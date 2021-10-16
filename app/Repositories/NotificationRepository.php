@@ -17,7 +17,12 @@ class NotificationRepository implements NotificationRepositoryContract
         return Notification::create($data)->id;
     }
 
-    public function setDelete ($id_sender, $id_notifications)
+    public function insertPivotMultiple ($id_notification, $id_accounts)
+    {
+        Notification::find($id_notification)->accounts()->attach($id_accounts);
+    }
+
+    public function update ($id_sender, $id_notifications)
     {
         Notification::whereIn('id', $id_notifications)
                     ->where('id_sender', '=', $id_sender)
@@ -44,8 +49,7 @@ class NotificationRepository implements NotificationRepositoryContract
                                 ->join(Account::table_as, 'id_sender', '=', 'acc.id')
                                 ->join(Department::table_as, 'id_sender', '=', 'dep.id_account')
                                 ->select('notification.*',
-                                         'dep.department_name as sender_name',
-                                         'acc.permission')
+                                         'dep.department_name as sender_name')
                                 ->get()
                                 ->toArray();
 
@@ -53,12 +57,25 @@ class NotificationRepository implements NotificationRepositoryContract
                                 ->join(Account::table_as, 'id_sender', '=', 'acc.id')
                                 ->join(Faculty::table_as, 'id_sender', '=', 'fac.id_account')
                                 ->select('notification.*',
-                                         'fac.faculty_name as sender_name',
-                                         'acc.permission')
+                                         'fac.faculty_name as sender_name')
                                 ->get()
                                 ->toArray();
 
         return $result;
+    }
+
+    public function getIDNotifications ($id_account, $offset)
+    {
+        return Account::find($id_account)->notifications()
+                      ->limit(10)->offset($offset)->pluck('id_notification')->toArray();
+    }
+
+    public function getIDAccounts ($id_notifications)
+    {
+        return Account::whereHas('notifications', function ($query) use ($id_notifications)
+        {
+            return $query->whereIn('id_notification', $id_notifications);
+        })->pluck('id')->toArray();
     }
 
     public function getDeletedNotifications ()

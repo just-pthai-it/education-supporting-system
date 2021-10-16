@@ -8,41 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class AccountRepository implements AccountRepositoryContract
 {
-    public function get ($username) : array
+    public function insertGetId ($data) : int
     {
-        return Account::where('username', '=', $username)
-                      ->select('id', 'username', 'password', 'permission')
-                      ->get()
-                      ->toArray();
-    }
-
-    public function getIDAccounts ($id_student_list) : array
-    {
-        $this->_createTemporaryTable($id_student_list);
-
-        return DB::table(Account::table_as)
-                 ->join('temp1', 'acc.username', '=', 'temp1.id_student')
-                 ->pluck('id')
-                 ->toArray();
-    }
-
-    public function updateQLDTPassword ($username, $qldt_password)
-    {
-        Account::where('username', '=', $username)
-               ->update(['qldt_password' => $qldt_password]);
-    }
-
-    public function updatePassword ($username, $password)
-    {
-        Account::where('username', '=', $username)
-               ->update(['password' => $password]);
-    }
-
-    public function getQLDTPassword ($id_student)
-    {
-        return Account::where('username', '=', $id_student)
-                      ->pluck('qldt_password')
-                      ->first();
+        return Account::create($data)->id;
     }
 
     public function insertMultiple ($data)
@@ -50,9 +18,32 @@ class AccountRepository implements AccountRepositoryContract
         Account::upsert($data, ['username'], ['username']);
     }
 
-    public function insertGetId ($data) : int
+    public function get ($username) : array
     {
-        return Account::create($data)->id;
+        return Account::where('username', '=', $username)
+                      ->select('id', 'username', 'password')
+                      ->get()
+                      ->toArray();
+    }
+
+    public function getIDAccounts ($id_student_list) : array
+    {
+        $this->_createTemporaryTable($id_student_list);
+        return DB::table(Account::table_as)
+                 ->join('temp1', 'acc.username', '=', 'temp1.id_student')
+                 ->pluck('id')
+                 ->toArray();
+    }
+
+    public function getPermissions ($id_account)
+    {
+        return Account::find($id_account)->roles()->pluck('role.id')->toArray();
+    }
+
+    public function updatePassword ($username, $password)
+    {
+        Account::where('username', '=', $username)
+               ->update(['password' => $password]);
     }
 
     public function _createTemporaryTable ($id_student_list)

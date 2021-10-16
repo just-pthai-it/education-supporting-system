@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface ScheduleRepositoryContract
 {
-    public function getStudentSchedules ($id_student);
+    public function getSchedules1 ($id_student);
 
-    public function getTeacherSchedules ($id_teacher);
+    public function getSchedules2 ($id_teacher);
 }

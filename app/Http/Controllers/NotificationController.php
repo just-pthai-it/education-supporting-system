@@ -50,7 +50,7 @@ class NotificationController extends Controller
         $this->notifyService->sendNotification($request->info, $id_account_list);
     }
 
-    public function getSentNotifications ($id_sender, $offset)
+    public function getSentNotifications ($id_sender, $offset = '0')
     {
         $data = $this->notificationService->getSentNotifications($id_sender, $offset);
         return response($data, 200);

@@ -51,14 +51,4 @@ class Student extends Model
     {
         return $this->hasOne(DataVersionStudent::class, 'id_student', 'id');
     }
-
-    public function moduleScores () : HasMany
-    {
-        return $this->hasMany(ModuleScore::class, 'id_student', 'id');
-    }
-
-    public function examSchedules () : HasMany
-    {
-        return $this->hasMany(ExamSchedule::class, 'id_student', 'id');
-    }
 }

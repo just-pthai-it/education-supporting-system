@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\BusinessClasses\FileUploadHandler;
+use App\Imports\Handler\FileUploadHandler;
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
 use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
@@ -113,12 +113,12 @@ class DataService implements DataServiceContract
 
     private function _insertFacultyClasses ($data)
     {
-        $this->classDepository->insertMultiple($data);
+        $this->classDepository->upsertMultiple($data);
     }
 
     private function _insertStudents ($data)
     {
-        $this->studentDepository->insertMultiple($data);
+        $this->studentDepository->upsertMultiple($data);
     }
 
     private function _insertParticipates ($data)

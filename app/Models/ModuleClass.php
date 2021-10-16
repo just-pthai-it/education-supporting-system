@@ -26,8 +26,8 @@ class ModuleClass extends Model
         'number_plan',
         'number_reality',
         'school_year',
+        'id_module',
         'id_teacher',
-        'id_module'
     ];
 
     protected $hidden = [

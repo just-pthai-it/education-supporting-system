@@ -23,6 +23,6 @@ class FacultyClassService implements FacultyClassServiceContract
         $id_academic_years = explode(',', $id_academic_years);
         $id_faculties      = explode(',', $id_faculties);
 
-        return $this->classDepository->getFacultyClass($id_academic_years, $id_faculties);
+        return $this->classDepository->getClasses($id_academic_years, $id_faculties);
     }
 }

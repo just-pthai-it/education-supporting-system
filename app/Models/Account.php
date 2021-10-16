@@ -26,7 +26,6 @@ class Account extends Model
         'email',
         'password',
         'qldt_password',
-        'permission'
     ];
 
     public function student () : HasOne
@@ -68,6 +67,12 @@ class Account extends Model
     public function sendNotification () : HasMany
     {
         return $this->hasMany(Notification::class, 'id_sender', 'id');
+    }
+
+    public function roles () : BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'account_role',
+                                    'id_account', 'id_role');
     }
 
     public function dataVersionStudent () : HasOneThrough

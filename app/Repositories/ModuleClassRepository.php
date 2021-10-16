@@ -10,9 +10,10 @@ use Illuminate\Support\Facades\DB;
 
 class ModuleClassRepository implements ModuleClassRepositoryContract
 {
-    public function getModuleClasses1 () : Collection
+    public function getModuleClasses1 ($id_teacher) : Collection
     {
-        return ModuleClass::where('id_school_year', '>=', SchoolYear::max('id') - 1)
+        return ModuleClass::where('id_school_year', '>=', SchoolYear::max('id') - 6)
+                          ->where('id_teacher', '=', $id_teacher)
                           ->orderBy('id')
                           ->select('id as id_module_class', 'module_class_name')
                           ->get();

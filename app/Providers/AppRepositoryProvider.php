@@ -15,7 +15,6 @@ use App\Repositories\Contracts\DeviceRepositoryContract;
 use App\Repositories\Contracts\FacultyRepositoryContract;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\ModuleRepositoryContract;
-use App\Repositories\Contracts\NotificationAccountRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\ParticipateRepositoryContract;
@@ -30,7 +29,6 @@ use App\Repositories\DeviceRepository;
 use App\Repositories\FacultyRepository;
 use App\Repositories\ModuleClassRepository;
 use App\Repositories\ModuleRepository;
-use App\Repositories\NotificationAccountRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\OtherDepartmentRepository;
 use App\Repositories\ParticipateRepository;
@@ -43,7 +41,6 @@ use Illuminate\Support\ServiceProvider;
 class AppRepositoryProvider extends ServiceProvider
 {
     public array $bindings = [
-        NotificationAccountRepositoryContract::class => NotificationAccountRepository::class,
         DataVersionStudentRepositoryContract::class  => DataVersionStudentRepository::class,
         DataVersionTeacherRepositoryContract::class  => DataVersionTeacherRepository::class,
         OtherDepartmentRepositoryContract::class     => OtherDepartmentRepository::class,

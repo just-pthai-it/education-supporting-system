@@ -39,7 +39,7 @@ class NotifyService implements NotifyServiceContract
     private function _getDeviceTokens ($id_account_list) : array
     {
         return empty($id_account_list) ?
-            [] : $this->deviceDepository->getTokens(SharedFunctions::formatArray($id_account_list, 'id_account'));
+            [] : $this->deviceDepository->getDeviceTokens(SharedFunctions::formatArray($id_account_list, 'id_account'));
     }
 
     /**

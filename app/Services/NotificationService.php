@@ -1,13 +1,10 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
 use App\Repositories\Contracts\DataVersionTeacherRepositoryContract;
-use App\Repositories\Contracts\NotificationAccountRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
 use App\Repositories\Contracts\ParticipateRepositoryContract;
 use App\Repositories\Contracts\StudentRepositoryContract;
@@ -16,7 +13,6 @@ use App\Services\Contracts\NotificationServiceContract;
 
 class NotificationService implements NotificationServiceContract
 {
-    private NotificationAccountRepositoryContract $notificationAccountDepository;
     private DataVersionStudentRepositoryContract $dataVersionStudentDepository;
     private DataVersionTeacherRepositoryContract $dataVersionTeacherRepository;
     private NotificationRepositoryContract $notificationDepository;
@@ -25,7 +21,6 @@ class NotificationService implements NotificationServiceContract
     private StudentRepositoryContract $studentDepository;
 
     /**
-     * @param NotificationAccountRepositoryContract $notificationAccountDepository
      * @param DataVersionStudentRepositoryContract $dataVersionStudentDepository
      * @param DataVersionTeacherRepositoryContract $dataVersionTeacherRepository
      * @param NotificationRepositoryContract $notificationDepository
@@ -33,15 +28,13 @@ class NotificationService implements NotificationServiceContract
      * @param AccountRepositoryContract $accountDepository
      * @param StudentRepositoryContract $studentDepository
      */
-    public function __construct (NotificationAccountRepositoryContract $notificationAccountDepository,
-                                 DataVersionStudentRepositoryContract  $dataVersionStudentDepository,
+    public function __construct (DataVersionStudentRepositoryContract  $dataVersionStudentDepository,
                                  DataVersionTeacherRepositoryContract  $dataVersionTeacherRepository,
                                  NotificationRepositoryContract        $notificationDepository,
                                  ParticipateRepositoryContract         $participateDepository,
                                  AccountRepositoryContract             $accountDepository,
                                  StudentRepositoryContract             $studentDepository)
     {
-        $this->notificationAccountDepository = $notificationAccountDepository;
         $this->dataVersionStudentDepository  = $dataVersionStudentDepository;
         $this->dataVersionTeacherRepository  = $dataVersionTeacherRepository;
         $this->notificationDepository        = $notificationDepository;
@@ -60,7 +53,7 @@ class NotificationService implements NotificationServiceContract
 
     private function _getIDStudentsBFC ($class_list)
     {
-        return $this->studentDepository->getIDStudents($class_list);
+        return $this->studentDepository->getIDStudents1($class_list);
     }
 
     public function pushMCNotification ($notification, $class_list) : array
@@ -109,46 +102,38 @@ class NotificationService implements NotificationServiceContract
         ];
     }
 
-    private function _createNotificationAccount ($id_account_list, $id_notification)
+    private function _createNotificationAccount ($id_accounts, $id_notification)
     {
-        if (empty($id_account_list))
+        if (empty($id_accounts))
         {
             return;
         }
 
-        $data = $this->_setUpNotificationAccount($id_account_list, $id_notification);
-        $this->notificationAccountDepository->insertMultiple($data);
-    }
-
-    public function _setUpNotificationAccount ($id_account_list, $id_notification) : array
-    {
-        $arr = [];
-        foreach ($id_account_list as $id_account)
-        {
-            $arr[] = [
-                'id_notification' => $id_notification,
-                'id_account'      => $id_account
-            ];
-        }
-        return $arr;
+        $this->notificationDepository->insertPivotMultiple($id_notification, $id_accounts);
     }
 
     public function setDelete ($id_sender, $id_notifications)
     {
-        $this->notificationDepository->setDelete($id_sender, $id_notifications);
-        $id_student_list = $this->notificationAccountDepository->getIDAccounts($id_notifications);
-        $this->_updateNotificationDataVersionStudent($id_student_list);
+        $this->notificationDepository->update($id_sender, $id_notifications);
+        $id_accounts = $this->notificationDepository->getIDAccounts($id_notifications);
+        $id_students = $this->_getIDStudentsByIDAccounts($id_accounts);
+        $this->_updateNotificationDataVersionStudent($id_students);
     }
 
-    private function _updateNotificationDataVersionStudent ($id_student_list)
+    private function _getIDStudentsByIDAccounts ($id_accounts)
     {
-        $this->dataVersionStudentDepository->updateMultiple($id_student_list, 'notification');
+        return $this->studentDepository->getIDStudents2($id_accounts);
+    }
+
+    private function _updateNotificationDataVersionStudent ($id_students)
+    {
+        $this->dataVersionStudentDepository->updateMultiple($id_students, 'notification');
     }
 
     public function getReceivedNotifications ($id_account, $offset) : array
     {
-        $id_notifications = $this->notificationAccountDepository->getIDNotifications($id_account, $offset);
-        $data = $this->notificationDepository->getNotifications2($id_notifications);
+        $id_notifications = $this->notificationDepository->getIDNotifications($id_account, $offset);
+        $data             = $this->notificationDepository->getNotifications2($id_notifications);
         return $this->_formatNotificationResponse($data);
     }
 
@@ -162,11 +147,8 @@ class NotificationService implements NotificationServiceContract
                 $response['sender'][] = [
                     'id_sender'   => $notification['id_sender'],
                     'sender_name' => $notification['sender_name'],
-                    'permission'  => $notification['permission']
                 ];
-
                 unset($notification['sender_name']);
-                unset($notification['permission']);
 
                 $response['notification'][] = $notification;
             }

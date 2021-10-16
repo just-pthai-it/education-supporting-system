@@ -17,9 +17,9 @@ class ModuleClassController extends Controller
         $this->moduleClassService = $moduleClassService;
     }
 
-    public function getRecentModuleClasses ()
+    public function getRecentModuleClasses ($id_teacher)
     {
-        $data = $this->moduleClassService->getRecentModuleClasses();
+        $data = $this->moduleClassService->getRecentModuleClasses($id_teacher);
         return response($data)->header('Content-Type', 'application/data');
     }
 }

@@ -4,13 +4,15 @@ namespace App\Repositories\Contracts;
 
 interface StudentRepositoryContract
 {
-    public function get ($id_account);
-
-    public function getIDStudents ($class_list);
-
     public function insert ($data);
 
-    public function insertMultiple ($data);
+    public function upsertMultiple ($data);
 
-    public function updateMultiple ($id_student_list);
+    public function get ($id_account);
+
+    public function getIDStudents1 ($classes);
+
+    public function getIDStudents2 ($id_accounts);
+
+    public function updateMultiple ($id_students);
 }

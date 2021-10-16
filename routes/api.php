@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FacultyClassController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\ModuleClassController;
 use App\Http\Controllers\NotificationController;
 use App\Models\Account;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,13 +24,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'auth'], function ()
 {
-    Route::post('login', [LoginController::class, 'login']);
+    Route::post('login', [AuthController::class, 'login']);
 });
 
 Route::group(['prefix' => 'notification'], function ()
 {
-    Route::get('{id_sender}/{offset}', [NotificationController::class, 'getSentNotifications']);
-
+    Route::get('{id_sender}/{offset?}', [NotificationController::class, 'getSentNotifications']);
 
     Route::group(['prefix' => 'push'], function ()
     {
@@ -65,13 +64,19 @@ Route::get('academic-year', [AcademicYearController::class, 'getRecentAcademicYe
 
 Route::get('faculty-class', [FacultyClassController::class, 'getFacultyClasses']);
 
-Route::get('module-class', [ModuleClassController::class, 'getRecentModuleClasses']);
+Route::get('module-class/{id_teacher}', [ModuleClassController::class, 'getRecentModuleClasses']);
 
 Route::post('/account/change-password', [AccountController::class, 'changePassword']);
 
-Route::post('/auth/logout', [LogoutController::class, 'logout']);
+Route::post('/auth/logout', [AuthController::class, 'logout']);
 
 Route::get('test', function ()
 {
-    return Account::find(42)->notifications()->pluck('id_notification')->toArray();
+
+    return Teacher::whereIn('id_account', [40, 41])->pluck('id');
+
+//    return \App\Models\Account::whereHas('notifications', function ($query)
+//    {
+//        return $query->whereIn('id_notification', ['2', '1']);
+//    })->select()->toSql();
 });

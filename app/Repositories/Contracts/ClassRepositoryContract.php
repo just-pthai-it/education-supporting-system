@@ -4,9 +4,9 @@ namespace App\Repositories\Contracts;
 
 interface ClassRepositoryContract
 {
-    public function getFacultyClass ($id_academic_years, $id_faculties);
+    public function upsert ($data);
 
-    public function insertMultiple ($data);
+    public function upsertMultiple ($data);
 
-    public function insert ($data);
+    public function getClasses ($id_academic_years, $id_faculties);
 }

@@ -9,7 +9,17 @@ use Illuminate\Support\Collection;
 
 class ClassRepository implements ClassRepositoryContract
 {
-    public function getFacultyClass ($id_academic_years, $id_faculties) : Collection
+    public function upsert ($data)
+    {
+        Class_::updateOrCreate(['id' => $data['id']], $data);
+    }
+
+    public function upsertMultiple ($data)
+    {
+        Class_::upsert($data, ['id'], ['id']);
+    }
+
+    public function getClasses ($id_academic_years, $id_faculties) : Collection
     {
         return Class_::whereIn('id_academic_year', $id_academic_years)
                      ->whereIn('id_faculty', $id_faculties)
@@ -18,15 +28,5 @@ class ClassRepository implements ClassRepositoryContract
                      ->orderBy('id')
                      ->select('id_academic_year', 'id_faculty', 'id as id_class')
                      ->get();
-    }
-
-    public function insertMultiple ($data)
-    {
-        Class_::upsert($data, ['id'], ['id']);
-    }
-
-    public function insert ($data)
-    {
-        Class_::updateOrCreate(['id' => $data['id']], $data);
     }
 }

@@ -4,7 +4,7 @@
 namespace App\Services;
 
 
-use App\BusinessClasses\AmazonS3;
+use App\Imports\Handler\AmazonS3;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
 
 class FixScheduleService implements Contracts\FixScheduleServiceContract

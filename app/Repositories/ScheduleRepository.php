@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class ScheduleRepository implements ScheduleRepositoryContract
 {
-    public function getStudentSchedules ($id_student) : Collection
+    public function getSchedules1 ($id_student) : Collection
     {
         return Student::find($id_student)->moduleClasses()
                       ->join(Schedule::table_as, 'module_class.id', '=', 'sdu.id_module_class')
@@ -24,7 +24,7 @@ class ScheduleRepository implements ScheduleRepositoryContract
                       ->get();
     }
 
-    public function getTeacherSchedules ($id_teacher) : Collection
+    public function getSchedules2 ($id_teacher) : Collection
     {
         return Teacher::find($id_teacher)->moduleClasses()
                       ->join(Schedule::table_as, 'module_class.id', '=', 'sdu.id_module_class')

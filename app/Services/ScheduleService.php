@@ -30,7 +30,7 @@ class ScheduleService implements Contracts\ScheduleServiceContract
 
     public function getStudentSchedules ($id_student) : array
     {
-        $data         = $this->scheduleDepository->getStudentSchedules($id_student);
+        $data         = $this->scheduleDepository->getSchedules1($id_student);
         $data_version = $this->dataVersionStudentDepository->getSingleColumn2($id_student, 'schedule');
 
         return [
@@ -41,7 +41,7 @@ class ScheduleService implements Contracts\ScheduleServiceContract
 
     public function getTeacherSchedules ($id_teacher) : array
     {
-        $data         = $this->scheduleDepository->getTeacherSchedules($id_teacher);
+        $data         = $this->scheduleDepository->getSchedules2($id_teacher);
         $data_version = $this->dataVersionTeacherDepository->getSingleColumn2($id_teacher, 'schedule');
 
         return [
