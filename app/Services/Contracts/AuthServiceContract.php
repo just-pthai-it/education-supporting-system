@@ -2,7 +2,9 @@
 
 namespace App\Services\Contracts;
 
-interface LoginServiceContract
+interface AuthServiceContract
 {
     public function login ($username, $password);
+
+    public function logout ();
 }
