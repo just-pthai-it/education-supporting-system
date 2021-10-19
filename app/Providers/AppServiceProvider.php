@@ -15,6 +15,7 @@ use App\Services\Contracts\DeviceServiceContract;
 use App\Services\Contracts\ExamScheduleServiceContract;
 use App\Services\Contracts\FacultyClassServiceContract;
 use App\Services\Contracts\FacultyServiceContract;
+use App\Services\Contracts\FileUploadServiceContract;
 use App\Services\Contracts\ModuleClassServiceContract;
 use App\Services\Contracts\NotificationServiceContract;
 use App\Services\Contracts\NotifyServiceContract;
@@ -26,6 +27,7 @@ use App\Services\DeviceService;
 use App\Services\ExamScheduleService;
 use App\Services\FacultyClassService;
 use App\Services\FacultyService;
+use App\Services\FileUploadService;
 use App\Services\ModuleClassService;
 use App\Services\NotificationService;
 use App\Services\NotifyService;
@@ -42,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
         AcademicYearServiceContract::class       => AcademicYearService::class,
         ExamScheduleServiceContract::class       => ExamScheduleService::class,
         ModuleClassServiceContract::class        => ModuleClassService::class,
+        FileUploadServiceContract::class         => FileUploadService::class,
         ScheduleServiceContract::class           => ScheduleService::class,
         AccountServiceContract::class            => AccountService::class,
         FacultyServiceContract::class            => FacultyService::class,

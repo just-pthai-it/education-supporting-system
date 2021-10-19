@@ -7,8 +7,7 @@ use App\Http\Controllers\FacultyClassController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\ModuleClassController;
 use App\Http\Controllers\NotificationController;
-use App\Models\Account;
-use App\Models\Teacher;
+use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,12 +49,12 @@ Route::group(['prefix' => 'teacher'], function ()
     });
 });
 
-//Route::group(['prefix' => 'import-data'], function ()
-//{
-//    Route::post('process-1', [DataController::class, 'process1']);
-//
-//    Route::post('process-2', [DataController::class, 'process2']);
-//});
+Route::group(['prefix' => 'import-data'], function ()
+{
+    Route::post('roll-call/{id_training_type}', [ResourceController::class, 'uploadRollCallFile']);
+
+    Route::post('schedule/{id_training_type}', [ResourceController::class, 'uploadScheduleFile']);
+});
 
 
 Route::get('faculty', [FacultyController::class, 'getIDFaculties']);
@@ -69,14 +68,3 @@ Route::get('module-class/{id_teacher}', [ModuleClassController::class, 'getRecen
 Route::post('/account/change-password', [AccountController::class, 'changePassword']);
 
 Route::post('/auth/logout', [AuthController::class, 'logout']);
-
-Route::get('test', function ()
-{
-
-    return Teacher::whereIn('id_account', [40, 41])->pluck('id');
-
-//    return \App\Models\Account::whereHas('notifications', function ($query)
-//    {
-//        return $query->whereIn('id_notification', ['2', '1']);
-//    })->select()->toSql();
-});

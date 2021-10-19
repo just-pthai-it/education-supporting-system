@@ -70,14 +70,6 @@ class NotificationRepository implements NotificationRepositoryContract
                       ->limit(10)->offset($offset)->pluck('id_notification')->toArray();
     }
 
-    public function getIDAccounts ($id_notifications)
-    {
-        return Account::whereHas('notifications', function ($query) use ($id_notifications)
-        {
-            return $query->whereIn('id_notification', $id_notifications);
-        })->pluck('id')->toArray();
-    }
-
     public function getDeletedNotifications ()
     {
         return Notification::where('is_delete', '=', true)

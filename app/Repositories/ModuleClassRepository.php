@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 
 class ModuleClassRepository implements ModuleClassRepositoryContract
 {
+    public function insertPivotMultiple ($id_module_class, $id_students)
+    {
+        ModuleClass::find($id_module_class)->students()->attach($id_students);
+    }
+
     public function getModuleClasses1 ($id_teacher) : Collection
     {
         return ModuleClass::where('id_school_year', '>=', SchoolYear::max('id') - 6)
@@ -24,5 +29,23 @@ class ModuleClassRepository implements ModuleClassRepositoryContract
         return ModuleClass::whereIn('id', $module_class_list)
                           ->pluck('id')
                           ->toArray();
+    }
+
+    public function getIDModuleClassesNotInDatabase ($id_module_classes)
+    {
+        $this->_createTemporaryTable($id_module_classes);
+        return ModuleClass::rightJoin('temp', 'id', '=', 'id_module_class')
+                      ->whereNull('id')->pluck('id_module_class')->toArray();
+    }
+
+    public function _createTemporaryTable ($id_module_classes)
+    {
+        $sql_query =
+            'CREATE TEMPORARY TABLE temp (
+                id_module_class varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
+
+        DB::unprepared($sql_query);
+        DB::table('temp')->insert($id_module_classes);
     }
 }

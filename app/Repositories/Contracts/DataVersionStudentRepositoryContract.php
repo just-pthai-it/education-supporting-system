@@ -6,7 +6,7 @@ interface DataVersionStudentRepositoryContract
 {
     public function insert ($data);
 
-    public function upsertMultiple ($data);
+    public function insertMultiple ($data);
 
     public function get ($id_student);
 

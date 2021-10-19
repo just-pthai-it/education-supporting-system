@@ -14,8 +14,6 @@ interface NotificationRepositoryContract
 
     public function getIDNotifications ($id_account, $offset);
 
-    public function getIDAccounts ($id_notifications);
-
     public function getDeletedNotifications ();
 
     public function update ($id_sender, $id_notifications);

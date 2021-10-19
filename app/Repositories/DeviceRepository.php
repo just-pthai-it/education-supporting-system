@@ -8,14 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class DeviceRepository implements DeviceRepositoryContract
 {
-    public function upsert ($id_account, $device_token, $curr_time)
-    {
-        Device::updateOrCreate(
-            ['device_token' => $device_token],
-            ['id_account' => $id_account, 'last_use' => $curr_time]
-        );
-    }
-
     public function getDeviceTokens ($id_account_list) : array
     {
         $this->_createTemporaryTable($id_account_list);

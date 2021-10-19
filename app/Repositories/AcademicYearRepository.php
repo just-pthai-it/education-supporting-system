@@ -9,7 +9,8 @@ class AcademicYearRepository implements AcademicYearRepositoryContract
 {
     public function getAcademicYears1 ()
     {
-        return AcademicYear::orderBy('id', 'desc')->limit(18)->pluck('academic_year', 'id');
+        return AcademicYear::orderBy('id', 'desc')->limit(18)
+                           ->select('id as id_academic_year', 'academic_year')->get();
     }
 
     public function getAcademicYears2 ()

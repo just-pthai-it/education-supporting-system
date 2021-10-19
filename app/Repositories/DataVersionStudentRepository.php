@@ -14,11 +14,9 @@ class DataVersionStudentRepository implements DataVersionStudentRepositoryContra
         DataVersionStudent::create($data);
     }
 
-    public function upsertMultiple ($data)
+    public function insertMultiple ($data)
     {
-        DataVersionStudent::upsert($data,
-                                   ['id_student'],
-                                   ['schedule' => DB::raw('schedule + 1')]);
+        DataVersionStudent::insert($data);
     }
 
     public function get ($id_student)

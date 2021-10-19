@@ -23,7 +23,8 @@ class Class_ extends Model
         'id',
         'id_academic_year',
         'class_name',
-        'id_faculty'
+        'id_faculty',
+        'id_training_type',
     ];
 
     public function students () : HasMany
@@ -31,12 +32,12 @@ class Class_ extends Model
         return $this->hasMany(Student::class, 'id_class', 'id');
     }
 
-    public function academicYear() : BelongsTo
+    public function academicYear () : BelongsTo
     {
         return $this->belongsTo(AcademicYear::class, 'id_academic_year', 'id');
     }
 
-    public function faculty() : BelongsTo
+    public function faculty () : BelongsTo
     {
         return $this->belongsTo(Faculty::class, 'id_faculty', 'id');
     }

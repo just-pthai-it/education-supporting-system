@@ -9,14 +9,14 @@ use Illuminate\Support\Collection;
 
 class ClassRepository implements ClassRepositoryContract
 {
-    public function upsert ($data)
+    public function insert ($data)
     {
-        Class_::updateOrCreate(['id' => $data['id']], $data);
+        Class_::create($data);
     }
 
-    public function upsertMultiple ($data)
+    public function insertMultiple ($data)
     {
-        Class_::upsert($data, ['id'], ['id']);
+        Class_::insert($data);
     }
 
     public function getClasses ($id_academic_years, $id_faculties) : Collection

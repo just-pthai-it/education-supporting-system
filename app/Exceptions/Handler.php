@@ -10,7 +10,6 @@ class Handler extends ExceptionHandler
 {
     /**
      * A list of the exception types that are not reported.
-     *
      * @var array
      */
     protected $dontReport = [
@@ -19,7 +18,6 @@ class Handler extends ExceptionHandler
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
-     *
      * @var array
      */
     protected $dontFlash = [
@@ -30,7 +28,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Register the exception handling callbacks for the application.
-     *
      * @return void
      */
     public function register ()
@@ -44,12 +41,17 @@ class Handler extends ExceptionHandler
         {
             return response('', 400);
         });
+        $this->renderable(function (ImportDataFailedException $exception)
+        {
+            return response('', 406);
+        });
     }
 
     public function report (Throwable $e)
     {
         if ($e instanceof InvalidAccountException
-            || $e instanceof InvalidFormRequestException)
+            || $e instanceof InvalidFormRequestException
+            || $e instanceof ImportDataFailedException)
         {
             return;
         }

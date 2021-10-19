@@ -8,16 +8,13 @@ use Exception;
 
 class ExcelFileReader1
 {
-    private string $id_training_type;
-
     /**
      * @throws Exception
      */
-    public function readData ($file_name, $module_list, $id_training_type) : array
+    public function readData ($file_name, $modules) : array
     {
-        $this->id_training_type = $id_training_type;
-        $raw_data               = $this->_getData($file_name);
-        $formatted_data         = $this->_formatData($raw_data, $module_list);
+        $raw_data       = $this->_getData($file_name);
+        $formatted_data = $this->_formatData($raw_data, $modules);
 
         return $formatted_data;
     }
@@ -31,15 +28,16 @@ class ExcelFileReader1
     /**
      * @throws Exception
      */
-    private function _formatData ($raw_data, $module_list) : array
+    private function _formatData ($raw_data, $modules) : array
     {
-        $curr_mc      = '';
-        $student      = [];
-        $participate  = [];
-        $module_class = [];
-        $exception    = [];
-        $temp_arr     = [];
-        $temp_num     = 0;
+        $curr_mc          = '';
+        $students         = [];
+        $id_students      = [];
+        $participates     = [];
+        $module_classes   = [];
+        $module_exception = [];
+        $temp_arr         = [];
+        $temp_num         = 0;
         foreach ($raw_data as $sheet)
         {
             $flag = false;
@@ -58,7 +56,7 @@ class ExcelFileReader1
                         if ($row[0] == $temp_num && $temp_num == 1)
                         {
                             $flag2 = false;
-                            foreach ($module_list as $module)
+                            foreach ($modules as $module)
                             {
                                 if (strpos($curr_mc, $module['module_name']) !== false)
                                 {
@@ -73,19 +71,16 @@ class ExcelFileReader1
                         {
                             if ($curr_mc != '')
                             {
-                                $module_class[] = $curr_mc;
+                                $module_classes[] = ['id_module_class' => $curr_mc];
                             }
                             foreach ($temp_arr as $id_student)
                             {
-                                $participate[] = [
-                                    'id_module_class' => $curr_mc,
-                                    'id_student'      => $id_student
-                                ];
+                                $participates[$curr_mc][] = $id_student;
                             }
                         }
                         else
                         {
-                            $exception[] = $curr_mc;
+                            $module_exception[] = $curr_mc;
                         }
 
                         $temp_arr = [];
@@ -101,8 +96,10 @@ class ExcelFileReader1
                     $arr['student_name'] = $row[3] . ' ' . $row[4];
                     $arr['birth']        = SharedFunctions::formatDate($row[5]);
                     $arr['id_class']     = $row[1];
-                    $student[]           = $arr;
-                    $temp_arr[]          = $arr['id'];
+
+                    $students[]    = $arr;
+                    $id_students[] = ['id_student' => $arr['id']];
+                    $temp_arr[]    = $arr['id'];
                 }
             }
         }
@@ -111,7 +108,7 @@ class ExcelFileReader1
         if ($temp_num == 1)
         {
             $flag2 = false;
-            foreach ($module_list as $module)
+            foreach ($modules as $module)
             {
                 if (strpos($curr_mc, $module['module_name']) !== false)
                 {
@@ -126,29 +123,28 @@ class ExcelFileReader1
         {
             if ($curr_mc != '')
             {
-                $module_class[] = $curr_mc;
+                $module_classes[] = ['id_module_class' => $curr_mc];
             }
             foreach ($temp_arr as $id_student)
             {
-                $participate[] = [
-                    'id_module_class' => $curr_mc,
-                    'id_student'      => $id_student
-                ];
+                $participates[$curr_mc][] = $id_student;
             }
         }
         else
         {
-            $exception[] = $curr_mc;
+            $module_exception[] = $curr_mc;
         }
 
-        $student      = array_unique($student, SORT_REGULAR);
-        $module_class = array_unique($module_class, SORT_REGULAR);
+        $students       = array_unique($students, SORT_REGULAR);
+        $module_classes = array_unique($module_classes, SORT_REGULAR);
+        $id_students    = array_unique($id_students, SORT_REGULAR);
 
         return [
-            'student'      => $student,
-            'participate'  => $participate,
-            'module_class' => $module_class,
-            'exception1'   => $exception
+            'students'         => $students,
+            'id_students'      => $id_students,
+            'participates'     => $participates,
+            'module_classes'   => $module_classes,
+            'module_exception' => $module_exception
         ];
     }
 }

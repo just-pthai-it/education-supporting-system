@@ -8,9 +8,13 @@ interface AccountRepositoryContract
 
     public function insertMultiple ($data);
 
+    public function insertPivotMultiple ($id_account, $roles);
+
     public function get ($username);
 
-    public function getIDAccounts ($id_student_list);
+    public function getIDAccounts1 ($id_student_list);
+
+    public function getIDAccounts2 ($id_notifications);
 
     public function getPermissions ($id_account);
 
