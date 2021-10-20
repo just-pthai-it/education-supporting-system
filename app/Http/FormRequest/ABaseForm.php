@@ -6,7 +6,7 @@ use App\Exceptions\InvalidFormRequestException;
 use Exception;
 use Illuminate\Http\Request;
 
-abstract class BaseForm
+abstract class ABaseForm
 {
     abstract protected function getRules ();
 

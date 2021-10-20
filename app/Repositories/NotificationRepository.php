@@ -22,13 +22,6 @@ class NotificationRepository implements NotificationRepositoryContract
         Notification::find($id_notification)->accounts()->attach($id_accounts);
     }
 
-    public function update ($id_sender, $id_notifications)
-    {
-        Notification::whereIn('id', $id_notifications)
-                    ->where('id_sender', '=', $id_sender)
-                    ->update(['is_delete' => 1]);
-    }
-
     public function getNotifications1 ($id_sender, $num) : Collection
     {
         return Notification::where('id_sender', '=', $id_sender)
@@ -70,11 +63,10 @@ class NotificationRepository implements NotificationRepositoryContract
                       ->limit(10)->offset($offset)->pluck('id_notification')->toArray();
     }
 
-    public function getDeletedNotifications ()
+    public function update ($id_sender, $id_notifications)
     {
-        return Notification::where('is_delete', '=', true)
-                           ->where('time_create', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 3 WEEK)'))
-                           ->pluck('id')
-                           ->toArray();
+        Notification::whereIn('id', $id_notifications)
+                    ->where('id_sender', '=', $id_sender)
+                    ->update(['is_delete' => 1]);
     }
 }

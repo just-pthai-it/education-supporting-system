@@ -27,7 +27,7 @@ class Notification extends Model
         'time_create',
         'time_start',
         'time_end',
-        'id_delete'
+        'is_delete'
     ];
 
     protected $hidden = [

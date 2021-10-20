@@ -9,19 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class StudentRepository implements StudentRepositoryContract
 {
-    public function insert ($data)
-    {
-        Student::create($data);
-    }
-
     public function insertMultiple ($data)
     {
         Student::insert($data);
-    }
-
-    public function get ($id_account)
-    {
-        return Account::find($id_account)->student;
     }
 
     public function getIDStudents1 ($classes) : array

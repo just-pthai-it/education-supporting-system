@@ -2,7 +2,7 @@
 
 namespace App\Services\Contracts;
 
-interface FacultyClassServiceContract
+interface ClassServiceContract
 {
     public function getFacultyClasses ($id_academic_years, $id_faculties);
 }

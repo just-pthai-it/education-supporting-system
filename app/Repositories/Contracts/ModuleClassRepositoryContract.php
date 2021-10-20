@@ -6,9 +6,7 @@ interface ModuleClassRepositoryContract
 {
     public function insertPivotMultiple ($id_module_class, $id_students);
 
-    public function getModuleClasses1 ($id_teacher);
-
-    public function getModuleClasses2 ($module_class_list);
+    public function getModuleClasses ($id_teacher);
 
     public function getIDModuleClassesNotInDatabase ($id_module_classes);
 }

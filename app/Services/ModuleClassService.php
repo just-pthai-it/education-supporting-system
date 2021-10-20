@@ -20,6 +20,6 @@ class ModuleClassService implements ModuleClassServiceContract
 
     public function getRecentModuleClasses ($id_teacher)
     {
-        return $this->moduleClassDepository->getModuleClasses1($id_teacher);
+        return $this->moduleClassDepository->getModuleClasses($id_teacher);
     }
 }

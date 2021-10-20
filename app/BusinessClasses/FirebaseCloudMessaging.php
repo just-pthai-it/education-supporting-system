@@ -15,14 +15,14 @@ use function config as config;
 class FirebaseCloudMessaging
 {
     private Messaging $messaging;
-    private array $token_list;
+    private array $tokens;
     private AndroidConfig $config;
     private string $credentials_path;
 
-    public function setUpData (array $info, array $token_list)
+    public function setUpData (array $info, array $tokens)
     {
         $this->credentials_path = config('filesystems.disks.credentials.file_path');
-        $this->token_list       = array_chunk($token_list, 500);
+        $this->tokens           = array_chunk($tokens, 500);
         $this->_setConfig($info);
         $this->_initFactory();
     }
@@ -31,13 +31,13 @@ class FirebaseCloudMessaging
      * @throws MessagingException
      * @throws FirebaseException
      */
-    public function send (): array
+    public function send () : array
     {
         $invalid_tokens = [];
 
         $message = $this->_applyConfig();
 
-        foreach ($this->token_list as $tokens)
+        foreach ($this->tokens as $tokens)
         {
             $report = $this->messaging->sendMulticast($message, $tokens);
 
@@ -51,10 +51,10 @@ class FirebaseCloudMessaging
         return $invalid_tokens;
     }
 
-    private function _applyConfig (): CloudMessage
+    private function _applyConfig () : CloudMessage
     {
         return CloudMessage::withTarget('token', 'all')
-            ->withAndroidConfig($this->config);
+                           ->withAndroidConfig($this->config);
     }
 
     private function _setConfig (array $info)

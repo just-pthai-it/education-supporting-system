@@ -110,7 +110,6 @@ class AuthService implements Contracts\AuthServiceContract
 
             default:
                 throw new InvalidAccountException();
-
         }
 
         return $data;

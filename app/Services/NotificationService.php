@@ -38,44 +38,44 @@ class NotificationService implements NotificationServiceContract
         $this->studentDepository            = $studentDepository;
     }
 
-    public function pushFCNotification ($notification, $class_list) : array
+    public function pushFCNotification ($notification, $classes) : array
     {
-        $id_student_list = $this->_getIDStudentsBFC($class_list);
-        $id_account_list = $this->_sharedFunctions($notification, $id_student_list);
+        $id_students = $this->_getIDStudentsBFC($classes);
+        $id_accounts = $this->_sharedFunctions($notification, $id_students);
 
-        return $id_account_list;
+        return $id_accounts;
     }
 
-    private function _getIDStudentsBFC ($class_list)
+    private function _getIDStudentsBFC ($classs)
     {
-        return $this->studentDepository->getIDStudents1($class_list);
+        return $this->studentDepository->getIDStudents1($classs);
     }
 
-    public function pushMCNotification ($notification, $class_list) : array
+    public function pushMCNotification ($notification, $classes) : array
     {
-        $id_student_list = $this->_getIDStudentsBMC($class_list);
-        $id_account_list = $this->_sharedFunctions($notification, $id_student_list);
-        return $id_account_list;
+        $id_students = $this->_getIDStudentsBMC($classes);
+        $id_accounts = $this->_sharedFunctions($notification, $id_students);
+        return $id_accounts;
     }
 
-    private function _getIDStudentsBMC ($class_list)
+    private function _getIDStudentsBMC ($classes)
     {
-        return $this->studentDepository->getIDStudents2($class_list);
+        return $this->studentDepository->getIDStudents2($classes);
     }
 
-    private function _sharedFunctions ($notification, $id_student_list) : array
+    private function _sharedFunctions ($notification, $id_students) : array
     {
-        $id_account_list = $this->_getIDAccounts(SharedFunctions::formatArray($id_student_list, 'id_student'));
+        $id_accounts     = $this->_getIDAccounts(SharedFunctions::formatArray($id_students, 'id_student'));
         $id_notification = $this->_createNotification($notification);
-        $this->_createNotificationAccount($id_account_list, $id_notification);
-        $this->_updateNotificationDataVersionStudent($id_student_list);
+        $this->_createNotificationAccount($id_accounts, $id_notification);
+        $this->_updateNotificationDataVersionStudent($id_students);
 
-        return $id_account_list;
+        return $id_accounts;
     }
 
-    private function _getIDAccounts ($id_student_list) : array
+    private function _getIDAccounts ($id_students) : array
     {
-        return empty($id_student_list) ? [] : $this->accountDepository->getIDAccounts1($id_student_list);
+        return empty($id_students) ? [] : $this->accountDepository->getIDAccounts1($id_students);
     }
 
     private function _createNotification ($notification)

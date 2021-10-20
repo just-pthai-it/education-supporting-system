@@ -19,6 +19,6 @@ class FacultyService implements Contracts\FacultyServiceContract
 
     public function getIDFaculties ()
     {
-        return $this->facultyDepository->getIDFaculties(SharedData::$id_faculty_list_not_query);
+        return $this->facultyDepository->getIDFaculties(SharedData::$id_faculties_not_query);
     }
 }

@@ -25,7 +25,7 @@ class ModuleClass extends Model
         'module_class_name',
         'number_plan',
         'number_reality',
-        'school_year',
+        'id_school_year',
         'id_module',
         'id_teacher',
     ];

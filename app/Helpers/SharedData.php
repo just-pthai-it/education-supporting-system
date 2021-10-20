@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 class SharedData
 {
-    public static array $id_faculty_list_not_query = [
+    public static array $id_faculties_not_query = [
         'LLCT', 'GDTC', 'GDQP'
     ];
 

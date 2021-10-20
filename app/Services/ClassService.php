@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\ClassRepositoryContract;
-use App\Services\Contracts\FacultyClassServiceContract;
+use App\Services\Contracts\ClassServiceContract;
 
-class FacultyClassService implements FacultyClassServiceContract
+class ClassService implements ClassServiceContract
 {
     private ClassRepositoryContract $classDepository;
 

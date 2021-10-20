@@ -5,15 +5,9 @@ namespace App\Repositories;
 use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
 use App\Models\Account;
 use App\Models\DataVersionStudent;
-use Illuminate\Support\Facades\DB;
 
 class DataVersionStudentRepository implements DataVersionStudentRepositoryContract
 {
-    public function insert ($data)
-    {
-        DataVersionStudent::create($data);
-    }
-
     public function insertMultiple ($data)
     {
         DataVersionStudent::insert($data);

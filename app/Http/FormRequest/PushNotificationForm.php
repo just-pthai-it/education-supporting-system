@@ -2,7 +2,7 @@
 
 namespace App\Http\FormRequest;
 
-class PushNotificationForm extends BaseForm
+class PushNotificationForm extends ABaseForm
 {
     protected function getRules () : array
     {

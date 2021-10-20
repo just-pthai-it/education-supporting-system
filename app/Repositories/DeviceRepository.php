@@ -8,21 +8,21 @@ use Illuminate\Support\Facades\DB;
 
 class DeviceRepository implements DeviceRepositoryContract
 {
-    public function getDeviceTokens ($id_account_list) : array
+    public function getDeviceTokens ($id_accounts) : array
     {
-        $this->_createTemporaryTable($id_account_list);
+        $this->_createTemporaryTable($id_accounts);
         return DB::table(Device::table_as)
                  ->join('temp2', 'd.id_account', '=', 'temp2.id_account')
                  ->pluck('device_token')
                  ->toArray();
     }
 
-    public function deleteMultiple ($device_token_list)
+    public function deleteMultiple ($device_tokens)
     {
-        Device::whereIn('device_token', $device_token_list)->delete();
+        Device::whereIn('device_token', $device_tokens)->delete();
     }
 
-    private function _createTemporaryTable ($id_account_list)
+    private function _createTemporaryTable ($id_accounts)
     {
         $sql_query =
             'CREATE TEMPORARY TABLE temp2 (
@@ -30,6 +30,6 @@ class DeviceRepository implements DeviceRepositoryContract
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
         DB::unprepared($sql_query);
-        DB::table('temp2')->insert($id_account_list);
+        DB::table('temp2')->insert($id_accounts);
     }
 }

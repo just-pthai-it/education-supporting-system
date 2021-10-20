@@ -29,36 +29,36 @@ class NotifyService implements NotifyServiceContract
      * @throws MessagingException
      * @throws FirebaseException
      */
-    public function sendNotification ($notification, $id_account_list)
+    public function sendNotification ($notification, $id_accounts)
     {
-        $device_token_list = $this->_getDeviceTokens($id_account_list);
-        $invalid_dt_list   = $this->_send($notification, $device_token_list);
-        $this->_deleteInvalidTokens($invalid_dt_list);
+        $device_tokens         = $this->_getDeviceTokens($id_accounts);
+        $invalid_device_tokens = $this->_send($notification, $device_tokens);
+        $this->_deleteInvalidTokens($invalid_device_tokens);
     }
 
-    private function _getDeviceTokens ($id_account_list) : array
+    private function _getDeviceTokens ($id_accounts) : array
     {
-        return empty($id_account_list) ?
-            [] : $this->deviceDepository->getDeviceTokens(SharedFunctions::formatArray($id_account_list, 'id_account'));
+        return empty($id_accounts) ?
+            [] : $this->deviceDepository->getDeviceTokens(SharedFunctions::formatArray($id_accounts, 'id_account'));
     }
 
     /**
      * @throws MessagingException
      * @throws FirebaseException
      */
-    private function _send ($notification, $device_token_list) : array
+    private function _send ($notification, $device_tokens) : array
     {
-        $this->fcm->setUpData($notification, $device_token_list);
+        $this->fcm->setUpData($notification, $device_tokens);
         return $this->fcm->send();
     }
 
-    private function _deleteInvalidTokens ($device_token_list)
+    private function _deleteInvalidTokens ($device_tokens)
     {
-        if (empty($device_token_list))
+        if (empty($device_tokens))
         {
             return;
         }
 
-        $this->deviceDepository->deleteMultiple($device_token_list);
+        $this->deviceDepository->deleteMultiple($device_tokens);
     }
 }

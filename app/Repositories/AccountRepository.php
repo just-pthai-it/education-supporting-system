@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class AccountRepository implements AccountRepositoryContract
 {
-    public function insertGetId ($data) : int
-    {
-        return Account::create($data)->id;
-    }
-
     public function insertMultiple ($data)
     {
         Account::insert($data);
@@ -23,17 +18,9 @@ class AccountRepository implements AccountRepositoryContract
         Account::find($id_account)->roles()->attach($roles);
     }
 
-    public function get ($username) : array
+    public function getIDAccounts1 ($id_students) : array
     {
-        return Account::where('username', '=', $username)
-                      ->select('id', 'username', 'password')
-                      ->get()
-                      ->toArray();
-    }
-
-    public function getIDAccounts1 ($id_student_list) : array
-    {
-        $this->_createTemporaryTable($id_student_list);
+        $this->_createTemporaryTable($id_students);
         return DB::table(Account::table_as)
                  ->join('temp1', 'acc.username', '=', 'temp1.id_student')
                  ->pluck('id')
@@ -59,7 +46,7 @@ class AccountRepository implements AccountRepositoryContract
                ->update(['password' => $password]);
     }
 
-    public function _createTemporaryTable ($id_student_list)
+    public function _createTemporaryTable ($id_students)
     {
         $sql_query =
             'CREATE TEMPORARY TABLE temp1 (
@@ -67,6 +54,6 @@ class AccountRepository implements AccountRepositoryContract
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
 
         DB::unprepared($sql_query);
-        DB::table('temp1')->insert($id_student_list);
+        DB::table('temp1')->insert($id_students);
     }
 }

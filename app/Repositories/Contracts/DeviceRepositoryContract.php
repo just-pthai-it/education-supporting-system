@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface DeviceRepositoryContract
 {
-    public function getDeviceTokens ($id_account_list);
+    public function getDeviceTokens ($id_accounts);
 
-    public function deleteMultiple ($device_token_list);
+    public function deleteMultiple ($device_tokens);
 }

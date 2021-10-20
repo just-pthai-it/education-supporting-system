@@ -4,11 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface StudentRepositoryContract
 {
-    public function insert ($data);
-
     public function insertMultiple ($data);
-
-    public function get ($id_account);
 
     public function getIDStudents1 ($classes);
 

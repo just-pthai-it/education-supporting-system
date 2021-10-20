@@ -15,7 +15,7 @@ class ModuleClassRepository implements ModuleClassRepositoryContract
         ModuleClass::find($id_module_class)->students()->attach($id_students);
     }
 
-    public function getModuleClasses1 ($id_teacher) : Collection
+    public function getModuleClasses ($id_teacher) : Collection
     {
         return ModuleClass::where('id_school_year', '>=', SchoolYear::max('id') - 6)
                           ->where('id_teacher', '=', $id_teacher)
@@ -24,18 +24,11 @@ class ModuleClassRepository implements ModuleClassRepositoryContract
                           ->get();
     }
 
-    public function getModuleClasses2 ($module_class_list) : array
-    {
-        return ModuleClass::whereIn('id', $module_class_list)
-                          ->pluck('id')
-                          ->toArray();
-    }
-
     public function getIDModuleClassesNotInDatabase ($id_module_classes)
     {
         $this->_createTemporaryTable($id_module_classes);
         return ModuleClass::rightJoin('temp', 'id', '=', 'id_module_class')
-                      ->whereNull('id')->pluck('id_module_class')->toArray();
+                          ->whereNull('id')->pluck('id_module_class')->toArray();
     }
 
     public function _createTemporaryTable ($id_module_classes)

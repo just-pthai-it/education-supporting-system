@@ -2,7 +2,7 @@
 
 namespace App\Http\FormRequest;
 
-class ChangePasswordForm extends BaseForm
+class ChangePasswordForm extends ABaseForm
 {
     protected function getRules () : array
     {

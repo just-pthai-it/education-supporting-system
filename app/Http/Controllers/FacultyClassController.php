@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Contracts\FacultyClassServiceContract;
+use App\Services\Contracts\ClassServiceContract;
 use Illuminate\Http\Request;
 
 class FacultyClassController extends Controller
 {
-    private FacultyClassServiceContract $facultyClassService;
+    private ClassServiceContract $facultyClassService;
 
     /**
-     * @param FacultyClassServiceContract $facultyClassService
+     * @param ClassServiceContract $facultyClassService
      */
-    public function __construct (FacultyClassServiceContract $facultyClassService)
+    public function __construct (ClassServiceContract $facultyClassService)
     {
         $this->facultyClassService = $facultyClassService;
     }

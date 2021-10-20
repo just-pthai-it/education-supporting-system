@@ -2,7 +2,7 @@
 
 namespace App\Http\FormRequest;
 
-class LoginForm extends BaseForm
+class LoginForm extends ABaseForm
 {
     protected function getRules () : array
     {
