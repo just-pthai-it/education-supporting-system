@@ -51,9 +51,9 @@ Route::group(['prefix' => 'teacher'], function ()
 
 Route::group(['prefix' => 'import-data'], function ()
 {
-    Route::post('roll-call/{id_training_type}', [ResourceController::class, 'uploadRollCallFile']);
+    Route::post('roll-call', [ResourceController::class, 'uploadRollCallFile']);
 
-    Route::post('schedule/{id_training_type}', [ResourceController::class, 'uploadScheduleFile']);
+    Route::post('schedule', [ResourceController::class, 'uploadScheduleFile']);
 });
 
 

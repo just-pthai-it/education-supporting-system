@@ -17,13 +17,13 @@ class ResourceController extends Controller
         $this->fileUploadService = $fileUploadServiceContract;
     }
 
-    public function uploadRollCallFile (Request $request, $id_training_type)
+    public function uploadRollCallFile (Request $request)
     {
-        $this->fileUploadService->importRollCallFile($request->file, $id_training_type);
+        $this->fileUploadService->importRollCallFile($request->all());
     }
 
     public function uploadScheduleFile (Request $request)
     {
-
+        $this->fileUploadService->importScheduleFile($request->all());
     }
 }

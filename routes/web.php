@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\AcademicYear;
+use App\Models\ModuleClass;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('test', function ()
 {
-
+    $old_module_classes    = Cache::get('MHT_special_module_classes') ?? [];
+    $recent_id_school_year = array_pop($old_module_classes);
+    $old_module_classes['Xác suất thống kê-2-20 (N06.BT1)'] = 'DSO04.2-2-20 (N06.BT1)';
+    $old_module_classes['id_school_year'] = $recent_id_school_year;
+    Cache::forever('MHT_special_module_classes', $old_module_classes);
 });

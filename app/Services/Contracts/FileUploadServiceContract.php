@@ -4,5 +4,7 @@ namespace App\Services\Contracts;
 
 interface FileUploadServiceContract
 {
-    public function importRollCallFile ($file, $id_training_type);
+    public function importRollCallFile ($input);
+
+    public function importScheduleFile ($input);
 }

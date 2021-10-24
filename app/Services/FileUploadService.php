@@ -6,12 +6,15 @@ use App\BusinessClasses\FileUploadHandler;
 use App\Exceptions\ImportDataFailedException;
 use App\Helpers\SharedFunctions;
 use App\Imports\Handler\ExcelDataHandler1;
+use App\Imports\Handler\ExcelDataHandler2;
 use App\Imports\Reader\ExcelFileReader1;
+use App\Imports\Reader\ExcelFileReader2;
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
 use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\ModuleRepositoryContract;
+use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\StudentRepositoryContract;
 use Exception;
 use Illuminate\Support\Facades\Cache;
@@ -23,39 +26,51 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     private FileUploadHandler $fileUploadHandler;
     private ExcelFileReader1 $excelFileReader1;
     private ExcelDataHandler1 $excelDataHandler1;
+    private ExcelFileReader2 $excelFileReader2;
+    private ExcelDataHandler2 $excelDataHandler2;
     private DataVersionStudentRepositoryContract $dataVersionStudentRepository;
     private ModuleClassRepositoryContract $moduleClassRepository;
     private StudentRepositoryContract $studentRepository;
     private AccountRepositoryContract $accountRepository;
     private ModuleRepositoryContract $moduleRepository;
     private ClassRepositoryContract $classRepository;
+    private ScheduleRepositoryContract $scheduleRepository;
 
     /**
      * @param FileUploadHandler $fileUploadHandler
      * @param ExcelFileReader1 $excelFileReader1
      * @param ExcelDataHandler1 $excelDataHandler1
+     * @param ExcelFileReader2 $excelFileReader2
+     * @param ExcelDataHandler2 $excelDataHandler2
      * @param DataVersionStudentRepositoryContract $dataVersionStudentRepository
      * @param ModuleClassRepositoryContract $moduleClassRepository
      * @param StudentRepositoryContract $studentRepository
      * @param AccountRepositoryContract $accountRepository
      * @param ModuleRepositoryContract $moduleRepository
      * @param ClassRepositoryContract $classRepository
+     * @param ScheduleRepositoryContract $scheduleRepository
      */
     public function __construct (FileUploadHandler                    $fileUploadHandler,
                                  ExcelFileReader1                     $excelFileReader1,
                                  ExcelDataHandler1                    $excelDataHandler1,
+                                 ExcelFileReader2                     $excelFileReader2,
+                                 ExcelDataHandler2                    $excelDataHandler2,
                                  DataVersionStudentRepositoryContract $dataVersionStudentRepository,
                                  ModuleClassRepositoryContract        $moduleClassRepository,
                                  StudentRepositoryContract            $studentRepository,
                                  AccountRepositoryContract            $accountRepository,
                                  ModuleRepositoryContract             $moduleRepository,
-                                 ClassRepositoryContract              $classRepository)
+                                 ClassRepositoryContract              $classRepository,
+                                 ScheduleRepositoryContract           $scheduleRepository)
     {
         $this->fileUploadHandler            = $fileUploadHandler;
         $this->excelFileReader1             = $excelFileReader1;
         $this->excelDataHandler1            = $excelDataHandler1;
+        $this->excelFileReader2             = $excelFileReader2;
+        $this->excelDataHandler2            = $excelDataHandler2;
         $this->dataVersionStudentRepository = $dataVersionStudentRepository;
         $this->moduleClassRepository        = $moduleClassRepository;
+        $this->scheduleRepository           = $scheduleRepository;
         $this->studentRepository            = $studentRepository;
         $this->accountRepository            = $accountRepository;
         $this->moduleRepository             = $moduleRepository;
@@ -63,55 +78,46 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     }
 
     /**
+     * @param $input
      * @throws Exception
      */
-    public function importRollCallFile ($file, $id_training_type)
+    public function importRollCallFile ($input)
     {
-        $this->fileUploadHandler->handleFileUpload($file);
-        $data = $this->_readData();
-        $this->_checkExceptions($data['module_exception'], $data['module_classes']);
+        $this->fileUploadHandler->handleFileUpload($input['file']);
+        $data = $this->_readData($input['id_department']);
+        $this->_checkExceptions2($data['module_classes_missing'], $data['id_module_classes']);
         $new_id_students = $this->_getIDStudentsNotInDatabase($data['id_students']);
-        $data            = $this->_handleData($data, $id_training_type, $new_id_students);
-        $this->_importAndUpdateData($data, $new_id_students);
+        $data            = $this->_handleData($data, $input['id_training_type'], $new_id_students);
+        $this->_createAndUpdateData2($data, $new_id_students);
     }
 
     /**
      * @throws Exception
      */
-    private function _readData () : array
+    private function _readData ($id_department) : array
     {
-        $modules = Cache::get('modules') ?? Cache::get('modules_backup');
-        return $this->excelFileReader1->readData($this->fileUploadHandler->getNewFileName(), $modules);
+        $special_module_classes = Cache::get($id_department . '_special_module_classes') ??
+                                  Cache::get($id_department . '_special_module_classes_backup');
+        return $this->excelFileReader1->readData($this->fileUploadHandler->getNewFileName(), $special_module_classes);
     }
 
     /**
      * @throws ImportDataFailedException
      */
-    private function _checkExceptions ($module_exceptions, $id_module_classes)
+    private function _checkExceptions2 ($module_classes_missing, $id_module_classes)
     {
-        $new_id_module_classes = $this->_getIDModuleClassesNotInDatabase($id_module_classes);
-        $file_name             = $this->fileUploadHandler->getOldFileName() . '.txt';
-        $message               = '';
+        $id_module_classes_missing = $this->_getIDModuleClassesNotInDatabase($id_module_classes);
+        $file_name                 = $this->fileUploadHandler->getOldFileName() . '.txt';
+        $message                   = '';
 
-        if (!empty($module_exceptions))
+        $module_classes_missing = array_merge($module_classes_missing, $id_module_classes_missing);
+        if (!empty($module_classes_missing))
         {
-            $message .= 'Cơ sở dữ liệu hiện tại không có một vài mã học phần trong file excel cùng tên này:' . PHP_EOL;;
-            foreach ($module_exceptions as $id_module_class)
+            $message .= 'Cơ sở dữ liệu hiện tại không có một vài lớp học phần trong file excel cùng tên này:' . PHP_EOL;;
+            foreach ($module_classes_missing as $module_class)
             {
-                $message .= $id_module_class . PHP_EOL;
+                $message .= $module_class . PHP_EOL;
             }
-        }
-        if (!empty($new_id_module_classes))
-        {
-            $message .= 'Cơ sở dữ liệu hiện tại không có một vài mã lớp học phần trong file excel cùng tên này:' . PHP_EOL;;
-            foreach ($new_id_module_classes as $id_module_class)
-            {
-                $message .= $id_module_class . PHP_EOL;
-            }
-        }
-
-        if ($message != '')
-        {
             SharedFunctions::printFileImportException($file_name, $message);
             throw new ImportDataFailedException();
         }
@@ -134,7 +140,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         return $this->studentRepository->getIDStudentsNotInDatabase($id_students);
     }
 
-    private function _importAndUpdateData ($data, $new_id_students)
+    private function _createAndUpdateData2 ($data, $new_id_students)
     {
         DB::transaction(function () use ($data, $new_id_students)
         {
@@ -226,5 +232,88 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     private function _getNewIDAccounts ($id_students)
     {
         return $this->studentRepository->getIDAccounts($id_students);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function importScheduleFile ($input)
+    {
+        $this->fileUploadHandler->handleFileUpload($input['file']);
+        $data = $this->excelFileReader2->readData($this->fileUploadHandler->getNewFileName(), $input['id_school_year']);
+//        $this->_createAndUpdateData($data);
+        $this->_updateCacheData($data['special_module_classes'], $input['id_department'], $input['id_school_year']);
+    }
+
+    private function _createAndUpdateData ($data)
+    {
+        DB::transaction(function () use ($data)
+        {
+            $this->_createManyModuleClasses($data['module_classes']);
+            $this->_createManySchedules($data['schedules']);
+        }, 2);
+    }
+
+    /**
+     * @throws ImportDataFailedException
+     */
+    private function _createManyModuleClasses ($module_classes)
+    {
+        $modules_missing = [];
+        foreach ($module_classes as $module_class)
+        {
+            try
+            {
+                $this->moduleClassRepository->insert($module_class);
+            }
+            catch (PDOException $error)
+            {
+                if ($error->getCode() == 23000
+                    && $error->errorInfo[1] == 1452)
+                {
+                    $modules_missing[] = $module_class['id_module'];
+                }
+                throw $error;
+            }
+        }
+
+        $this->_checkExceptions($modules_missing);
+    }
+
+    private function _createManySchedules ($schedules)
+    {
+        $this->scheduleRepository->insertMultiple($schedules);
+    }
+
+    /**
+     * @throws ImportDataFailedException
+     */
+    private function _checkExceptions ($modules_missing)
+    {
+        if (empty($modules_missing))
+        {
+            return;
+        }
+
+        $file_name = $this->fileUploadHandler->getOldFileName();
+        $message   = 'Cơ sở dữ liệu hiện tại không có một vài mã học phần tương ứng với các mã lớp học phần sau:' . PHP_EOL;;
+        foreach ($modules_missing as $modules)
+        {
+            $message .= $modules . PHP_EOL;
+        }
+
+        SharedFunctions::printFileImportException($file_name, $message);
+        throw new ImportDataFailedException();
+    }
+
+    private function _updateCacheData ($module_classes, $id_department, $id_school_year)
+    {
+        $old_module_classes    = Cache::get($id_department . '_special_module_classes') ?? [];
+        $recent_id_school_year = array_pop($old_module_classes);
+        if ($recent_id_school_year != $id_school_year)
+        {
+            $old_module_classes = [];
+        }
+        Cache::forever($id_department . '_special_module_classes', array_merge($old_module_classes, $module_classes));
     }
 }

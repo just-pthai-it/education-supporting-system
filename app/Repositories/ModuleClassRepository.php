@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 
 class ModuleClassRepository implements ModuleClassRepositoryContract
 {
+    public function insert ($data)
+    {
+        ModuleClass::insert($data);
+    }
+
     public function insertPivotMultiple ($id_module_class, $id_students)
     {
         ModuleClass::find($id_module_class)->students()->attach($id_students);

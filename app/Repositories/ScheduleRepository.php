@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 
 class ScheduleRepository implements ScheduleRepositoryContract
 {
+    public function insertMultiple ($data)
+    {
+        Schedule::insert($data);
+    }
+
     public function getSchedules ($id_teacher) : Collection
     {
         return Teacher::find($id_teacher)->moduleClasses()

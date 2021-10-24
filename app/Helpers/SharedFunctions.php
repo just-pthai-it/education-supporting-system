@@ -38,7 +38,6 @@ class SharedFunctions
     {
         $str = preg_replace('/[ ]+/', ' ', $str);
         $str = trim($str, ' ');
-
         return $str;
     }
 
@@ -47,7 +46,6 @@ class SharedFunctions
     {
         $date_split = explode('/', $date);
         $date       = $date_split[2] . '-' . $date_split[1] . '-' . $date_split[0];
-
         return $date;
     }
 
@@ -58,27 +56,30 @@ class SharedFunctions
         {
             $formatted_array[] = [$key => $a];
         }
-
         return $formatted_array;
     }
 
-
-
-    public static function formatStringDataCrawled ($str) : string
+    public static function convertToIDModuleClass ($id_module, $module_class_name) : string
     {
-        $str = preg_replace('/\s+/', ' ', $str);
-        $str = str_replace('- ', '-', $str);
-        $str = str_replace(' -', '-', $str);
-        $str = trim($str, ' ');
-
-        return $str;
+        $arr        = explode('-', $module_class_name);
+        $arr_length = count($arr);
+        return $id_module . '-' . $arr[$arr_length - 3] . '-' . $arr[$arr_length - 2] . '-' . $arr[$arr_length - 1];
     }
 
+    public static function convertToDate ($temp_date) : string
+    {
+        $date = substr_replace($temp_date, '/20' . substr($temp_date, 12), 5);
+        return self::formatDate($date);
+    }
+
+    public static function plusDate ($date, $plus)
+    {
+        return date('Y-m-d', strtotime($date . '+' . $plus . ' days'));
+    }
 
     /*
      *
      */
-
 
 
     /*
