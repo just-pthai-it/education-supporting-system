@@ -59,7 +59,7 @@ class StudentRepository implements StudentRepositoryContract
         DB::table('temp')->insert($classes);
     }
 
-    public function getIDStudentsNotInDatabase ($id_students)
+    public function getIDStudentsMissing ($id_students)
     {
         $this->_createTemporaryTable2($id_students);
         return Student::rightJoin('temp1', 'id', '=', 'id_student')

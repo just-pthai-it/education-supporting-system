@@ -22,8 +22,8 @@ class SchoolYear extends Model
         'school_year',
     ];
 
-    public function moduleClasses() : HasMany
+    public function studySessions() : HasMany
     {
-        return $this->hasMany(ModuleClass::class, 'id_school_year', 'id');
+        return $this->hasMany(StudySession::class, 'id_school_year', 'id');
     }
 }

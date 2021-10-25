@@ -3,14 +3,14 @@
 namespace App\Repositories;
 
 use App\Models\ModuleClass;
-use App\Models\SchoolYear;
+use App\Models\StudySession;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ModuleClassRepository implements ModuleClassRepositoryContract
 {
-    public function insert ($data)
+    public function insertMultiple ($data)
     {
         ModuleClass::insert($data);
     }
@@ -22,14 +22,14 @@ class ModuleClassRepository implements ModuleClassRepositoryContract
 
     public function getModuleClasses ($id_teacher) : Collection
     {
-        return ModuleClass::where('id_school_year', '>=', SchoolYear::max('id') - 6)
+        return ModuleClass::where('id_study_session', '>=', StudySession::max('id') - 6)
                           ->where('id_teacher', '=', $id_teacher)
                           ->orderBy('id')
                           ->select('id as id_module_class', 'module_class_name')
                           ->get();
     }
 
-    public function getIDModuleClassesNotInDatabase ($id_module_classes)
+    public function getIDModuleClassesMissing ($id_module_classes)
     {
         $this->_createTemporaryTable($id_module_classes);
         return ModuleClass::rightJoin('temp', 'id', '=', 'id_module_class')

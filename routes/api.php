@@ -8,6 +8,7 @@ use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\ModuleClassController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\StudySessionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,6 +65,8 @@ Route::get('academic-year', [AcademicYearController::class, 'getRecentAcademicYe
 Route::get('faculty-class', [FacultyClassController::class, 'getFacultyClasses']);
 
 Route::get('module-class/{id_teacher}', [ModuleClassController::class, 'getRecentModuleClasses']);
+
+Route::get('study-session', [StudySessionController::class, 'getRecentStudySessions']);
 
 Route::post('/account/change-password', [AccountController::class, 'changePassword']);
 

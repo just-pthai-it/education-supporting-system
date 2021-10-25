@@ -86,7 +86,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         $this->fileUploadHandler->handleFileUpload($input['file']);
         $data = $this->_readData($input['id_department']);
         $this->_checkExceptions2($data['module_classes_missing'], $data['id_module_classes']);
-        $new_id_students = $this->_getIDStudentsNotInDatabase($data['id_students']);
+        $new_id_students = $this->_getIDStudentsMissing($data['id_students']);
         $data            = $this->_handleData($data, $input['id_training_type'], $new_id_students);
         $this->_createAndUpdateData2($data, $new_id_students);
     }
@@ -98,7 +98,8 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     {
         $special_module_classes = Cache::get($id_department . '_special_module_classes') ??
                                   Cache::get($id_department . '_special_module_classes_backup');
-        return $this->excelFileReader1->readData($this->fileUploadHandler->getNewFileName(), $special_module_classes);
+        return $this->excelFileReader1->readData($this->fileUploadHandler->getNewFileName(),
+                                                 $special_module_classes);
     }
 
     /**
@@ -106,14 +107,15 @@ class FileUploadService implements Contracts\FileUploadServiceContract
      */
     private function _checkExceptions2 ($module_classes_missing, $id_module_classes)
     {
-        $id_module_classes_missing = $this->_getIDModuleClassesNotInDatabase($id_module_classes);
+        $id_module_classes_missing = $this->_getIDModuleClassesMissing($id_module_classes);
         $file_name                 = $this->fileUploadHandler->getOldFileName() . '.txt';
         $message                   = '';
 
         $module_classes_missing = array_merge($module_classes_missing, $id_module_classes_missing);
         if (!empty($module_classes_missing))
         {
-            $message .= 'Cơ sở dữ liệu hiện tại không có một vài lớp học phần trong file excel cùng tên này:' . PHP_EOL;;
+            $message .= 'Cơ sở dữ liệu hiện tại không có một vài lớp học phần trong file excel cùng tên này:' .
+                        PHP_EOL;;
             foreach ($module_classes_missing as $module_class)
             {
                 $message .= $module_class . PHP_EOL;
@@ -123,9 +125,9 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         }
     }
 
-    private function _getIDModuleClassesNotInDatabase ($id_module_classes)
+    private function _getIDModuleClassesMissing ($id_module_classes)
     {
-        return $this->moduleClassRepository->getIDModuleClassesNotInDatabase($id_module_classes);
+        return $this->moduleClassRepository->getIDModuleClassesMissing($id_module_classes);
     }
 
     private function _handleData ($formatted_data, $id_training_type, $new_id_students) : array
@@ -135,9 +137,9 @@ class FileUploadService implements Contracts\FileUploadServiceContract
                                                     $new_id_students, $academic_years);
     }
 
-    private function _getIDStudentsNotInDatabase ($id_students)
+    private function _getIDStudentsMissing ($id_students)
     {
-        return $this->studentRepository->getIDStudentsNotInDatabase($id_students);
+        return $this->studentRepository->getIDStudentsMissing($id_students);
     }
 
     private function _createAndUpdateData2 ($data, $new_id_students)
@@ -240,9 +242,19 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     public function importScheduleFile ($input)
     {
         $this->fileUploadHandler->handleFileUpload($input['file']);
-        $data = $this->excelFileReader2->readData($this->fileUploadHandler->getNewFileName(), $input['id_school_year']);
-//        $this->_createAndUpdateData($data);
-        $this->_updateCacheData($data['special_module_classes'], $input['id_department'], $input['id_school_year']);
+        $data = $this->excelFileReader2->readData($this->fileUploadHandler->getNewFileName(),
+                                                  $input['id_study_session']);
+
+        $modules_missing = $this->_getIDModulesMissing($data['id_modules']);
+        $this->_checkExceptions($modules_missing);
+        $this->_createAndUpdateData($data);
+        $this->_updateCacheData($data['special_module_classes'], $input['id_department'],
+                                $input['id_study_session']);
+    }
+
+    private function _getIDModulesMissing ($id_modules)
+    {
+        return $this->moduleRepository->getIDModulesMissing($id_modules);
     }
 
     private function _createAndUpdateData ($data)
@@ -254,30 +266,9 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         }, 2);
     }
 
-    /**
-     * @throws ImportDataFailedException
-     */
     private function _createManyModuleClasses ($module_classes)
     {
-        $modules_missing = [];
-        foreach ($module_classes as $module_class)
-        {
-            try
-            {
-                $this->moduleClassRepository->insert($module_class);
-            }
-            catch (PDOException $error)
-            {
-                if ($error->getCode() == 23000
-                    && $error->errorInfo[1] == 1452)
-                {
-                    $modules_missing[] = $module_class['id_module'];
-                }
-                throw $error;
-            }
-        }
-
-        $this->_checkExceptions($modules_missing);
+        $this->moduleClassRepository->insertMultiple($module_classes);
     }
 
     private function _createManySchedules ($schedules)
@@ -290,30 +281,31 @@ class FileUploadService implements Contracts\FileUploadServiceContract
      */
     private function _checkExceptions ($modules_missing)
     {
-        if (empty($modules_missing))
+        if (!empty($modules_missing))
         {
-            return;
-        }
+            $file_name = $this->fileUploadHandler->getOldFileName() . '.txt';
+            $message   =
+                'Cơ sở dữ liệu hiện tại không có một vài mã học phần tương ứng với các mã lớp học phần sau:' .
+                PHP_EOL;
+            foreach ($modules_missing as $modules)
+            {
+                $message .= $modules . PHP_EOL;
+            }
 
-        $file_name = $this->fileUploadHandler->getOldFileName();
-        $message   = 'Cơ sở dữ liệu hiện tại không có một vài mã học phần tương ứng với các mã lớp học phần sau:' . PHP_EOL;;
-        foreach ($modules_missing as $modules)
-        {
-            $message .= $modules . PHP_EOL;
+            SharedFunctions::printFileImportException($file_name, $message);
+            throw new ImportDataFailedException();
         }
-
-        SharedFunctions::printFileImportException($file_name, $message);
-        throw new ImportDataFailedException();
     }
 
-    private function _updateCacheData ($module_classes, $id_department, $id_school_year)
+    private function _updateCacheData ($module_classes, $id_department, $id_study_session)
     {
-        $old_module_classes    = Cache::get($id_department . '_special_module_classes') ?? [];
-        $recent_id_school_year = array_pop($old_module_classes);
-        if ($recent_id_school_year != $id_school_year)
+        $old_module_classes      = Cache::get($id_department . '_special_module_classes') ?? [];
+        $recent_id_study_session = array_pop($old_module_classes);
+        if ($recent_id_study_session != $id_study_session)
         {
             $old_module_classes = [];
         }
-        Cache::forever($id_department . '_special_module_classes', array_merge($old_module_classes, $module_classes));
+        Cache::forever($id_department . '_special_module_classes',
+                       array_merge($old_module_classes, $module_classes));
     }
 }

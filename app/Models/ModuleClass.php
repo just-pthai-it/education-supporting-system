@@ -25,7 +25,7 @@ class ModuleClass extends Model
         'module_class_name',
         'number_plan',
         'number_reality',
-        'id_school_year',
+        'id_study_session',
         'id_module',
         'id_teacher',
     ];
@@ -33,6 +33,11 @@ class ModuleClass extends Model
     protected $hidden = [
         'pivot'
     ];
+
+    public function studySession () : BelongsTo
+    {
+        return $this->belongsTo(StudySession::class, 'id_study_session', 'id');
+    }
 
     public function module () : BelongsTo
     {

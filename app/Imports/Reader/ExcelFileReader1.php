@@ -127,13 +127,11 @@ class ExcelFileReader1
             }
         }
 
-        $students = array_unique($students, SORT_REGULAR);
         //        $id_module_classes_missing = array_unique($id_module_classes_missing, SORT_REGULAR);
-        $id_students = array_unique($id_students, SORT_REGULAR);
 
         return [
-            'students'               => $students,
-            'id_students'            => $id_students,
+            'students'               => array_unique($students, SORT_REGULAR),
+            'id_students'            => array_unique($id_students, SORT_REGULAR),
             'participates'           => $participates,
             'id_module_classes'      => $id_module_classes,
             'module_classes_missing' => $module_classes_missing,

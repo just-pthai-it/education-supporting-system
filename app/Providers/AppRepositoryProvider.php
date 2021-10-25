@@ -20,6 +20,7 @@ use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\SchoolYearRepositoryContract;
 use App\Repositories\Contracts\StudentRepositoryContract;
+use App\Repositories\Contracts\StudySessionRepositoryContract;
 use App\Repositories\Contracts\TeacherRepositoryContract;
 use App\Repositories\DataVersionStudentRepository;
 use App\Repositories\DataVersionTeacherRepository;
@@ -33,33 +34,34 @@ use App\Repositories\OtherDepartmentRepository;
 use App\Repositories\ScheduleRepository;
 use App\Repositories\SchoolYearRepository;
 use App\Repositories\StudentRepository;
+use App\Repositories\StudySessionRepository;
 use App\Repositories\TeacherRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppRepositoryProvider extends ServiceProvider
 {
     public array $bindings = [
-        DataVersionStudentRepositoryContract::class  => DataVersionStudentRepository::class,
-        DataVersionTeacherRepositoryContract::class  => DataVersionTeacherRepository::class,
-        OtherDepartmentRepositoryContract::class     => OtherDepartmentRepository::class,
-        NotificationRepositoryContract::class        => NotificationRepository::class,
-        AcademicYearRepositoryContract::class        => AcademicYearRepository::class,
-        ModuleClassRepositoryContract::class         => ModuleClassRepository::class,
-        DepartmentRepositoryContract::class          => DepartmentRepository::class,
-        SchoolYearRepositoryContract::class          => SchoolYearRepository::class,
-        ScheduleRepositoryContract::class            => ScheduleRepository::class,
-        TeacherRepositoryContract::class             => TeacherRepository::class,
-        StudentRepositoryContract::class             => StudentRepository::class,
-        AccountRepositoryContract::class             => AccountRepository::class,
-        FacultyRepositoryContract::class             => FacultyRepository::class,
-        DeviceRepositoryContract::class              => DeviceRepository::class,
-        ModuleRepositoryContract::class              => ModuleRepository::class,
-        ClassRepositoryContract::class               => ClassRepository::class,
+        DataVersionStudentRepositoryContract::class => DataVersionStudentRepository::class,
+        DataVersionTeacherRepositoryContract::class => DataVersionTeacherRepository::class,
+        OtherDepartmentRepositoryContract::class    => OtherDepartmentRepository::class,
+        NotificationRepositoryContract::class       => NotificationRepository::class,
+        AcademicYearRepositoryContract::class       => AcademicYearRepository::class,
+        StudySessionRepositoryContract::class       => StudySessionRepository::class,
+        ModuleClassRepositoryContract::class        => ModuleClassRepository::class,
+        DepartmentRepositoryContract::class         => DepartmentRepository::class,
+        SchoolYearRepositoryContract::class         => SchoolYearRepository::class,
+        ScheduleRepositoryContract::class           => ScheduleRepository::class,
+        TeacherRepositoryContract::class            => TeacherRepository::class,
+        StudentRepositoryContract::class            => StudentRepository::class,
+        AccountRepositoryContract::class            => AccountRepository::class,
+        FacultyRepositoryContract::class            => FacultyRepository::class,
+        DeviceRepositoryContract::class             => DeviceRepository::class,
+        ModuleRepositoryContract::class             => ModuleRepository::class,
+        ClassRepositoryContract::class              => ClassRepository::class,
     ];
 
     /**
      * Register services.
-     *
      * @return void
      */
     public function register ()
@@ -68,7 +70,6 @@ class AppRepositoryProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
-     *
      * @return void
      */
     public function boot ()

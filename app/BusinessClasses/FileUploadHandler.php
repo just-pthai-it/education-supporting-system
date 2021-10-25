@@ -32,14 +32,11 @@ class FileUploadHandler
     {
         $original_file_name = $file->getClientOriginalName();
 
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $timeSplit = explode('.', microtime(true));
-
         $this->old_file_name = $file_name = substr($original_file_name, 0, strripos($original_file_name, '.'));
         $expand              = substr($original_file_name, strripos($original_file_name, '.'));;
 
         $new_file_name = preg_replace('/\s+/', '', $file_name);
-        $new_file_name = $new_file_name . '_' . $timeSplit[0] . $timeSplit[1] . $expand;
+        $new_file_name = $new_file_name  . $expand;
 
         $location = storage_path('app/public/excels/' . $new_file_name);
 

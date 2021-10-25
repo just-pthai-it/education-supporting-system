@@ -16,5 +16,5 @@ interface StudentRepositoryContract
 
     public function updateMultiple ($id_students);
 
-    public function getIDStudentsNotInDatabase ($id_students);
+    public function getIDStudentsMissing ($id_students);
 }

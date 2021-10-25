@@ -16,12 +16,14 @@ use App\Services\Contracts\NotificationServiceContract;
 use App\Services\Contracts\NotifyServiceContract;
 use App\Services\Contracts\ScheduleServiceContract;
 use App\Services\ClassService;
+use App\Services\Contracts\StudySessionServiceContract;
 use App\Services\FacultyService;
 use App\Services\FileUploadService;
 use App\Services\ModuleClassService;
 use App\Services\NotificationService;
 use App\Services\NotifyService;
 use App\Services\ScheduleService;
+use App\Services\StudySessionService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
     public array $bindings = [
         NotificationServiceContract::class => NotificationService::class,
         AcademicYearServiceContract::class => AcademicYearService::class,
+        StudySessionServiceContract::class => StudySessionService::class,
         ModuleClassServiceContract::class  => ModuleClassService::class,
         FileUploadServiceContract::class   => FileUploadService::class,
         ScheduleServiceContract::class     => ScheduleService::class,

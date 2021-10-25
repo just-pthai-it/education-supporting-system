@@ -11,10 +11,10 @@ class ExcelFileReader2
     /**
      * @throws Exception
      */
-    public function readData ($file_name, $id_school_year) : array
+    public function readData ($file_name, $id_study_session) : array
     {
         $raw_data       = $this->_getData($file_name);
-        $formatted_data = $this->_formatData($raw_data, $id_school_year);
+        $formatted_data = $this->_formatData($raw_data, $id_study_session);
         return $formatted_data;
     }
 
@@ -26,11 +26,12 @@ class ExcelFileReader2
     /**
      * @throws Exception
      */
-    private function _formatData ($raw_data, $id_school_year) : array
+    private function _formatData ($raw_data, $id_study_session) : array
     {
 
-        $module_classes         = [];
         $schedules              = [];
+        $id_modules             = [];
+        $module_classes         = [];
         $Special_module_classes = [];
 
         foreach ($raw_data as $sheet)
@@ -54,8 +55,8 @@ class ExcelFileReader2
                 {
                     $current_id_module         = $sheet[$i][2] ?? $current_id_module;
                     $temp_module_class_name    = str_replace('(', ' (', $sheet[$i][4]);
-                    $current_module_class_name = $temp_module_class_name != '' ? $temp_module_class_name :
-                                                    $current_module_class_name;
+                    $current_module_class_name = $temp_module_class_name !=
+                                                 '' ? $temp_module_class_name : $current_module_class_name;
                     $current_credit            = $sheet[$i][2] ?? $current_credit;
                     $current_student_num       = $sheet[$i][5] ?? $current_student_num;
                     $current_date              = $sheet[$i][$other_index['date']] ?? $current_date;
@@ -64,7 +65,9 @@ class ExcelFileReader2
                     $this->_createModuleClass($module_classes, $current_id_module,
                                               $current_module_class_name,
                                               $current_student_num,
-                                              $id_school_year);
+                                              $id_study_session);
+
+                    $id_modules[] = ['id_module' => $current_id_module];
 
                     if ($current_student_num <= 40)
                     {
@@ -122,14 +125,16 @@ class ExcelFileReader2
         }
 
         return [
-            'module_classes'         => $module_classes,
             'schedules'              => $schedules,
-            'special_module_classes' => array_merge($Special_module_classes, ['id_school_year' => $id_school_year])
+            'id_modules'             => array_unique($id_modules, SORT_REGULAR),
+            'module_classes'         => $module_classes,
+            'special_module_classes' => array_merge($Special_module_classes,
+                                                    ['id_study_session' => $id_study_session])
         ];
     }
 
-    private function _createModuleClass (&$module_classes, $id_module, $module_class_name, $student_num,
-                                         $id_school_year)
+    private function _createModuleClass (&$module_classes, $id_module, $module_class_name,
+                                         $student_num, $id_study_session)
     {
         $id_module_class = SharedFunctions::convertToIDModuleClass($id_module, $module_class_name);
 
@@ -137,7 +142,7 @@ class ExcelFileReader2
             'id'                => $id_module_class,
             'module_class_name' => $module_class_name,
             'number_plan'       => $student_num,
-            'id_school_year'    => $id_school_year,
+            'id_study_session'  => $id_study_session,
             'id_module'         => $id_module,
         ];
     }
@@ -145,7 +150,8 @@ class ExcelFileReader2
     /**
      * @throws Exception
      */
-    private function _createSchedule (&$schedules, $id_module_class, $date, $period, $id_room, $times, $day)
+    private function _createSchedule (&$schedules, $id_module_class, $date, $period, $id_room,
+                                      $times, $day)
     {
         $exact_date = $this->_getExactDate($date, $day);
         $shift      = $this->_getShift($period);
