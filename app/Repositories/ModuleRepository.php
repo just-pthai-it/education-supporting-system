@@ -3,10 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Module;
-use App\Repositories\Contracts\ModuleRepositoryContract;
 use Illuminate\Support\Facades\DB;
 
-class ModuleRepository implements ModuleRepositoryContract
+class ModuleRepository implements Contracts\ModuleRepositoryContract
 {
     public function getAll () : array
     {

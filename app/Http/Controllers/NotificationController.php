@@ -35,7 +35,8 @@ class NotificationController extends Controller
     public function pushFCNotification (Request $request)
     {
         $this->form->validate($request);
-        $id_accounts = $this->notificationService->pushFCNotification($request->info, $request->class_list);
+        $id_accounts = $this->notificationService->pushFCNotification($request->info,
+                                                                      $request->class_list);
         $this->notifyService->sendNotification($request->info, $id_accounts);
     }
 
@@ -45,7 +46,8 @@ class NotificationController extends Controller
     public function pushMCNotification (Request $request)
     {
         $this->form->validate($request);
-        $id_accounts = $this->notificationService->pushMCNotification($request->info, $request->class_list);
+        $id_accounts = $this->notificationService->pushMCNotification($request->info,
+                                                                      $request->class_list);
 
         $this->notifyService->sendNotification($request->info, $id_accounts);
     }

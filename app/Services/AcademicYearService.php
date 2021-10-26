@@ -3,9 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\AcademicYearRepositoryContract;
-use App\Services\Contracts\AcademicYearServiceContract;
 
-class AcademicYearService implements AcademicYearServiceContract
+class AcademicYearService implements Contracts\AcademicYearServiceContract
 {
     private AcademicYearRepositoryContract $academicYearRepository;
 

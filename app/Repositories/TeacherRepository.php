@@ -3,9 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Account;
-use App\Repositories\Contracts\TeacherRepositoryContract;
 
-class TeacherRepository implements TeacherRepositoryContract
+class TeacherRepository implements Contracts\TeacherRepositoryContract
 {
     public function get ($id_account)
     {

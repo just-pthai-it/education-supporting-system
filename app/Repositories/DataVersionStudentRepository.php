@@ -2,11 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
 use App\Models\Account;
 use App\Models\DataVersionStudent;
 
-class DataVersionStudentRepository implements DataVersionStudentRepositoryContract
+class DataVersionStudentRepository implements Contracts\DataVersionStudentRepositoryContract
 {
     public function insertMultiple ($data)
     {
@@ -15,7 +14,8 @@ class DataVersionStudentRepository implements DataVersionStudentRepositoryContra
 
     public function get ($id_student)
     {
-        return DataVersionStudent::select('schedule', 'notification', 'module_score', 'exam_schedule')
+        return DataVersionStudent::select('schedule', 'notification', 'module_score',
+                                          'exam_schedule')
                                  ->find($id_student);
     }
 
@@ -26,7 +26,8 @@ class DataVersionStudentRepository implements DataVersionStudentRepositoryContra
 
     public function getSingleColumn2 ($id_student, $column_name)
     {
-        return DataVersionStudent::where('id_student', '=', $id_student)->pluck($column_name)->first();
+        return DataVersionStudent::where('id_student', '=', $id_student)->pluck($column_name)
+                                 ->first();
     }
 
     public function update ($id_student, $column_name)

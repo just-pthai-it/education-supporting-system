@@ -46,7 +46,8 @@ Route::group(['prefix' => 'teacher'], function ()
 {
     Route::group(['prefix' => 'notification'], function ()
     {
-        Route::get('{id_account}/{offset}', [NotificationController::class, 'getReceivedNotifications']);
+        Route::get('{id_account}/{offset}',
+                   [NotificationController::class, 'getReceivedNotifications']);
     });
 });
 

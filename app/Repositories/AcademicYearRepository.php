@@ -3,9 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\AcademicYear;
-use App\Repositories\Contracts\AcademicYearRepositoryContract;
 
-class AcademicYearRepository implements AcademicYearRepositoryContract
+class AcademicYearRepository implements Contracts\AcademicYearRepositoryContract
 {
     public function getAcademicYears1 ()
     {

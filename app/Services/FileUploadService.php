@@ -37,18 +37,18 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     private ScheduleRepositoryContract $scheduleRepository;
 
     /**
-     * @param FileUploadHandler $fileUploadHandler
-     * @param ExcelFileReader1 $excelFileReader1
-     * @param ExcelDataHandler1 $excelDataHandler1
-     * @param ExcelFileReader2 $excelFileReader2
-     * @param ExcelDataHandler2 $excelDataHandler2
+     * @param FileUploadHandler                    $fileUploadHandler
+     * @param ExcelFileReader1                     $excelFileReader1
+     * @param ExcelDataHandler1                    $excelDataHandler1
+     * @param ExcelFileReader2                     $excelFileReader2
+     * @param ExcelDataHandler2                    $excelDataHandler2
      * @param DataVersionStudentRepositoryContract $dataVersionStudentRepository
-     * @param ModuleClassRepositoryContract $moduleClassRepository
-     * @param StudentRepositoryContract $studentRepository
-     * @param AccountRepositoryContract $accountRepository
-     * @param ModuleRepositoryContract $moduleRepository
-     * @param ClassRepositoryContract $classRepository
-     * @param ScheduleRepositoryContract $scheduleRepository
+     * @param ModuleClassRepositoryContract        $moduleClassRepository
+     * @param StudentRepositoryContract            $studentRepository
+     * @param AccountRepositoryContract            $accountRepository
+     * @param ModuleRepositoryContract             $moduleRepository
+     * @param ClassRepositoryContract              $classRepository
+     * @param ScheduleRepositoryContract           $scheduleRepository
      */
     public function __construct (FileUploadHandler                    $fileUploadHandler,
                                  ExcelFileReader1                     $excelFileReader1,
@@ -79,6 +79,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
 
     /**
      * @param $input
+     *
      * @throws Exception
      */
     public function importRollCallFile ($input)

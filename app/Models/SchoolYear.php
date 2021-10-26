@@ -22,7 +22,7 @@ class SchoolYear extends Model
         'school_year',
     ];
 
-    public function studySessions() : HasMany
+    public function studySessions () : HasMany
     {
         return $this->hasMany(StudySession::class, 'id_school_year', 'id');
     }

@@ -24,7 +24,7 @@ class AcademicYear extends Model
         'academic_year',
     ];
 
-    public function classes() : HasMany
+    public function classes () : HasMany
     {
         return $this->hasMany(Class_::class, 'id_academic_year', 'id');
     }

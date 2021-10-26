@@ -40,9 +40,9 @@ class ExcelDataHandler1
         }
 
         return [
-            'available_id_students' => $available_id_students,
-            'accounts'              => $accounts,
             'classes'               => array_unique($classes, SORT_REGULAR),
+            'accounts'              => $accounts,
+            'available_id_students' => $available_id_students,
             'data_version_students' => $data_version_students,
             'students'              => $formatted_data['students'],
             'participates'          => $formatted_data['participates'],

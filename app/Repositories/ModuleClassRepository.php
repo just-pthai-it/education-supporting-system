@@ -4,11 +4,10 @@ namespace App\Repositories;
 
 use App\Models\ModuleClass;
 use App\Models\StudySession;
-use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class ModuleClassRepository implements ModuleClassRepositoryContract
+class ModuleClassRepository implements Contracts\ModuleClassRepositoryContract
 {
     public function insertMultiple ($data)
     {

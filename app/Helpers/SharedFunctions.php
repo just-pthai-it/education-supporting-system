@@ -12,7 +12,8 @@ class SharedFunctions
         $message .= 'Code: ' . $error->getCode() . PHP_EOL;
         $message .= $error->getMessage() . PHP_EOL;
         $message .= $error->getFile() . '  ' . $error->getLine() . PHP_EOL;
-        $message .= '=========================================================================================' . PHP_EOL;
+        $message .= '=========================================================================================' .
+                    PHP_EOL;
 
         file_put_contents(config('filesystems.disks.errors.file_path'), $message, FILE_APPEND);
     }
@@ -63,7 +64,8 @@ class SharedFunctions
     {
         $arr        = explode('-', $module_class_name);
         $arr_length = count($arr);
-        return $id_module . '-' . $arr[$arr_length - 3] . '-' . $arr[$arr_length - 2] . '-' . $arr[$arr_length - 1];
+        return $id_module . '-' . $arr[$arr_length - 3] . '-' . $arr[$arr_length - 2] . '-' .
+               $arr[$arr_length - 1];
     }
 
     public static function convertToDate ($temp_date) : string

@@ -3,14 +3,12 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
-use App\Services\Contracts\ModuleClassServiceContract;
 
-class ModuleClassService implements ModuleClassServiceContract
+class ModuleClassService implements Contracts\ModuleClassServiceContract
 {
     private ModuleClassRepositoryContract $moduleClassDepository;
 
     /**
-     * ModuleClassService constructor.
      * @param ModuleClassRepositoryContract $moduleClassDepository
      */
     public function __construct (ModuleClassRepositoryContract $moduleClassDepository)

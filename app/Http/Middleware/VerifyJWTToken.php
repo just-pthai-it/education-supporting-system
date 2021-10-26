@@ -12,7 +12,6 @@ class VerifyJWTToken extends BaseMiddleware
 {
     /**
      * Handle an incoming request.
-     *
      * @param Request $request
      * @param Closure $next
      * @return mixed
@@ -39,7 +38,8 @@ class VerifyJWTToken extends BaseMiddleware
             }
             catch (JWTException $e)
             {
-                throw new UnauthorizedHttpException('jwt-auth', $e->getMessage(), $e, $e->getCode());
+                throw new UnauthorizedHttpException('jwt-auth', $e->getMessage(), $e,
+                                                    $e->getCode());
             }
         }
 

@@ -4,11 +4,8 @@ namespace App\Services;
 
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Exceptions\InvalidAccountException;
-use App\Services\Contracts\AccountServiceContract;
-use Exception;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
-class AccountService implements AccountServiceContract
+class AccountService implements Contracts\AccountServiceContract
 {
     private AccountRepositoryContract $accountDepository;
 

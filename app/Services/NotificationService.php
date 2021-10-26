@@ -10,7 +10,7 @@ use App\Repositories\Contracts\StudentRepositoryContract;
 use App\Helpers\SharedFunctions;
 use App\Services\Contracts\NotificationServiceContract;
 
-class NotificationService implements NotificationServiceContract
+class NotificationService implements Contracts\NotificationServiceContract
 {
     private DataVersionStudentRepositoryContract $dataVersionStudentDepository;
     private DataVersionTeacherRepositoryContract $dataVersionTeacherRepository;
@@ -21,9 +21,9 @@ class NotificationService implements NotificationServiceContract
     /**
      * @param DataVersionStudentRepositoryContract $dataVersionStudentDepository
      * @param DataVersionTeacherRepositoryContract $dataVersionTeacherRepository
-     * @param NotificationRepositoryContract $notificationDepository
-     * @param AccountRepositoryContract $accountDepository
-     * @param StudentRepositoryContract $studentDepository
+     * @param NotificationRepositoryContract       $notificationDepository
+     * @param AccountRepositoryContract            $accountDepository
+     * @param StudentRepositoryContract            $studentDepository
      */
     public function __construct (DataVersionStudentRepositoryContract $dataVersionStudentDepository,
                                  DataVersionTeacherRepositoryContract $dataVersionTeacherRepository,
@@ -65,7 +65,8 @@ class NotificationService implements NotificationServiceContract
 
     private function _sharedFunctions ($notification, $id_students) : array
     {
-        $id_accounts     = $this->_getIDAccounts(SharedFunctions::formatArray($id_students, 'id_student'));
+        $id_accounts     = $this->_getIDAccounts(SharedFunctions::formatArray($id_students,
+                                                                              'id_student'));
         $id_notification = $this->_createNotification($notification);
         $this->_createNotificationAccount($id_accounts, $id_notification);
         $this->_updateNotificationDataVersionStudent($id_students);

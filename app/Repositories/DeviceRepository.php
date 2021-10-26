@@ -2,11 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\DeviceRepositoryContract;
 use App\Models\Device;
 use Illuminate\Support\Facades\DB;
 
-class DeviceRepository implements DeviceRepositoryContract
+class DeviceRepository implements Contracts\DeviceRepositoryContract
 {
     public function getDeviceTokens ($id_accounts) : array
     {

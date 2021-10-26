@@ -19,10 +19,10 @@ class AuthService implements Contracts\AuthServiceContract
 
     /**
      * @param OtherDepartmentRepositoryContract $otherDepartmentDepository
-     * @param DepartmentRepositoryContract $departmentDepository
-     * @param TeacherRepositoryContract $teacherDepository
-     * @param FacultyRepositoryContract $facultyDepository
-     * @param AccountRepositoryContract $accountRepository
+     * @param DepartmentRepositoryContract      $departmentDepository
+     * @param TeacherRepositoryContract         $teacherDepository
+     * @param FacultyRepositoryContract         $facultyDepository
+     * @param AccountRepositoryContract         $accountRepository
      */
     public function __construct (OtherDepartmentRepositoryContract $otherDepartmentDepository,
                                  DepartmentRepositoryContract      $departmentDepository,
@@ -51,7 +51,6 @@ class AuthService implements Contracts\AuthServiceContract
         ];
     }
 
-
     /**
      * @throws InvalidAccountException
      */
@@ -78,10 +77,10 @@ class AuthService implements Contracts\AuthServiceContract
         $permissions = $this->_getAccountPermissions($id_account);
         switch ($this->_verifyAccountUser($permissions))
         {
-//            case 'admin':
-//                $data = collect([]);
-//                $data->name = 'ADMIN';
-//                break;
+            //            case 'admin':
+            //                $data = collect([]);
+            //                $data->name = 'ADMIN';
+            //                break;
 
             case 'other_department.qldt':
             case 'other_department.qlph';
@@ -122,11 +121,12 @@ class AuthService implements Contracts\AuthServiceContract
 
     private function _verifyAccountUser ($permissions) : string
     {
-//        if (in_array(1, $permissions))
-//        {
-//            return 'admin';
-//        }
-        if (in_array(2, $permissions) && in_array(3, $permissions))
+        //        if (in_array(1, $permissions))
+        //        {
+        //            return 'admin';
+        //        }
+        if (in_array(2, $permissions) &&
+            in_array(3, $permissions))
         {
             return 'other_department.qldt';
         }

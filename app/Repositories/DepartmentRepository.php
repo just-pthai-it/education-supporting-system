@@ -3,9 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Account;
-use App\Repositories\Contracts\DepartmentRepositoryContract;
 
-class DepartmentRepository implements DepartmentRepositoryContract
+class DepartmentRepository implements Contracts\DepartmentRepositoryContract
 {
     public function get ($id_account)
     {

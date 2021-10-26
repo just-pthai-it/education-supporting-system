@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Imports\Handler\AmazonS3;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
@@ -13,11 +11,11 @@ class FixScheduleService implements Contracts\FixScheduleServiceContract
     private AmazonS3 $amazonS3s3;
 
     /**
-     * FixScheduleService constructor.
      * @param FixedScheduleRepositoryContract $fixDepository
-     * @param AmazonS3 $amazonS3s3
+     * @param AmazonS3                        $amazonS3s3
      */
-    public function __construct (FixedScheduleRepositoryContract $fixDepository, AmazonS3 $amazonS3s3)
+    public function __construct (FixedScheduleRepositoryContract $fixDepository,
+                                 AmazonS3                        $amazonS3s3)
     {
         $this->fixDepository = $fixDepository;
         $this->amazonS3s3    = $amazonS3s3;

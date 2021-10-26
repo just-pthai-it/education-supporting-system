@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\StudentRepositoryContract;
 use App\Models\Account;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 
-class StudentRepository implements StudentRepositoryContract
+class StudentRepository implements Contracts\StudentRepositoryContract
 {
     public function insertMultiple ($data)
     {

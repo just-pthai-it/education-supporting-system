@@ -2,11 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Models\Account;
 use Illuminate\Support\Facades\DB;
 
-class AccountRepository implements AccountRepositoryContract
+class AccountRepository implements Contracts\AccountRepositoryContract
 {
     public function insertMultiple ($data)
     {

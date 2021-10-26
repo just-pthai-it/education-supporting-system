@@ -4,7 +4,6 @@ namespace App\Repositories\Contracts;
 
 interface AcademicYearRepositoryContract
 {
-
     /**
      * return an associative array with key  => value: id = > academic_year
      * @return mixed

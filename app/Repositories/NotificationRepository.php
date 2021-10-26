@@ -5,12 +5,10 @@ namespace App\Repositories;
 use App\Models\Account;
 use App\Models\Department;
 use App\Models\Faculty;
-use App\Repositories\Contracts\NotificationRepositoryContract;
 use App\Models\Notification;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
-class NotificationRepository implements NotificationRepositoryContract
+class NotificationRepository implements Contracts\NotificationRepositoryContract
 {
     public function insertGetID ($data) : int
     {

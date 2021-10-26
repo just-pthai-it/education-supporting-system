@@ -2,13 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Models\Schedule;
 use App\Models\Teacher;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class ScheduleRepository implements ScheduleRepositoryContract
+class ScheduleRepository implements Contracts\ScheduleRepositoryContract
 {
     public function insertMultiple ($data)
     {
@@ -22,7 +21,8 @@ class ScheduleRepository implements ScheduleRepositoryContract
                       ->where('sdu.date', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 YEAR)'))
                       ->orderBy('sdu.id_module_class')
                       ->orderBy('sdu.id')
-                      ->select('sdu.id as id_schedule', 'sdu.id_module_class', 'module_class.module_class_name',
+                      ->select('sdu.id as id_schedule', 'sdu.id_module_class',
+                               'module_class.module_class_name',
                                'sdu.id_room', 'sdu.shift', 'sdu.date')
                       ->get();
     }

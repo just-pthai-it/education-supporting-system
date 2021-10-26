@@ -2,10 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Models\Account;
 
-class OtherDepartmentRepository implements OtherDepartmentRepositoryContract
+class OtherDepartmentRepository implements Contracts\OtherDepartmentRepositoryContract
 {
     public function get ($id_account)
     {

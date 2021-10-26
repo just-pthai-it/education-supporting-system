@@ -43,7 +43,8 @@ class FirebaseCloudMessaging
 
             if ($report->hasFailures())
             {
-                $temp_invalid_tokens = array_merge($report->invalidTokens(), $report->unknownTokens());
+                $temp_invalid_tokens = array_merge($report->invalidTokens(),
+                                                   $report->unknownTokens());
                 $invalid_tokens      = array_merge($invalid_tokens, $temp_invalid_tokens);
             }
         }

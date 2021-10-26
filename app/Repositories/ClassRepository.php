@@ -2,12 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Models\AcademicYear;
 use App\Models\Class_;
-use App\Repositories\Contracts\ClassRepositoryContract;
 use Illuminate\Support\Collection;
 
-class ClassRepository implements ClassRepositoryContract
+class ClassRepository implements Contracts\ClassRepositoryContract
 {
     public function insert ($data)
     {

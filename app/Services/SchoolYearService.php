@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Services\Contracts\SchoolYearServiceContract;
-
-class SchoolYearService implements SchoolYearServiceContract
+class SchoolYearService implements Contracts\SchoolYearServiceContract
 {
 
 }

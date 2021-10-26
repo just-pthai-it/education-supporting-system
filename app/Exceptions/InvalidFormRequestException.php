@@ -1,10 +1,10 @@
 <?php
 
-    namespace App\Exceptions;
+namespace App\Exceptions;
 
-    use Exception;
+use Exception;
 
-    class InvalidFormRequestException extends Exception
-    {
+class InvalidFormRequestException extends Exception
+{
 
-    }
+}

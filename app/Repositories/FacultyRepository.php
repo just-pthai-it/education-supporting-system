@@ -4,10 +4,9 @@ namespace App\Repositories;
 
 use App\Models\Account;
 use App\Models\Faculty;
-use App\Repositories\Contracts\FacultyRepositoryContract;
 use Illuminate\Support\Collection;
 
-class FacultyRepository implements FacultyRepositoryContract
+class FacultyRepository implements Contracts\FacultyRepositoryContract
 {
     public function get ($id_account)
     {

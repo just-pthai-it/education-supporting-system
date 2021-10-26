@@ -76,10 +76,13 @@ class ExcelDataHandler2
             }
             else
             {
-                $class_info               = SharedData::$faculty_class_and_major_info[substr($class, 0,
-                                                                                             strlen($class) - 1)];
+                $class_info               = SharedData::$faculty_class_and_major_info[substr($class,
+                                                                                             0,
+                                                                                             strlen($class) -
+                                                                                             1)];
                 $name_academic_year       = substr_replace($academic_year, 'hóa ', 1, 0);
-                $class_info['class_name'] = $class_info['class_name'] . ' ' . $num . ' - ' . $name_academic_year;
+                $class_info['class_name'] = $class_info['class_name'] . ' ' . $num . ' - ' .
+                                            $name_academic_year;
             }
         }
         else

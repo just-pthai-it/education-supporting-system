@@ -3,9 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\SchoolYear;
-use App\Repositories\Contracts\SchoolYearRepositoryContract;
 
-class SchoolYearRepository implements SchoolYearRepositoryContract
+class SchoolYearRepository implements Contracts\SchoolYearRepositoryContract
 {
     public function insert ($data)
     {
