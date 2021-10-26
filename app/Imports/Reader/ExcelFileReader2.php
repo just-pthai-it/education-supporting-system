@@ -54,9 +54,7 @@ class ExcelFileReader2
                     $sheet[$i][$other_index['faculty']] != null)
                 {
                     $current_id_module         = $sheet[$i][2] ?? $current_id_module;
-                    $temp_module_class_name    = str_replace('(', ' (', $sheet[$i][4]);
-                    $current_module_class_name = $temp_module_class_name !=
-                                                 '' ? $temp_module_class_name : $current_module_class_name;
+                    $current_module_class_name = $sheet[$i][4] ?? $current_module_class_name;
                     $current_credit            = $sheet[$i][2] ?? $current_credit;
                     $current_student_num       = $sheet[$i][5] ?? $current_student_num;
                     $current_date              = $sheet[$i][$other_index['date']] ?? $current_date;
@@ -78,9 +76,9 @@ class ExcelFileReader2
                     foreach ($day_index as $e)
                     {
                         $k++;
-                        if ($sheet[$i][$e] != null
-                            && $sheet[$i][$e + 1] != null
-                            && $e > 10)
+                        if ($sheet[$i][$e] != null &&
+                            $sheet[$i][$e + 1] != null &&
+                            $e > 10)
                         {
                             $period  = $sheet[$i][$e] ?? '';
                             $id_room = $sheet[$i][$e + 1] ?? '';
@@ -176,18 +174,22 @@ class ExcelFileReader2
     /**
      * @throws Exception
      */
-    private function _getShift ($period) : int
+    private function _getShift ($period) : string
     {
         switch ($period)
         {
             case '1,2,3':
-                return 1;
+                return '1';
             case '4,5,6':
-                return 2;
+                return '2';
             case '7,8,9':
-                return 3;
+                return '3';
             case '10,11,12':
-                return 4;
+                return '4';
+            case '13,14,15':
+                return '5-1';
+            case '13,14,15,16':
+                return '5-2';
             default:
                 throw new Exception();
         }

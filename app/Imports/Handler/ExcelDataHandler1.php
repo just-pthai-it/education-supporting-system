@@ -7,18 +7,18 @@ use App\Helpers\SharedData;
 class ExcelDataHandler1
 {
     public function handleData ($formatted_data, $id_training_type,
-                                $new_id_students, $academic_years) : array
+                                $id_students_missing, $academic_years) : array
     {
         $classes               = [];
         $accounts              = [];
-        $old_id_students       = [];
+        $available_id_students = [];
         $data_version_students = [];
 
         foreach ($formatted_data['students'] as $key => &$student)
         {
-            if (!in_array($student['id'], $new_id_students))
+            if (!in_array($student['id'], $id_students_missing))
             {
-                $old_id_students[] = $student['id'];
+                $available_id_students[] = $student['id'];
                 unset($formatted_data['students'][$key]);
                 continue;
             }
@@ -38,12 +38,11 @@ class ExcelDataHandler1
             ];
 
         }
-        $classes = array_unique($classes, SORT_REGULAR);;
 
         return [
-            'old_id_students'       => $old_id_students,
+            'available_id_students' => $available_id_students,
             'accounts'              => $accounts,
-            'classes'               => $classes,
+            'classes'               => array_unique($classes, SORT_REGULAR),
             'data_version_students' => $data_version_students,
             'students'              => $formatted_data['students'],
             'participates'          => $formatted_data['participates'],
@@ -76,10 +75,13 @@ class ExcelDataHandler1
             }
             else
             {
-                $class_info               = SharedData::$faculty_class_and_major_info[substr($class, 0,
-                                                                                             strlen($class) - 1)];
+                $class_info               = SharedData::$faculty_class_and_major_info[substr($class,
+                                                                                             0,
+                                                                                             strlen($class) -
+                                                                                             1)];
                 $name_academic_year       = substr_replace($academic_year, 'hóa ', 1, 0);
-                $class_info['class_name'] = $class_info['class_name'] . ' ' . $num . ' - ' . $name_academic_year;
+                $class_info['class_name'] = $class_info['class_name'] . ' ' . $num . ' - ' .
+                                            $name_academic_year;
             }
         }
         else

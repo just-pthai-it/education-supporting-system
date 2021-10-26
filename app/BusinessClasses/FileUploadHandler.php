@@ -32,11 +32,12 @@ class FileUploadHandler
     {
         $original_file_name = $file->getClientOriginalName();
 
-        $this->old_file_name = $file_name = substr($original_file_name, 0, strripos($original_file_name, '.'));
-        $expand              = substr($original_file_name, strripos($original_file_name, '.'));;
+        $this->old_file_name = $file_name = substr($original_file_name, 0,
+                                                   strripos($original_file_name, '.'));
+        $expand              = substr($original_file_name, strripos($original_file_name, '.'));
 
         $new_file_name = preg_replace('/\s+/', '', $file_name);
-        $new_file_name = $new_file_name  . $expand;
+        $new_file_name = $new_file_name . $expand;
 
         $location = storage_path('app/public/excels/' . $new_file_name);
 

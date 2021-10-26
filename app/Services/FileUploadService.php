@@ -86,9 +86,10 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         $this->fileUploadHandler->handleFileUpload($input['file']);
         $data = $this->_readData($input['id_department']);
         $this->_checkExceptions2($data['module_classes_missing'], $data['id_module_classes']);
-        $new_id_students = $this->_getIDStudentsMissing($data['id_students']);
-        $data            = $this->_handleData($data, $input['id_training_type'], $new_id_students);
-        $this->_createAndUpdateData2($data, $new_id_students);
+        $id_students_missing = $this->_getIDStudentsMissing($data['id_students']);
+        $data                = $this->_handleData($data, $input['id_training_type'],
+                                                  $id_students_missing);
+        $this->_createAndUpdateData2($data, $id_students_missing);
     }
 
     /**
@@ -154,7 +155,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
             $this->_createRolesAccountsForStudents($new_id_accounts);
             $this->_createDataVersionStudents($data['data_version_students']);
             $this->_createParticipates($data['participates']);
-            $this->_updateDataVersionStudents($data['old_id_students']);
+            $this->_updateDataVersionStudents($data['available_id_students']);
         }, 2);
     }
 
@@ -186,8 +187,8 @@ class FileUploadService implements Contracts\FileUploadServiceContract
             }
             catch (PDOException $error)
             {
-                if ($error->getCode() == 23000
-                    && $error->errorInfo[1] == 1062)
+                if ($error->getCode() == 23000 &&
+                    $error->errorInfo[1] == 1062)
                 {
                     continue;
                 }
@@ -211,8 +212,8 @@ class FileUploadService implements Contracts\FileUploadServiceContract
             }
             catch (PDOException $error)
             {
-                if ($error->getCode() == 23000
-                    && $error->errorInfo[1] == 1062)
+                if ($error->getCode() == 23000 &&
+                    $error->errorInfo[1] == 1062)
                 {
                     continue;
                 }

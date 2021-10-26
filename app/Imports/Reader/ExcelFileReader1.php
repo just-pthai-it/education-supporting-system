@@ -30,14 +30,15 @@ class ExcelFileReader1
      */
     private function _formatData ($raw_data, $special_module_classes) : array
     {
-        $curr_mc                = '';
+        $curr_mc    = '';
+        $latest_num = 0;
+
         $students               = [];
         $id_students            = [];
         $participates           = [];
+        $temp_students          = [];
         $id_module_classes      = [];
         $module_classes_missing = [];
-        $temp_students          = [];
-        $latest_num             = 0;
         foreach ($raw_data as $sheet)
         {
             $flag = false;
@@ -89,9 +90,9 @@ class ExcelFileReader1
                 if ($flag)
                 {
                     $arr['id']           = $row[2];
-                    $arr['student_name'] = $row[3] . ' ' . $row[4];
                     $arr['birth']        = SharedFunctions::formatDate($row[5]);
                     $arr['id_class']     = $row[1];
+                    $arr['student_name'] = $row[3] . ' ' . $row[4];
 
                     $students[]      = $arr;
                     $id_students[]   = ['id_student' => $arr['id']];
@@ -126,8 +127,6 @@ class ExcelFileReader1
                 $participates[$curr_mc][] = $id_student;
             }
         }
-
-        //        $id_module_classes_missing = array_unique($id_module_classes_missing, SORT_REGULAR);
 
         return [
             'students'               => array_unique($students, SORT_REGULAR),
