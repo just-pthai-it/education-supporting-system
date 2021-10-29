@@ -12,7 +12,7 @@ class NotificationRepository implements Contracts\NotificationRepositoryContract
 {
     public function insertGetID ($data) : int
     {
-        return Notification::create($data)->id;
+        return Notification::insertGetId($data);
     }
 
     public function insertPivotMultiple ($id_notification, $id_accounts)

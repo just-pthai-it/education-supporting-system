@@ -9,7 +9,7 @@ class ClassRepository implements Contracts\ClassRepositoryContract
 {
     public function insert ($data)
     {
-        Class_::create($data);
+        Class_::insert($data);
     }
 
     public function insertMultiple ($data)
