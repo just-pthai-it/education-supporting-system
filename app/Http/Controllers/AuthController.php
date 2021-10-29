@@ -13,7 +13,7 @@ class AuthController extends Controller
     private AuthServiceContract $authService;
 
     /**
-     * @param LoginForm $loginForm
+     * @param LoginForm           $loginForm
      * @param AuthServiceContract $authService
      */
     public function __construct (LoginForm $loginForm, AuthServiceContract $authService)

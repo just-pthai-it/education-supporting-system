@@ -19,9 +19,7 @@ class SchoolYearRepository implements Contracts\SchoolYearRepositoryContract
 
     public function getMultiple ()
     {
-        return SchoolYear::orderBy('school_year', 'desc')
-                         ->limit(7)
-                         ->select('id as id_school_year', 'school_year')
-                         ->toArray();
+        return SchoolYear::orderBy('id', 'desc') ->limit(14)
+                         ->pluck('id', 'school_year')->toArray();
     }
 }

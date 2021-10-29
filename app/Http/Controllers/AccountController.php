@@ -13,7 +13,7 @@ class AccountController extends Controller
     private AccountServiceContract $accountService;
 
     /**
-     * @param ChangePasswordForm $form
+     * @param ChangePasswordForm     $form
      * @param AccountServiceContract $accountService
      */
     public function __construct (ChangePasswordForm $form, AccountServiceContract $accountService)
@@ -28,7 +28,7 @@ class AccountController extends Controller
     public function changePassword (Request $request)
     {
         $this->form->validate($request);
-        $this->accountService->changePassword($request->username, $request->password,
-                                              $request->new_password);
+        $this->accountService->changePassword($request->only('id_account', 'username',
+                                                             'password', 'new_password'));
     }
 }

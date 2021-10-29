@@ -10,14 +10,13 @@ class ModuleRepository implements Contracts\ModuleRepositoryContract
     public function getAll () : array
     {
         return Module::select('id as id_module', 'module_name')
-                     ->get()
-                     ->toArray();
+                     ->get()->toArray();
     }
 
     public function getIDModulesMissing ($id_modules)
     {
         $this->_createTemporaryTable($id_modules);
-        return Module::rightJoin('temp_module', 'id', '=', 'id_module')
+        return Module::rightJoin('temp_module', 'id', 'id_module')
                      ->whereNull('id')->pluck('id_module')->toArray();
     }
 

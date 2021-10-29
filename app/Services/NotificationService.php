@@ -140,19 +140,19 @@ class NotificationService implements Contracts\NotificationServiceContract
         {
             foreach ($part as $notification)
             {
-                $response['sender'][] = [
+                $response['senders'][] = [
                     'id_sender'   => $notification['id_sender'],
                     'sender_name' => $notification['sender_name'],
                 ];
                 unset($notification['sender_name']);
 
-                $response['notification'][] = $notification;
+                $response['notifications'][] = $notification;
             }
         }
 
-        if (isset($response['sender']))
+        if (isset($response['senders']))
         {
-            $response['sender'] = array_values(array_unique($response['sender'], SORT_REGULAR));
+            $response['senders'] = array_values(array_unique($response['senders'], SORT_REGULAR));
         }
 
         return $response;

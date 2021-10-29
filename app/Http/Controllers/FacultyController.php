@@ -9,7 +9,6 @@ class FacultyController extends Controller
     private FacultyServiceContract $facultyService;
 
     /**
-     * FacultyController constructor.
      * @param FacultyServiceContract $facultyService
      */
     public function __construct (FacultyServiceContract $facultyService)

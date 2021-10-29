@@ -5,7 +5,6 @@ namespace App\Services;
 use App\BusinessClasses\FirebaseCloudMessaging;
 use App\Repositories\Contracts\DeviceRepositoryContract;
 use App\Helpers\SharedFunctions;
-use App\Services\Contracts\NotifyServiceContract;
 use Kreait\Firebase\Exception\FirebaseException;
 use Kreait\Firebase\Exception\MessagingException;
 

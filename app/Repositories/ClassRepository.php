@@ -24,7 +24,6 @@ class ClassRepository implements Contracts\ClassRepositoryContract
                      ->orderBy('id_academic_year')
                      ->orderBy('id_faculty')
                      ->orderBy('id')
-                     ->select('id_academic_year', 'id_faculty', 'id as id_class')
-                     ->get();
+                     ->select('id_academic_year', 'id_faculty', 'id as id_class')->get();
     }
 }

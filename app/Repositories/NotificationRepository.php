@@ -28,8 +28,7 @@ class NotificationRepository implements Contracts\NotificationRepositoryContract
                            ->offset($num)
                            ->limit(15)
                            ->select('id as id_notification', 'title', 'content',
-                                    'time_create', 'time_start', 'time_end')
-                           ->get();
+                                    'time_create', 'time_start', 'time_end')->get();
     }
 
     public function getNotifications2 ($id_notifications) : array
@@ -40,17 +39,13 @@ class NotificationRepository implements Contracts\NotificationRepositoryContract
                                 ->join(Account::table_as, 'id_sender', '=', 'acc.id')
                                 ->join(Department::table_as, 'id_sender', '=', 'dep.id_account')
                                 ->select('notification.*',
-                                         'dep.department_name as sender_name')
-                                ->get()
-                                ->toArray();
+                                         'dep.department_name as sender_name')->get()->toArray();
 
         $result[] = Notification::whereIn('notification.id', $id_notifications)
                                 ->join(Account::table_as, 'id_sender', '=', 'acc.id')
                                 ->join(Faculty::table_as, 'id_sender', '=', 'fac.id_account')
                                 ->select('notification.*',
-                                         'fac.faculty_name as sender_name')
-                                ->get()
-                                ->toArray();
+                                         'fac.faculty_name as sender_name')->get()->toArray();
 
         return $result;
     }
@@ -64,7 +59,6 @@ class NotificationRepository implements Contracts\NotificationRepositoryContract
     public function update ($id_sender, $id_notifications)
     {
         Notification::whereIn('id', $id_notifications)
-                    ->where('id_sender', '=', $id_sender)
-                    ->update(['is_delete' => 1]);
+                    ->where('id_sender', $id_sender)->update(['is_delete' => 1]);
     }
 }

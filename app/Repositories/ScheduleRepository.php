@@ -23,7 +23,6 @@ class ScheduleRepository implements Contracts\ScheduleRepositoryContract
                       ->orderBy('sdu.id')
                       ->select('sdu.id as id_schedule', 'sdu.id_module_class',
                                'module_class.module_class_name',
-                               'sdu.id_room', 'sdu.shift', 'sdu.date')
-                      ->get();
+                               'sdu.id_room', 'sdu.shift', 'sdu.date')->get();
     }
 }

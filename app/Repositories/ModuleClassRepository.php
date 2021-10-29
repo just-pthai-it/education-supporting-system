@@ -22,16 +22,15 @@ class ModuleClassRepository implements Contracts\ModuleClassRepositoryContract
     public function getModuleClasses ($id_teacher) : Collection
     {
         return ModuleClass::where('id_study_session', '>=', StudySession::max('id') - 6)
-                          ->where('id_teacher', '=', $id_teacher)
+                          ->where('id_teacher', $id_teacher)
                           ->orderBy('id')
-                          ->select('id as id_module_class', 'module_class_name')
-                          ->get();
+                          ->select('id as id_module_class', 'module_class_name')->get();
     }
 
     public function getIDModuleClassesMissing ($id_module_classes)
     {
         $this->_createTemporaryTable($id_module_classes);
-        return ModuleClass::rightJoin('temp', 'id', '=', 'id_module_class')
+        return ModuleClass::rightJoin('temp', 'id', 'id_module_class')
                           ->whereNull('id')->pluck('id_module_class')->toArray();
     }
 

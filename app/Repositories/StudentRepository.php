@@ -18,8 +18,7 @@ class StudentRepository implements Contracts\StudentRepositoryContract
         $this->_createTemporaryTable1($classes);
         return DB::table(Student::table_as)
                  ->join('temp', 'stu.id_class', 'temp.id_class')
-                 ->pluck('id')
-                 ->toArray();
+                 ->pluck('id')->toArray();
     }
 
     public function getIDStudents2 ($id_module_classes)
@@ -37,13 +36,13 @@ class StudentRepository implements Contracts\StudentRepositoryContract
 
     public function getIDAccounts ($id_students)
     {
-        return Student::whereIn('id', $id_students)->pluck('id_account')->toArray();
+        return Student::select('id_account')->find($id_students)->pluck('id_account')->toArray();
     }
 
     public function updateMultiple ($id_students)
     {
         Student::whereIn('student.id', $id_students)
-               ->join(Account::table_as, 'student.id', '=', 'acc.username')
+               ->join(Account::table_as, 'student.id', 'acc.username')
                ->update(['student.id_account' => DB::raw('acc.id')]);
     }
 
@@ -61,7 +60,7 @@ class StudentRepository implements Contracts\StudentRepositoryContract
     public function getIDStudentsMissing ($id_students)
     {
         $this->_createTemporaryTable2($id_students);
-        return Student::rightJoin('temp1', 'id', '=', 'id_student')
+        return Student::rightJoin('temp1', 'id', 'id_student')
                       ->whereNull('id')->pluck('id_student')->toArray();
     }
 

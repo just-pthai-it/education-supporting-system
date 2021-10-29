@@ -21,9 +21,8 @@ class AccountRepository implements Contracts\AccountRepositoryContract
     {
         $this->_createTemporaryTable($id_students);
         return DB::table(Account::table_as)
-                 ->join('temp1', 'acc.username', '=', 'temp1.id_student')
-                 ->pluck('id')
-                 ->toArray();
+                 ->join('temp1', 'acc.username', 'temp1.id_student')
+                 ->pluck('id')->toArray();
     }
 
     public function getIDAccounts2 ($id_notifications)
@@ -39,10 +38,9 @@ class AccountRepository implements Contracts\AccountRepositoryContract
         return Account::find($id_account)->roles()->pluck('role.id')->toArray();
     }
 
-    public function updatePassword ($username, $password)
+    public function updatePassword ($id_account, $password)
     {
-        Account::where('username', '=', $username)
-               ->update(['password' => $password]);
+        Account::find($id_account)->update(['password' => $password]);
     }
 
     public function _createTemporaryTable ($id_students)

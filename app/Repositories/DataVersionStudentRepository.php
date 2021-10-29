@@ -14,9 +14,8 @@ class DataVersionStudentRepository implements Contracts\DataVersionStudentReposi
 
     public function get ($id_student)
     {
-        return DataVersionStudent::select('schedule', 'notification', 'module_score',
-                                          'exam_schedule')
-                                 ->find($id_student);
+        return DataVersionStudent::select('schedule', 'notification',
+                                          'module_score', 'exam_schedule')->find($id_student);
     }
 
     public function getSingleColumn1 ($id_account, $column_name)
@@ -26,8 +25,8 @@ class DataVersionStudentRepository implements Contracts\DataVersionStudentReposi
 
     public function getSingleColumn2 ($id_student, $column_name)
     {
-        return DataVersionStudent::where('id_student', '=', $id_student)->pluck($column_name)
-                                 ->first();
+        return DataVersionStudent::select($column_name)->find($id_student)->$column_name;
+
     }
 
     public function update ($id_student, $column_name)

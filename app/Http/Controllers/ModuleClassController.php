@@ -9,7 +9,6 @@ class ModuleClassController extends Controller
     private ModuleClassServiceContract $moduleClassService;
 
     /**
-     * ModuleClassController constructor.
      * @param ModuleClassServiceContract $moduleClassService
      */
     public function __construct (ModuleClassServiceContract $moduleClassService)

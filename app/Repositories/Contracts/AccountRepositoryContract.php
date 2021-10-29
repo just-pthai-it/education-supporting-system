@@ -14,5 +14,5 @@ interface AccountRepositoryContract
 
     public function getPermissions ($id_account);
 
-    public function updatePassword ($username, $password);
+    public function updatePassword ($id_account, $password);
 }

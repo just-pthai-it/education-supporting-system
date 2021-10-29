@@ -15,10 +15,9 @@ class NotificationController extends Controller
     private NotifyServiceContract $notifyService;
 
     /**
-     * PushNotificationBMCController constructor.
-     * @param PushNotificationForm $pushNotificationForm
+     * @param PushNotificationForm        $pushNotificationForm
      * @param NotificationServiceContract $notificationService
-     * @param NotifyServiceContract $notifyService
+     * @param NotifyServiceContract       $notifyService
      */
     public function __construct (PushNotificationForm        $pushNotificationForm,
                                  NotificationServiceContract $notificationService,
