@@ -27,8 +27,8 @@ class NotificationRepository implements Contracts\NotificationRepositoryContract
                            ->orderBy('id', 'desc')
                            ->offset($num)
                            ->limit(15)
-                           ->select('id as id_notification', 'title', 'content',
-                                    'time_create', 'time_start', 'time_end')->get();
+                           ->get(['id as id_notification', 'title', 'content',
+                                  'time_create', 'time_start', 'time_end']);
     }
 
     public function getNotifications2 ($id_notifications) : array
@@ -38,14 +38,14 @@ class NotificationRepository implements Contracts\NotificationRepositoryContract
         $result[] = Notification::whereIn('notification.id', $id_notifications)
                                 ->join(Account::table_as, 'id_sender', '=', 'acc.id')
                                 ->join(Department::table_as, 'id_sender', '=', 'dep.id_account')
-                                ->select('notification.*',
-                                         'dep.department_name as sender_name')->get()->toArray();
+                                ->get(['notification.*',
+                                       'dep.department_name as sender_name'])->toArray();
 
         $result[] = Notification::whereIn('notification.id', $id_notifications)
                                 ->join(Account::table_as, 'id_sender', '=', 'acc.id')
                                 ->join(Faculty::table_as, 'id_sender', '=', 'fac.id_account')
-                                ->select('notification.*',
-                                         'fac.faculty_name as sender_name')->get()->toArray();
+                                ->get(['notification.*',
+                                       'fac.faculty_name as sender_name'])->toArray();
 
         return $result;
     }

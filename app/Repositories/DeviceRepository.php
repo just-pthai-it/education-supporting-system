@@ -12,8 +12,7 @@ class DeviceRepository implements Contracts\DeviceRepositoryContract
         $this->_createTemporaryTable($id_accounts);
         return DB::table(Device::table_as)
                  ->join('temp2', 'd.id_account', 'temp2.id_account')
-                 ->pluck('device_token')
-                 ->toArray();
+                 ->pluck('device_token')->toArray();
     }
 
     public function deleteMultiple ($device_tokens)

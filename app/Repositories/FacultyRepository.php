@@ -16,6 +16,6 @@ class FacultyRepository implements Contracts\FacultyRepositoryContract
     public function getIDFaculties ($data) : Collection
     {
         return Faculty::whereNotIn('id', $data)->orderBy('id')
-                      ->select('id as id_faculty', 'faculty_name')->get();
+                      ->get(['id as id_faculty', 'faculty_name']);
     }
 }

@@ -29,15 +29,15 @@ Route::get('test', function ()
     //    $old_module_classes['id_study_session'] = '43';
     //    Cache::forever('MHT_special_module_classes', $old_module_classes);
 
-        Cache::forever('academic_years',
-                       AcademicYear::orderBy('id', 'desc')->limit(18)->pluck('id', 'academic_year')
-                                   ->toArray());
-            $a = SchoolYear::orderBy('id', 'desc')->limit(14)
-                           ->pluck('id', 'school_year')->toArray();
+//        Cache::forever('academic_years',
+//                       AcademicYear::orderBy('id', 'desc')->limit(18)->pluck('id', 'academic_year')
+//                                   ->toArray());
+//            $a = SchoolYear::orderBy('id', 'desc')->limit(14)
+//                           ->pluck('id', 'school_year')->toArray();
     //        array_shift($a);
     //        array_shift($a);
 
-            Cache::forever('school_years',$a);
+//            Cache::forever('school_years',$a);
     //    return Cache::get('school_years');
 
     //    return SchoolYear::whereHas('examSchedules', function ($query)
@@ -57,7 +57,7 @@ Route::get('test', function ()
 
 //    return Student::select('id_account')->find(['191201402', '191240003'])->pluck('id_account')->toArray();
 
-
+    echo url('/post/');
 });
 
 Route::get('view', function ()

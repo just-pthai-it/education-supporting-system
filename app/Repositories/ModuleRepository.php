@@ -7,12 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class ModuleRepository implements Contracts\ModuleRepositoryContract
 {
-    public function getAll () : array
-    {
-        return Module::select('id as id_module', 'module_name')
-                     ->get()->toArray();
-    }
-
     public function getIDModulesMissing ($id_modules)
     {
         $this->_createTemporaryTable($id_modules);

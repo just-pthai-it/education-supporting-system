@@ -24,7 +24,7 @@ class ModuleClassRepository implements Contracts\ModuleClassRepositoryContract
         return ModuleClass::where('id_study_session', '>=', StudySession::max('id') - 6)
                           ->where('id_teacher', $id_teacher)
                           ->orderBy('id')
-                          ->select('id as id_module_class', 'module_class_name')->get();
+                          ->get(['id as id_module_class', 'module_class_name']);
     }
 
     public function getIDModuleClassesMissing ($id_module_classes)

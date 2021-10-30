@@ -9,7 +9,7 @@ class AcademicYearRepository implements Contracts\AcademicYearRepositoryContract
     public function getAcademicYears1 ()
     {
         return AcademicYear::orderBy('id', 'desc')->limit(18)
-                           ->select('id as id_academic_year', 'academic_year')->get();
+                           ->get(['id as id_academic_year', 'academic_year']);
     }
 
     public function getAcademicYears2 ()
