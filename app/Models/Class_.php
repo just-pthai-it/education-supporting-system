@@ -22,7 +22,7 @@ class Class_ extends Model
     protected $fillable = [
         'id',
         'id_academic_year',
-        'class_name',
+        'name',
         'id_faculty',
         'id_training_type',
     ];

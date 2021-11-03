@@ -30,6 +30,7 @@ class FixedSchedule extends Model
         'time_accept',
         'time_set_room',
         'status',
+        'id_notification',
     ];
 
     public function schedule () : BelongsTo

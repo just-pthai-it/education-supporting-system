@@ -85,26 +85,22 @@ class AuthService implements Contracts\AuthServiceContract
             case 'other_department.qldt':
             case 'other_department.qlph';
                 $data       = $this->otherDepartmentDepository->get($id_account);
-                $data->name = 'Phòng ' . $data->other_department_name;
-                unset($data->other_department_name);
+                $data->name = 'Phòng ' . $data->name;
                 break;
 
             case 'faculty':
                 $data       = $this->facultyDepository->get($id_account);
-                $data->name = 'Khoa ' . $data->faculty_name;
-                unset($data->faculty_name);
+                $data->name = 'Khoa ' . $data->name;
                 break;
 
             case 'department':
                 $data       = $this->departmentDepository->get($id_account);
-                $data->name = 'Bộ môn ' . $data->department_name;
-                unset($data->department_name);
+                $data->name = 'Bộ môn ' . $data->name;
                 break;
 
             case 'teacher':
                 $data       = $this->teacherDepository->get($id_account);
-                $data->name = 'Gv ' . $data->teacher_name;
-                unset($data->teacher_name);
+                $data->name = 'Gv ' . $data->name;
                 break;
 
             default:

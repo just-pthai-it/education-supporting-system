@@ -20,7 +20,7 @@ class OtherDepartment extends Model
 
     protected $fillable = [
         'id',
-        'other_department_name',
+        'name',
         'email',
         'phone_number',
         'address',

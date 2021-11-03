@@ -20,13 +20,13 @@ class StudySession extends Model
 
     protected $fillable = [
         'id',
-        'study_session',
-        'id_school_year',
+        'name',
+        'id_term',
     ];
 
-    public function schoolYear () : BelongsTo
+    public function term () : BelongsTo
     {
-        return $this->belongsTo(SchoolYear::class, 'id_school_year', 'id');
+        return $this->belongsTo(Term::class, 'id_term', 'id');
     }
 
     public function moduleClasses () : HasMany

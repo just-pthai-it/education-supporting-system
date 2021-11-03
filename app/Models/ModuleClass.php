@@ -22,7 +22,7 @@ class ModuleClass extends Model
 
     protected $fillable = [
         'id',
-        'module_class_name',
+        'name',
         'number_plan',
         'number_reality',
         'id_study_session',

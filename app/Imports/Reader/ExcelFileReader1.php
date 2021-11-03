@@ -89,10 +89,10 @@ class ExcelFileReader1
                 }
                 if ($flag)
                 {
-                    $arr['id']           = $row[2];
-                    $arr['birth']        = SharedFunctions::formatDate($row[5]);
-                    $arr['id_class']     = $row[1];
-                    $arr['student_name'] = $row[3] . ' ' . $row[4];
+                    $arr['id']       = $row[2];
+                    $arr['birth']    = SharedFunctions::formatDate($row[5]);
+                    $arr['id_class'] = $row[1];
+                    $arr['name']     = $row[3] . ' ' . $row[4];
 
                     $students[]      = $arr;
                     $id_students[]   = ['id_student' => $arr['id']];

@@ -5,11 +5,12 @@ use App\Models\Account;
 use App\Models\DataVersionStudent;
 use App\Models\ExamSchedule;
 use App\Models\ModuleClass;
-use App\Models\SchoolYear;
+use App\Models\Term;
 use App\Models\Student;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,7 +58,14 @@ Route::get('test', function ()
 
 //    return Student::select('id_account')->find(['191201402', '191240003'])->pluck('id_account')->toArray();
 
-    echo url('/post/');
+//    var_dump((string) Str::orderedUuid());
+//    var_dump((string) Str::orderedUuid());
+//    var_dump((string) Str::orderedUuid());
+//    var_dump((string) Str::orderedUuid());
+//    var_dump((string) Str::orderedUuid());
+//    var_dump((string) Str::orderedUuid());
+//    var_dump((string) Str::orderedUuid());
+    var_dump('94c8f3cd-06cf-48a3-aed3-314bb0f0b677' > '94c8f3cd-04a6-44d1-8dd3-290159e3a497');
 });
 
 Route::get('view', function ()

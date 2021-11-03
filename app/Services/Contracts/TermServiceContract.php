@@ -2,7 +2,7 @@
 
 namespace App\Services\Contracts;
 
-interface SchoolYearServiceContract
+interface TermServiceContract
 {
 
 }

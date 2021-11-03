@@ -18,7 +18,7 @@ use App\Repositories\Contracts\ModuleRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
-use App\Repositories\Contracts\SchoolYearRepositoryContract;
+use App\Repositories\Contracts\TermRepositoryContract;
 use App\Repositories\Contracts\StudentRepositoryContract;
 use App\Repositories\Contracts\StudySessionRepositoryContract;
 use App\Repositories\Contracts\TeacherRepositoryContract;
@@ -32,7 +32,7 @@ use App\Repositories\ModuleRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\OtherDepartmentRepository;
 use App\Repositories\ScheduleRepository;
-use App\Repositories\SchoolYearRepository;
+use App\Repositories\TermRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\StudySessionRepository;
 use App\Repositories\TeacherRepository;
@@ -49,7 +49,7 @@ class AppRepositoryProvider extends ServiceProvider
         StudySessionRepositoryContract::class       => StudySessionRepository::class,
         ModuleClassRepositoryContract::class        => ModuleClassRepository::class,
         DepartmentRepositoryContract::class         => DepartmentRepository::class,
-        SchoolYearRepositoryContract::class         => SchoolYearRepository::class,
+        TermRepositoryContract::class               => TermRepository::class,
         ScheduleRepositoryContract::class           => ScheduleRepository::class,
         TeacherRepositoryContract::class            => TeacherRepository::class,
         StudentRepositoryContract::class            => StudentRepository::class,

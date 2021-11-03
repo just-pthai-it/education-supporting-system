@@ -71,17 +71,17 @@ class ExcelDataHandler1
                                                                         strlen($class) - 1)]))
             {
                 $class_info['id_faculty'] = 'KHOAKHAC';
-                $class_info['class_name'] = 'Lớp thuộc khoa khác';
+                $class_info['name']       = 'Lớp thuộc khoa khác';
             }
             else
             {
-                $class_info               = SharedData::$faculty_class_and_major_info[substr($class,
-                                                                                             0,
-                                                                                             strlen($class) -
-                                                                                             1)];
-                $name_academic_year       = substr_replace($academic_year, 'hóa ', 1, 0);
-                $class_info['class_name'] = $class_info['class_name'] . ' ' . $num . ' - ' .
-                                            $name_academic_year;
+                $class_info         = SharedData::$faculty_class_and_major_info[substr($class,
+                                                                                       0,
+                                                                                       strlen($class) -
+                                                                                       1)];
+                $name_academic_year = substr_replace($academic_year, 'hóa ', 1, 0);
+                $class_info['name'] = $class_info['name'] . ' ' . $num . ' - ' .
+                                      $name_academic_year;
             }
         }
         else
@@ -89,13 +89,13 @@ class ExcelDataHandler1
             if (!isset(SharedData::$faculty_class_and_major_info[$class]))
             {
                 $class_info['id_faculty'] = 'KHOAKHAC';
-                $class_info['class_name'] = 'Lớp thuộc khoa khác';
+                $class_info['name']       = 'Lớp thuộc khoa khác';
             }
             else
             {
-                $class_info               = SharedData::$faculty_class_and_major_info[$class];
-                $name_academic_year       = substr_replace($academic_year, 'hóa ', 1, 0);
-                $class_info['class_name'] = $class_info['class_name'] . ' - ' . $name_academic_year;
+                $class_info         = SharedData::$faculty_class_and_major_info[$class];
+                $name_academic_year = substr_replace($academic_year, 'hóa ', 1, 0);
+                $class_info['name'] = $class_info['name'] . ' - ' . $name_academic_year;
             }
         }
         $class_info['id']               = $id_class;

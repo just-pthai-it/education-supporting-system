@@ -38,14 +38,12 @@ class NotificationRepository implements Contracts\NotificationRepositoryContract
         $result[] = Notification::whereIn('notification.id', $id_notifications)
                                 ->join(Account::table_as, 'id_sender', '=', 'acc.id')
                                 ->join(Department::table_as, 'id_sender', '=', 'dep.id_account')
-                                ->get(['notification.*',
-                                       'dep.department_name as sender_name'])->toArray();
+                                ->get(['notification.*', 'dep.name'])->toArray();
 
         $result[] = Notification::whereIn('notification.id', $id_notifications)
                                 ->join(Account::table_as, 'id_sender', '=', 'acc.id')
                                 ->join(Faculty::table_as, 'id_sender', '=', 'fac.id_account')
-                                ->get(['notification.*',
-                                       'fac.faculty_name as sender_name'])->toArray();
+                                ->get(['notification.*', 'fac.name'])->toArray();
 
         return $result;
     }

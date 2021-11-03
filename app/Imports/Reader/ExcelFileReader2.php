@@ -137,11 +137,11 @@ class ExcelFileReader2
         $id_module_class = SharedFunctions::convertToIDModuleClass($id_module, $module_class_name);
 
         $module_classes[$id_module_class] = [
-            'id'                => $id_module_class,
-            'module_class_name' => $module_class_name,
-            'number_plan'       => $student_num,
-            'id_study_session'  => $id_study_session,
-            'id_module'         => $id_module,
+            'id'               => $id_module_class,
+            'name'             => $module_class_name,
+            'number_plan'      => $student_num,
+            'id_study_session' => $id_study_session,
+            'id_module'        => $id_module,
         ];
     }
 

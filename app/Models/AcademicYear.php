@@ -21,7 +21,7 @@ class AcademicYear extends Model
 
     protected $fillable = [
         'id',
-        'academic_year',
+        'name',
     ];
 
     public function classes () : HasMany
