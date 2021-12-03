@@ -2,7 +2,9 @@
 
 namespace App\Imports\Handler;
 
-use App\Helpers\SharedData;
+use App\Helpers\GData;
+use App\Helpers\GFunction;
+use Illuminate\Support\Str;
 
 class ExcelDataHandler1
 {
@@ -10,9 +12,9 @@ class ExcelDataHandler1
                                 $id_students_missing, $academic_years) : array
     {
         $classes               = [];
-        $accounts              = [];
+//        $accounts              = [];
         $available_id_students = [];
-        $data_version_students = [];
+//        $data_version_students = [];
 
         foreach ($formatted_data['students'] as $key => &$student)
         {
@@ -27,23 +29,20 @@ class ExcelDataHandler1
                                                         $id_training_type, $academic_years);
             $classes[]  = $class_info;
 
-            $accounts[] = [
-                'username' => $student['id'],
-                'password' => bcrypt($student['birth']),
-            ];
+            $student['uuid'] = GFunction::uuidToBin(Str::orderedUuid());
 
-            $data_version_students[] = [
-                'id_student' => $student['id'],
-                'schedule'   => '1'
-            ];
+//
+//            $data_version_students[] = [
+//                'id_student' => $student['id'],
+//                'schedule'   => '1'
+//            ];
 
         }
 
         return [
             'classes'               => array_unique($classes, SORT_REGULAR),
-            'accounts'              => $accounts,
             'available_id_students' => $available_id_students,
-            'data_version_students' => $data_version_students,
+//            'data_version_students' => $data_version_students,
             'students'              => $formatted_data['students'],
             'participates'          => $formatted_data['participates'],
         ];
@@ -67,7 +66,7 @@ class ExcelDataHandler1
         $num = substr($class, strlen($class) - 1, 1);
         if (is_numeric($num))
         {
-            if (!isset(SharedData::$faculty_class_and_major_info[substr($class, 0,
+            if (!isset(GData::$faculty_class_and_major_info[substr($class, 0,
                                                                         strlen($class) - 1)]))
             {
                 $class_info['id_faculty'] = 'KHOAKHAC';
@@ -75,8 +74,8 @@ class ExcelDataHandler1
             }
             else
             {
-                $class_info         = SharedData::$faculty_class_and_major_info[substr($class,
-                                                                                       0,
+                $class_info         = GData::$faculty_class_and_major_info[substr($class,
+                                                                                  0,
                                                                                        strlen($class) -
                                                                                        1)];
                 $name_academic_year = substr_replace($academic_year, 'hóa ', 1, 0);
@@ -86,14 +85,14 @@ class ExcelDataHandler1
         }
         else
         {
-            if (!isset(SharedData::$faculty_class_and_major_info[$class]))
+            if (!isset(GData::$faculty_class_and_major_info[$class]))
             {
                 $class_info['id_faculty'] = 'KHOAKHAC';
                 $class_info['name']       = 'Lớp thuộc khoa khác';
             }
             else
             {
-                $class_info         = SharedData::$faculty_class_and_major_info[$class];
+                $class_info         = GData::$faculty_class_and_major_info[$class];
                 $name_academic_year = substr_replace($academic_year, 'hóa ', 1, 0);
                 $class_info['name'] = $class_info['name'] . ' - ' . $name_academic_year;
             }

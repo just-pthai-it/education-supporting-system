@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\URL;
 use App\Services\AcademicYearService;
 use App\Services\AccountService;
 use App\Services\AuthService;
+use App\Services\ExamScheduleService;
+use App\Services\RollCallExcelService;
+use App\Services\ExamScheduleExcelService;
 use App\Services\Contracts\AcademicYearServiceContract;
 use App\Services\Contracts\AccountServiceContract;
 use App\Services\Contracts\AuthServiceContract;
@@ -25,10 +29,12 @@ use App\Services\NotifyService;
 use App\Services\ScheduleService;
 use App\Services\StudySessionService;
 use Illuminate\Support\ServiceProvider;
+use App\Services\Contracts\ExamScheduleServiceContract;
 
 class AppServiceProvider extends ServiceProvider
 {
     public array $bindings = [
+        ExamScheduleServiceContract::class => ExamScheduleService::class,
         NotificationServiceContract::class => NotificationService::class,
         AcademicYearServiceContract::class => AcademicYearService::class,
         StudySessionServiceContract::class => StudySessionService::class,
@@ -48,6 +54,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register ()
     {
+        $this->app->bind('excel_roll_call', function ()
+        {
+            return new RollCallExcelService();
+        });
+
+        $this->app->bind('excel_exam_schedule', function ()
+        {
+            return new ExamScheduleExcelService();
+        });
     }
 
     /**
@@ -56,5 +71,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot ()
     {
+        URL::forceScheme('https');
     }
 }

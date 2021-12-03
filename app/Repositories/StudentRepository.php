@@ -39,11 +39,16 @@ class StudentRepository implements Contracts\StudentRepositoryContract
         return Student::select('id_account')->find($id_students)->pluck('id_account')->toArray();
     }
 
-    public function updateMultiple ($id_students)
+    public function updateMultiple1 ($id_students)
     {
         Student::whereIn('student.id', $id_students)
                ->join(Account::table_as, 'student.id', 'acc.username')
                ->update(['student.id_account' => DB::raw('acc.id')]);
+    }
+
+    public function updateMultiple2 ($id_students, $column_name)
+    {
+        Student::whereIn('id_student', $id_students)->increment($column_name);
     }
 
     public function _createTemporaryTable1 ($classes)

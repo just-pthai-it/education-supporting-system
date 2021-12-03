@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Helpers\GFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Teacher extends Model
 {
@@ -24,30 +26,56 @@ class Teacher extends Model
         'id',
         'name',
         'birth',
-        'phone_number',
-        'email',
         'university_teacher_degree',
         'id_department',
         'is_delete',
-        'id_account'
+        'schedule_data_version',
+        'notification_data_version',
+        'uuid',
     ];
 
     protected $hidden = [
+        'uuid',
         'is_delete',
     ];
 
-    public function account () : BelongsTo
+    private array $column = [
+        'name',
+        'birth',
+        'university_teacher_degree',
+        'id_department',
+        'schedule_data_version',
+        'notification_data_version',
+    ];
+
+    public function scopeWithUuid ($query, ...$e)
     {
-        return $this->belongsTo(Account::class, 'id_account', 'id');
+        if (empty($e))
+        {
+            return $query->select(GFunction::uuidFromBin('uuid'), ...$this->column);
+        }
+
+        return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
     }
 
-    public function dataVersionTeacher () : HasOne
+    public function account () : HasOne
     {
-        return $this->hasOne(DataVersionTeacher::class, 'id_teacher', 'id');
+        return $this->hasOne(Account::class, 'id_user', 'id');
     }
 
     public function moduleClasses () : HasMany
     {
         return $this->hasMany(ModuleClass::class, 'id_teacher', 'id');
+    }
+
+    public function department () : BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'id_department', 'id');
+    }
+
+    public function examSchedules () : BelongsToMany
+    {
+        return $this->belongsToMany(ExamSchedule::class, 'exam_schedule_teacher',
+                             'id_teacher', 'id_exam_schedule');
     }
 }

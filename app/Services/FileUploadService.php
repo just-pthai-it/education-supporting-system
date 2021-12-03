@@ -4,14 +4,12 @@ namespace App\Services;
 
 use App\BusinessClasses\FileUploadHandler;
 use App\Exceptions\ImportDataFailedException;
-use App\Helpers\SharedFunctions;
+use App\Helpers\GFunction;
 use App\Imports\Handler\ExcelDataHandler1;
-use App\Imports\Handler\ExcelDataHandler2;
-use App\Imports\Reader\ExcelFileReader1;
 use App\Imports\Reader\ExcelFileReader2;
-use App\Repositories\Contracts\AccountRepositoryContract;
+use App\Services\Contracts\ExcelServiceContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
-use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
+use App\Repositories\Contracts\TeacherRepositoryContract;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\ModuleRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
@@ -20,66 +18,59 @@ use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use PDOException;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 
 class FileUploadService implements Contracts\FileUploadServiceContract
 {
     private FileUploadHandler $fileUploadHandler;
-    private ExcelFileReader1 $excelFileReader1;
     private ExcelDataHandler1 $excelDataHandler1;
     private ExcelFileReader2 $excelFileReader2;
-    private ExcelDataHandler2 $excelDataHandler2;
-    private DataVersionStudentRepositoryContract $dataVersionStudentRepository;
     private ModuleClassRepositoryContract $moduleClassRepository;
     private StudentRepositoryContract $studentRepository;
-    private AccountRepositoryContract $accountRepository;
+    private TeacherRepositoryContract $teacherRepository;
     private ModuleRepositoryContract $moduleRepository;
     private ClassRepositoryContract $classRepository;
     private ScheduleRepositoryContract $scheduleRepository;
+    private ExamScheduleRepositoryContract $examScheduleRepository;
+    private ExcelServiceContract $excelService;
 
     /**
-     * @param FileUploadHandler                    $fileUploadHandler
-     * @param ExcelFileReader1                     $excelFileReader1
-     * @param ExcelDataHandler1                    $excelDataHandler1
-     * @param ExcelFileReader2                     $excelFileReader2
-     * @param ExcelDataHandler2                    $excelDataHandler2
-     * @param DataVersionStudentRepositoryContract $dataVersionStudentRepository
-     * @param ModuleClassRepositoryContract        $moduleClassRepository
-     * @param StudentRepositoryContract            $studentRepository
-     * @param AccountRepositoryContract            $accountRepository
-     * @param ModuleRepositoryContract             $moduleRepository
-     * @param ClassRepositoryContract              $classRepository
-     * @param ScheduleRepositoryContract           $scheduleRepository
+     * @param FileUploadHandler              $fileUploadHandler
+     * @param ExcelDataHandler1              $excelDataHandler1
+     * @param ExcelFileReader2               $excelFileReader2
+     * @param ModuleClassRepositoryContract  $moduleClassRepository
+     * @param StudentRepositoryContract      $studentRepository
+     * @param TeacherRepositoryContract      $teacherRepository
+     * @param ModuleRepositoryContract       $moduleRepository
+     * @param ClassRepositoryContract        $classRepository
+     * @param ScheduleRepositoryContract     $scheduleRepository
+     * @param ExamScheduleRepositoryContract $examScheduleRepository
      */
-    public function __construct (FileUploadHandler                    $fileUploadHandler,
-                                 ExcelFileReader1                     $excelFileReader1,
-                                 ExcelDataHandler1                    $excelDataHandler1,
-                                 ExcelFileReader2                     $excelFileReader2,
-                                 ExcelDataHandler2                    $excelDataHandler2,
-                                 DataVersionStudentRepositoryContract $dataVersionStudentRepository,
-                                 ModuleClassRepositoryContract        $moduleClassRepository,
-                                 StudentRepositoryContract            $studentRepository,
-                                 AccountRepositoryContract            $accountRepository,
-                                 ModuleRepositoryContract             $moduleRepository,
-                                 ClassRepositoryContract              $classRepository,
-                                 ScheduleRepositoryContract           $scheduleRepository)
+    public function __construct (FileUploadHandler              $fileUploadHandler,
+                                 ExcelDataHandler1              $excelDataHandler1,
+                                 ExcelFileReader2               $excelFileReader2,
+                                 ModuleClassRepositoryContract  $moduleClassRepository,
+                                 StudentRepositoryContract      $studentRepository,
+                                 TeacherRepositoryContract      $teacherRepository,
+                                 ModuleRepositoryContract       $moduleRepository,
+                                 ClassRepositoryContract        $classRepository,
+                                 ScheduleRepositoryContract     $scheduleRepository,
+                                 ExamScheduleRepositoryContract $examScheduleRepository)
     {
-        $this->fileUploadHandler            = $fileUploadHandler;
-        $this->excelFileReader1             = $excelFileReader1;
-        $this->excelDataHandler1            = $excelDataHandler1;
-        $this->excelFileReader2             = $excelFileReader2;
-        $this->excelDataHandler2            = $excelDataHandler2;
-        $this->dataVersionStudentRepository = $dataVersionStudentRepository;
-        $this->moduleClassRepository        = $moduleClassRepository;
-        $this->scheduleRepository           = $scheduleRepository;
-        $this->studentRepository            = $studentRepository;
-        $this->accountRepository            = $accountRepository;
-        $this->moduleRepository             = $moduleRepository;
-        $this->classRepository              = $classRepository;
+        $this->fileUploadHandler      = $fileUploadHandler;
+        $this->excelDataHandler1      = $excelDataHandler1;
+        $this->excelFileReader2       = $excelFileReader2;
+        $this->moduleClassRepository  = $moduleClassRepository;
+        $this->studentRepository      = $studentRepository;
+        $this->teacherRepository      = $teacherRepository;
+        $this->moduleRepository       = $moduleRepository;
+        $this->classRepository        = $classRepository;
+        $this->scheduleRepository     = $scheduleRepository;
+        $this->examScheduleRepository = $examScheduleRepository;
     }
 
     /**
-     * @param $input
-     *
      * @throws Exception
      */
     public function importRollCallFile ($input)
@@ -122,7 +113,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
             {
                 $message .= $module_class . PHP_EOL;
             }
-            SharedFunctions::printFileImportException($file_name, $message);
+            GFunction::printFileImportException($file_name, $message);
             throw new ImportDataFailedException();
         }
     }
@@ -150,11 +141,6 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         {
             $this->_createClasses($data['classes']);
             $this->_createStudents($data['students']);
-            $this->_createAccounts($data['accounts']);
-            $this->_bindIDAccountsToStudents($new_id_students);
-            $new_id_accounts = $this->_getNewIDAccounts($new_id_students);
-            $this->_createRolesAccountsForStudents($new_id_accounts);
-            $this->_createDataVersionStudents($data['data_version_students']);
             $this->_createParticipates($data['participates']);
             $this->_updateDataVersionStudents($data['available_id_students']);
         }, 2);
@@ -163,19 +149,6 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     private function _createStudents ($data)
     {
         $this->studentRepository->insertMultiple($data);
-    }
-
-    private function _createAccounts ($data)
-    {
-        $this->accountRepository->insertMultiple($data);
-    }
-
-    private function _createRolesAccountsForStudents ($data)
-    {
-        foreach ($data as $id_account)
-        {
-            $this->accountRepository->insertPivotMultiple($id_account, [11]);
-        }
     }
 
     private function _createClasses ($data)
@@ -196,11 +169,6 @@ class FileUploadService implements Contracts\FileUploadServiceContract
                 throw $error;
             }
         }
-    }
-
-    private function _createDataVersionStudents ($data)
-    {
-        $this->dataVersionStudentRepository->insertMultiple($data);
     }
 
     private function _createParticipates ($data)
@@ -225,17 +193,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
 
     private function _updateDataVersionStudents ($id_students)
     {
-        $this->dataVersionStudentRepository->updateMultiple($id_students, 'schedule');
-    }
-
-    private function _bindIDAccountsToStudents ($id_students)
-    {
-        $this->studentRepository->updateMultiple($id_students);
-    }
-
-    private function _getNewIDAccounts ($id_students)
-    {
-        return $this->studentRepository->getIDAccounts($id_students);
+        $this->studentRepository->updateMultiple2($id_students, 'schedule_data_version');
     }
 
     /**
@@ -294,7 +252,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
                 $message .= $modules . PHP_EOL;
             }
 
-            SharedFunctions::printFileImportException($file_name, $message);
+            GFunction::printFileImportException($file_name, $message);
             throw new ImportDataFailedException();
         }
     }
@@ -309,5 +267,35 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         }
         Cache::forever($id_department . '_special_module_classes',
                        array_merge($old_module_classes, $module_classes));
+    }
+
+    /**
+     * @throws BindingResolutionException
+     * @throws Exception
+     */
+    public function importExamScheduleFile ($input)
+    {
+        $this->excelService = app()->make('excel_exam_schedule');
+        $this->fileUploadHandler->handleFileUpload($input['file']);
+        $this->excelService->setParameters($this->teacherRepository->findAllByIdDepartment($input['id_department']));
+        $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName());
+        DB::transaction(function () use ($data)
+        {
+            $this->_createManyExamSchedules($data['exam_schedules']);
+            $this->_createManyExamSchedulesTeachers($data['exam_schedules_teachers']);
+        }, 2);
+    }
+
+    private function _createManyExamSchedules($exam_schedules)
+    {
+        $this->examScheduleRepository->insertMultiple($exam_schedules);
+    }
+
+    private function _createManyExamSchedulesTeachers($exam_schedules_teachers)
+    {
+        foreach ($exam_schedules_teachers as $id_module_class => $id_teachers)
+        {
+            $this->examScheduleRepository->insertPivot($id_module_class, $id_teachers);
+        }
     }
 }

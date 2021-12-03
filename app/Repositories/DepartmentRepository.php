@@ -2,12 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Models\Account;
+use App\Models\Department;
 
 class DepartmentRepository implements Contracts\DepartmentRepositoryContract
 {
-    public function get ($id_account)
+    public function get ($id)
     {
-        return Account::find($id_account)->department;
+        return Department::withUuid()->find($id)->makeVisible(['uuid']);
     }
 }

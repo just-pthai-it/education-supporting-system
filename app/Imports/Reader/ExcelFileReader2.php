@@ -2,7 +2,7 @@
 
 namespace App\Imports\Reader;
 
-use App\Helpers\SharedFunctions;
+use App\Helpers\GFunction;
 use App\Imports\FileImport;
 use Exception;
 
@@ -49,7 +49,6 @@ class ExcelFileReader2
             $sheet_length = count($sheet);
             for ($i = 0; $i < $sheet_length; $i++)
             {
-
                 if (isset($other_index['date']) &&
                     $sheet[$i][$other_index['faculty']] != null)
                 {
@@ -134,7 +133,7 @@ class ExcelFileReader2
     private function _createModuleClass (&$module_classes, $id_module, $module_class_name,
                                          $student_num, $id_study_session)
     {
-        $id_module_class = SharedFunctions::convertToIDModuleClass($id_module, $module_class_name);
+        $id_module_class = GFunction::convertToIDModuleClass($id_module, $module_class_name);
 
         $module_classes[$id_module_class] = [
             'id'               => $id_module_class,
@@ -158,7 +157,7 @@ class ExcelFileReader2
         {
             $schedules[] = [
                 'id_module_class' => $id_module_class,
-                'date'            => SharedFunctions::plusDate($exact_date, 7 * $i),
+                'date'            => GFunction::plusDate($exact_date, 7 * $i),
                 'shift'           => $shift,
                 'id_room'         => $id_room,
             ];
@@ -167,8 +166,8 @@ class ExcelFileReader2
 
     private function _getExactDate ($date, $day)
     {
-        $date = SharedFunctions::convertToDate($date);
-        return SharedFunctions::plusDate($date, $day);
+        $date = GFunction::convertToDate($date);
+        return GFunction::plusDate($date, $day);
     }
 
     /**

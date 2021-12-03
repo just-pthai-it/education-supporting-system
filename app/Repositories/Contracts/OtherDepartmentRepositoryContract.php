@@ -4,5 +4,5 @@ namespace App\Repositories\Contracts;
 
 interface OtherDepartmentRepositoryContract
 {
-    public function get ($id_account);
+    public function get ($id);
 }

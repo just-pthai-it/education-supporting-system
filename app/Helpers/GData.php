@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class SharedData
+class GData
 {
     public static array $id_faculties_not_query = [
         'LLCT', 'GDTC', 'GDQP'

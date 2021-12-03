@@ -19,8 +19,8 @@ class FacultyClassController extends Controller
 
     public function getFacultyClasses (Request $request)
     {
-        $data = $this->facultyClassService->getFacultyClasses($request->academic_years,
-                                                              $request->faculties);
+        $data = $this->facultyClassService->getFacultyClasses($request->id_academic_years,
+                                                              $request->id_faculties);
         return response($data)->header('Content-Type', 'application/data');
     }
 }

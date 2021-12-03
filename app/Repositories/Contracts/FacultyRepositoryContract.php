@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface FacultyRepositoryContract
 {
-    public function get ($id_account);
+    public function get ($id);
 
     public function getIDFaculties ($data);
 }

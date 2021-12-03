@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\FacultyRepositoryContract;
-use App\Helpers\SharedData;
+use App\Helpers\GData;
 
 class FacultyService implements Contracts\FacultyServiceContract
 {
@@ -19,6 +19,6 @@ class FacultyService implements Contracts\FacultyServiceContract
 
     public function getIDFaculties ()
     {
-        return $this->facultyDepository->getIDFaculties(SharedData::$id_faculties_not_query);
+        return $this->facultyDepository->getIDFaculties(GData::$id_faculties_not_query);
     }
 }

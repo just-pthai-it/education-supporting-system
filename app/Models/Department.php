@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\GFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,12 +23,30 @@ class Department extends Model
     protected $fillable = [
         'id',
         'name',
-        'email',
-        'phone_number',
         'address',
         'id_faculty',
-        'id_account'
+        'uuid'
     ];
+
+    protected $hidden = [
+        'uuid',
+    ];
+
+    private array $column = [
+        'name',
+        'address',
+        'id_faculty',
+    ];
+
+    public function scopeWithUuid ($query, ...$e)
+    {
+        if (empty($e))
+        {
+            return $query->select(GFunction::uuidFromBin('uuid'), ...$this->column);
+        }
+
+        return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
+    }
 
     public function account () : BelongsTo
     {

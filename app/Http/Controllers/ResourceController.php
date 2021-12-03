@@ -26,4 +26,9 @@ class ResourceController extends Controller
     {
         $this->fileUploadService->importScheduleFile($request->all());
     }
+
+    public function uploadExamScheduleFile(Request $request)
+    {
+        $this->fileUploadService->importExamScheduleFile($request->all());
+    }
 }

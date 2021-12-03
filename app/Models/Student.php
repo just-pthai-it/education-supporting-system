@@ -27,9 +27,12 @@ class Student extends Model
         'birth',
         'id_class',
         'id_card_number',
-        'phone_number',
         'address',
-        'id_account'
+        'schedule_data_version',
+        'notification_data_version',
+        'module_score_data_version',
+        'exam_schedule_data_version',
+        'uuid',
     ];
 
     public function account () : BelongsTo

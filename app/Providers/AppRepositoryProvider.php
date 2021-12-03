@@ -2,28 +2,28 @@
 
 namespace App\Providers;
 
+use App\Repositories\PermissionRepository;
 use App\Repositories\AcademicYearRepository;
 use App\Repositories\AccountRepository;
 use App\Repositories\ClassRepository;
+use App\Repositories\ExamScheduleRepository;
+use App\Repositories\Contracts\PermissionRepositoryContract;
 use App\Repositories\Contracts\AcademicYearRepositoryContract;
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
-use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
-use App\Repositories\Contracts\DataVersionTeacherRepositoryContract;
 use App\Repositories\Contracts\DepartmentRepositoryContract;
 use App\Repositories\Contracts\DeviceRepositoryContract;
 use App\Repositories\Contracts\FacultyRepositoryContract;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\ModuleRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
+use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\TermRepositoryContract;
 use App\Repositories\Contracts\StudentRepositoryContract;
 use App\Repositories\Contracts\StudySessionRepositoryContract;
 use App\Repositories\Contracts\TeacherRepositoryContract;
-use App\Repositories\DataVersionStudentRepository;
-use App\Repositories\DataVersionTeacherRepository;
 use App\Repositories\DepartmentRepository;
 use App\Repositories\DeviceRepository;
 use App\Repositories\FacultyRepository;
@@ -41,38 +41,22 @@ use Illuminate\Support\ServiceProvider;
 class AppRepositoryProvider extends ServiceProvider
 {
     public array $bindings = [
-        DataVersionStudentRepositoryContract::class => DataVersionStudentRepository::class,
-        DataVersionTeacherRepositoryContract::class => DataVersionTeacherRepository::class,
-        OtherDepartmentRepositoryContract::class    => OtherDepartmentRepository::class,
-        NotificationRepositoryContract::class       => NotificationRepository::class,
-        AcademicYearRepositoryContract::class       => AcademicYearRepository::class,
-        StudySessionRepositoryContract::class       => StudySessionRepository::class,
-        ModuleClassRepositoryContract::class        => ModuleClassRepository::class,
-        DepartmentRepositoryContract::class         => DepartmentRepository::class,
-        TermRepositoryContract::class               => TermRepository::class,
-        ScheduleRepositoryContract::class           => ScheduleRepository::class,
-        TeacherRepositoryContract::class            => TeacherRepository::class,
-        StudentRepositoryContract::class            => StudentRepository::class,
-        AccountRepositoryContract::class            => AccountRepository::class,
-        FacultyRepositoryContract::class            => FacultyRepository::class,
-        DeviceRepositoryContract::class             => DeviceRepository::class,
-        ModuleRepositoryContract::class             => ModuleRepository::class,
-        ClassRepositoryContract::class              => ClassRepository::class,
+        OtherDepartmentRepositoryContract::class => OtherDepartmentRepository::class,
+        NotificationRepositoryContract::class    => NotificationRepository::class,
+        AcademicYearRepositoryContract::class    => AcademicYearRepository::class,
+        ExamScheduleRepositoryContract::class    => ExamScheduleRepository::class,
+        StudySessionRepositoryContract::class    => StudySessionRepository::class,
+        ModuleClassRepositoryContract::class     => ModuleClassRepository::class,
+        DepartmentRepositoryContract::class      => DepartmentRepository::class,
+        PermissionRepositoryContract::class      => PermissionRepository::class,
+        ScheduleRepositoryContract::class        => ScheduleRepository::class,
+        TeacherRepositoryContract::class         => TeacherRepository::class,
+        StudentRepositoryContract::class         => StudentRepository::class,
+        AccountRepositoryContract::class         => AccountRepository::class,
+        FacultyRepositoryContract::class         => FacultyRepository::class,
+        DeviceRepositoryContract::class          => DeviceRepository::class,
+        ModuleRepositoryContract::class          => ModuleRepository::class,
+        ClassRepositoryContract::class           => ClassRepository::class,
+        TermRepositoryContract::class            => TermRepository::class,
     ];
-
-    /**
-     * Register services.
-     * @return void
-     */
-    public function register ()
-    {
-    }
-
-    /**
-     * Bootstrap services.
-     * @return void
-     */
-    public function boot ()
-    {
-    }
 }

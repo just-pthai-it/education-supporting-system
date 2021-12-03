@@ -28,7 +28,6 @@ class AccountController extends Controller
     public function changePassword (Request $request)
     {
         $this->form->validate($request);
-        $this->accountService->changePassword($request->only('id_account', 'username',
-                                                             'password', 'new_password'));
+        $this->accountService->changePassword($request->only('password', 'new_password'));
     }
 }

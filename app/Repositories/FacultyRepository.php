@@ -2,15 +2,14 @@
 
 namespace App\Repositories;
 
-use App\Models\Account;
 use App\Models\Faculty;
 use Illuminate\Support\Collection;
 
 class FacultyRepository implements Contracts\FacultyRepositoryContract
 {
-    public function get ($id_account)
+    public function get ($id)
     {
-        return Account::find($id_account)->faculty;
+        return Faculty::withUuid()->find($id)->makeVisible(['uuid']);
     }
 
     public function getIDFaculties ($data) : Collection

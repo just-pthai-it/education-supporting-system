@@ -7,4 +7,6 @@ interface FileUploadServiceContract
     public function importRollCallFile ($input);
 
     public function importScheduleFile ($input);
+
+    public function importExamScheduleFile ($input);
 }

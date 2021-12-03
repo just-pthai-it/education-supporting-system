@@ -4,5 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface StudySessionRepositoryContract
 {
-    public function getMultiple ();
+    public function findAllRecent1 ();
+
+    public function findAllRecent2 ();
 }

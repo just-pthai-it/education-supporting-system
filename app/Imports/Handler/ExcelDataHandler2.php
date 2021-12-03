@@ -2,7 +2,7 @@
 
 namespace App\Imports\Handler;
 
-use App\Helpers\SharedData;
+use App\Helpers\GData;
 
 class ExcelDataHandler2
 {
@@ -68,7 +68,7 @@ class ExcelDataHandler2
         $num = substr($class, strlen($class) - 1, 1);
         if (is_numeric($num))
         {
-            if (!isset(SharedData::$faculty_class_and_major_info[substr($class, 0,
+            if (!isset(GData::$faculty_class_and_major_info[substr($class, 0,
                                                                         strlen($class) - 1)]))
             {
                 $class_info['id_faculty'] = 'KHOAKHAC';
@@ -76,8 +76,8 @@ class ExcelDataHandler2
             }
             else
             {
-                $class_info         = SharedData::$faculty_class_and_major_info[substr($class,
-                                                                                       0,
+                $class_info         = GData::$faculty_class_and_major_info[substr($class,
+                                                                                  0,
                                                                                        strlen($class) -
                                                                                        1)];
                 $name_academic_year = substr_replace($academic_year, 'hóa ', 1, 0);
@@ -87,14 +87,14 @@ class ExcelDataHandler2
         }
         else
         {
-            if (!isset(SharedData::$faculty_class_and_major_info[$class]))
+            if (!isset(GData::$faculty_class_and_major_info[$class]))
             {
                 $class_info['id_faculty'] = 'KHOAKHAC';
                 $class_info['name']       = 'Lớp thuộc khoa khác';
             }
             else
             {
-                $class_info         = SharedData::$faculty_class_and_major_info[$class];
+                $class_info         = GData::$faculty_class_and_major_info[$class];
                 $name_academic_year = substr_replace($academic_year, 'hóa ', 1, 0);
                 $class_info['name'] = $class_info['name'] . ' - ' . $name_academic_year;
             }

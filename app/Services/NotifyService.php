@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\BusinessClasses\FirebaseCloudMessaging;
 use App\Repositories\Contracts\DeviceRepositoryContract;
-use App\Helpers\SharedFunctions;
+use App\Helpers\GFunction;
 use Kreait\Firebase\Exception\FirebaseException;
 use Kreait\Firebase\Exception\MessagingException;
 
@@ -38,8 +38,8 @@ class NotifyService implements Contracts\NotifyServiceContract
     private function _getDeviceTokens ($id_accounts) : array
     {
         return empty($id_accounts) ?
-            [] : $this->deviceDepository->getDeviceTokens(SharedFunctions::formatArray($id_accounts,
-                                                                                       'id_account'));
+            [] : $this->deviceDepository->getDeviceTokens(GFunction::formatArray($id_accounts,
+                                                                                 'id_account'));
     }
 
     /**

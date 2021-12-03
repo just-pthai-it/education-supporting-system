@@ -2,7 +2,7 @@
 
 namespace App\Imports\Reader;
 
-use App\Helpers\SharedFunctions;
+use App\Helpers\GFunction;
 use App\Imports\FileImport;
 use Exception;
 
@@ -15,7 +15,6 @@ class ExcelFileReader1
     {
         $raw_data       = $this->_getData($file_name);
         $formatted_data = $this->_formatData($raw_data, $special_module_classes);
-
         return $formatted_data;
     }
 
@@ -90,7 +89,7 @@ class ExcelFileReader1
                 if ($flag)
                 {
                     $arr['id']       = $row[2];
-                    $arr['birth']    = SharedFunctions::formatDate($row[5]);
+                    $arr['birth']    = GFunction::formatDate($row[5]);
                     $arr['id_class'] = $row[1];
                     $arr['name']     = $row[3] . ' ' . $row[4];
 

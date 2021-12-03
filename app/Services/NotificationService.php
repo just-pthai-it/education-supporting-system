@@ -7,7 +7,7 @@ use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
 use App\Repositories\Contracts\DataVersionTeacherRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
 use App\Repositories\Contracts\StudentRepositoryContract;
-use App\Helpers\SharedFunctions;
+use App\Helpers\GFunction;
 use App\Services\Contracts\NotificationServiceContract;
 
 class NotificationService implements Contracts\NotificationServiceContract
@@ -65,8 +65,8 @@ class NotificationService implements Contracts\NotificationServiceContract
 
     private function _sharedFunctions ($notification, $id_students) : array
     {
-        $id_accounts     = $this->_getIDAccounts(SharedFunctions::formatArray($id_students,
-                                                                              'id_student'));
+        $id_accounts     = $this->_getIDAccounts(GFunction::formatArray($id_students,
+                                                                        'id_student'));
         $id_notification = $this->_createNotification($notification);
         $this->_createNotificationAccount($id_accounts, $id_notification);
         $this->_updateNotificationDataVersionStudent($id_students);
@@ -88,11 +88,11 @@ class NotificationService implements Contracts\NotificationServiceContract
     private function _setUpNotification ($notification) : array
     {
         return [
-            'title'       => SharedFunctions::formatString($notification['title']),
-            'content'     => SharedFunctions::formatString($notification['content']),
+            'title'       => GFunction::formatString($notification['title']),
+            'content'     => GFunction::formatString($notification['content']),
             'type'        => $notification['type'],
             'id_sender'   => $notification['id_sender'],
-            'time_create' => SharedFunctions::getDateTimeNow(),
+            'time_create' => GFunction::getDateTimeNow(),
             'time_start'  => $notification['time_start'],
             'time_end'    => $notification['time_end']
         ];

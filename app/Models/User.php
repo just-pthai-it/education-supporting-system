@@ -13,22 +13,24 @@ class User extends Authenticatable implements JWTSubject
 
     protected $table = 'account';
     protected $primaryKey = 'id';
-    /**
-     * The attributes that are mass assignable.
-     * @var array
-     */
+    public $timestamps = false;
+
     protected $fillable = [
+        'id',
         'username',
-        'email',
         'password',
         'qldt_password',
+        'email',
+        'phone_number',
+        'id_user_type',
+        'id_user',
+        'uuid',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     * @var array
-     */
     protected $hidden = [
+        'id',
+        'username',
+        'email',
         'password',
         'qldt_password',
         'remember_token',

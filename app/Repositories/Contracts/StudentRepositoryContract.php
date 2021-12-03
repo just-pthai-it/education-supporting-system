@@ -14,7 +14,9 @@ interface StudentRepositoryContract
 
     public function getIDAccounts ($id_students);
 
-    public function updateMultiple ($id_students);
+    public function updateMultiple1 ($id_students);
+
+    public function updateMultiple2 ($id_students, $column_name);
 
     public function getIDStudentsMissing ($id_students);
 }

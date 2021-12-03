@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Helpers\SharedFunctions;
+use App\Helpers\GFunction;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -56,6 +56,6 @@ class Handler extends ExceptionHandler
             return;
         }
 
-        SharedFunctions::printError($e);
+        GFunction::printError($e);
     }
 }

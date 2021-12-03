@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -23,9 +24,17 @@ class Account extends Model
     protected $fillable = [
         'id',
         'username',
-        'email',
         'password',
         'qldt_password',
+        'email',
+        'phone_number',
+        'id_role',
+        'id_user',
+        'uuid',
+    ];
+
+    protected $hidden = [
+        'uuid',
     ];
 
     public function student () : HasOne
@@ -69,10 +78,9 @@ class Account extends Model
         return $this->hasMany(Notification::class, 'id_sender', 'id');
     }
 
-    public function roles () : BelongsToMany
+    public function roles () : BelongsTo
     {
-        return $this->belongsToMany(Role::class, 'account_role',
-                                    'id_account', 'id_role');
+        return $this->belongsTo(Role::class, 'id_role', 'id');
     }
 
     public function dataVersionStudent () : HasOneThrough

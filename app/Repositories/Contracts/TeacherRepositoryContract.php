@@ -4,5 +4,8 @@ namespace App\Repositories\Contracts;
 
 interface TeacherRepositoryContract
 {
-    public function get ($id_account);
+    public function findById ($id);
+
+    public function findAllByIdDepartment($id_department);
+
 }

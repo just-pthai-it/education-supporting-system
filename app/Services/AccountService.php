@@ -24,17 +24,17 @@ class AccountService implements Contracts\AccountServiceContract
      */
     public function changePassword ($input)
     {
-        $this->_verifyAccount($input['username'], $input['password']);
-        $this->_updatePassword($input['id_account'], $input['new_password']);
+        $this->_verifyAccount(auth()->user()->id, $input['password']);
+        $this->_updatePassword(auth()->user()->id, $input['new_password']);
     }
 
     /**
      * @throws InvalidAccountException
      */
-    private function _verifyAccount ($username, $password)
+    private function _verifyAccount ($id_account, $password)
     {
         $credential = [
-            'username' => $username,
+            'id'       => $id_account,
             'password' => $password
         ];
 

@@ -2,7 +2,13 @@
 
 namespace App\Helpers;
 
-class SharedFunctions
+use DateTime;
+use Carbon\Carbon;
+use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+
+class GFunction
 {
     public static function printError ($error)
     {
@@ -50,6 +56,11 @@ class SharedFunctions
         return $date;
     }
 
+    public static function excelValueToDate($value) : string
+    {
+        return Date::excelToDateTimeObject($value)->format('Y-m-d');
+    }
+
     public static function formatArray ($arr, $key) : array
     {
         $formatted_array = [];
@@ -62,6 +73,7 @@ class SharedFunctions
 
     public static function convertToIDModuleClass ($id_module, $module_class_name) : string
     {
+
         $arr        = explode('-', $module_class_name);
         $arr_length = count($arr);
         return $id_module . '-' . $arr[$arr_length - 3] . '-' . $arr[$arr_length - 2] . '-' .
@@ -79,6 +91,16 @@ class SharedFunctions
         return date('Y-m-d', strtotime($date . '+' . $plus . ' days'));
     }
 
+
+    public static function uuidToBin ($uuid_value) : Expression
+    {
+        return DB::raw('UuidToBin(\'' . $uuid_value . '\')');
+    }
+
+    public static function uuidFromBin ($column_name) : Expression
+    {
+        return DB::raw('UuidFromBin(' . $column_name . ') as ' . $column_name);
+    }
     /*
      *
      */
