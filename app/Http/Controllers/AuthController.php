@@ -32,7 +32,9 @@ class AuthController extends Controller
 
         return response(json_encode($arr['data']))
             ->header('Content-Type', 'application/json')
-            ->header('Authorization', 'Bearer ' . $arr['token']);
+            ->header('Authorization', 'Bearer ' . $arr['token'])
+            ->header('Access-Control-Expose-Headers', 'Authorization')
+            ->header('Access-Control-Allow-Headers', 'Authorization');
     }
 
     public function logout ()
