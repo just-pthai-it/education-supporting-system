@@ -21,8 +21,8 @@ class ExamSchedule extends Model
         'id',
         'id_module_class',
         'method',
-        'date_start',
         'time_start',
+        'time_end',
         'id_room',
     ];
 
@@ -33,6 +33,6 @@ class ExamSchedule extends Model
     public function teachers () : BelongsToMany
     {
         return $this->belongsToMany(Teacher::class, 'exam_schedule_teacher',
-                             'id_exam_schedule', 'id_teacher');
+                                    'id_exam_schedule', 'id_teacher');
     }
 }

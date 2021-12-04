@@ -87,13 +87,15 @@ class ExamScheduleExcelService implements Contracts\ExcelServiceContract
     }
 
     private function _createExamSchedules (&$exam_schedules, $id_module_class,
-                                           $method, $date_start, $time_start, $id_room)
+                                           $method, $date, $time, $id_room)
     {
+        $date_time = $this->_createDateTime($date, $time);
+
         $exam_schedules[] = [
             'id_module_class' => $id_module_class,
             'method'          => $method,
-            'date_start'      => GFunction::excelValueToDate($date_start),
-            'time_start'      => preg_replace('/\s+/', ' ', $time_start),
+            'time_start'      => $date_time[0],
+            'time_end'        => $date_time[1],
             'id_room'         => $id_room,
         ];
     }
@@ -105,6 +107,17 @@ class ExamScheduleExcelService implements Contracts\ExcelServiceContract
         {
             $exam_schedules_teaches[$id_module_class][] = $this->teachers[$teacher_name];
         }
+    }
+
+    private function _createDateTime ($date, $time) : array
+    {
+        preg_replace('/\s+/', ' ', $time);
+        $date       = GFunction::excelValueToDate($date);
+        $arr        = explode('-', $time);
+        $time_start = $date . ' ' . substr($arr[0], strlen($arr[0]) - 5) . ':00.000';
+        $time_end   = $date . ' ' . substr($arr[1], 0, 5) . ':00.000';
+
+        return [$time_start, $time_end];
     }
 
     public function handleData ($formatted_data)
