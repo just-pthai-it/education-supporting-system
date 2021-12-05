@@ -19,6 +19,6 @@ class ExamScheduleController extends Controller
 
     public function getTeacherExamSchedules ($id_teacher)
     {
-        return $this->examScheduleService->getTeacherExamSchedules(auth()->user()->id_user);
+        return response($this->examScheduleService->getTeacherExamSchedules(auth()->user()->id_user));
     }
 }

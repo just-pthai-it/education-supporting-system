@@ -24,13 +24,15 @@ use App\Http\Controllers\ExamScheduleController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::group(['prefix' => 'auth'], function ()
+Route::middleware(['default_header'])->group(function ()
 {
-    Route::post('login', [AuthController::class, 'login']);
+    Route::group(['prefix' => 'auth'], function ()
+    {
+        Route::post('login', [AuthController::class, 'login']);
+    });
 });
 
-Route::middleware('cus.auth')->group(function ()
+Route::middleware(['cus.auth', 'default_header'])->group(function ()
 {
     Route::group(['prefix' => 'notification'], function ()
     {
@@ -59,7 +61,8 @@ Route::middleware('cus.auth')->group(function ()
         {
             Route::get('schedules', [ScheduleController::class, 'getTeacherSchedules']);
 
-            Route::get('exam-schedules', [ExamScheduleController::class, 'getTeacherExamSchedules']);
+            Route::get('exam-schedules',
+                       [ExamScheduleController::class, 'getTeacherExamSchedules']);
         });
     });
 

@@ -31,10 +31,7 @@ class AuthController extends Controller
         $arr = $this->authService->login($request->username, $request->password);
 
         return response(json_encode($arr['data']))
-            ->header('Content-Type', 'application/json')
-            ->header('Authorization', 'Bearer ' . $arr['token'])
-            ->header('Access-Control-Expose-Headers', 'Authorization')
-            ->header('Access-Control-Allow-Headers', 'Authorization');
+            ->header('Authorization', 'Bearer ' . $arr['token']);
     }
 
     public function logout ()

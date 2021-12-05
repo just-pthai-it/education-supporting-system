@@ -13,7 +13,6 @@ class FeedbackRepository implements Contracts\FeedbackRepositoryContract
 
     public function findAll ()
     {
-        return Feedback::latest('id')
-                       ->get(['title', 'content', 'feedback_type', 'create_at']);
+        return Feedback::latest('id')->get(['title', 'content', 'feedback_type', 'create_at']);
     }
 }

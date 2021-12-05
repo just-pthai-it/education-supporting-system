@@ -24,6 +24,6 @@ class FeedbackController extends Controller
 
     public function getAllFeedbacks ()
     {
-        return $this->feedbackService->getAllFeedbacks();
+        return response($this->feedbackService->getAllFeedbacks());
     }
 }
