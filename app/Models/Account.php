@@ -78,6 +78,11 @@ class Account extends Model
         return $this->hasMany(Notification::class, 'id_sender', 'id');
     }
 
+    public function feedbacks () : HasMany
+    {
+        return $this->hasMany(Notification::class, 'id_account', 'id');
+    }
+
     public function roles () : BelongsTo
     {
         return $this->belongsTo(Role::class, 'id_role', 'id');

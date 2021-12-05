@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\FeedbackService;
 use Illuminate\Support\Facades\URL;
 use App\Services\AcademicYearService;
 use App\Services\AccountService;
@@ -9,6 +10,7 @@ use App\Services\AuthService;
 use App\Services\ExamScheduleService;
 use App\Services\RollCallExcelService;
 use App\Services\ExamScheduleExcelService;
+use App\Services\Contracts\FeedbackServiceContract;
 use App\Services\Contracts\AcademicYearServiceContract;
 use App\Services\Contracts\AccountServiceContract;
 use App\Services\Contracts\AuthServiceContract;
@@ -40,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         StudySessionServiceContract::class => StudySessionService::class,
         ModuleClassServiceContract::class  => ModuleClassService::class,
         FileUploadServiceContract::class   => FileUploadService::class,
+        FeedbackServiceContract::class     => FeedbackService::class,
         ScheduleServiceContract::class     => ScheduleService::class,
         AccountServiceContract::class      => AccountService::class,
         FacultyServiceContract::class      => FacultyService::class,

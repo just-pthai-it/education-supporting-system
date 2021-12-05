@@ -23,7 +23,8 @@ class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
     {
         return Teacher::find($id_teacher)->examSchedules()
                       ->join(ModuleClass::table_as, 'mc.id', '=', 'exam_schedule.id_module_class')
-                      ->get(['id_module_class', 'mc.name', 'method', 'time_start', 'time_end', 'id_room'])
+                      ->get(['id_module_class', 'mc.name', 'method',
+                             'time_start', 'time_end', 'id_room', 'note'])
                       ->toArray();
     }
 }

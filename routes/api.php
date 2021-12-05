@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
@@ -100,5 +101,12 @@ Route::middleware('cus.auth')->group(function ()
 
     Route::group(['prefix' => 'other-department'], function ()
     {
+    });
+
+    Route::group(['prefix' => 'feedbacks'], function ()
+    {
+        Route::post('send-feedback', [FeedbackController::class, 'createFeedback']);
+
+        Route::get('', [FeedbackController::class, 'getAllFeedbacks']);
     });
 });
