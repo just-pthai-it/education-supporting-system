@@ -6,5 +6,7 @@ interface AuthServiceContract
 {
     public function login ($username, $password);
 
+    public function getUserInfo ();
+
     public function logout ();
 }
