@@ -10,6 +10,23 @@ use Illuminate\Support\Str;
 
 class CustomUserProvider extends EloquentUserProvider implements UserProvider
 {
+    public function retrieveById ($identifier)
+    {
+        $model = $this->createModel();
+
+        $columns = [
+            'id',
+            'password',
+            'id_role',
+            'id_user',
+            GFunction::uuidFromBin('uuid'),
+        ];
+
+        return $this->newModelQuery($model)
+                    ->where($model->getAuthIdentifierName(), $identifier)
+                    ->first($columns);
+    }
+
     public function retrieveByCredentials (array $credentials)
     {
         if (empty($credentials) ||

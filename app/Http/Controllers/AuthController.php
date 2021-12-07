@@ -29,9 +29,8 @@ class AuthController extends Controller
     {
         $this->loginForm->validate($request);
         $arr = $this->authService->login($request->username, $request->password);
-
-        return response(json_encode($arr['data']))
-            ->header('Authorization', 'Bearer ' . $arr['token']);
+        var_dump($arr);
+        return response($arr['data'])->header('Authorization', 'Bearer ' . $arr['token']);
     }
 
     public function logout ()

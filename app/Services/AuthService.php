@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Exceptions\InvalidAccountException;
-use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Repositories\Contracts\DepartmentRepositoryContract;
 use App\Repositories\Contracts\FacultyRepositoryContract;
 use App\Repositories\Contracts\PermissionRepositoryContract;
@@ -45,7 +44,7 @@ class AuthService implements Contracts\AuthServiceContract
     public function login ($username, $password) : array
     {
         $token = $this->_authenticate($username, $password);
-        $data  = $this->_getUserInfo();
+        $data  = $this->getUserInfo();
 
         return [
             'data'  => $data,
@@ -83,7 +82,7 @@ class AuthService implements Contracts\AuthServiceContract
     /**
      * @throws InvalidAccountException
      */
-    protected function _getUserInfo ()
+    public function getUserInfo ()
     {
         $permissions = $this->_getAccountPermissions();
         switch (auth()->user()->id_role)
