@@ -48,7 +48,7 @@ class StudentRepository implements Contracts\StudentRepositoryContract
 
     public function updateMultiple2 ($id_students, $column_name)
     {
-        Student::whereIn('id_student', $id_students)->increment($column_name);
+        Student::whereIn('id', $id_students)->increment($column_name);
     }
 
     public function _createTemporaryTable1 ($classes)

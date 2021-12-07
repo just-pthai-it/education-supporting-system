@@ -28,8 +28,7 @@ class ServiceCommand extends GeneratorCommand
 
     public function handle ()
     {
-        shell_exec('php artisan make:service-contract ' .
-                   ucwords(strtolower($this->argument('name'))));
+        shell_exec('php artisan make:service-contract ' . $this->argument('name'));
         parent::handle();
     }
 
