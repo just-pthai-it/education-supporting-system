@@ -20,4 +20,9 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
     {
         return $this->examScheduleRepository->findAllByIdTeacher($id_teacher);
     }
+
+    public function updateExamSchedule ($data)
+    {
+        $this->examScheduleRepository->update($data);
+    }
 }

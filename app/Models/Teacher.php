@@ -25,6 +25,7 @@ class Teacher extends Model
     protected $fillable = [
         'id',
         'name',
+        'is_female',
         'birth',
         'university_teacher_degree',
         'id_department',
@@ -41,6 +42,7 @@ class Teacher extends Model
 
     private array $column = [
         'name',
+        'is_female',
         'birth',
         'university_teacher_degree',
         'id_department',

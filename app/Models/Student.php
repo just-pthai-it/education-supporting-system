@@ -24,6 +24,7 @@ class Student extends Model
     protected $fillable = [
         'id',
         'name',
+        'is_female',
         'birth',
         'id_class',
         'id_card_number',

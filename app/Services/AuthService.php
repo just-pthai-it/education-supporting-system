@@ -108,8 +108,7 @@ class AuthService implements Contracts\AuthServiceContract
                 break;
 
             case 2:
-                $data       = $this->teacherDepository->findById(auth()->user()->id_user);
-                $data->name = 'Gv ' . $data->name;
+                $data = $this->teacherDepository->findById(auth()->user()->id_user);
                 break;
 
             default:
@@ -117,7 +116,7 @@ class AuthService implements Contracts\AuthServiceContract
         }
 
         $data->uuid_account = auth()->user()->uuid;
-        $data->permissions = $permissions;
+        $data->permissions  = $permissions;
         return $data;
     }
 

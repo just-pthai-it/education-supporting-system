@@ -24,6 +24,7 @@ class ExamSchedule extends Model
         'time_start',
         'time_end',
         'id_room',
+        'note',
     ];
 
     protected $hidden = [

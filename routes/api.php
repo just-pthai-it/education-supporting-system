@@ -116,5 +116,10 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::get('', [FeedbackController::class, 'getAllFeedbacks']);
     });
 
+    Route::group(['prefix' => 'exam-schedules'], function ()
+    {
+        Route::put('update', [ExamScheduleController::class, 'updateExamSchedule']);
+    });
+
     Route::get('users', [UserController::class, 'getUserInfo']);
 });
