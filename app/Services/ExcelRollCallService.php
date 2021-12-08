@@ -2,72 +2,33 @@
 
 namespace App\Services;
 
-use Exception;
 use App\Helpers\GData;
 use App\Helpers\GFunction;
 use App\Imports\FileImport;
 use Illuminate\Support\Str;
 
-class RollCallExcelService implements Contracts\ExcelServiceContract
+class ExcelRollCallService implements Contracts\ExcelServiceContract
 {
-    private array $special_module_classes;
-    private array $id_students_missing;
-    private array $academic_years;
-    private string $id_training_type;
+    private $special_module_classes;
+    private $id_students_missing;
+    private $academic_years;
+    private $id_training_type;
 
-    /**
-     * @param array $special_module_classes
-     */
-    public function setSpecialModuleClasses (array $special_module_classes) : void
+    public function readData ($file_name) : array
     {
-        $this->special_module_classes = $special_module_classes;
-    }
-
-    /**
-     * @param array $id_students_missing
-     */
-    public function setIdStudentsMissing (array $id_students_missing) : void
-    {
-        $this->id_students_missing = $id_students_missing;
-    }
-
-    /**
-     * @param array $academic_years
-     */
-    public function setAcademicYears (array $academic_years) : void
-    {
-        $this->academic_years = $academic_years;
-    }
-
-    /**
-     * @param string $id_training_type
-     */
-    public function setIdTrainingType (string $id_training_type) : void
-    {
-        $this->id_training_type = $id_training_type;
-    }
-
-
-    public function readData ($file_name)
-    {
-        $raw_data       = $this->_getData($file_name);
-        $formatted_data = $this->_formatData($raw_data);
-        return $formatted_data;
+        $raw_data = $this->_getData($file_name);
+        return $this->_formatData($raw_data);
     }
 
     private function _getData ($file_name) : array
     {
-        $raw_data = (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
-        return $raw_data;
+        return (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
     }
 
-    /**
-     * @throws Exception
-     */
     private function _formatData ($raw_data) : array
     {
-        $curr_mc    = '';
-        $latest_num = 0;
+        $current_module_class        = '';
+        $latest_first_ordinal_number = -1;
 
         $students               = [];
         $id_students            = [];
@@ -77,53 +38,29 @@ class RollCallExcelService implements Contracts\ExcelServiceContract
         $module_classes_missing = [];
         foreach ($raw_data as $sheet)
         {
-            $flag = false;
+            $is_begin = false;
             foreach ($sheet as $row)
             {
-                if (!is_int($row[0]) && $flag)
+                if (!is_int($row[0]) && $is_begin)
                 {
                     break;
                 }
 
-                if (is_int($row[0]) && !$flag)
+                if (is_int($row[0]) && !$is_begin)
                 {
                     if ($row[0] == 1)
                     {
-                        $flag2 = true;
-                        if ($row[0] == $latest_num && $latest_num == 1)
-                        {
-                            $flag2 = false;
-                            if (isset($this->special_module_classes[$curr_mc]))
-                            {
-                                $curr_mc = $this->special_module_classes[$curr_mc];
-                                $flag2   = true;
-                            }
-                            else
-                            {
-                                $module_classes_missing[] = $curr_mc;
-                            }
-                        }
-
-                        if ($flag2)
-                        {
-                            if ($curr_mc != '')
-                            {
-                                $id_module_classes[] = ['id_module_class' => $curr_mc];
-                            }
-                            foreach ($temp_students as $id_student)
-                            {
-                                $participates[$curr_mc][] = $id_student;
-                            }
-                        }
-
-                        $temp_students = [];
+                        $this->_firstPage($latest_first_ordinal_number, $current_module_class,
+                                          $temp_students, $participates, $id_module_classes,
+                                          $module_classes_missing);
                     }
 
-                    $latest_num = $row[0];
-                    $curr_mc    = $sheet[4][0];
-                    $flag       = true;
+                    $latest_first_ordinal_number = $row[0];
+                    $current_module_class        = $sheet[4][0];
+                    $is_begin                    = true;
                 }
-                if ($flag)
+
+                if ($is_begin)
                 {
                     $arr['id']       = $row[2];
                     $arr['birth']    = GFunction::formatDate($row[5]);
@@ -137,32 +74,9 @@ class RollCallExcelService implements Contracts\ExcelServiceContract
             }
         }
 
-        $flag2 = true;
-        if ($latest_num == 1)
-        {
-            $flag2 = false;
-            if (isset($this->special_module_classes[$curr_mc]))
-            {
-                $curr_mc = $this->special_module_classes[$curr_mc];
-                $flag2   = true;
-            }
-            else
-            {
-                $module_classes_missing[] = $curr_mc;
-            }
-        }
-
-        if ($flag2)
-        {
-            if ($curr_mc != '')
-            {
-                $id_module_classes[] = ['id_module_class' => $curr_mc];
-            }
-            foreach ($temp_students as $id_student)
-            {
-                $participates[$curr_mc][] = $id_student;
-            }
-        }
+        $this->_firstPage($latest_first_ordinal_number, $current_module_class,
+                          $temp_students, $participates, $id_module_classes,
+                          $module_classes_missing);
 
         return [
             'students'               => array_unique($students, SORT_REGULAR),
@@ -171,6 +85,40 @@ class RollCallExcelService implements Contracts\ExcelServiceContract
             'id_module_classes'      => $id_module_classes,
             'module_classes_missing' => $module_classes_missing,
         ];
+    }
+
+    private function _firstPage ($latest_first_ordinal_number, $current_module_class,
+                                 &$temp_students, &$participates, &$id_module_classes,
+                                 &$module_classes_missing)
+    {
+        $is_valid = true;
+        if ($latest_first_ordinal_number == 1)
+        {
+            $is_valid = false;
+            if (isset($this->special_module_classes[$current_module_class]))
+            {
+                $current_module_class = $this->special_module_classes[$current_module_class];
+                $is_valid             = true;
+            }
+            else
+            {
+                $module_classes_missing[] = $current_module_class;
+            }
+        }
+
+        if ($is_valid)
+        {
+            if ($current_module_class != '')
+            {
+                $id_module_classes[] = ['id_module_class' => $current_module_class];
+            }
+            foreach ($temp_students as $id_student)
+            {
+                $participates[$current_module_class][] = $id_student;
+            }
+        }
+
+        $temp_students = [];
     }
 
     public function handleData ($formatted_data) : array
@@ -201,14 +149,22 @@ class RollCallExcelService implements Contracts\ExcelServiceContract
         ];
     }
 
+    public function setParameters (...$parameters)
+    {
+        $this->special_module_classes = $parameters[0];
+        $this->id_students_missing    = $parameters[1];
+        $this->academic_years         = $parameters[2];
+        $this->id_training_type       = $parameters[3];
+    }
+
     private function _getInfoOfFacultyClass (&$id_class)
     {
         $id_class      = str_replace('Đ', 'D', $id_class);
+        $id_class      = str_replace('Ư', 'U', $id_class);
         $id_class      = preg_replace('/\s+/', '', $id_class);
         $arr           = explode('.', $id_class);
-        $academic_year = $arr[0];
+        $academic_year = array_shift($arr);
 
-        unset($arr[0]);
         $class = '';
         foreach ($arr as $a)
         {
@@ -216,7 +172,7 @@ class RollCallExcelService implements Contracts\ExcelServiceContract
         }
         $class = rtrim($class, '.');
 
-        $num = substr($class, strlen($class) - 1, 1);
+        $num = substr($class, strlen($class) - 1);
         if (is_numeric($num))
         {
             if (!isset(GData::$faculty_class_and_major_info[substr($class, 0,

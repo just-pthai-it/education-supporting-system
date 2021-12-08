@@ -5,8 +5,6 @@ namespace App\Services;
 use App\BusinessClasses\FileUploadHandler;
 use App\Exceptions\ImportDataFailedException;
 use App\Helpers\GFunction;
-use App\Imports\Handler\ExcelDataHandler1;
-use App\Imports\Reader\ExcelFileReader2;
 use App\Services\Contracts\ExcelServiceContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
 use App\Repositories\Contracts\TeacherRepositoryContract;
@@ -24,8 +22,6 @@ use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 class FileUploadService implements Contracts\FileUploadServiceContract
 {
     private FileUploadHandler $fileUploadHandler;
-    private ExcelDataHandler1 $excelDataHandler1;
-    private ExcelFileReader2 $excelFileReader2;
     private ModuleClassRepositoryContract $moduleClassRepository;
     private StudentRepositoryContract $studentRepository;
     private TeacherRepositoryContract $teacherRepository;
@@ -37,8 +33,6 @@ class FileUploadService implements Contracts\FileUploadServiceContract
 
     /**
      * @param FileUploadHandler              $fileUploadHandler
-     * @param ExcelDataHandler1              $excelDataHandler1
-     * @param ExcelFileReader2               $excelFileReader2
      * @param ModuleClassRepositoryContract  $moduleClassRepository
      * @param StudentRepositoryContract      $studentRepository
      * @param TeacherRepositoryContract      $teacherRepository
@@ -48,8 +42,6 @@ class FileUploadService implements Contracts\FileUploadServiceContract
      * @param ExamScheduleRepositoryContract $examScheduleRepository
      */
     public function __construct (FileUploadHandler              $fileUploadHandler,
-                                 ExcelDataHandler1              $excelDataHandler1,
-                                 ExcelFileReader2               $excelFileReader2,
                                  ModuleClassRepositoryContract  $moduleClassRepository,
                                  StudentRepositoryContract      $studentRepository,
                                  TeacherRepositoryContract      $teacherRepository,
@@ -59,8 +51,6 @@ class FileUploadService implements Contracts\FileUploadServiceContract
                                  ExamScheduleRepositoryContract $examScheduleRepository)
     {
         $this->fileUploadHandler      = $fileUploadHandler;
-        $this->excelDataHandler1      = $excelDataHandler1;
-        $this->excelFileReader2       = $excelFileReader2;
         $this->moduleClassRepository  = $moduleClassRepository;
         $this->studentRepository      = $studentRepository;
         $this->teacherRepository      = $teacherRepository;
@@ -75,6 +65,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
      */
     public function importRollCallFile ($input)
     {
+        $this->excelService = app()->make('excel_roll_call');
         $this->fileUploadHandler->handleFileUpload($input['file']);
         $data = $this->_readData($input['id_department']);
         $this->_checkExceptions2($data['module_classes_missing'], $data['id_module_classes']);
@@ -91,8 +82,8 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     {
         $special_module_classes = Cache::get($id_department . '_special_module_classes') ??
                                   Cache::get($id_department . '_special_module_classes_backup');
-        return $this->excelFileReader1->readData($this->fileUploadHandler->getNewFileName(),
-                                                 $special_module_classes);
+        $this->excelService->setParameters($special_module_classes, null, null, null);
+        return $this->excelService->readData($this->fileUploadHandler->getNewFileName());
     }
 
     /**
@@ -126,8 +117,9 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     private function _handleData ($formatted_data, $id_training_type, $new_id_students) : array
     {
         $academic_years = Cache::get('academic_years') ?? Cache::get('academic_years_backup');
-        return $this->excelDataHandler1->handleData($formatted_data, $id_training_type,
-                                                    $new_id_students, $academic_years);
+        $this->excelService->setParameters(null, $new_id_students,
+                                           $academic_years, $id_training_type);
+        return $this->excelService->handleData($formatted_data);
     }
 
     private function _getIDStudentsMissing ($id_students)
@@ -201,9 +193,10 @@ class FileUploadService implements Contracts\FileUploadServiceContract
      */
     public function importScheduleFile ($input)
     {
+        $this->excelService = app()->make('excel_schedule');
+        $this->excelService->setParameters($input['id_study_session']);
         $this->fileUploadHandler->handleFileUpload($input['file']);
-        $data = $this->excelFileReader2->readData($this->fileUploadHandler->getNewFileName(),
-                                                  $input['id_study_session']);
+        $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName());
 
         $modules_missing = $this->_getIDModulesMissing($data['id_modules']);
         $this->_checkExceptions($modules_missing);
@@ -286,12 +279,12 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         }, 2);
     }
 
-    private function _createManyExamSchedules($exam_schedules)
+    private function _createManyExamSchedules ($exam_schedules)
     {
         $this->examScheduleRepository->insertMultiple($exam_schedules);
     }
 
-    private function _createManyExamSchedulesTeachers($exam_schedules_teachers)
+    private function _createManyExamSchedulesTeachers ($exam_schedules_teachers)
     {
         foreach ($exam_schedules_teachers as $id_module_class => $id_teachers)
         {

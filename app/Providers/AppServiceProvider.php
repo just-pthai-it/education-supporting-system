@@ -8,8 +8,9 @@ use App\Services\AcademicYearService;
 use App\Services\AccountService;
 use App\Services\AuthService;
 use App\Services\ExamScheduleService;
-use App\Services\RollCallExcelService;
-use App\Services\ExamScheduleExcelService;
+use App\Services\ExcelRollCallService;
+use App\Services\ExcelScheduleService;
+use App\Services\ExcelExamScheduleService;
 use App\Services\Contracts\FeedbackServiceContract;
 use App\Services\Contracts\AcademicYearServiceContract;
 use App\Services\Contracts\AccountServiceContract;
@@ -59,12 +60,17 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind('excel_roll_call', function ()
         {
-            return new RollCallExcelService();
+            return new ExcelRollCallService();
+        });
+
+        $this->app->bind('excel_schedule', function ()
+        {
+            return new ExcelScheduleService();
         });
 
         $this->app->bind('excel_exam_schedule', function ()
         {
-            return new ExamScheduleExcelService();
+            return new ExcelExamScheduleService();
         });
     }
 

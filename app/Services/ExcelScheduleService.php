@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Imports\Reader;
+namespace App\Services;
 
+use Exception;
 use App\Helpers\GFunction;
 use App\Imports\FileImport;
-use Exception;
 
-class ExcelFileReader2
+class ExcelScheduleService implements Contracts\ExcelServiceContract
 {
-    /**
-     * @throws Exception
-     */
-    public function readData ($file_name, $id_study_session) : array
+    private $id_study_session;
+
+    public function readData ($file_name) : array
     {
-        $raw_data       = $this->_getData($file_name);
-        $formatted_data = $this->_formatData($raw_data, $id_study_session);
-        return $formatted_data;
+        $raw_data = $this->_getData($file_name);
+        return $this->_formatData($raw_data);
     }
 
     private function _getData ($file_name) : array
@@ -23,12 +21,8 @@ class ExcelFileReader2
         return (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
     }
 
-    /**
-     * @throws Exception
-     */
-    private function _formatData ($raw_data, $id_study_session) : array
+    private function _formatData ($raw_data) : array
     {
-
         $schedules              = [];
         $id_modules             = [];
         $module_classes         = [];
@@ -61,8 +55,7 @@ class ExcelFileReader2
 
                     $this->_createModuleClass($module_classes, $current_id_module,
                                               $current_module_class_name,
-                                              $current_student_num,
-                                              $id_study_session);
+                                              $current_student_num);
 
                     $id_modules[] = ['id_module' => $current_id_module];
 
@@ -126,12 +119,13 @@ class ExcelFileReader2
             'id_modules'             => array_unique($id_modules, SORT_REGULAR),
             'module_classes'         => $module_classes,
             'special_module_classes' => array_merge($Special_module_classes,
-                                                    ['id_study_session' => $id_study_session])
+                                                    ['id_study_session' => $this->id_study_session])
         ];
     }
 
+
     private function _createModuleClass (&$module_classes, $id_module, $module_class_name,
-                                         $student_num, $id_study_session)
+                                         $student_num)
     {
         $id_module_class = GFunction::convertToIDModuleClass($id_module, $module_class_name);
 
@@ -139,7 +133,7 @@ class ExcelFileReader2
             'id'               => $id_module_class,
             'name'             => $module_class_name,
             'number_plan'      => $student_num,
-            'id_study_session' => $id_study_session,
+            'id_study_session' => $this->id_study_session,
             'id_module'        => $id_module,
         ];
     }
@@ -192,5 +186,15 @@ class ExcelFileReader2
             default:
                 throw new Exception();
         }
+    }
+
+    public function handleData ($formatted_data)
+    {
+
+    }
+
+    public function setParameters (...$parameters)
+    {
+        $this->id_study_session = $parameters[0];
     }
 }

@@ -5,9 +5,9 @@ namespace App\Services;
 use App\Helpers\GFunction;
 use App\Imports\FileImport;
 
-class ExamScheduleExcelService implements Contracts\ExcelServiceContract
+class ExcelExamScheduleService implements Contracts\ExcelServiceContract
 {
-    private array $teachers;
+    private $teachers;
 
     public function readData ($file_name) : array
     {
@@ -17,8 +17,7 @@ class ExamScheduleExcelService implements Contracts\ExcelServiceContract
 
     private function _getData ($file_name) : array
     {
-        $raw_data = (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
-        return $raw_data;
+        return (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
     }
 
     private function _formatData ($raw_data) : array
