@@ -12,8 +12,10 @@ class VerifyJWTToken extends BaseMiddleware
 {
     /**
      * Handle an incoming request.
+     *
      * @param Request $request
      * @param Closure $next
+     *
      * @return mixed
      */
     public function handle (Request $request, Closure $next)
@@ -31,7 +33,10 @@ class VerifyJWTToken extends BaseMiddleware
         {
             try
             {
-                $token    = $this->auth->parseToken()->refresh();
+                $token = $this->auth->parseToken()->refresh();
+                $this->auth->setToken($token);
+                $this->auth->authenticate();
+
                 $response = $next($request);
 
                 return $this->setAuthenticationHeader($response, $token);
