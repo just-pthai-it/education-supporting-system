@@ -19,7 +19,7 @@ class FeedbackController extends Controller
 
     public function createFeedback (Request $request)
     {
-        $this->feedbackService->createFeedback($request->only(['title', 'content', 'feedback_type', 'create_at', 'report_bug']));
+        $this->feedbackService->createFeedback($request->only(['title', 'content', 'feedback_type', 'create_at', 'is_bug']));
     }
 
     public function getAllFeedbacks ()
