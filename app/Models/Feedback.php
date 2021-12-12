@@ -23,6 +23,7 @@ class Feedback extends Model
         'content',
         'feedback_type',
         'create_at',
+        'is_bug',
         'id_account',
     ];
 

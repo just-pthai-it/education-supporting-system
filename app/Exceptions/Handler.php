@@ -34,7 +34,7 @@ class Handler extends ExceptionHandler
     {
         $this->renderable(function (InvalidAccountException $exception)
         {
-            return response('Invalid username or password', 401);
+            return response('Invalid username or password', 403);
         });
 
         $this->renderable(function (InvalidFormRequestException $exception)
