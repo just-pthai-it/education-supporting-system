@@ -35,13 +35,13 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
                 $response[$i] = $exam_schedule;
                 unset($response[$i]['teacher_name']);
                 unset($response[$i]['position']);
-                $response[$i]['teachers'][intval($exam_schedule['position'])] = $exam_schedule['teacher_name'];
+                $response[$i]['teachers'][] = $exam_schedule['teacher_name'];
 
                 $current_id_exam_schedule = $exam_schedule['id_module_class'];
             }
             else
             {
-                $response[$i]['teachers'][intval($exam_schedule['position'])] = $exam_schedule['teacher_name'];
+                $response[$i]['teachers'][] = $exam_schedule['teacher_name'];
             }
         }
 

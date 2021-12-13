@@ -26,6 +26,8 @@ class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
                       ->join('exam_schedule_teacher as est', 'est.id_exam_schedule', '=',
                              'exam_schedule.id')
                       ->join(Teacher::table_as, 'tea.id', '=', 'est.id_teacher')
+                      ->orderBy('id')
+                      ->orderBy('position')
                       ->get(['exam_schedule.id', 'id_module_class', 'mc.name', 'method',
                              'time_start', 'time_end', 'id_room', 'note',
                              'tea.name as teacher_name', 'est.position'])
