@@ -45,7 +45,7 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
             }
         }
 
-        return $response;
+        return array_values($response);
     }
 
     public function updateExamSchedule ($data)
