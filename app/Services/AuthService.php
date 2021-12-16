@@ -102,12 +102,8 @@ class AuthService implements Contracts\AuthServiceContract
                 $data->name = 'Khoa ' . $data->name;
                 break;
 
-            case 3:
-                $data       = $this->departmentDepository->get(auth()->user()->id_user);
-                $data->name = 'Bộ môn ' . $data->name;
-                break;
-
             case 2:
+            case 3:
                 $data = $this->teacherDepository->findById(auth()->user()->id_user);
                 break;
 
