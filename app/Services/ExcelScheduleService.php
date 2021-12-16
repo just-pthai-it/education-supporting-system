@@ -21,6 +21,9 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
         return (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
     }
 
+    /**
+     * @throws Exception
+     */
     private function _formatData ($raw_data) : array
     {
         $schedules              = [];

@@ -38,6 +38,7 @@ class Teacher extends Model
     protected $hidden = [
         'uuid',
         'is_delete',
+        'pivot',
     ];
 
     private array $column = [
@@ -78,6 +79,8 @@ class Teacher extends Model
     public function examSchedules () : BelongsToMany
     {
         return $this->belongsToMany(ExamSchedule::class, 'exam_schedule_teacher',
-                             'id_teacher', 'id_exam_schedule');
+                                    'id_teacher', 'id_exam_schedule')
+                    ->withPivot('position');
+
     }
 }

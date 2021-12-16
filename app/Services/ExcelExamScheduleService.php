@@ -59,11 +59,6 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
                         break;
                     }
 
-                    $teacher_names = [];
-                    for ($j = $first_teacher_index; $j <= $last_teacher_index; $j++)
-                    {
-                        $teacher_names[] = $row[$j];
-                    }
 
                     $id_room = $row[$last_teacher_index + 1] ==
                                null ? $row[11] : substr($row[$last_teacher_index + 1], 2);
@@ -73,8 +68,14 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
 
                     $this->_createExamSchedules($exam_schedules, $id_module_class, $row[6], $row[7],
                                                 $row[8], $id_room);
-                    $this->_createExamSchedulesTeachers($exam_schedules_teachers,
-                                                        $id_module_class, $teacher_names);
+
+                    for ($j = $first_teacher_index; $j <= $last_teacher_index; $j++)
+                    {
+                        $this->_createExamSchedulesTeachers($exam_schedules_teachers,
+                                                            $id_module_class, $row[$j],
+                                                            $j - $first_teacher_index + 1);
+                    }
+
                 }
             }
         }
@@ -100,12 +101,10 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
     }
 
     private function _createExamSchedulesTeachers (&$exam_schedules_teaches, $id_module_class,
-                                                   $teacher_names)
+                                                   $teacher_name, $position)
     {
-        foreach ($teacher_names as $teacher_name)
-        {
-            $exam_schedules_teaches[$id_module_class][] = $this->teachers[$teacher_name];
-        }
+        $id_teacher = $this->teachers[$teacher_name];
+        $exam_schedules_teaches[$id_module_class][$id_teacher] = ['position' => $position];
     }
 
     private function _createDateTime ($date, $time) : array

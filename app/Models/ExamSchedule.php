@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -28,12 +29,17 @@ class ExamSchedule extends Model
     ];
 
     protected $hidden = [
-        'pivot',
     ];
+
+    public function moduleClass () : BelongsTo
+    {
+        return $this->belongsTo(ModuleClass::class, 'id_module_class', 'id');
+    }
 
     public function teachers () : BelongsToMany
     {
         return $this->belongsToMany(Teacher::class, 'exam_schedule_teacher',
-                                    'id_exam_schedule', 'id_teacher');
+                                    'id_exam_schedule', 'id_teacher')
+                    ->withPivot('position');
     }
 }

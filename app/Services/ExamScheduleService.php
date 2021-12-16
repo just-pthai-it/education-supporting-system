@@ -2,46 +2,92 @@
 
 namespace App\Services;
 
+use App\Repositories\Contracts\TeacherRepositoryContract;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 
 class ExamScheduleService implements Contracts\ExamScheduleServiceContract
 {
     private ExamScheduleRepositoryContract $examScheduleRepository;
+    private TeacherRepositoryContract $teacherRepository;
 
     /**
      * @param ExamScheduleRepositoryContract $examScheduleRepository
+     * @param TeacherRepositoryContract      $teacherRepository
      */
-    public function __construct (ExamScheduleRepositoryContract $examScheduleRepository)
+    public function __construct (ExamScheduleRepositoryContract $examScheduleRepository,
+                                 TeacherRepositoryContract      $teacherRepository)
     {
         $this->examScheduleRepository = $examScheduleRepository;
+        $this->teacherRepository      = $teacherRepository;
     }
 
     public function getTeacherExamSchedules ($id_teacher) : array
     {
         $exam_schedules = $this->examScheduleRepository->findAllByIdTeacher($id_teacher);
-        return $this->_formatResponse($exam_schedules);
+        return $this->_formatResponse1($exam_schedules);
     }
 
-    private function _formatResponse ($exam_schedules) : array
+    public function getDepartmentExamSchedules ($id_department) : array
     {
-        $response                 = [];
-        $current_id_exam_schedule = '';
-        $i                        = 0;
+        $id_teachers    = $this->teacherRepository->findAllByIdDepartment($id_department);
+        $exam_schedules = $this->examScheduleRepository->findAllByIdTeachers($id_teachers);
+        return $this->_formatResponse2($exam_schedules);
+    }
+
+    private function _formatResponse1 ($exam_schedules) : array
+    {
+        $response = [];
         foreach ($exam_schedules as $exam_schedule)
         {
-            if ($exam_schedule['id_module_class'] != $current_id_exam_schedule)
-            {
-                $i++;
-                $response[$i] = $exam_schedule;
-                unset($response[$i]['teacher_name']);
-                unset($response[$i]['position']);
-                $response[$i]['teachers'][] = $exam_schedule['teacher_name'];
+            $position          = intval($exam_schedule['position']) - 1;
+            $id_module_class   = $exam_schedule['id_module_class'];
+            $module_class_name = 'Thi môn ' . $exam_schedule['name'];
 
-                $current_id_exam_schedule = $exam_schedule['id_module_class'];
+            if (!isset($response[$id_module_class]))
+            {
+                $response[$id_module_class]         = $exam_schedule;
+                $response[$id_module_class]['name'] = $module_class_name;
+                unset($response[$id_module_class]['teacher_name']);
+                unset($response[$id_module_class]['position']);
+                unset($response[$id_module_class]['pivot']);
+                $response[$id_module_class]['teachers'][$position] = $exam_schedule['teacher_name'];
             }
             else
             {
-                $response[$i]['teachers'][] = $exam_schedule['teacher_name'];
+                $response[$id_module_class]['teachers'][$position] = $exam_schedule['teacher_name'];
+            }
+
+            ksort($response[$id_module_class]['teachers']);
+        }
+
+        return array_values($response);
+    }
+
+    private function _formatResponse2 ($data) : array
+    {
+        $response = [];
+        foreach ($data as $teacher)
+        {
+            foreach ($teacher['exam_schedules'] as $exam_schedule)
+            {
+                $position          = intval($exam_schedule['pivot']['position']) - 1;
+                $id_module_class   = $exam_schedule['id_module_class'];
+                $module_class_name = 'Thi môn ' . $exam_schedule['module_class']['name'];
+
+                if (!isset($response[$id_module_class]))
+                {
+                    $response[$id_module_class]                        = $exam_schedule;
+                    $response[$id_module_class]['name']                = $module_class_name;
+                    $response[$id_module_class]['teachers'][$position] = $teacher['name'];
+                    unset($response[$id_module_class]['pivot']);
+                    unset($response[$id_module_class]['module_class']);
+                }
+                else
+                {
+                    $response[$id_module_class]['teachers'][$position] = $teacher['name'];
+                }
+
+                ksort($response[$id_module_class]['teachers']);
             }
         }
 

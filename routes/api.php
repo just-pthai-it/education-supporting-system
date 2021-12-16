@@ -96,6 +96,9 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::group(['prefix' => '{id_department}'], function ()
         {
             Route::get('schedules', [ScheduleController::class, 'getDepartmentSchedules']);
+
+            Route::get('exam-schedules',
+                       [ExamScheduleController::class, 'getDepartmentExamSchedules']);
         });
     });
 

@@ -281,7 +281,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
 
     private function _createManyExamSchedules ($exam_schedules)
     {
-        $this->examScheduleRepository->insertMultiple($exam_schedules);
+        $this->examScheduleRepository->upsertMultiple($exam_schedules);
     }
 
     private function _createManyExamSchedulesTeachers ($exam_schedules_teachers)

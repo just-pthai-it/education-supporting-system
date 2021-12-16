@@ -5,18 +5,20 @@ namespace App\Repositories;
 use App\Models\Teacher;
 use App\Models\ModuleClass;
 use App\Models\ExamSchedule;
+use Illuminate\Support\Facades\DB;
 
 class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
 {
-    public function insertMultiple ($exam_schedules)
+    public function upsertMultiple ($exam_schedules)
     {
-        ExamSchedule::insert($exam_schedules);
+        ExamSchedule::upsert($exam_schedules, ['id_module_class'],
+                             ['id_module_class' => DB::raw('id_module_class')]);
     }
 
     public function insertPivot ($id_module_class, $id_teachers)
     {
-        ExamSchedule::where('id_module_class', $id_module_class)->first()->teachers()
-                    ->attach($id_teachers);
+        ExamSchedule::where('id_module_class', $id_module_class)->first()
+                    ->teachers()->sync($id_teachers);
     }
 
     public function findAllByIdTeacher ($id_teacher)
@@ -26,12 +28,16 @@ class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
                       ->join('exam_schedule_teacher as est', 'est.id_exam_schedule', '=',
                              'exam_schedule.id')
                       ->join(Teacher::table_as, 'tea.id', '=', 'est.id_teacher')
-                      ->orderBy('id')
-                      ->orderBy('position')
                       ->get(['exam_schedule.id', 'id_module_class', 'mc.name', 'method',
                              'time_start', 'time_end', 'id_room', 'note',
                              'tea.name as teacher_name', 'est.position'])
                       ->toArray();
+    }
+
+    public function findAllByIdTeachers ($id_teachers) : array
+    {
+        return Teacher::with(['examSchedules', 'examSchedules.moduleClass:id,name'])
+                      ->select('id', 'name')->find($id_teachers)->toArray();
     }
 
     public function update ($data)

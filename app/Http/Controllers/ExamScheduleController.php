@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Teacher;
 use Illuminate\Http\Request;
 use App\Services\Contracts\ExamScheduleServiceContract;
 
@@ -21,6 +20,11 @@ class ExamScheduleController extends Controller
     public function getTeacherExamSchedules ($id_teacher)
     {
         return response($this->examScheduleService->getTeacherExamSchedules(auth()->user()->id_user));
+    }
+
+    public function getDepartmentExamSchedules ($id_department)
+    {
+        return response($this->examScheduleService->getDepartmentExamSchedules($id_department));
     }
 
     public function updateExamSchedule (Request $request)
