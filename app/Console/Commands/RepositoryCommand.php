@@ -43,7 +43,7 @@ class RepositoryCommand extends GeneratorCommand
      */
     protected function replaceClass ($stub, $name) : string
     {
-        $model = ucwords(strtolower($this->argument('name')));
+        $model = $this->argument('name');
 
         if (!$this->argument('name'))
         {
