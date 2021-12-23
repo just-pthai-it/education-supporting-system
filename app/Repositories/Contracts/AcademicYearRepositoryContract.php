@@ -15,4 +15,10 @@ interface AcademicYearRepositoryContract
      * @return mixed
      */
     public function getAcademicYears2 ();
+
+    /**
+     * return an associative array with key  => value: academic_year = > id
+     * @return mixed
+     */
+    public function getAcademicYears3 ();
 }

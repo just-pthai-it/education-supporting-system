@@ -21,4 +21,10 @@ class AcademicYearController extends Controller
         $data = $this->academicYearService->getRecentAcademicYears();
         return response($data)->header('Content-Type', 'application/data');
     }
+
+    public function getAcademicYearsWithTrainingType ()
+    {
+        $data = $this->academicYearService->getAcademicYearsWithTrainingType();
+        return response($data)->header('Content-Type', 'application/data');
+    }
 }

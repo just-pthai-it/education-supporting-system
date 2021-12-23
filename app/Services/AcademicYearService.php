@@ -20,4 +20,9 @@ class AcademicYearService implements Contracts\AcademicYearServiceContract
     {
         return $this->academicYearRepository->getAcademicYears1();
     }
+
+    public function getAcademicYearsWithTrainingType ()
+    {
+        return $this->academicYearRepository->getAcademicYears3();
+    }
 }

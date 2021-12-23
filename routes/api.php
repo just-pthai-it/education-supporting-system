@@ -80,6 +80,8 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::get('academic-year', [AcademicYearController::class, 'getRecentAcademicYears']);
 
+    Route::get('academic-year2', [AcademicYearController::class, 'getAcademicYearsWithTrainingType']);
+
     Route::get('faculty-class', [FacultyClassController::class, 'getFacultyClasses']);
 
     Route::get('module-class/{id_teacher}',
