@@ -24,7 +24,6 @@ class Class_ extends Model
         'id_academic_year',
         'name',
         'id_faculty',
-        'id_training_type',
     ];
 
     public function students () : HasMany

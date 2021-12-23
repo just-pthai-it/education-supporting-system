@@ -60,4 +60,9 @@ class Faculty extends Model
     {
         return $this->hasMany(Class_::class, 'id_faculty', 'id');
     }
+
+    public function majors () : HasMany
+    {
+        return $this->hasMany(Major::class, 'id_faculty', 'id');
+    }
 }

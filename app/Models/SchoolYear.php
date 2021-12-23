@@ -6,16 +6,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TrainingType extends Model
+class SchoolYear extends Model
 {
     use HasFactory;
 
-    public const table = 'training_type';
-    public const table_as = 'training_type as tt';
+    public const table = 'school_year';
+    public const table_as = 'school_year as sy';
 
-    use HasFactory;
-
-    protected $table = 'training_type';
+    protected $table = 'school_year';
     protected $primaryKey = 'id';
     public $timestamps = false;
 
@@ -24,9 +22,8 @@ class TrainingType extends Model
         'name',
     ];
 
-    public function academicYears () : HasMany
+    public function terms () : HasMany
     {
-        return $this->hasMany(AcademicYear::class, 'id_training_type', 'id');
+        return $this->hasMany(Term::class, 'id_school_year', 'id');
     }
-
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Module extends Model
 {
@@ -25,9 +26,10 @@ class Module extends Model
         'credit',
         'semester',
         'theory',
-        'practice',
         'exercise',
         'project',
+        'experiment',
+        'practice',
         'option',
         'id_department'
     ];
@@ -40,5 +42,11 @@ class Module extends Model
     public function moduleClasses () : HasMany
     {
         return $this->hasMany(ModuleClass::class, 'id_module', 'id');
+    }
+
+    public function modules () : BelongsToMany
+    {
+        return $this->belongsToMany(Module::class, 'curriculum_module', 'id_module',
+                                    'id_curriculum');
     }
 }
