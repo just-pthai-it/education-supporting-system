@@ -29,7 +29,7 @@ class AuthController extends Controller
     {
         $this->loginForm->validate($request);
         $arr = $this->authService->login($request->username, $request->password);
-        return response($arr['data'])->header('Authorization', 'Bearer ' . $arr['token']);
+        return response(array('data' => $arr['data'], 'localData' => $arr['local_data']))->header('Authorization', 'Bearer ' . $arr['token']);
     }
 
     public function logout ()

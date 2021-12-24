@@ -45,8 +45,10 @@ class AuthService implements Contracts\AuthServiceContract
     {
         $token = $this->_authenticate($username, $password);
         $data  = $this->getUserInfo();
+        $local_data = array('currentTerm' => \config('app.current_term'));
 
         return [
+            'local_data' => $local_data,
             'data'  => $data,
             'token' => $token,
         ];

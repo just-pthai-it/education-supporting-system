@@ -233,4 +233,5 @@ return [
 
     ],
 
+    'current_term' => env('CURRENT_TERM'),
 ];
