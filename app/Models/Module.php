@@ -44,7 +44,7 @@ class Module extends Model
         return $this->hasMany(ModuleClass::class, 'id_module', 'id');
     }
 
-    public function modules () : BelongsToMany
+    public function curriculums () : BelongsToMany
     {
         return $this->belongsToMany(Module::class, 'curriculum_module', 'id_module',
                                     'id_curriculum');

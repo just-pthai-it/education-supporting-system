@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class ModuleRepository implements Contracts\ModuleRepositoryContract
 {
+    public function upsertMultiple ($modules)
+    {
+        Module::upsert($modules, ['id'], ['id' => DB::raw('id')]);
+    }
+
     public function getIDModulesMissing ($id_modules)
     {
         $this->_createTemporaryTable($id_modules);
@@ -24,4 +29,6 @@ class ModuleRepository implements Contracts\ModuleRepositoryContract
         DB::unprepared($sql_query);
         DB::table('temp_module')->insert($id_modules);
     }
+
+
 }

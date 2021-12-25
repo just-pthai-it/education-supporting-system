@@ -8,6 +8,7 @@ use App\Helpers\GFunction;
 use App\Services\Contracts\ExcelServiceContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
 use App\Repositories\Contracts\TeacherRepositoryContract;
+use App\Repositories\Contracts\CurriculumRepositoryContract;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\ModuleRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
@@ -29,6 +30,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     private ClassRepositoryContract $classRepository;
     private ScheduleRepositoryContract $scheduleRepository;
     private ExamScheduleRepositoryContract $examScheduleRepository;
+    private CurriculumRepositoryContract $curriculumRepository;
     private ExcelServiceContract $excelService;
 
     /**
@@ -40,6 +42,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
      * @param ClassRepositoryContract        $classRepository
      * @param ScheduleRepositoryContract     $scheduleRepository
      * @param ExamScheduleRepositoryContract $examScheduleRepository
+     * @param CurriculumRepositoryContract   $curriculumRepository
      */
     public function __construct (FileUploadHandler              $fileUploadHandler,
                                  ModuleClassRepositoryContract  $moduleClassRepository,
@@ -48,7 +51,8 @@ class FileUploadService implements Contracts\FileUploadServiceContract
                                  ModuleRepositoryContract       $moduleRepository,
                                  ClassRepositoryContract        $classRepository,
                                  ScheduleRepositoryContract     $scheduleRepository,
-                                 ExamScheduleRepositoryContract $examScheduleRepository)
+                                 ExamScheduleRepositoryContract $examScheduleRepository,
+                                 CurriculumRepositoryContract   $curriculumRepository)
     {
         $this->fileUploadHandler      = $fileUploadHandler;
         $this->moduleClassRepository  = $moduleClassRepository;
@@ -58,6 +62,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         $this->classRepository        = $classRepository;
         $this->scheduleRepository     = $scheduleRepository;
         $this->examScheduleRepository = $examScheduleRepository;
+        $this->curriculumRepository   = $curriculumRepository;
     }
 
     /**
@@ -193,11 +198,13 @@ class FileUploadService implements Contracts\FileUploadServiceContract
      */
     public function importScheduleFile ($input)
     {
+        echo 1;
         $this->excelService = app()->make('excel_schedule');
-        $this->excelService->setParameters($input['id_study_session']);
         $this->fileUploadHandler->handleFileUpload($input['file']);
-        $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName());
-
+        $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),
+                                              $input['id_study_session'], $input['is_international']);
+//var_dump($data);
+//exit();
         $modules_missing = $this->_getIDModulesMissing($data['id_modules']);
         $this->_checkExceptions($modules_missing);
         $this->_createAndUpdateData($data);
@@ -270,8 +277,13 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     {
         $this->excelService = app()->make('excel_exam_schedule');
         $this->fileUploadHandler->handleFileUpload($input['file']);
-        $this->excelService->setParameters($this->teacherRepository->findAllByIdDepartment($input['id_department']));
+        $this->excelService->setParameters($this->teacherRepository->findByIdDepartment($input['id_department']));
         $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName());
+        $this->_createAndUpdateData3($data);
+    }
+
+    private function _createAndUpdateData3 ($data)
+    {
         DB::transaction(function () use ($data)
         {
             $this->_createManyExamSchedules($data['exam_schedules']);
@@ -290,5 +302,55 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         {
             $this->examScheduleRepository->insertPivot($id_module_class, $id_teachers);
         }
+    }
+
+    /**
+     * @throws BindingResolutionException
+     * @throws Exception
+     */
+    public function importCurriculumFile ($input)
+    {
+        $this->excelService = app()->make('excel_curriculum');
+        $this->fileUploadHandler->handleFileUpload($input['file']);
+        $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName());
+//        var_dump($data);
+        $this->_createAndUpdateData4($data);
+    }
+
+    private function _createAndUpdateData4 ($data)
+    {
+        DB::transaction(function () use ($data)
+        {
+            $id_curriculum = $this->_createCurriculum($data['curriculum']);
+            $this->_createModules($data['modules']);
+            $this->_createManyCurriculumModule($id_curriculum, $data['id_modules']);
+        }, 2);
+    }
+
+    private function _createCurriculum ($curriculum)
+    {
+        return $this->curriculumRepository->insertGetId($curriculum);
+    }
+
+    private function _createModules ($modules)
+    {
+        foreach ($modules as $module)
+        {
+            try
+            {
+                $this->moduleRepository->upsertMultiple([$module]);
+            }
+            catch (PDOException $e)
+            {
+                var_dump($module);
+                throw $e;
+            }
+        }
+//        $this->moduleRepository->upsertMultiple($modules);
+    }
+
+    private function _createManyCurriculumModule ($id_curriculum, $id_modules)
+    {
+        $this->curriculumRepository->insertPivot($id_curriculum, $id_modules);
     }
 }

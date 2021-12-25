@@ -9,4 +9,6 @@ interface FileUploadServiceContract
     public function importScheduleFile ($input);
 
     public function importExamScheduleFile ($input);
+
+    public function importCurriculumFile ($input);
 }

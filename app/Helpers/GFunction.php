@@ -44,6 +44,8 @@ class GFunction
     public static function formatString ($str) : string
     {
         $str = preg_replace('/[ ]+/', ' ', $str);
+        $str = str_replace('- ', '-', $str);
+        $str = str_replace(' -', '-', $str);
         $str = trim($str, ' ');
         return $str;
     }
@@ -56,7 +58,7 @@ class GFunction
         return $date;
     }
 
-    public static function excelValueToDate($value) : string
+    public static function excelValueToDate ($value) : string
     {
         return Date::excelToDateTimeObject($value)->format('Y-m-d');
     }
