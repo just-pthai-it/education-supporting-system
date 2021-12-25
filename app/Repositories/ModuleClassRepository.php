@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\ModuleClass;
 use App\Models\StudySession;
+use App\Models\ExamSchedule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -17,6 +18,16 @@ class ModuleClassRepository implements Contracts\ModuleClassRepositoryContract
     public function insertPivotMultiple ($id_module_class, $id_students)
     {
         ModuleClass::find($id_module_class)->students()->attach($id_students);
+    }
+
+    public function update ($new_module_class)
+    {
+        $module_class = ModuleClass::find($new_module_class['id']);
+        foreach ($new_module_class as $key => $value)
+        {
+            $module_class->$key = strpos($key, 'is_') !== false ? intval($value) : $value;
+        }
+        $module_class->save();
     }
 
     public function getModuleClasses ($id_teacher) : Collection

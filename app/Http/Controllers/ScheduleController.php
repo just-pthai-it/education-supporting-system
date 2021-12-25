@@ -17,13 +17,15 @@ class ScheduleController extends Controller
         $this->scheduleService = $scheduleService;
     }
 
-    public function getTeacherSchedules ($id_teacher)
+    public function getTeacherSchedules (Request $request, $id_teacher)
     {
-        return $this->scheduleService->getTeacherSchedules(auth()->user()->id_user);
+        return $this->scheduleService->getTeacherSchedules(auth()->user()->id_user,
+                                                           $request->term, $request->ss);
     }
 
-    public function getDepartmentSchedules ($id_department)
+    public function getDepartmentSchedules (Request $request, $id_department)
     {
-        return $this->scheduleService->getDepartmentSchedules(auth()->user()->id_user);
+        return $this->scheduleService->getDepartmentSchedules($id_department,
+                                                              $request->term, $request->ss);
     }
 }

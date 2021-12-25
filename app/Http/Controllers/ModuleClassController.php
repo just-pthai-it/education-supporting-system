@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Services\Contracts\ModuleClassServiceContract;
 
 class ModuleClassController extends Controller
@@ -14,6 +15,20 @@ class ModuleClassController extends Controller
     public function __construct (ModuleClassServiceContract $moduleClassService)
     {
         $this->moduleClassService = $moduleClassService;
+    }
+
+    public function updateModuleClass (Request $request)
+    {
+        $this->moduleClassService->updateModuleClass($request->only([
+                                                                        'id',
+                                                                        'name',
+                                                                        'number_plan',
+                                                                        'number_reality',
+                                                                        'id_study_session',
+                                                                        'is_international',
+                                                                        'id_module',
+                                                                        'id_teacher',
+                                                                    ]));
     }
 
     public function getRecentModuleClasses ($id_teacher)

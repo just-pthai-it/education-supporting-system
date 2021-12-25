@@ -32,7 +32,7 @@ class ScheduleRepository implements Contracts\ScheduleRepositoryContract
     {
         return Module::join(ModuleClass::table_as, 'mc.id_module', '=', 'module.id')
                      ->join(Schedule::table_as, 'mc.id', '=', 'sdu.id_module_class')
-                     ->where('id_department', $id_department)
+                     ->where('id_department', '=',  $id_department)
                      ->whereIn('mc.id_study_session', $id_study_sessions)
                      ->orderBy('sdu.id_module_class')
                      ->orderBy('sdu.id')

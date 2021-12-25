@@ -18,6 +18,6 @@ class StudySessionService implements Contracts\StudySessionServiceContract
 
     public function getRecentStudySessions ()
     {
-        return $this->studySessionRepository->findAllRecent1();
+        return $this->studySessionRepository->findRecent();
     }
 }

@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface ScheduleRepositoryContract
 {
-    public function insertMultiple ($data);
+    public function insertMultiple (array $data);
 
     public function findAllByIdTeacher (string $id_teacher, array $id_study_sessions);
 

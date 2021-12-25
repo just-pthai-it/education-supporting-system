@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface StudySessionRepositoryContract
 {
-    public function findAllRecent1 ();
+    public function findRecent ();
 
-    public function findAllRecent2 ();
+    public function findByNames ($study_sessions);
 }

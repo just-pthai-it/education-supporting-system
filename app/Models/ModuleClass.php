@@ -26,6 +26,7 @@ class ModuleClass extends Model
         'number_plan',
         'number_reality',
         'id_study_session',
+        'is_international',
         'id_module',
         'id_teacher',
     ];

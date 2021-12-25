@@ -15,6 +15,10 @@ class ModuleClassService implements Contracts\ModuleClassServiceContract
     {
         $this->moduleClassDepository = $moduleClassDepository;
     }
+    public function updateModuleClass ($module_class)
+    {
+        $this->moduleClassDepository->update($module_class);
+    }
 
     public function getRecentModuleClasses ($id_teacher)
     {
