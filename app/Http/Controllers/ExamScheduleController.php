@@ -17,14 +17,18 @@ class ExamScheduleController extends Controller
         $this->examScheduleService = $examScheduleService;
     }
 
-    public function getTeacherExamSchedules ($id_teacher)
+    public function getTeacherExamSchedules (Request $request, $id_teacher)
     {
-        return response($this->examScheduleService->getTeacherExamSchedules(auth()->user()->id_user));
+        return response($this->examScheduleService->getTeacherExamSchedules(auth()->user()->id_user,
+                                                                            $request->term,
+                                                                            $request->ss));
     }
 
-    public function getDepartmentExamSchedules ($id_department)
+    public function getDepartmentExamSchedules (Request $request, $id_department)
     {
-        return response($this->examScheduleService->getDepartmentExamSchedules($id_department));
+        return response($this->examScheduleService->getDepartmentExamSchedules($id_department,
+                                                                               $request->term,
+                                                                               $request->ss));
     }
 
     public function updateExamSchedule (Request $request)

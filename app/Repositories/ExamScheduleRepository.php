@@ -22,10 +22,11 @@ class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
                     ->teachers()->sync($id_teachers);
     }
 
-    public function findAllByIdTeacher ($id_teacher)
+    public function findAllByIdTeacher ($id_teacher, $id_study_sessions)
     {
         return Teacher::find($id_teacher)->examSchedules()
                       ->join(ModuleClass::table_as, 'mc.id', '=', 'exam_schedule.id_module_class')
+                      ->whereIn('mc.id_study_session', $id_study_sessions)
                       ->join('exam_schedule_teacher as est', 'est.id_exam_schedule', '=',
                              'exam_schedule.id')
                       ->join(Teacher::table_as, 'tea.id', '=', 'est.id_teacher')
@@ -35,9 +36,16 @@ class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
                       ->toArray();
     }
 
-    public function findAllByIdTeachers ($id_teachers) : array
+    public function findAllByIdTeachers ($id_teachers, $id_study_sessions) : array
     {
-        return Teacher::with(['examSchedules', 'examSchedules.moduleClass:id,name'])
+        return Teacher::with([
+                                 'examSchedules.moduleClass' => function ($query) use (
+                                     $id_study_sessions
+                                 )
+                                 {
+                                     return $query->whereIn('id_study_session', $id_study_sessions)
+                                                  ->select('id', 'name');
+                                 },])
                       ->select('id', 'name')->find($id_teachers)->toArray();
     }
 

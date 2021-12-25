@@ -73,20 +73,40 @@ Route::get('test', function ()
     //    }])
     //                  ->where('id', '0884')
     //                  ->get(['id'])
-//    return Teacher::with(['moduleClasses:id,id_teacher',
-//                          'moduleClasses.schedules:id,id_module_class,date,shift,id_room'])
-//                  ->find('0884', ['id']);
+    //    return Teacher::with(['moduleClasses:id,id_teacher',
+    //                          'moduleClasses.schedules:id,id_module_class,date,shift,id_room'])
+    //                  ->find('0884', ['id']);
 
-//    return Teacher::with(['moduleClasses:id,id_teacher',
-//                          'moduleClasses.schedules:id,id_module_class,date,shift,id_room'])
-//                  ->where('id', '0884')
-//                  ->get(['id']);
-//    return StudySession::orderBy('id', 'desc')->limit(7)->pluck('id')->toArray();
-//    return Teacher::find('0884')->examSchedules()
-//                  ->join(ModuleClass::table_as, 'mc.id', '=', 'exam_schedule.id_module_class')
-//                  ->get(['id_module_class', 'mc.name', 'method', 'date_start', 'time_start', 'id_room'])
-//                  ->toArray();
-    echo Str::orderedUuid();
+    //    return Teacher::whereHas('moduleClasses', function ($query)
+    //    {
+    //        return $query->whereHas('schedules', function ($query)
+    //        {
+    ////            return $query->whereHas('schedules', ['0884']);
+    //        });
+    //    })
+    //                  ->get();
+    //                  ->find('0884', ['id']);
+
+    //    return Teacher::with(['moduleClasses:id,id_teacher',
+    //                          'moduleClasses.schedules:id,id_module_class,date,shift,id_room'])
+    //                  ->where('id', '0884')
+    //                  ->get(['id']);
+    //    return StudySession::orderBy('id', 'desc')->limit(7)->pluck('id')->toArray();
+    //    return Teacher::find('0884')->examSchedules()
+    //                  ->join(ModuleClass::table_as, 'mc.id', '=', 'exam_schedule.id_module_class')
+    //                  ->get(['id_module_class', 'mc.name', 'method', 'date_start', 'time_start', 'id_room'])
+    //                  ->toArray();
+    //    echo Str::orderedUuid();
+    return Teacher::with([
+
+                             'examSchedules.moduleClass' => function ($query)
+                             {
+                                 return $query->whereIn('id_study_session', ['46'])
+                                              ->select('id', 'name');
+                             },'examSchedules.teachers:name',
+                             ])
+                  ->select('id', 'name')->find(Teacher::where('id_department', 'MHT')->pluck('id')->toArray())->toArray();
+    //Teacher::where('id_department', 'MHT')->pluck('id')->toArray()
 });
 
 Route::get('view', function ()

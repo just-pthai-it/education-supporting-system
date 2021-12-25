@@ -2,35 +2,47 @@
 
 namespace App\Services;
 
+use App\Helpers\GFunction;
 use App\Repositories\Contracts\TeacherRepositoryContract;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
+use App\Repositories\Contracts\StudySessionRepositoryContract;
 
 class ExamScheduleService implements Contracts\ExamScheduleServiceContract
 {
     private ExamScheduleRepositoryContract $examScheduleRepository;
     private TeacherRepositoryContract $teacherRepository;
+    private StudySessionRepositoryContract $studySessionRepository;
 
     /**
      * @param ExamScheduleRepositoryContract $examScheduleRepository
      * @param TeacherRepositoryContract      $teacherRepository
+     * @param StudySessionRepositoryContract $studySessionRepository
      */
     public function __construct (ExamScheduleRepositoryContract $examScheduleRepository,
-                                 TeacherRepositoryContract      $teacherRepository)
+                                 TeacherRepositoryContract      $teacherRepository,
+                                 StudySessionRepositoryContract $studySessionRepository)
     {
         $this->examScheduleRepository = $examScheduleRepository;
         $this->teacherRepository      = $teacherRepository;
+        $this->studySessionRepository = $studySessionRepository;
     }
 
-    public function getTeacherExamSchedules ($id_teacher) : array
+    public function getTeacherExamSchedules ($id_teacher, $term, $study_sessions) : array
     {
-        $exam_schedules = $this->examScheduleRepository->findAllByIdTeacher($id_teacher);
+        $study_sessions    = GFunction::getOfficialStudySessions($term, $study_sessions);
+        $id_study_sessions = $this->studySessionRepository->findByNames($study_sessions);
+        $exam_schedules    = $this->examScheduleRepository->findAllByIdTeacher($id_teacher,
+                                                                               $id_study_sessions);
         return $this->_formatResponse1($exam_schedules);
     }
 
     public function getDepartmentExamSchedules ($id_department, $term, $study_sessions) : array
     {
-        $id_teachers    = $this->teacherRepository->findByIdDepartment($id_department);
-        $exam_schedules = $this->examScheduleRepository->findAllByIdTeachers($id_teachers);
+        $study_sessions    = GFunction::getOfficialStudySessions($term, $study_sessions);
+        $id_study_sessions = $this->studySessionRepository->findByNames($study_sessions);
+        $id_teachers       = $this->teacherRepository->findByIdDepartment($id_department);
+        $exam_schedules    = $this->examScheduleRepository->findAllByIdTeachers($id_teachers,
+                                                                                $id_study_sessions);
         return $this->_formatResponse2($exam_schedules);
     }
 
