@@ -9,7 +9,7 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
 {
     private $teachers;
 
-    public function readData ($file_name) : array
+    public function readData ($file_name, ...$params) : array
     {
         $raw_data = $this->_getData($file_name);
         return $this->_formatData($raw_data);
@@ -118,7 +118,7 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
         return [$time_start, $time_end];
     }
 
-    public function handleData ($formatted_data)
+    public function handleData ($formatted_data, ...$params)
     {
 
     }

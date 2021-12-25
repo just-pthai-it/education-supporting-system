@@ -27,9 +27,9 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
         return $this->_formatResponse1($exam_schedules);
     }
 
-    public function getDepartmentExamSchedules ($id_department) : array
+    public function getDepartmentExamSchedules ($id_department, $term, $study_sessions) : array
     {
-        $id_teachers    = $this->teacherRepository->findAllByIdDepartment($id_department);
+        $id_teachers    = $this->teacherRepository->findByIdDepartment($id_department);
         $exam_schedules = $this->examScheduleRepository->findAllByIdTeachers($id_teachers);
         return $this->_formatResponse2($exam_schedules);
     }
@@ -50,12 +50,8 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
                 unset($response[$id_module_class]['teacher_name']);
                 unset($response[$id_module_class]['position']);
                 unset($response[$id_module_class]['pivot']);
-                $response[$id_module_class]['teachers'][$position] = $exam_schedule['teacher_name'];
             }
-            else
-            {
-                $response[$id_module_class]['teachers'][$position] = $exam_schedule['teacher_name'];
-            }
+            $response[$id_module_class]['teachers'][$position] = $exam_schedule['teacher_name'];
 
             ksort($response[$id_module_class]['teachers']);
         }

@@ -14,7 +14,7 @@ class ExcelRollCallService implements Contracts\ExcelServiceContract
     private $academic_years;
     private $id_training_type;
 
-    public function readData ($file_name) : array
+    public function readData ($file_name, ...$params) : array
     {
         $raw_data = $this->_getData($file_name);
         return $this->_formatData($raw_data);
@@ -121,7 +121,7 @@ class ExcelRollCallService implements Contracts\ExcelServiceContract
         $temp_students = [];
     }
 
-    public function handleData ($formatted_data) : array
+    public function handleData ($formatted_data, ...$params) : array
     {
         $classes               = [];
         $available_id_students = [];
@@ -208,7 +208,8 @@ class ExcelRollCallService implements Contracts\ExcelServiceContract
         }
         $class_info['id']               = $id_class;
         $class_info['id_academic_year'] = $this->academic_years[$academic_year];
-        $class_info['id_training_type'] = $this->id_training_type;
+        $class_info['id_training_type'] = strpos($id_class, 'VLVH') !==
+                                          false ? 2 : $this->id_training_type;
 
         return $class_info;
     }

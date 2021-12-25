@@ -4,12 +4,14 @@ namespace App\Providers;
 
 use App\Repositories\FeedbackRepository;
 use App\Repositories\PermissionRepository;
+use App\Repositories\CurriculumRepository;
 use App\Repositories\AcademicYearRepository;
 use App\Repositories\AccountRepository;
 use App\Repositories\ClassRepository;
 use App\Repositories\ExamScheduleRepository;
 use App\Repositories\Contracts\FeedbackRepositoryContract;
 use App\Repositories\Contracts\PermissionRepositoryContract;
+use App\Repositories\Contracts\CurriculumRepositoryContract;
 use App\Repositories\Contracts\AcademicYearRepositoryContract;
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
@@ -49,6 +51,7 @@ class AppRepositoryProvider extends ServiceProvider
         ExamScheduleRepositoryContract::class    => ExamScheduleRepository::class,
         StudySessionRepositoryContract::class    => StudySessionRepository::class,
         ModuleClassRepositoryContract::class     => ModuleClassRepository::class,
+        CurriculumRepositoryContract::class      => CurriculumRepository::class,
         DepartmentRepositoryContract::class      => DepartmentRepository::class,
         PermissionRepositoryContract::class      => PermissionRepository::class,
         ScheduleRepositoryContract::class        => ScheduleRepository::class,

@@ -86,8 +86,7 @@ Route::get('test', function ()
 //                  ->join(ModuleClass::table_as, 'mc.id', '=', 'exam_schedule.id_module_class')
 //                  ->get(['id_module_class', 'mc.name', 'method', 'date_start', 'time_start', 'id_room'])
 //                  ->toArray();
-    $a = [1, 'a' => 2, '4'];
-    var_dump(array($a));
+    echo Str::orderedUuid();
 });
 
 Route::get('view', function ()

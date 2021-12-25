@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
-class ImportDataFailedException extends \Exception
+use Exception;
+
+class ImportDataFailedException extends Exception
 {
 
 }

@@ -12,5 +12,5 @@ interface ExamScheduleRepositoryContract
 
     public function findAllByIdTeachers ($id_teachers);
 
-    public function update ($data);
+    public function update ($new_exam_schedule);
 }

@@ -11,7 +11,8 @@ class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
 {
     public function upsertMultiple ($exam_schedules)
     {
-        ExamSchedule::upsert($exam_schedules, ['id_module_class'],
+        ExamSchedule::upsert($exam_schedules,
+                             ['id_module_class'],
                              ['id_module_class' => DB::raw('id_module_class')]);
     }
 
@@ -40,10 +41,10 @@ class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
                       ->select('id', 'name')->find($id_teachers)->toArray();
     }
 
-    public function update ($data)
+    public function update ($new_exam_schedule)
     {
-        $exam_schedule = ExamSchedule::find($data['id']);
-        foreach ($data as $key => $value)
+        $exam_schedule = ExamSchedule::find($new_exam_schedule['id']);
+        foreach ($new_exam_schedule as $key => $value)
         {
             $exam_schedule->$key = strpos($key, 'is_') !== false ? intval($value) : $value;
         }

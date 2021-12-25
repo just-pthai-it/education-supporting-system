@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AccountController;
@@ -52,6 +53,8 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'teachers'], function ()
     {
+        Route::get('', [TeacherController::class, 'getTeachersByIdDepartment']);
+
         Route::group(['prefix' => 'notification'], function ()
         {
             Route::get('{id_account}/{offset}',
@@ -74,6 +77,9 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::post('schedule', [ResourceController::class, 'uploadScheduleFile']);
 
         Route::post('exam-schedule', [ResourceController::class, 'uploadExamScheduleFile']);
+
+        Route::post('curriculum', [ResourceController::class, 'uploadCurriculumFile']);
+
     });
 
     Route::get('faculty', [FacultyController::class, 'getIDFaculties']);
@@ -86,6 +92,11 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::get('module-class/{id_teacher}',
                [ModuleClassController::class, 'getRecentModuleClasses']);
+
+    Route::group(['prefix' => 'module-classes'], function ()
+    {
+        Route::put('update', [ModuleClassController::class, 'updateModuleClass']);
+    });
 
     Route::get('study-session', [StudySessionController::class, 'getRecentStudySessions']);
 

@@ -9,10 +9,18 @@ use App\Imports\FileImport;
 class ExcelScheduleService implements Contracts\ExcelServiceContract
 {
     private $id_study_session;
+    private $is_international;
 
-    public function readData ($file_name) : array
+    /**
+     * @throws Exception
+     */
+    public function readData ($file_name, ...$params) : array
     {
         $raw_data = $this->_getData($file_name);
+
+        $this->id_study_session = $params[0];
+        $this->is_international = $params[1];
+
         return $this->_formatData($raw_data);
     }
 
@@ -137,6 +145,7 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
             'name'             => $module_class_name,
             'number_plan'      => $student_num,
             'id_study_session' => $this->id_study_session,
+            'is_international' => intval($this->is_international),
             'id_module'        => $id_module,
         ];
     }
@@ -191,7 +200,7 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
         }
     }
 
-    public function handleData ($formatted_data)
+    public function handleData ($formatted_data, ...$params)
     {
 
     }
