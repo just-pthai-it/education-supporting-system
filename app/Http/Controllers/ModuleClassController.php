@@ -31,9 +31,17 @@ class ModuleClassController extends Controller
                                                                     ]));
     }
 
-    public function getRecentModuleClasses ($id_teacher)
+    public function getModuleClassesByIdTeacher (Request $request, $id_teacher)
     {
-        $data = $this->moduleClassService->getRecentModuleClasses($id_teacher);
-        return response($data)->header('Content-Type', 'application/data');
+        return response($this->moduleClassService->getModuleClassesByIdTeacher(auth()->user()->id_user,
+                                                                                  $request->term,
+                                                                                  $request->ss));
+    }
+
+    public function getModuleClassesByIdDepartment (Request $request, $id_department)
+    {
+        return response($this->moduleClassService->getModuleClassesByIdDepartment($id_department,
+                                                                                  $request->term,
+                                                                                  $request->ss));
     }
 }

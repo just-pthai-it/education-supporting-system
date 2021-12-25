@@ -103,6 +103,17 @@ class GFunction
     {
         return DB::raw('UuidFromBin(' . $column_name . ') as ' . $column_name);
     }
+
+    public static function getOfficialStudySessions ($term, $study_sessions)
+    {
+        $study_sessions = explode(',', $study_sessions);
+        foreach ($study_sessions as &$study_session)
+        {
+            $study_session = $term . '_' . $study_session;
+        }
+
+        return $study_sessions;
+    }
     /*
      *
      */

@@ -19,13 +19,14 @@ class ScheduleController extends Controller
 
     public function getTeacherSchedules (Request $request, $id_teacher)
     {
-        return $this->scheduleService->getTeacherSchedules(auth()->user()->id_user,
-                                                           $request->term, $request->ss);
+        return response($this->scheduleService->getTeacherSchedules(auth()->user()->id_user,
+                                                                    $request->term, $request->ss));
     }
 
     public function getDepartmentSchedules (Request $request, $id_department)
     {
-        return $this->scheduleService->getDepartmentSchedules($id_department,
-                                                              $request->term, $request->ss);
+        return response($this->scheduleService->getDepartmentSchedules($id_department,
+                                                                       $request->term,
+                                                                       $request->ss));
     }
 }

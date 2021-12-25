@@ -63,6 +63,8 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
         Route::group(['prefix' => '{id_teacher}'], function ()
         {
+            Route::get('module-classes', [ModuleClassController::class, 'getModuleClassesByIdTeacher']);
+
             Route::get('schedules', [ScheduleController::class, 'getTeacherSchedules']);
 
             Route::get('exam-schedules',
@@ -91,7 +93,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     Route::get('faculty-class', [FacultyClassController::class, 'getFacultyClasses']);
 
     Route::get('module-class/{id_teacher}',
-               [ModuleClassController::class, 'getRecentModuleClasses']);
+               [ModuleClassController::class, 'getModuleClassesByIdTeacher']);
 
     Route::group(['prefix' => 'module-classes'], function ()
     {
@@ -108,6 +110,8 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     {
         Route::group(['prefix' => '{id_department}'], function ()
         {
+            Route::get('module-classes', [ModuleClassController::class, 'getModuleClassesByIdDepartment']);
+
             Route::get('schedules', [ScheduleController::class, 'getDepartmentSchedules']);
 
             Route::get('exam-schedules',
