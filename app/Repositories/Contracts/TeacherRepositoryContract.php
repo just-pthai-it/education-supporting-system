@@ -6,6 +6,8 @@ interface TeacherRepositoryContract
 {
     public function findById ($id);
 
-    public function findAllByIdDepartment($id_department);
+    public function findByIdDepartment ($id_department);
+
+    public function findByIdDepartment2 ($id_department);
 
 }

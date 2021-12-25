@@ -11,8 +11,13 @@ class TeacherRepository implements Contracts\TeacherRepositoryContract
         return Teacher::withUuid()->find($id)->makeVisible(['uuid']);
     }
 
-    public function findAllByIdDepartment ($id_department)
+    public function findByIdDepartment ($id_department)
     {
         return Teacher::where('id_department', '=', $id_department)->pluck('id', 'name')->toArray();
+    }
+
+    public function findByIdDepartment2 ($id_department)
+    {
+        return Teacher::where('id_department', '=', $id_department)->get(['id', 'name'])->toArray();
     }
 }
