@@ -139,11 +139,13 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
                                          $student_num)
     {
         $id_module_class = GFunction::convertToIDModuleClass($id_module, $module_class_name);
+        $class_type      = substr($id_module_class, -4, 2);
 
         $module_classes[$id_module_class] = [
             'id'               => $id_module_class,
             'name'             => $module_class_name,
             'number_plan'      => $student_num,
+            'class_type'       => $class_type == 'BT' ? 2 : ($class_type == 'TH' ? 3 : 1),
             'id_study_session' => $this->id_study_session,
             'is_international' => intval($this->is_international),
             'id_module'        => $id_module,

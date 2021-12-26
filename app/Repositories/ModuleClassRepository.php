@@ -3,9 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Module;
+use App\Models\Teacher;
 use App\Models\ModuleClass;
-use App\Models\StudySession;
-use App\Models\ExamSchedule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -41,11 +40,13 @@ class ModuleClassRepository implements Contracts\ModuleClassRepositoryContract
 
     public function findByIdDepartment ($id_department, $id_study_sessions)
     {
-        return Module::join(ModuleClass::table_as, 'mc.id_module', '=', 'module.id')
-                     ->where('id_department', '=', $id_department)
-                     ->whereIn('mc.id_study_session', $id_study_sessions)
-                     ->orderBy('mc.id')
-                     ->get(['mc.id', 'mc.name']);
+        return ModuleClass::join(Module::table_as, 'module_class.id_module', '=', 'md.id')
+                     ->where('md.id_department', '=', $id_department)
+                     ->leftJoin(Teacher::table_as, 'tea.id', '=', 'module_class.id_teacher')
+                     ->whereIn('module_class.id_study_session', $id_study_sessions)
+                     ->orderBy('module_class.id')
+                     ->get(['module_class.id', 'module_class.name', 'credit', 'number_plan',
+                            'class_type', 'tea.name as teacher_name']);
     }
 
     public function getIDModuleClassesMissing ($id_module_classes)
