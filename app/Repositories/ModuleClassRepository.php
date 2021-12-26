@@ -45,7 +45,7 @@ class ModuleClassRepository implements Contracts\ModuleClassRepositoryContract
                      ->where('id_department', '=', $id_department)
                      ->whereIn('mc.id_study_session', $id_study_sessions)
                      ->orderBy('mc.id')
-                     ->get(['mc.id as id_module_class', 'mc.name as module_class_name']);
+                     ->get(['mc.id', 'mc.name']);
     }
 
     public function getIDModuleClassesMissing ($id_module_classes)
