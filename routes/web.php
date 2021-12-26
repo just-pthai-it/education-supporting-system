@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Faculty;
 use App\Models\AcademicYear;
 use App\Models\Account;
 use App\Models\DataVersionStudent;
@@ -87,26 +88,21 @@ Route::get('test', function ()
     //                  ->get();
     //                  ->find('0884', ['id']);
 
-    //    return Teacher::with(['moduleClasses:id,id_teacher',
-    //                          'moduleClasses.schedules:id,id_module_class,date,shift,id_room'])
-    //                  ->where('id', '0884')
-    //                  ->get(['id']);
-    //    return StudySession::orderBy('id', 'desc')->limit(7)->pluck('id')->toArray();
-    //    return Teacher::find('0884')->examSchedules()
-    //                  ->join(ModuleClass::table_as, 'mc.id', '=', 'exam_schedule.id_module_class')
-    //                  ->get(['id_module_class', 'mc.name', 'method', 'date_start', 'time_start', 'id_room'])
-    //                  ->toArray();
+//        return Teacher::with(['moduleClasses:id,id_teacher',
+//                              'moduleClasses.schedules:id,id_module_class,date,shift,id_room'])
+//                      ->where('id', '0884')
+//                      ->get(['id']);
     //    echo Str::orderedUuid();
-    return Teacher::with([
-
-                             'examSchedules.moduleClass' => function ($query)
-                             {
-                                 return $query->whereIn('id_study_session', ['46'])
-                                              ->select('id', 'name');
-                             },'examSchedules.teachers:name',
-                             ])
-                  ->select('id', 'name')->find(Teacher::where('id_department', 'MHT')->pluck('id')->toArray())->toArray();
-    //Teacher::where('id_department', 'MHT')->pluck('id')->toArray()
+    //    return Teacher::with([
+    //
+    //                             'examSchedules.moduleClass' => function ($query)
+    //                             {
+    //                                 return $query->whereIn('id_study_session', ['46'])
+    //                                              ->select('id', 'name');
+    //                             },'examSchedules.teachers:name',
+    //                             ])
+    //                  ->select('id', 'name')->find(Teacher::where('id_department', 'MHT')->pluck('id')->toArray())->toArray();
+    return Faculty::with(['value:id,name,id_faculty'])->get(['id', 'name']);
 });
 
 Route::get('view', function ()

@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Helpers\GFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Faculty extends Model
@@ -46,12 +45,7 @@ class Faculty extends Model
         return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
     }
 
-    public function account () : BelongsTo
-    {
-        return $this->belongsTo(Account::class, 'id_account', 'id');
-    }
-
-    public function departments () : HasMany
+    public function value () : HasMany
     {
         return $this->hasMany(Department::class, 'id_faculty', 'id');
     }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
@@ -36,31 +37,8 @@ Route::middleware(['default_header'])->group(function ()
 
 Route::middleware(['cus.auth', 'default_header'])->group(function ()
 {
-    Route::group(['prefix' => 'notification'], function ()
-    {
-        Route::get('{id_sender}/{offset?}',
-                   [NotificationController::class, 'getSentNotifications']);
-
-        Route::group(['prefix' => 'push'], function ()
-        {
-            Route::post('faculty-class', [NotificationController::class, 'pushFCNotification']);
-
-            Route::post('module-class', [NotificationController::class, 'pushMCNotification']);
-        });
-
-        Route::post('delete', [NotificationController::class, 'deleteNotifications']);
-    });
-
     Route::group(['prefix' => 'teachers'], function ()
     {
-        Route::get('', [TeacherController::class, 'getTeachersByIdDepartment']);
-
-        Route::group(['prefix' => 'notification'], function ()
-        {
-            Route::get('{id_account}/{offset}',
-                       [NotificationController::class, 'getReceivedNotifications']);
-        });
-
         Route::group(['prefix' => '{id_teacher}'], function ()
         {
             Route::get('module-classes', [ModuleClassController::class, 'getModuleClassesByIdTeacher']);
@@ -108,6 +86,8 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'departments'], function ()
     {
+        Route::get('', [DepartmentController::class, 'getAllDepartments']);
+
         Route::group(['prefix' => '{id_department}'], function ()
         {
             Route::get('module-classes', [ModuleClassController::class, 'getModuleClassesByIdDepartment']);
@@ -116,6 +96,9 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
             Route::get('exam-schedules',
                        [ExamScheduleController::class, 'getDepartmentExamSchedules']);
+
+            Route::get('teachers', [TeacherController::class, 'getTeachersByIdDepartment']);
+
         });
     });
 
