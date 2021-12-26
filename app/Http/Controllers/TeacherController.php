@@ -17,8 +17,8 @@ class TeacherController extends Controller
         $this->teacherService = $teacherService;
     }
 
-    public function getTeachersByIdDepartment (Request $request)
+    public function getTeachersByIdDepartment ($id_department)
     {
-        return response($this->teacherService->getTeachersByIdDepartment($request->id_department));
+        return response($this->teacherService->getTeachersByIdDepartment($id_department));
     }
 }
