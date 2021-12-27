@@ -19,23 +19,14 @@ class ModuleClassController extends Controller
 
     public function updateModuleClass (Request $request)
     {
-        $this->moduleClassService->updateModuleClass($request->only([
-                                                                        'id',
-                                                                        'name',
-                                                                        'number_plan',
-                                                                        'number_reality',
-                                                                        'id_study_session',
-                                                                        'is_international',
-                                                                        'id_module',
-                                                                        'id_teacher',
-                                                                    ]));
+        $this->moduleClassService->updateModuleClass($request->ids, $request->id_teacher);
     }
 
     public function getModuleClassesByIdTeacher (Request $request, $id_teacher)
     {
         return response($this->moduleClassService->getModuleClassesByIdTeacher(auth()->user()->id_user,
-                                                                                  $request->term,
-                                                                                  $request->ss));
+                                                                               $request->term,
+                                                                               $request->ss));
     }
 
     public function getModuleClassesByIdDepartment (Request $request, $id_department)

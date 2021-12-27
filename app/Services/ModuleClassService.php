@@ -27,9 +27,16 @@ class ModuleClassService implements Contracts\ModuleClassServiceContract
         $this->studySessionRepository = $studySessionRepository;
     }
 
-    public function updateModuleClass ($module_class)
+    public function updateModuleClass ($ids, $id_teacher)
     {
-        $this->moduleClassDepository->update($module_class);
+        foreach ($ids as $id)
+        {
+            $module_class = [
+                'id'         => $id,
+                'id_teacher' => $id_teacher
+            ];
+            $this->moduleClassDepository->update($module_class);
+        }
     }
 
     public function getModuleClassesByIdTeacher ($id_teacher, $term, $study_sessions)
