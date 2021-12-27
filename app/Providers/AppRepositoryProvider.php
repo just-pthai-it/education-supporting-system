@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Faculty;
+use App\Models\Department;
 use App\Repositories\FeedbackRepository;
 use App\Repositories\PermissionRepository;
 use App\Repositories\CurriculumRepository;
@@ -65,4 +67,16 @@ class AppRepositoryProvider extends ServiceProvider
         ClassRepositoryContract::class           => ClassRepository::class,
         TermRepositoryContract::class            => TermRepository::class,
     ];
+
+    /**
+     * Bootstrap any application services.
+     * @return void
+     */
+    public function boot ()
+    {
+        Faculty::resolveRelationUsing('value', function ($facultyModel)
+        {
+            return $facultyModel->hasMany(Department::class, 'id_faculty', 'id');
+        });
+    }
 }

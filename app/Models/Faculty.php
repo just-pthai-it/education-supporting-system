@@ -45,7 +45,7 @@ class Faculty extends Model
         return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
     }
 
-    public function value () : HasMany
+    public function departments () : HasMany
     {
         return $this->hasMany(Department::class, 'id_faculty', 'id');
     }
