@@ -45,8 +45,8 @@ class ModuleClassRepository implements Contracts\ModuleClassRepositoryContract
                      ->leftJoin(Teacher::table_as, 'tea.id', '=', 'module_class.id_teacher')
                      ->whereIn('module_class.id_study_session', $id_study_sessions)
                      ->orderBy('module_class.id')
-                     ->get(['module_class.id', 'module_class.name', 'credit', 'number_plan',
-                            'class_type', 'tea.name as teacher_name']);
+                     ->get(['module_class.id', 'module_class.name', 'credit', 'number_plan as numberPlan',
+                            'class_type as classType', 'tea.name as teacher']);
     }
 
     public function getIDModuleClassesMissing ($id_module_classes)
