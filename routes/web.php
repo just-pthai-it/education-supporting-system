@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Faculty;
+use App\BusinessClasses\aa;
 use App\Models\AcademicYear;
 use App\Models\Account;
 use App\Models\DataVersionStudent;
@@ -10,10 +11,13 @@ use App\Models\StudySession;
 use App\Models\Teacher;
 use App\Models\Term;
 use App\Models\Student;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use App\Http\Resources\FacultyResource;
+use App\Http\Resources\AccountCollection;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,10 +92,10 @@ Route::get('test', function ()
     //                  ->get();
     //                  ->find('0884', ['id']);
 
-//        return Teacher::with(['moduleClasses:id,id_teacher',
-//                              'moduleClasses.schedules:id,id_module_class,date,shift,id_room'])
-//                      ->where('id', '0884')
-//                      ->get(['id']);
+    //        return Teacher::with(['moduleClasses:id,id_teacher',
+    //                              'moduleClasses.schedules:id,id_module_class,date,shift,id_room'])
+    //                      ->where('id', '0884')
+    //                      ->get(['id']);
     //    echo Str::orderedUuid();
     //    return Teacher::with([
     //
@@ -102,7 +106,11 @@ Route::get('test', function ()
     //                             },'examSchedules.teachers:name',
     //                             ])
     //                  ->select('id', 'name')->find(Teacher::where('id_department', 'MHT')->pluck('id')->toArray())->toArray();
-    return Faculty::with(['value:id,name,id_faculty'])->get(['id', 'name']);
+    //    var_dump(Account::all());
+    //    return new UserResource(Account::find(1));
+//    return new AccountCollection(Faculty::with(['departments'])->get(['id', 'name']));
+    return response((FacultyResource::collection(Faculty::with(['departments:id,name,id_faculty'])->get(['id', 'name']))));
+
 });
 
 Route::get('view', function ()

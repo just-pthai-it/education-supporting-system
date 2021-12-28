@@ -10,7 +10,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FacultyClassController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\ModuleClassController;
-use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StudySessionController;

@@ -74,9 +74,9 @@ class AppRepositoryProvider extends ServiceProvider
      */
     public function boot ()
     {
-        Faculty::resolveRelationUsing('value', function ($facultyModel)
-        {
-            return $facultyModel->hasMany(Department::class, 'id_faculty', 'id');
-        });
+//        Faculty::resolveRelationUsing('value', function ($facultyModel)
+//        {
+//            return $facultyModel->hasMany(Department::class, 'id_faculty', 'id');
+//        });
     }
 }
