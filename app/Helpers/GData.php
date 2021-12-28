@@ -10,6 +10,7 @@ class GData
 
     public static array $colors = [
         '#a8cef1',
+        '#a8cef1',
         '#3682db',
         '#8dda71',
         '#34b41f',
@@ -24,6 +25,12 @@ class GData
         '#ea97c4',
         '#bd65a4',
         '#7fd7cc',
+        '#2fad96',
+        '#d4aca2',
+        '#9d6f64',
+        '#d2e9a2',
+        '#aadc42',
+        '#a0c5df',
     ];
 
     public static string $current = '';

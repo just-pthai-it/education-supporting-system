@@ -48,6 +48,11 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
 
     private function _formatResponse1 ($exam_schedules) : array
     {
+        if (is_null($exam_schedules))
+        {
+            return [];
+        }
+
         $response = [];
         foreach ($exam_schedules as $exam_schedule)
         {
@@ -73,6 +78,11 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
 
     private function _formatResponse2 ($data) : array
     {
+        if (is_null($data))
+        {
+            return [];
+        }
+
         $response = [];
         foreach ($data as $teacher)
         {

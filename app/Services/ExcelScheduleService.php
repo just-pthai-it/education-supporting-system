@@ -44,7 +44,9 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
             $current_id_module         = '';
             $current_module_class_name = '';
             $current_credit            = '';
-            $current_student_num       = '';
+            $max_attempt               = '';
+            $real_attempt              = '';
+            $current_class_type        = '';
             $current_date              = '';
             $times                     = '';
 
@@ -60,17 +62,19 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
                     $current_id_module         = $sheet[$i][2] ?? $current_id_module;
                     $current_module_class_name = $sheet[$i][4] ?? $current_module_class_name;
                     $current_credit            = $sheet[$i][2] ?? $current_credit;
-                    $current_student_num       = $sheet[$i][5] ?? $current_student_num;
+                    $max_attempt               = $sheet[$i][5] ?? $max_attempt;
+                    $real_attempt              = $sheet[$i][6] ?? $real_attempt;
+                    $current_class_type        = $sheet[$i][7] ?? $current_class_type;
                     $current_date              = $sheet[$i][$other_index['date']] ?? $current_date;
                     $times                     = $sheet[$i][$other_index['date'] + 1] ?? $times;
 
                     $this->_createModuleClass($module_classes, $current_id_module,
-                                              $current_module_class_name,
-                                              $current_student_num);
+                                              $current_module_class_name, $current_class_type,
+                                              $max_attempt, $real_attempt);
 
                     $id_modules[] = ['id_module' => $current_id_module];
 
-                    if ($current_student_num <= 40)
+                    if ($max_attempt <= 40)
                     {
                         $Special_module_classes[$current_module_class_name] = end($module_classes)['id'];
                     }
@@ -136,16 +140,18 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
 
 
     private function _createModuleClass (&$module_classes, $id_module, $module_class_name,
-                                         $student_num)
+                                         $class_type, $max_attempt, $real_attempt)
     {
         $id_module_class = GFunction::convertToIDModuleClass($id_module, $module_class_name);
-        $class_type      = substr($id_module_class, -4, 2);
 
         $module_classes[$id_module_class] = [
             'id'               => $id_module_class,
             'name'             => $module_class_name,
-            'number_plan'      => $student_num,
-            'class_type'       => $class_type == 'BT' ? 2 : ($class_type == 'TH' ? 3 : 1),
+            'number_plan'      => $max_attempt,
+            'number_reality'   => $real_attempt,
+            'class_type'       => $class_type == 'BT' ? 2 : ($class_type ==
+                                                             'TH' ? 3 : ($class_type ==
+                                                                         'DA' ? 4 : 1)),
             'id_study_session' => $this->id_study_session,
             'is_international' => intval($this->is_international),
             'id_module'        => $id_module,
