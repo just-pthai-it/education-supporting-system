@@ -23,8 +23,8 @@ class ScheduleRepository implements Contracts\ScheduleRepositoryContract
                       ->whereIn('module_class.id_study_session', $id_study_sessions)
                       ->orderBy('sdu.id_module_class')
                       ->orderBy('sdu.id')
-                      ->get(['sdu.id as id_schedule', 'sdu.id_module_class',
-                             'module_class.name as module_class_name',
+                      ->get(['sdu.id', 'sdu.id_module_class',
+                             'module_class.name',
                              'sdu.id_room', 'sdu.shift', 'sdu.date'])->toArray();
     }
 
@@ -36,8 +36,8 @@ class ScheduleRepository implements Contracts\ScheduleRepositoryContract
                      ->whereIn('mc.id_study_session', $id_study_sessions)
                      ->orderBy('sdu.id_module_class')
                      ->orderBy('sdu.id')
-                     ->get(['sdu.id as id_schedule', 'sdu.id_module_class',
-                            'mc.name as module_class_name',
+                     ->get(['sdu.id', 'sdu.id_module_class',
+                            'mc.name',
                             'sdu.id_room', 'sdu.shift', 'sdu.date'])->toArray();
     }
 }
