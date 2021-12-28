@@ -23,7 +23,7 @@ class ScheduleService implements Contracts\ScheduleServiceContract
         $this->studySessionRepository = $studySessionRepository;
     }
 
-    public function getTeacherSchedules ($id_teacher, $term, $study_sessions) : array
+    public function getTeacherSchedules ($id_teacher, $term, $study_sessions)
     {
         $study_sessions    = GFunction::getOfficialStudySessions($term, $study_sessions);
         $id_study_sessions = $this->studySessionRepository->findByNames($study_sessions);

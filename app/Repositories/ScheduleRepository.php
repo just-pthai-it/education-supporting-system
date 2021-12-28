@@ -23,12 +23,11 @@ class ScheduleRepository implements Contracts\ScheduleRepositoryContract
                       ->whereIn('module_class.id_study_session', $id_study_sessions)
                       ->orderBy('sdu.id_module_class')
                       ->orderBy('sdu.id')
-                      ->get(['sdu.id', 'sdu.id_module_class',
-                             'module_class.name',
-                             'sdu.id_room', 'sdu.shift', 'sdu.date'])->toArray();
+                      ->get(['sdu.id', 'sdu.id_module_class', 'module_class.name',
+                             'sdu.id_room', 'sdu.shift', 'sdu.date']);
     }
 
-    public function findAllByIdDepartment (string $id_department, array $id_study_sessions) : array
+    public function findAllByIdDepartment (string $id_department, array $id_study_sessions)
     {
         return Module::join(ModuleClass::table_as, 'mc.id_module', '=', 'module.id')
                      ->join(Schedule::table_as, 'mc.id', '=', 'sdu.id_module_class')
@@ -36,8 +35,7 @@ class ScheduleRepository implements Contracts\ScheduleRepositoryContract
                      ->whereIn('mc.id_study_session', $id_study_sessions)
                      ->orderBy('sdu.id_module_class')
                      ->orderBy('sdu.id')
-                     ->get(['sdu.id', 'sdu.id_module_class',
-                            'mc.name',
-                            'sdu.id_room', 'sdu.shift', 'sdu.date'])->toArray();
+                     ->get(['sdu.id', 'sdu.id_module_class', 'mc.name',
+                            'sdu.id_room', 'sdu.shift', 'sdu.date']);
     }
 }

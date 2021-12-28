@@ -8,6 +8,26 @@ class GData
         'LLCT', 'GDTC', 'GDQP'
     ];
 
+    public static array $colors = [
+        '#a8cef1',
+        '#3682db',
+        '#8dda71',
+        '#34b41f',
+        '#e29398',
+        '#b8474e',
+        '#fcc068',
+        '#ff8a00',
+        '#dab3f9',
+        '#7b439e',
+        '#fee797',
+        '#fcbb14',
+        '#ea97c4',
+        '#bd65a4',
+        '#7fd7cc',
+    ];
+
+    public static string $current = '';
+
     public static array $faculty_class_and_major_info = [
         'CKOTO'        => ['name'       => 'Lớp Cơ khí ô tô',
                            'id_faculty' => 'CK'],
