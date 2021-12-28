@@ -7,9 +7,9 @@ use App\Models\Department;
 
 class DepartmentRepository implements Contracts\DepartmentRepositoryContract
 {
-    public function findAll ()
+    public function findAllWithDepartments ()
     {
-        return Faculty::with(['value:id,name,id_faculty'])->get(['id', 'name']);
+        return Faculty::with(['departments:id,name,id_faculty'])->get(['id', 'name']);
     }
 
     public function get ($id)

@@ -18,6 +18,6 @@ class DepartmentService implements Contracts\DepartmentServiceContract
 
     public function getAllDepartments ()
     {
-        return $this->departmentRepository->findAll();
+        return $this->departmentRepository->findAllWithDepartments();
     }
 }

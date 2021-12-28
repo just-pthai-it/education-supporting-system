@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Resources\FacultyResource;
 use App\Services\Contracts\DepartmentServiceContract;
 
 class DepartmentController extends Controller
@@ -19,6 +19,6 @@ class DepartmentController extends Controller
 
     public function getAllDepartments()
     {
-        return response($this->departmentService->getAllDepartments());
+        return response(FacultyResource::collection($this->departmentService->getAllDepartments()));
     }
 }
