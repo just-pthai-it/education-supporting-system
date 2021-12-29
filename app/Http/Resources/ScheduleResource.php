@@ -24,9 +24,14 @@ class ScheduleResource extends JsonResource
      */
     public function toArray ($request, $a = [])
     {
+        $arr         = explode('-', $this->id_module_class);
+        $id_module   = $arr[0];
+        $module_name = str_replace('-' . $arr[1] . '-' . $arr[2] . '-' . $arr[3],
+                                   '', $this->name);
+
         if ($this->teacher != 'self')
         {
-            $current_id_module = explode('-', $this->id_module_class)[0];
+            $current_id_module = $id_module;
             if (GData::$current != $current_id_module)
             {
                 GData::$current = $current_id_module;
@@ -52,7 +57,8 @@ class ScheduleResource extends JsonResource
             'id_room'         => $this->id_room,
             'shift'           => $this->shift,
             'date'            => $this->date,
-            'id_module'       => explode('-', $this->id_module_class)[0],
+            'id_module'       => $id_module,
+            'mmodule_name'    => $module_name,
             'teacher'         => $this->teacher,
             'color'           => $color,
         ];
