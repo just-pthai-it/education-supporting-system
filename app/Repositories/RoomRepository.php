@@ -9,6 +9,6 @@ class RoomRepository implements Contracts\RoomRepositoryContract
 
     public function findAll ()
     {
-        return Room::get(['id', 'name']);
+        return Room::get(['id']);
     }
 }
