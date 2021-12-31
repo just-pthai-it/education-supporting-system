@@ -33,6 +33,16 @@ class FixedSchedule extends Model
         'id_notification',
     ];
 
+    public function scopeStatus ($query, $status)
+    {
+        if ($status == 'all')
+        {
+            return $query;
+        }
+
+        return $query->where('status', '=', $status);
+    }
+
     public function schedule () : BelongsTo
     {
         return $this->belongsTo(Schedule::class, 'id_schedule', 'id');

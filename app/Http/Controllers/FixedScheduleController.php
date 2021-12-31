@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\FixedScheduleServiceContract;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FixedScheduleController extends Controller
 {
@@ -17,7 +19,7 @@ class FixedScheduleController extends Controller
         $this->fixedScheduleService = $fixedScheduleService;
     }
 
-    public function createFixedSchedule(Request $request)
+    public function createFixedSchedule (Request $request)
     {
         $this->fixedScheduleService->createFixedSchedule($request->only([
                                                                             'id_schedule',
@@ -30,5 +32,11 @@ class FixedScheduleController extends Controller
                                                                             'time_request',
                                                                             'time_set_room',
                                                                         ]));
+    }
+
+    public function getFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
+    {
+        $fixed_schedules = $this->fixedScheduleService->getFixedSchedulesByStatus($request->status);
+        return FixedScheduleResource::collection($fixed_schedules);
     }
 }
