@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\DepartmentController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StudySessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExamScheduleController;
+use App\Http\Controllers\FixedScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,7 +103,17 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         });
     });
 
-    Route::group(['prefix' => 'faculty'], function ()
+    Route::group(['prefix' => 'fixed-schedules'], function ()
+    {
+        Route::post('create', [FixedScheduleController::class, 'createFixedSchedule']);
+    });
+
+    Route::group(['prefix' => 'rooms'], function ()
+    {
+        Route::get('', [RoomController::class, 'getAllRooms']);
+    });
+
+    Route::group(['prefix' => 'faculties'], function ()
     {
 
     });

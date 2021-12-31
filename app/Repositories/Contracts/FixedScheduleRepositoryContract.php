@@ -4,5 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface FixedScheduleRepositoryContract
 {
+    public function insert ($fixed_schedule);
+
 
 }

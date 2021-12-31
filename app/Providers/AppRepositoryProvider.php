@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Faculty;
 use App\Models\Department;
+use App\Repositories\RoomRepository;
 use App\Repositories\FeedbackRepository;
 use App\Repositories\PermissionRepository;
 use App\Repositories\CurriculumRepository;
@@ -11,6 +12,8 @@ use App\Repositories\AcademicYearRepository;
 use App\Repositories\AccountRepository;
 use App\Repositories\ClassRepository;
 use App\Repositories\ExamScheduleRepository;
+use App\Repositories\FixedScheduleRepository;
+use App\Repositories\Contracts\RoomRepositoryContract;
 use App\Repositories\Contracts\FeedbackRepositoryContract;
 use App\Repositories\Contracts\PermissionRepositoryContract;
 use App\Repositories\Contracts\CurriculumRepositoryContract;
@@ -24,6 +27,7 @@ use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\ModuleRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
+use App\Repositories\Contracts\FixedScheduleRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\TermRepositoryContract;
@@ -48,6 +52,7 @@ class AppRepositoryProvider extends ServiceProvider
 {
     public array $bindings = [
         OtherDepartmentRepositoryContract::class => OtherDepartmentRepository::class,
+        FixedScheduleRepositoryContract::class   => FixedScheduleRepository::class,
         NotificationRepositoryContract::class    => NotificationRepository::class,
         AcademicYearRepositoryContract::class    => AcademicYearRepository::class,
         ExamScheduleRepositoryContract::class    => ExamScheduleRepository::class,
@@ -66,6 +71,8 @@ class AppRepositoryProvider extends ServiceProvider
         ModuleRepositoryContract::class          => ModuleRepository::class,
         ClassRepositoryContract::class           => ClassRepository::class,
         TermRepositoryContract::class            => TermRepository::class,
+        RoomRepositoryContract::class            => RoomRepository::class,
+
     ];
 
     /**
@@ -74,9 +81,9 @@ class AppRepositoryProvider extends ServiceProvider
      */
     public function boot ()
     {
-//        Faculty::resolveRelationUsing('value', function ($facultyModel)
-//        {
-//            return $facultyModel->hasMany(Department::class, 'id_faculty', 'id');
-//        });
+        //        Faculty::resolveRelationUsing('value', function ($facultyModel)
+        //        {
+        //            return $facultyModel->hasMany(Department::class, 'id_faculty', 'id');
+        //        });
     }
 }

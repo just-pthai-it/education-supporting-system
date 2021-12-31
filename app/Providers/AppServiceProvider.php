@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\RoomService;
 use App\Services\TeacherService;
 use App\Services\FeedbackService;
 use Illuminate\Support\Facades\URL;
@@ -12,8 +13,10 @@ use App\Services\AuthService;
 use App\Services\ExamScheduleService;
 use App\Services\ExcelRollCallService;
 use App\Services\ExcelScheduleService;
+use App\Services\FixedScheduleService;
 use App\Services\ExcelCurriculumService;
 use App\Services\ExcelExamScheduleService;
+use App\Services\Contracts\RoomServiceContract;
 use App\Services\Contracts\TeacherServiceContract;
 use App\Services\Contracts\FeedbackServiceContract;
 use App\Services\Contracts\DepartmentServiceContract;
@@ -38,25 +41,28 @@ use App\Services\ScheduleService;
 use App\Services\StudySessionService;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Contracts\ExamScheduleServiceContract;
+use App\Services\Contracts\FixedScheduleServiceContract;
 
 class AppServiceProvider extends ServiceProvider
 {
     public array $bindings = [
-        ExamScheduleServiceContract::class => ExamScheduleService::class,
-        NotificationServiceContract::class => NotificationService::class,
-        AcademicYearServiceContract::class => AcademicYearService::class,
-        StudySessionServiceContract::class => StudySessionService::class,
-        ModuleClassServiceContract::class  => ModuleClassService::class,
-        DepartmentServiceContract::class   => DepartmentService::class,
-        FileUploadServiceContract::class   => FileUploadService::class,
-        FeedbackServiceContract::class     => FeedbackService::class,
-        ScheduleServiceContract::class     => ScheduleService::class,
-        TeacherServiceContract::class      => TeacherService::class,
-        AccountServiceContract::class      => AccountService::class,
-        FacultyServiceContract::class      => FacultyService::class,
-        NotifyServiceContract::class       => NotifyService::class,
-        ClassServiceContract::class        => ClassService::class,
-        AuthServiceContract::class         => AuthService::class,
+        FixedScheduleServiceContract::class => FixedScheduleService::class,
+        ExamScheduleServiceContract::class  => ExamScheduleService::class,
+        NotificationServiceContract::class  => NotificationService::class,
+        AcademicYearServiceContract::class  => AcademicYearService::class,
+        StudySessionServiceContract::class  => StudySessionService::class,
+        ModuleClassServiceContract::class   => ModuleClassService::class,
+        DepartmentServiceContract::class    => DepartmentService::class,
+        FileUploadServiceContract::class    => FileUploadService::class,
+        FeedbackServiceContract::class      => FeedbackService::class,
+        ScheduleServiceContract::class      => ScheduleService::class,
+        TeacherServiceContract::class       => TeacherService::class,
+        AccountServiceContract::class       => AccountService::class,
+        FacultyServiceContract::class       => FacultyService::class,
+        NotifyServiceContract::class        => NotifyService::class,
+        ClassServiceContract::class         => ClassService::class,
+        AuthServiceContract::class          => AuthService::class,
+        RoomServiceContract::class          => RoomService::class,
     ];
 
     /**
