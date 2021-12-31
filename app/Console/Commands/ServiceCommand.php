@@ -50,7 +50,7 @@ class ServiceCommand extends GeneratorCommand
         }
 
         $stub = parent::replaceClass($stub, $name);
-
+        $stub = str_replace('dummy', lcfirst($model), $stub);
         return str_replace('Dummy', $model, $stub);
     }
 

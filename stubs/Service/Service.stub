@@ -2,7 +2,20 @@
 
 namespace App\Services;
 
+use App\Repositories\Contracts\DummyRepositoryContract;
+
 class DummyService implements Contracts\DummyServiceContract
 {
+    private DummyRepositoryContract $dummyDepository;
+
+    /**
+     * @param DummyRepositoryContract $dummyDepository
+     */
+    public function __construct (DummyRepositoryContract $dummyDepository)
+    {
+        $this->dummyDepository = $dummyDepository;
+    }
+
+        DummyServiceContract::class  => DummyService::class,
 
 }

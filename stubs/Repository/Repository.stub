@@ -4,5 +4,6 @@ namespace App\Repositories;
 
 class DummyRepository implements Contracts\DummyRepositoryContract
 {
+        DummyRepositoryContract::class    => DummyRepository::class,
 
 }
