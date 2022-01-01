@@ -111,6 +111,9 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::get('', [FixedScheduleController::class, 'getFixedSchedulesByStatus']);
 
         Route::post('create', [FixedScheduleController::class, 'createFixedSchedule']);
+
+        Route::put('update', [FixedScheduleController::class, 'updateFixedSchedule']);
+
     });
 
     Route::group(['prefix' => 'rooms'], function ()

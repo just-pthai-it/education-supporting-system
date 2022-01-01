@@ -26,13 +26,16 @@ class FixedScheduleController extends Controller
                                                                             'new_date',
                                                                             'new_shift',
                                                                             'new_id_room',
-                                                                            'old_date',
-                                                                            'old_shift',
-                                                                            'old_id_room',
                                                                             'time_request',
                                                                             'time_set_room',
                                                                         ]));
     }
+
+    public function updateFixedSchedule (Request $request)
+    {
+        $this->fixedScheduleService->updateFixedSchedule($request->only(['id', 'status']));
+    }
+
 
     public function getFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
     {
