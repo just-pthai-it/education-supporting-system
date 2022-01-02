@@ -313,7 +313,6 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         $this->excelService = app()->make('excel_curriculum');
         $this->fileUploadHandler->handleFileUpload($input['file']);
         $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName());
-//        var_dump($data);
         $this->_createAndUpdateData4($data);
     }
 
@@ -334,19 +333,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
 
     private function _createModules ($modules)
     {
-        foreach ($modules as $module)
-        {
-            try
-            {
-                $this->moduleRepository->upsertMultiple([$module]);
-            }
-            catch (PDOException $e)
-            {
-                var_dump($module);
-                throw $e;
-            }
-        }
-//        $this->moduleRepository->upsertMultiple($modules);
+        $this->moduleRepository->upsertMultiple($modules);
     }
 
     private function _createManyCurriculumModule ($id_curriculum, $id_modules)
