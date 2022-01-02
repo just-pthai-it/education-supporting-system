@@ -22,16 +22,16 @@ class ScheduleController extends Controller
     public function getTeacherSchedules (Request $request, $id_teacher)
     {
         $schedules = $this->scheduleService->getTeacherSchedules(auth()->user()->id_user,
-                                                                          $request->term,
-                                                                          $request->ss);
+                                                                          $request->start,
+                                                                          $request->end);
         return response(new ScheduleCollection(ScheduleResource::collection($schedules)));
     }
 
     public function getDepartmentSchedules (Request $request, $id_department)
     {
         $schedules = $this->scheduleService->getDepartmentSchedules($id_department,
-                                                                       $request->term,
-                                                                       $request->ss);
+                                                                       $request->start,
+                                                                       $request->end);
         return response(new ScheduleCollection(ScheduleResource::collection($schedules)));
     }
 }

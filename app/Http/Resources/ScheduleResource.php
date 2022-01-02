@@ -58,7 +58,7 @@ class ScheduleResource extends JsonResource
             'shift'           => $this->shift,
             'date'            => $this->date,
             'id_module'       => $id_module,
-            'module_name'    => $module_name,
+            'module_name'     => $module_name,
             'teacher'         => $this->teacher,
             'color'           => $color,
         ];
