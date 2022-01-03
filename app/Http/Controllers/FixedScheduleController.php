@@ -33,7 +33,7 @@ class FixedScheduleController extends Controller
 
     public function updateFixedSchedule (Request $request)
     {
-        $this->fixedScheduleService->updateFixedSchedule($request->only(['id', 'status']));
+        $this->fixedScheduleService->updateFixedSchedule($request->only(['id', 'time_accept', 'status']));
     }
 
     public function getFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
