@@ -30,6 +30,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     private function _fillData (&$fixed_schedule)
     {
         $schedule = $this->_getScheduleById($fixed_schedule['id_schedule']);
+
         $fixed_schedule['old_date']    = $schedule->date;
         $fixed_schedule['old_shift']   = $schedule->shift;
         $fixed_schedule['old_id_room'] = $schedule->id_room;
@@ -42,7 +43,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
 
     public function updateFixedSchedule ($object)
     {
-        $this->fixedScheduleRepository->update($object, 'id');
+        $this->fixedScheduleRepository->update($object);
     }
 
     public function getFixedSchedulesByStatus ($status)

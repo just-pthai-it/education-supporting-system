@@ -21,19 +21,21 @@ class FixedScheduleController extends Controller
 
     public function createFixedSchedule (Request $request)
     {
-        $this->fixedScheduleService->createFixedSchedule($request->only([
-                                                                            'id_schedule',
-                                                                            'new_date',
-                                                                            'new_shift',
-                                                                            'new_id_room',
-                                                                            'time_request',
-                                                                            'time_set_room',
-                                                                        ]));
+        $this->fixedScheduleService->createFixedSchedule($request->only(['id_schedule',
+                                                                         'new_date',
+                                                                         'new_shift',
+                                                                         'new_id_room',
+                                                                         'time_request',
+                                                                         'time_set_room',]));
     }
 
     public function updateFixedSchedule (Request $request)
     {
-        $this->fixedScheduleService->updateFixedSchedule($request->only(['id', 'time_accept', 'status']));
+        $this->fixedScheduleService->updateFixedSchedule($request->only(['id',
+                                                                         'new_id_room',
+                                                                         'time_accept',
+                                                                         'time_set_room',
+                                                                         'status',]));
     }
 
     public function getFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection

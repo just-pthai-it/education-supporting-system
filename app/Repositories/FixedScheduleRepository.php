@@ -11,7 +11,7 @@ class FixedScheduleRepository implements Contracts\FixedScheduleRepositoryContra
         FixedSchedule::create($fixed_schedule);
     }
 
-    public function update ($object, $column, $operator = '=')
+    public function update ($object, $column = 'id', $operator = '=')
     {
         FixedSchedule::where($column, $operator, array_shift($object))->update($object);
     }

@@ -27,6 +27,7 @@ class FixedSchedule extends Model
         'old_shift',
         'old_id_room',
         'time_request',
+        'reason',
         'time_accept',
         'time_set_room',
         'status',
