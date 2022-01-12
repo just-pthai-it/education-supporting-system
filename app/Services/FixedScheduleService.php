@@ -45,9 +45,4 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     {
         $this->fixedScheduleRepository->update($object);
     }
-
-    public function getFixedSchedulesByStatus ($status)
-    {
-        return $this->fixedScheduleRepository->findByStatus($status);
-    }
 }

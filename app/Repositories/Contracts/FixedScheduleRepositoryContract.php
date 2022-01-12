@@ -8,5 +8,7 @@ interface FixedScheduleRepositoryContract
 
     public function update ($object, $column = 'id', $operator = '=');
 
-    public function findByStatus ($status);
+    public function findByStatusAndIdDepartment ($id_department, $status);
+
+    public function findByStatusAndIdTeacher ($id_teacher, $status);
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -59,5 +60,10 @@ class ModuleClass extends Model
     public function students () : BelongsToMany
     {
         return $this->belongsToMany(Student::class, 'participate', 'id_module_class', 'id_student');
+    }
+
+    public function examSchedule () : HasOne
+    {
+        return $this->hasOne(ExamSchedule::class, 'id_module_class', 'id');
     }
 }

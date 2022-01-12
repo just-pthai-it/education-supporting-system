@@ -37,10 +37,4 @@ class FixedScheduleController extends Controller
                                                                          'time_set_room',
                                                                          'status',]));
     }
-
-    public function getFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
-    {
-        $fixed_schedules = $this->fixedScheduleService->getFixedSchedulesByStatus($request->status);
-        return FixedScheduleResource::collection($fixed_schedules);
-    }
 }
