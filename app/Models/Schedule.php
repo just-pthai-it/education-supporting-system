@@ -37,7 +37,7 @@ class Schedule extends Model
         return $this->belongsTo(Room::class, 'id_room', 'id');
     }
 
-    public function fixedSchedule () : hasOne
+    public function fixedSchedules () : hasOne
     {
         return $this->hasOne(FixedSchedule::class, 'id_schedule', 'id');
     }

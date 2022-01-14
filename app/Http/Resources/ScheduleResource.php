@@ -2,10 +2,8 @@
 
 namespace App\Http\Resources;
 
-use JsonSerializable;
 use App\Helpers\GData;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ScheduleResource extends JsonResource
@@ -19,48 +17,49 @@ class ScheduleResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param Request $request
+     * @param array   $a
      *
-     * @return array|Arrayable|JsonSerializable
+     * @return array
      */
-    public function toArray ($request, $a = [])
+    public function toArray ($request, array $a = []) : array
     {
         $arr         = explode('-', $this->id_module_class);
         $id_module   = $arr[0];
         $module_name = str_replace('-' . $arr[1] . '-' . $arr[2] . '-' . $arr[3],
-                                   '', $this->name);
+                                   '', $this->moduleClass->name);
+        $teacher     = $this->moduleClass->teacher->name ?? 'self';
 
-        if ($this->teacher != 'self')
+        if ($teacher != 'self')
         {
-            $current_id_module = $id_module;
-            if (GData::$current != $current_id_module)
+            if (!isset(GData::$current[$id_module]))
             {
-                GData::$current = $current_id_module;
-                array_shift(GData::$colors);
+                GData::$current[$id_module] = array_shift(GData::$colors);
             }
-            $color = GData::$colors[0];
+            $color          = GData::$current[$id_module];
+            $fixedSchedules = null;
         }
         else
         {
-            $current_id_module_class = $this->id_module_class;
-            if (GData::$current != $current_id_module_class)
+            if (!isset(GData::$current[$this->id_module_class]))
             {
-                GData::$current = $current_id_module_class;
-                array_shift(GData::$colors);
+                GData::$current[$this->id_module_class] = array_shift(GData::$colors);
             }
-            $color = GData::$colors[0];
+            $color          = GData::$current[$this->id_module_class];
+            $fixedSchedules = $this->fixedSchedules;
         }
 
         return [
             'id'              => $this->id,
             'id_module_class' => $this->id_module_class,
-            'name'            => $this->name,
+            'name'            => $this->moduleClass->name,
             'id_room'         => $this->id_room,
             'shift'           => $this->shift,
             'date'            => $this->date,
             'id_module'       => $id_module,
             'module_name'     => $module_name,
-            'teacher'         => $this->teacher,
+            'teacher'         => $teacher,
             'color'           => $color,
+            'fixedSchedule'   => $fixedSchedules,
         ];
     }
 }

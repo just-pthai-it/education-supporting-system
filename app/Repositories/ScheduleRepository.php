@@ -2,11 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Models\Module;
-use App\Models\ModuleClass;
 use App\Models\Schedule;
-use App\Models\Teacher;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class ScheduleRepository implements Contracts\ScheduleRepositoryContract
 {
@@ -27,25 +24,29 @@ class ScheduleRepository implements Contracts\ScheduleRepositoryContract
 
     public function findAllByIdTeacher ($id_teacher, $start, $end)
     {
-        return Teacher::find($id_teacher)->moduleClasses()
-                      ->join(Schedule::table_as, 'module_class.id', '=', 'sdu.id_module_class')
-                      ->whereBetween('date', [$start, $end])
-            //                      ->orderBy('sdu.id_module_class')
-            //                      ->orderBy('sdu.id')
-                      ->get(['sdu.id', 'sdu.id_module_class', 'module_class.name',
-                             'sdu.id_room', 'sdu.shift', 'sdu.date', DB::raw('\'self\' as teacher'),]);
+        return Schedule::whereHas('moduleClass', function (Builder $query)
+        {
+            $query->where('id_teacher', '0884');
+        })->whereBetween('date', [$start, $end])
+                       ->with(['moduleClass:id,name',
+                               'fixedSchedules' => function ($query)
+                               {
+                                   return $query->where('status', '=', 1)
+                                                ->select('id_schedule', 'new_date',
+                                                         'new_shift', 'new_id_room');
+                               },])->get();
     }
 
     public function findAllByIdDepartment ($id_department, $start, $end)
     {
-        return ModuleClass::join(Module::table_as, 'module_class.id_module', '=', 'md.id')
-                          ->join(Schedule::table_as, 'module_class.id', '=', 'sdu.id_module_class')
-                          ->leftJoin(Teacher::table_as, 'tea.id', '=', 'module_class.id_teacher')
-                          ->where('md.id_department', '=', $id_department)
-                          ->whereBetween('date', [$start, $end])
-            //                          ->orderBy('sdu.id_module_class')
-            //                          ->orderBy('sdu.id')
-                          ->get(['sdu.id', 'sdu.id_module_class', 'module_class.name',
-                                 'sdu.id_room', 'sdu.shift', 'sdu.date', 'tea.name as teacher']);
+        return Schedule::whereHas('moduleClass', function (Builder $query) use ($id_department)
+        {
+            $query->whereHas('module', function (Builder $query) use ($id_department)
+            {
+                $query->where('id_department', '=', $id_department);
+            });
+        })->whereBetween('date', [$start, $end])
+                       ->with(['moduleClass:id,name,id_teacher',
+                               'moduleClass.teacher:id,name'])->get();
     }
 }

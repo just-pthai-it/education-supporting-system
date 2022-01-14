@@ -10,7 +10,6 @@ class GData
 
     public static array $colors = [
         '#a8cef1',
-        '#a8cef1',
         '#3682db',
         '#8dda71',
         '#34b41f',
@@ -33,7 +32,7 @@ class GData
         '#a0c5df',
     ];
 
-    public static string $current = '';
+    public static $current;
 
     public static array $faculty_class_and_major_info = [
         'CKOTO'        => ['name'       => 'Lớp Cơ khí ô tô',
