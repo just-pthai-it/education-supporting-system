@@ -19,19 +19,24 @@ class ScheduleController extends Controller
         $this->scheduleService = $scheduleService;
     }
 
+    public function updateSchedules (Request $request)
+    {
+        $this->scheduleService->updateSchedules($request->only(['id', 'note']));
+    }
+
     public function getTeacherSchedules (Request $request, $id_teacher)
     {
         $schedules = $this->scheduleService->getTeacherSchedules(auth()->user()->id_user,
-                                                                          $request->start,
-                                                                          $request->end);
+                                                                 $request->start,
+                                                                 $request->end);
         return response(new ScheduleCollection(ScheduleResource::collection($schedules)));
     }
 
     public function getDepartmentSchedules (Request $request, $id_department)
     {
         $schedules = $this->scheduleService->getDepartmentSchedules($id_department,
-                                                                       $request->start,
-                                                                       $request->end);
+                                                                    $request->start,
+                                                                    $request->end);
         return response(new ScheduleCollection(ScheduleResource::collection($schedules)));
     }
 }

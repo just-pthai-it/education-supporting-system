@@ -38,6 +38,12 @@ Route::middleware(['default_header'])->group(function ()
 
 Route::middleware(['cus.auth', 'default_header'])->group(function ()
 {
+    Route::group(['prefix' => 'schedules'], function ()
+    {
+        Route::put('update', [ScheduleController::class, 'updateSchedules']);
+    });
+
+
     Route::group(['prefix' => 'teachers'], function ()
     {
         Route::group(['prefix' => '{id_teacher}'], function ()
@@ -66,6 +72,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     });
 
+
     Route::get('faculty', [FacultyController::class, 'getIDFaculties']);
 
     Route::get('academic-year', [AcademicYearController::class, 'getRecentAcademicYears']);
@@ -89,6 +96,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
+
     Route::group(['prefix' => 'departments'], function ()
     {
         Route::get('', [DepartmentController::class, 'getAllDepartments']);
@@ -105,10 +113,12 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
             Route::get('teachers', [TeacherController::class, 'getTeachersByIdDepartment']);
 
-            Route::get('fixed-schedules', [DepartmentController::class, 'getFixedSchedulesByStatus']);
+            Route::get('fixed-schedules',
+                       [DepartmentController::class, 'getFixedSchedulesByStatus']);
 
         });
     });
+
 
     Route::group(['prefix' => 'fixed-schedules'], function ()
     {
@@ -119,20 +129,24 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     });
 
+
     Route::group(['prefix' => 'rooms'], function ()
     {
         Route::get('', [RoomController::class, 'getAllRooms']);
     });
+
 
     Route::group(['prefix' => 'faculties'], function ()
     {
 
     });
 
+
     Route::group(['prefix' => 'other-department'], function ()
     {
 
     });
+
 
     Route::group(['prefix' => 'feedbacks'], function ()
     {
@@ -141,10 +155,12 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::get('', [FeedbackController::class, 'getAllFeedbacks']);
     });
 
+
     Route::group(['prefix' => 'exam-schedules'], function ()
     {
         Route::put('update', [ExamScheduleController::class, 'updateExamSchedule']);
     });
+
 
     Route::get('users', [UserController::class, 'getUserInfo']);
 });

@@ -24,6 +24,7 @@ class Schedule extends Model
         'date',
         'shift',
         'id_room',
+        'note',
     ];
 
     public function moduleClass () : BelongsTo

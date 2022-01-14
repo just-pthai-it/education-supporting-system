@@ -16,6 +16,11 @@ class ScheduleService implements Contracts\ScheduleServiceContract
         $this->scheduleDepository = $scheduleDepository;
     }
 
+    public function updateSchedules ($object)
+    {
+        $this->scheduleDepository->update($object);
+    }
+
     public function getTeacherSchedules ($id_teacher, $start, $end)
     {
         return $this->scheduleDepository->findAllByIdTeacher($id_teacher, $start, $end);

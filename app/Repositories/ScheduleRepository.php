@@ -15,6 +15,11 @@ class ScheduleRepository implements Contracts\ScheduleRepositoryContract
         Schedule::insert($data);
     }
 
+    public function update ($object, $column = 'id', $operator = '=')
+    {
+        Schedule::where($column, $operator, array_shift($object))->update($object);
+    }
+
     public function findById ($id, $columns = ['*'])
     {
         return Schedule::find($id, $columns);

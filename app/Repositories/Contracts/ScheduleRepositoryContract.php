@@ -6,6 +6,8 @@ interface ScheduleRepositoryContract
 {
     public function insertMultiple ($data);
 
+    public function update ($object, $column = 'id', $operator = '=');
+
     public function findById ($id, $columns = ['*']);
 
     public function findAllByIdTeacher ($id_teacher, $start, $end);
