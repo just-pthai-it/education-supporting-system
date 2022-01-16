@@ -26,7 +26,8 @@ class FixedScheduleController extends Controller
                                                                          'new_shift',
                                                                          'new_id_room',
                                                                          'time_request',
-                                                                         'time_set_room',]));
+                                                                         'time_set_room',
+                                                                         'reason',]));
     }
 
     public function updateFixedSchedule (Request $request)
