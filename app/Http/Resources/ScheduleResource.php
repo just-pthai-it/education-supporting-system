@@ -27,7 +27,8 @@ class ScheduleResource extends JsonResource
         $id_module   = $arr[0];
         $module_name = str_replace('-' . $arr[1] . '-' . $arr[2] . '-' . $arr[3],
                                    '', $this->moduleClass->name);
-        $teacher     = $this->moduleClass->teacher->name ?? 'self';
+        $teacher     = $this->moduleClass->teacher ==
+                       'self' ? 'self' : $this->moduleClass->teacher->name;
 
         if ($teacher != 'self')
         {

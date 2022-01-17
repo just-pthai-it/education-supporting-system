@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Schedule;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 
 class ScheduleRepository implements Contracts\ScheduleRepositoryContract
@@ -28,13 +29,19 @@ class ScheduleRepository implements Contracts\ScheduleRepositoryContract
         {
             $query->where('id_teacher', '0884');
         })->whereBetween('date', [$start, $end])
-                       ->with(['moduleClass:id,name',
-                               'fixedSchedules' => function ($query)
-                               {
-                                   return $query->where('status', '=', 1)
-                                                ->select('id_schedule', 'new_date',
-                                                         'new_shift', 'new_id_room');
-                               },])->get();
+                       ->with([
+                                  'moduleClass'    => function ($query)
+                                  {
+                                      return $query->select('id', 'name',
+                                                            DB::raw('\'self\' as teacher'));
+                                  },
+                                  'fixedSchedules' => function ($query)
+                                  {
+                                      return $query->where('status', '=', 1)
+                                                   ->select('id_schedule', 'new_date',
+                                                            'new_shift', 'new_id_room');
+                                  },
+                              ])->get();
     }
 
     public function findAllByIdDepartment ($id_department, $start, $end)
