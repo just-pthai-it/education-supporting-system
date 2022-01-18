@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Schedule extends Model
 {
@@ -37,8 +37,8 @@ class Schedule extends Model
         return $this->belongsTo(Room::class, 'id_room', 'id');
     }
 
-    public function fixedSchedules () : hasOne
+    public function fixedSchedules () : HasMany
     {
-        return $this->hasOne(FixedSchedule::class, 'id_schedule', 'id');
+        return $this->hasMany(FixedSchedule::class, 'id_schedule', 'id');
     }
 }
