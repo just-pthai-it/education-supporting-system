@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Faculty;
-use App\Models\Department;
 use App\Repositories\RoomRepository;
 use App\Repositories\FeedbackRepository;
 use App\Repositories\PermissionRepository;
