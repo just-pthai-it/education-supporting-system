@@ -7,36 +7,32 @@ use App\Http\Resources\FacultyResource;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
-use App\Services\Contracts\ScheduleServiceContract;
 use App\Services\Contracts\DepartmentServiceContract;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class DepartmentController extends Controller
 {
     private DepartmentServiceContract $departmentService;
-    private ScheduleServiceContract $scheduleService;
 
     /**
      * @param DepartmentServiceContract $departmentService
-     * @param ScheduleServiceContract   $scheduleService
      */
-    public function __construct (DepartmentServiceContract $departmentService,
-                                 ScheduleServiceContract   $scheduleService)
+    public function __construct (DepartmentServiceContract $departmentService)
     {
         $this->departmentService = $departmentService;
-        $this->scheduleService   = $scheduleService;
     }
 
-    public function getAllDepartments ()
+    public function getAll ()
     {
         return response(FacultyResource::collection($this->departmentService->getAllDepartments()));
     }
 
     public function getSchedules (Request $request, $id_department)
     {
-        $schedules = $this->scheduleService->getDepartmentSchedules($id_department,
-                                                                    $request->start,
-                                                                    $request->end);
+        $schedules = $this->departmentService->getSchedules($id_department,
+                                                            $request->start,
+                                                            $request->end);
+
         return ScheduleResource::collection($schedules)->all();
     }
 
@@ -45,6 +41,7 @@ class DepartmentController extends Controller
         $exam_schedules = $this->departmentService->getExamSchedules($id_department,
                                                                      $request->start,
                                                                      $request->end);
+
         return ExamScheduleResource::collection($exam_schedules)->all();
     }
 
