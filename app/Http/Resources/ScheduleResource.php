@@ -34,8 +34,9 @@ class ScheduleResource extends JsonResource
             {
                 GData::$current[$id_module] = array_shift(GData::$colors);
             }
-            $color   = GData::$current[$id_module];
-            $teacher = is_null($this->moduleClass->teacher) ? null : $this->moduleClass->teacher->name;
+            $color          = GData::$current[$id_module];
+            $teacher        = is_null($this->moduleClass->teacher) ? null : $this->moduleClass->teacher->name;
+            $fixedSchedules = [];
         }
         else
         {
@@ -43,23 +44,24 @@ class ScheduleResource extends JsonResource
             {
                 GData::$current[$this->id_module_class] = array_shift(GData::$colors);
             }
-            $color   = GData::$current[$this->id_module_class];
-            $teacher = $this->moduleClass->teacher;
+            $color          = GData::$current[$this->id_module_class];
+            $teacher        = $this->moduleClass->teacher;
+            $fixedSchedules = $this->fixedSchedules;
         }
 
         return [
-            'id'              => $this->id,
-            'id_module_class' => $this->id_module_class,
-            'name'            => $this->moduleClass->name,
-            'id_room'         => $this->id_room,
-            'shift'           => $this->shift,
-            'date'            => $this->date,
-            'id_module'       => $id_module,
-            'note'            => $this->note,
-            'module_name'     => $module_name,
-            'teacher'         => $teacher,
-            'color'           => $color,
-            'fixedSchedule'   => $this->fixedSchedules,
+            'id'            => $this->id,
+            'idModuleClass' => $this->id_module_class,
+            'name'          => $this->moduleClass->name,
+            'idRoom'        => $this->id_room,
+            'shift'         => $this->shift,
+            'date'          => $this->date,
+            'idModule'      => $id_module,
+            'note'          => $this->note,
+            'moduleName'    => $module_name,
+            'teacher'       => $teacher,
+            'color'         => $color,
+            'fixedSchedule' => $fixedSchedules,
         ];
     }
 }
