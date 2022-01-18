@@ -33,7 +33,7 @@ class TeacherController extends Controller
 
     public function getSchedules (Request $request, $id_teacher)
     {
-        $schedules = $this->scheduleService->getTeacherSchedules(auth()->user()->id_user,
+        $schedules = $this->teacherService->getSchedules(auth()->user()->id_user,
                                                                  $request->start,
                                                                  $request->end);
         return ScheduleResource::collection($schedules)->all();

@@ -20,14 +20,4 @@ class ScheduleService implements Contracts\ScheduleServiceContract
     {
         $this->scheduleDepository->update($object);
     }
-
-    public function getTeacherSchedules ($id_teacher, $start, $end)
-    {
-        return $this->scheduleDepository->findAllByIdTeacher($id_teacher, $start, $end);
-    }
-
-    public function getDepartmentSchedules ($id_department, $start, $end)
-    {
-        return $this->scheduleDepository->findAllByIdDepartment($id_department, $start, $end);
-    }
 }
