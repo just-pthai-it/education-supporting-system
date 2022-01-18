@@ -8,9 +8,9 @@ interface ExamScheduleRepositoryContract
 
     public function insertPivot ($id_module_class, $id_teachers);
 
-    public function findAllByIdTeacher ($id_teacher, $id_study_sessions);
+    public function findByIdTeacher ($id_teacher, $start, $end);
 
-    public function findAllByIdTeachers ($id_teachers, $id_study_sessions);
+    public function findByIdDepartment ($id_department, $start, $end);
 
     public function update ($new_exam_schedule);
 }

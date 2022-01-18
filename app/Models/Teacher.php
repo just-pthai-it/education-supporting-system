@@ -38,7 +38,7 @@ class Teacher extends Model
     protected $hidden = [
         'uuid',
         'is_delete',
-//        'pivot',
+        'pivot',
     ];
 
     private array $column = [

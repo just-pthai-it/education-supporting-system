@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\TeacherResource;
+use App\Http\Resources\ExamScheduleCollection;
 use App\Services\Contracts\ExamScheduleServiceContract;
 
 class ExamScheduleController extends Controller
@@ -26,9 +28,12 @@ class ExamScheduleController extends Controller
 
     public function getDepartmentExamSchedules (Request $request, $id_department)
     {
-        return response($this->examScheduleService->getDepartmentExamSchedules($id_department,
-                                                                               $request->term,
-                                                                               $request->ss));
+        $exam_schedules = $this->examScheduleService->getDepartmentExamSchedules($id_department,
+                                                                                 $request->start,
+                                                                                 $request->end);
+//        var_dump($exam_schedules);
+//        return $exam_schedules;
+        return TeacherResource::collection($exam_schedules)->all();
     }
 
     public function updateExamSchedule (Request $request)

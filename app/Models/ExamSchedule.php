@@ -29,6 +29,7 @@ class ExamSchedule extends Model
     ];
 
     protected $hidden = [
+        'pivot',
     ];
 
     public function moduleClass () : BelongsTo

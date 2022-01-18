@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\ScheduleResource;
+use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\TeacherServiceContract;
 use App\Services\Contracts\ScheduleServiceContract;
@@ -36,6 +37,14 @@ class TeacherController extends Controller
                                                                  $request->start,
                                                                  $request->end);
         return ScheduleResource::collection($schedules)->all();
+    }
+
+    public function getExamSchedules (Request $request, $id_teacher)
+    {
+        $exam_schedules = $this->teacherService->getExamSchedules(auth()->user()->id_user,
+                                                                  $request->start,
+                                                                  $request->end);
+        return ExamScheduleResource::collection($exam_schedules)->all();
     }
 
     public function getFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection

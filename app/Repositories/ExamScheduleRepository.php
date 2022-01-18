@@ -6,6 +6,7 @@ use App\Models\Teacher;
 use App\Models\ModuleClass;
 use App\Models\ExamSchedule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
 {
@@ -22,31 +23,33 @@ class ExamScheduleRepository implements Contracts\ExamScheduleRepositoryContract
                     ->teachers()->sync($id_teachers);
     }
 
-    public function findAllByIdTeacher ($id_teacher, $id_study_sessions)
+    public function findByIdTeacher ($id_teacher, $start, $end)
     {
-        return Teacher::find($id_teacher)->examSchedules()
-                      ->join(ModuleClass::table_as, 'mc.id', '=', 'exam_schedule.id_module_class')
-                      ->whereIn('mc.id_study_session', $id_study_sessions)
-                      ->join('exam_schedule_teacher as est', 'est.id_exam_schedule', '=',
-                             'exam_schedule.id')
-                      ->join(Teacher::table_as, 'tea.id', '=', 'est.id_teacher')
-                      ->get(['exam_schedule.id', 'id_module_class', 'mc.name', 'method',
-                             'time_start', 'time_end', 'id_room', 'note',
-                             'tea.name as teacher_name', 'est.position'])
-                      ->toArray();
+        return ExamSchedule::whereHas('teachers', function (Builder $query) use ($id_teacher)
+        {
+            $query->where('teacher.id', '=', $id_teacher);
+        })->whereBetween('time_start', [$start, $end])
+                           ->with(['moduleClass:id,name',
+                                   'teachers' => function ($query)
+                                   {
+                                       return $query->orderBy('position')->select('id', 'name');
+                                   }])->get();
     }
 
-    public function findAllByIdTeachers ($id_teachers, $id_study_sessions) : array
+    public function findByIdDepartment ($id_department, $start, $end)
     {
-        return Teacher::with([
-                                 'examSchedules.moduleClass' => function ($query) use (
-                                     $id_study_sessions
-                                 )
-                                 {
-                                     return $query->whereIn('id_study_session', $id_study_sessions)
-                                                  ->select('id', 'name');
-                                 },])
-                      ->select('id', 'name')->find($id_teachers)->toArray();
+        return ExamSchedule::whereHas('moduleClass', function (Builder $query) use ($id_department)
+        {
+            $query->whereHas('module', function (Builder $query) use ($id_department)
+            {
+                $query->where('id_department', '=', $id_department);
+            });
+        })->whereBetween('time_start', [$start, $end])
+                           ->with(['moduleClass:id,name',
+                                   'teachers' => function ($query)
+                                   {
+                                       return $query->orderBy('position')->select('id', 'name');
+                                   }])->get();
     }
 
     public function update ($new_exam_schedule)
