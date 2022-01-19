@@ -2,18 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\Faculty;
 use App\Models\Department;
+use App\Repositories\Abstracts\BaseRepository;
 
-class DepartmentRepository implements Contracts\DepartmentRepositoryContract
+class DepartmentRepository extends BaseRepository implements Contracts\DepartmentRepositoryContract
 {
-    public function findAllWithDepartments ()
+    function model () : string
     {
-        return Faculty::with(['departments:id,name,id_faculty'])->get(['id', 'name']);
-    }
-
-    public function get ($id)
-    {
-        return Department::withUuid()->find($id)->makeVisible(['uuid']);
+        return Department::class;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FacultyResource;
 use App\Services\Contracts\FacultyServiceContract;
 
 class FacultyController extends Controller
@@ -16,9 +17,13 @@ class FacultyController extends Controller
         $this->facultyService = $facultyService;
     }
 
+    public function getAllWithDepartments ()
+    {
+        return FacultyResource::collection($this->facultyService->getAllWithDepartments())->all();
+    }
+
     public function getIDFaculties ()
     {
-        $data = $this->facultyService->getIDFaculties();
-        return response($data)->header('Content-Type', 'application/data');
+        return $this->facultyService->getIdFaculties();
     }
 }

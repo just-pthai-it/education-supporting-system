@@ -17,8 +17,15 @@ class FacultyService implements Contracts\FacultyServiceContract
         $this->facultyDepository = $facultyDepository;
     }
 
-    public function getIDFaculties ()
+    public function getAllWithDepartments ()
     {
-        return $this->facultyDepository->getIDFaculties(GData::$id_faculties_not_query);
+        return $this->facultyDepository->findAllWithDepartments();
+    }
+
+    public function getIdFaculties ()
+    {
+        return $this->facultyDepository->find(['id', 'name'],
+                                              [['id', 'not in', GData::$id_faculties_not_query]],
+                                              [['id']]);
     }
 }

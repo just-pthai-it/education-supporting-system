@@ -6,7 +6,6 @@ use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\DepartmentRepositoryContract;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
-use function Symfony\Component\String\s;
 
 class DepartmentService implements Contracts\DepartmentServiceContract
 {
@@ -30,11 +29,6 @@ class DepartmentService implements Contracts\DepartmentServiceContract
         $this->fixedScheduleRepository = $fixedScheduleRepository;
         $this->examScheduleRepository  = $examScheduleRepository;
         $this->scheduleDepository      = $scheduleDepository;
-    }
-
-    public function getAllDepartments ()
-    {
-        return $this->departmentRepository->findAllWithDepartments();
     }
 
     public function getSchedules ($id_department, $start, $end)

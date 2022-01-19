@@ -2,9 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface FacultyRepositoryContract
+interface FacultyRepositoryContract extends BaseRepositoryContract
 {
-    public function get ($id);
-
-    public function getIDFaculties ($data);
+    public function findAllWithDepartments ();
 }

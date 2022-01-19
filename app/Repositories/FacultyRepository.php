@@ -3,18 +3,17 @@
 namespace App\Repositories;
 
 use App\Models\Faculty;
-use Illuminate\Support\Collection;
+use App\Repositories\Abstracts\BaseRepository;
 
-class FacultyRepository implements Contracts\FacultyRepositoryContract
+class FacultyRepository extends BaseRepository implements Contracts\FacultyRepositoryContract
 {
-    public function get ($id)
+    function model () : string
     {
-        return Faculty::withUuid()->find($id)->makeVisible(['uuid']);
+        return Faculty::class;
     }
 
-    public function getIDFaculties ($data) : Collection
+    public function findAllWithDepartments ()
     {
-        return Faculty::whereNotIn('id', $data)->orderBy('id')
-                      ->get(['id as id_faculty', 'name as faculty_name']);
+        return Faculty::with(['departments:id,name,id_faculty'])->get(['id', 'name']);
     }
 }

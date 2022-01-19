@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\FacultyResource;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
@@ -20,11 +19,6 @@ class DepartmentController extends Controller
     public function __construct (DepartmentServiceContract $departmentService)
     {
         $this->departmentService = $departmentService;
-    }
-
-    public function getAll ()
-    {
-        return response(FacultyResource::collection($this->departmentService->getAllDepartments()));
     }
 
     public function getSchedules (Request $request, $id_department)

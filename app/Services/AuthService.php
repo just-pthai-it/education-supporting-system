@@ -43,14 +43,14 @@ class AuthService implements Contracts\AuthServiceContract
      */
     public function login ($username, $password) : array
     {
-        $token = $this->_authenticate($username, $password);
-        $data  = $this->getUserInfo();
-        $local_data = array('currentTerm' => \config('app.current_term'));
+        $token      = $this->_authenticate($username, $password);
+        $data       = $this->getUserInfo();
+        $local_data = ['currentTerm' => \config('app.current_term')];
 
         return [
             'local_data' => $local_data,
-            'data'  => $data,
-            'token' => $token,
+            'data'       => $data,
+            'token'      => $token,
         ];
     }
 
@@ -89,21 +89,11 @@ class AuthService implements Contracts\AuthServiceContract
         $permissions = $this->_getAccountPermissions();
         switch (auth()->user()->id_role)
         {
-            //            case 'AD':
-            //                $data = collect([]);
-            //                $data->name = 'ADMIN';
-            //                break;
-
             case 5;
-                $data       = $this->otherDepartmentDepository->get(auth()->user()->id_user);
-                $data->name = 'Phòng ' . $data->name;
+                $data = $this->otherDepartmentDepository->get(auth()->user()->id_user);
                 break;
 
             case 4:
-                $data       = $this->facultyDepository->get(auth()->user()->id_user);
-                $data->name = 'Khoa ' . $data->name;
-                break;
-
             case 2:
             case 3:
                 $data = $this->teacherDepository->findById(auth()->user()->id_user);
