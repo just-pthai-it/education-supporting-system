@@ -185,10 +185,10 @@ abstract class BaseRepository implements BaseRepositoryContract
             return;
         }
 
-        foreach ($scopes as $scope)
+        foreach ($scopes as $arr)
         {
-            $params      = $scope[1] ?? [];
-            $this->model = $this->model->$scope[0](...$params);
+            $scope       = array_shift($arr);
+            $this->model = $this->model->$scope(...$arr);
         }
     }
 
@@ -294,10 +294,10 @@ abstract class BaseRepository implements BaseRepositoryContract
             return;
         }
 
-        foreach ($functions as $function)
+        foreach ($functions as $arr)
         {
-            $params = $function[1] ?? [];
-            $result = $result->$function(...$params);
+            $function = array_shift($arr);
+            $result   = $result->$function(...$arr);
         }
     }
 }
