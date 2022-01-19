@@ -93,8 +93,8 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->model->whereIn('id', $ids)->increment($column, $step);
     }
 
-    public function find (array $columns = ['*'], int $limit = null, int $offset = null,
-                          array $conditions1 = [], array $conditions2 = [], array $scopes = [],
+    public function find (array $columns = ['*'], array $conditions1 = [], array $conditions2 = [],
+                          int   $limit = null, int $offset = null, array $scopes = [],
                           array $postFunctions = [])
     {
         $this->createModel();

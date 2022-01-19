@@ -23,8 +23,8 @@ interface BaseRepositoryContract
 
     public function updateIncrementByIds ($ids, $column, int $step = 1);
 
-    public function find (array $columns = ['*'], int $limit = null, int $offset = null,
-                          array $conditions1 = [], array $conditions2 = [], array $scopes = [],
+    public function find (array $columns = ['*'], array $conditions1 = [], array $conditions2 = [],
+                          int   $limit = null, int $offset = null, array $scopes = [],
                           array $postFunctions = []);
 
     public function findByIds ($ids, array $columns = ['*']);
