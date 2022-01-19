@@ -56,8 +56,13 @@ abstract class BaseRepository implements BaseRepositoryContract
     }
 
     public function upsert ($objects, array $uniqueColumns = [],
-                            array $columnsUpdate = ['id' => DB::raw('id')])
+                            array $columnsUpdate = [])
     {
+        if (empty($columnsUpdate))
+        {
+            $columnsUpdate['id'] = DB::raw('id');
+        }
+
         $this->createModel();
         $this->model->upsert($objects, $uniqueColumns, $columnsUpdate);
     }
@@ -89,10 +94,12 @@ abstract class BaseRepository implements BaseRepositoryContract
     }
 
     public function find (array $columns = ['*'], int $limit = null, int $offset = null,
-                          array $conditions1 = [], array $conditions2 = [])
+                          array $conditions1 = [], array $conditions2 = [], array $scopes = [],
+                          array $postFunctions = [])
     {
         $this->createModel();
 
+        $this->addScopes($scopes);
         $this->addWhere($conditions1);
         $this->addOrderBy($conditions2);
 
@@ -106,7 +113,10 @@ abstract class BaseRepository implements BaseRepositoryContract
             $this->model = $this->model->limit($limit);
         }
 
-        return $this->model->get($columns);
+        $result = $this->model->get($columns);
+        $this->addPostFunction($result, $postFunctions);
+
+        return $result;
     }
 
     public function findByIds ($ids, array $columns = ['*'])
@@ -168,42 +178,48 @@ abstract class BaseRepository implements BaseRepositoryContract
     //        }
     //    }
 
-    protected function addOrderBy (array $orderBys = [])
+    protected function addScopes (array $scopes)
     {
-
-        if (!$orderBys || !is_array($orderBys))
+        if (empty($scopes))
         {
-            return $this->model;
+            return;
         }
 
-        if (!isset($orderBys[0]) || !is_array($orderBys[0]))
+        foreach ($scopes as $scope)
         {
-            $orderBys = [
-                0 => $orderBys,
-            ];
+            $params      = $scope[1] ?? [];
+            $this->model = $this->model->$scope[0](...$params);
+        }
+    }
+
+    protected function addOrderBy (array $conditions = [])
+    {
+        if (empty($conditions))
+        {
+            return;
         }
 
-        foreach ($orderBys as $orderBy)
+        foreach ($conditions as $condition)
         {
-            $attribute   = $orderBy[0];
-            $order       = $orderBy[1];
+            $attribute   = $condition[0];
+            $order       = $condition[1] ?? 'asc';
             $this->model = $this->model->orderBy($attribute, $order);
         }
-
-        return $this->model;
     }
 
     protected function addWhere (array $conditions = [])
     {
+        if (empty($conditions))
+        {
+            return;
+        }
+
         foreach ($conditions as $condition)
         {
             $attribute = $condition[0];
             $operator  = $condition[1];
-            $value     = null;
-            if (isset($condition[2]))
-            {
-                $value = $condition[2];
-            }
+            $value     = $condition[2] ?? null;
+
             if ($operator == "=")
             {
                 $this->model = $this->model->where($attribute, "=", $value);
@@ -244,7 +260,7 @@ abstract class BaseRepository implements BaseRepositoryContract
                 $this->model = $this->model->whereIn($attribute, $value);
             }
 
-            if ($operator == "not int")
+            if ($operator == "not in")
             {
                 $this->model = $this->model->whereNotIn($attribute, $value);
             }
@@ -259,18 +275,29 @@ abstract class BaseRepository implements BaseRepositoryContract
                 $this->model = $this->model->where($attribute, "not like", $value);
             }
 
-            if ($operator == "Null")
+            if ($operator == "null")
             {
                 $this->model = $this->model->whereNull($attribute);
             }
 
-            if ($operator == "NotNull")
+            if ($operator == "not null")
             {
                 $this->model = $this->model->whereNotNull($attribute);
             }
+        }
+    }
 
+    protected function addPostFunction (&$result, array $functions)
+    {
+        if (empty($functions))
+        {
+            return;
         }
 
-        return $this->model;
+        foreach ($functions as $function)
+        {
+            $params = $function[1] ?? [];
+            $result = $result->$function(...$params);
+        }
     }
 }

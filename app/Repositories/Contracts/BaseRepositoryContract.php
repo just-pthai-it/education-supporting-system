@@ -13,7 +13,7 @@ interface BaseRepositoryContract
     public function insertMultiple (array $objects);
 
     public function upsert ($objects, array $uniqueColumns = [],
-                            array $columnsUpdate = ['id' => DB::raw('id')]);
+                            array $columnsUpdate = []);
 
     public function update (array $values, array $conditions = []);
 
@@ -24,7 +24,8 @@ interface BaseRepositoryContract
     public function updateIncrementByIds ($ids, $column, int $step = 1);
 
     public function find (array $columns = ['*'], int $limit = null, int $offset = null,
-                          array $conditions1 = [], array $conditions2 = []);
+                          array $conditions1 = [], array $conditions2 = [], array $scopes = [],
+                          array $postFunctions = []);
 
     public function findByIds ($ids, array $columns = ['*']);
 
