@@ -10,8 +10,11 @@ interface BaseRepositoryContract
 
     public function insertMultiple (array $objects);
 
-    public function upsert ($objects, array $uniqueColumns = [],
-                            array $columnsUpdate = []);
+    public function insertPivot (int|string $id, array $array, string $relation);
+
+    public function syncPivot (int|string $id, array $array, string $relation);
+
+    public function upsert ($objects, array $uniqueColumns = [], array $columnsUpdate = []);
 
     public function update (array $values, array $conditions = []);
 

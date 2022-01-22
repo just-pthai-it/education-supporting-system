@@ -17,14 +17,14 @@ abstract class BaseRepository implements BaseRepositoryContract
 
     /**
      * Specify Model class name
-     * @return mixed
+     * @return string
      */
-    abstract function model ();
+    abstract function model () : string;
 
     /**
      * @return mixed
      */
-    public function createModel ()
+    public function createModel () : mixed
     {
         try
         {
@@ -55,8 +55,19 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->model->insert($objects);
     }
 
-    public function upsert ($objects, array $uniqueColumns = [],
-                            array $columnsUpdate = [])
+    public function insertPivot (int|string $id, array $array, string $relation)
+    {
+        $this->createModel();
+        $this->model->find($id)->$relation->attach($array);
+    }
+
+    public function syncPivot (int|string $id, array $array, string $relation)
+    {
+        $this->createModel();
+        $this->model->find($id)->$relation->sync($array);
+    }
+
+    public function upsert ($objects, array $uniqueColumns = [], array $columnsUpdate = [])
     {
         if (empty($columnsUpdate))
         {
