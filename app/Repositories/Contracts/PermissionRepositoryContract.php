@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface PermissionRepositoryContract
+interface PermissionRepositoryContract extends BaseRepositoryContract
 {
-    public function findByIdRole (string $id_role);
+
 }

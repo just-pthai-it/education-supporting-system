@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\InvalidAccountException;
+use App\Repositories\Contracts\RoleRepositoryContract;
 use App\Repositories\Contracts\DepartmentRepositoryContract;
 use App\Repositories\Contracts\FacultyRepositoryContract;
 use App\Repositories\Contracts\PermissionRepositoryContract;
@@ -12,31 +13,22 @@ use App\Repositories\Contracts\TeacherRepositoryContract;
 class AuthService implements Contracts\AuthServiceContract
 {
     private OtherDepartmentRepositoryContract $otherDepartmentDepository;
-    private DepartmentRepositoryContract $departmentDepository;
     private TeacherRepositoryContract $teacherDepository;
-    private FacultyRepositoryContract $facultyDepository;
-    private PermissionRepositoryContract $permissionRepository;
+    private RoleRepositoryContract $roleRepository;
 
     /**
      * @param OtherDepartmentRepositoryContract $otherDepartmentDepository
-     * @param DepartmentRepositoryContract      $departmentDepository
      * @param TeacherRepositoryContract         $teacherDepository
-     * @param FacultyRepositoryContract         $facultyDepository
-     * @param PermissionRepositoryContract      $permissionRepository
+     * @param RoleRepositoryContract            $roleRepository
      */
     public function __construct (OtherDepartmentRepositoryContract $otherDepartmentDepository,
-                                 DepartmentRepositoryContract      $departmentDepository,
                                  TeacherRepositoryContract         $teacherDepository,
-                                 FacultyRepositoryContract         $facultyDepository,
-                                 PermissionRepositoryContract      $permissionRepository)
+                                 RoleRepositoryContract            $roleRepository)
     {
         $this->otherDepartmentDepository = $otherDepartmentDepository;
-        $this->departmentDepository      = $departmentDepository;
         $this->teacherDepository         = $teacherDepository;
-        $this->facultyDepository         = $facultyDepository;
-        $this->permissionRepository      = $permissionRepository;
+        $this->roleRepository            = $roleRepository;
     }
-
 
     /**
      * @throws InvalidAccountException
@@ -110,7 +102,7 @@ class AuthService implements Contracts\AuthServiceContract
 
     private function _getAccountPermissions ()
     {
-        return $this->permissionRepository->findByIdRole(auth()->user()->id_role);
+        return $this->roleRepository->findPermissionsByIdRole(auth()->user()->id_role);
     }
 
     public function logout ()

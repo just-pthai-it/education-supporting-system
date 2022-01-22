@@ -98,8 +98,6 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'departments'], function ()
     {
-        Route::get('', [DepartmentController::class, 'getAllDepartments']);
-
         Route::group(['prefix' => '{id_department}'], function ()
         {
             Route::get('module-classes',
@@ -120,23 +118,21 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'fixed-schedules'], function ()
     {
-
         Route::post('create', [FixedScheduleController::class, 'createFixedSchedule']);
 
         Route::put('update', [FixedScheduleController::class, 'updateFixedSchedule']);
-
     });
 
 
     Route::group(['prefix' => 'rooms'], function ()
     {
-        Route::get('', [RoomController::class, 'getAllRooms']);
+        Route::get('', [RoomController::class, 'getAllIdRooms']);
     });
 
 
     Route::group(['prefix' => 'faculties'], function ()
     {
-
+        Route::get('', [FacultyController::class, 'getAllWithDepartments']);
     });
 
 

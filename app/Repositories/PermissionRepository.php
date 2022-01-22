@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\Role;
+use App\Models\Permission;
+use App\Repositories\Abstracts\BaseRepository;
 
-class PermissionRepository implements Contracts\PermissionRepositoryContract
+class PermissionRepository extends BaseRepository implements Contracts\PermissionRepositoryContract
 {
-
-    public function findByIdRole (string $id_role)
+    function model () : string
     {
-        return Role::find($id_role)->permissions()->pluck('id');
+        return Permission::class;
     }
 }
