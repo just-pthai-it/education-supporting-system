@@ -48,7 +48,7 @@ use App\Repositories\StudySessionRepository;
 use App\Repositories\TeacherRepository;
 use Illuminate\Support\ServiceProvider;
 
-class AppRepositoryProvider extends ServiceProvider
+class RepositoryServiceProvider extends ServiceProvider
 {
     public array $bindings = [
         OtherDepartmentRepositoryContract::class => OtherDepartmentRepository::class,
