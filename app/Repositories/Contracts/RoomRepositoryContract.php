@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface RoomRepositoryContract
+interface RoomRepositoryContract extends BaseRepositoryContract
 {
-    public function findAll ();
+
 }

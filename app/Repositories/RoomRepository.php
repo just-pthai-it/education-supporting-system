@@ -3,12 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Room;
+use App\Repositories\Abstracts\BaseRepository;
 
-class RoomRepository implements Contracts\RoomRepositoryContract
+class RoomRepository extends BaseRepository implements Contracts\RoomRepositoryContract
 {
-
-    public function findAll ()
+    function model () : string
     {
-        return Room::pluck('id');
+        return Room::class;
     }
 }
