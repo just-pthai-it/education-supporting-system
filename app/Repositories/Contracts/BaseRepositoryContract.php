@@ -2,8 +2,6 @@
 
 namespace App\Repositories\Contracts;
 
-use Illuminate\Support\Facades\DB;
-
 interface BaseRepositoryContract
 {
     public function insert (array $object);
@@ -23,11 +21,15 @@ interface BaseRepositoryContract
 
     public function updateIncrementByIds ($ids, $column, int $step = 1);
 
-    public function find (array $columns = ['*'], array $conditions1 = [], array $conditions2 = [],
+    public function find (array $columns = ['*'], array $conditions = [], array $orders = [],
                           int   $limit = null, int $offset = null, array $scopes = [],
                           array $postFunctions = []);
 
-    public function findByIds ($ids, array $columns = ['*']);
+    public function findByIds ($ids, array $columns = ['*'], array $orders = [],
+                               array $scopes = [], array $postFunctions = []);
+
+    public function pluck (array $columns = [['id']], array $conditions = [], array $orders = [],
+                           array $pagination = [], array $scopes = []);
 
     public function delete (array $conditions = []);
 

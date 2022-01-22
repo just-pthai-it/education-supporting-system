@@ -93,15 +93,15 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->model->whereIn('id', $ids)->increment($column, $step);
     }
 
-    public function find (array $columns = ['*'], array $conditions1 = [], array $conditions2 = [],
+    public function find (array $columns = ['*'], array $conditions = [], array $orders = [],
                           int   $limit = null, int $offset = null, array $scopes = [],
                           array $postFunctions = [])
     {
         $this->createModel();
 
         $this->addScopes($scopes);
-        $this->addWhere($conditions1);
-        $this->addOrderBy($conditions2);
+        $this->addWhere($conditions);
+        $this->addOrderBy($orders);
 
         if ($offset)
         {
@@ -119,10 +119,29 @@ abstract class BaseRepository implements BaseRepositoryContract
         return $result;
     }
 
-    public function findByIds ($ids, array $columns = ['*'])
+    public function findByIds ($ids, array $columns = ['*'], array $orders = [],
+                               array $scopes = [], array $postFunctions = [])
     {
         $this->createModel();
-        return $this->model->find($ids, $columns);
+        $this->addScopes($scopes);
+        $this->addOrderBy($orders);
+
+        $result = $this->model->find($ids, $columns);
+        $this->addPostFunction($result, $postFunctions);
+
+        return $result;
+    }
+
+    public function pluck (array $columns = [['id']], array $conditions = [], array $orders = [],
+                           array $pagination = [], array $scopes = [])
+    {
+        $this->createModel();
+        $this->addScopes($scopes);
+        $this->addWhere($conditions);
+        $this->addPagination($pagination);
+
+        return $this->model->select(...$columns[0])
+                           ->pluck(...(count($columns) == 2 ? $columns[1] : $columns[0]));
     }
 
     public function delete (array $conditions = [])
@@ -192,18 +211,16 @@ abstract class BaseRepository implements BaseRepositoryContract
         }
     }
 
-    protected function addOrderBy (array $conditions = [])
+    protected function addOrderBy (array $orders = [])
     {
-        if (empty($conditions))
+        if (empty($orders))
         {
             return;
         }
 
-        foreach ($conditions as $condition)
+        foreach ($orders as $order)
         {
-            $attribute   = $condition[0];
-            $order       = $condition[1] ?? 'asc';
-            $this->model = $this->model->orderBy($attribute, $order);
+            $this->model = $this->model->orderBy(...$order);
         }
     }
 
@@ -284,6 +301,23 @@ abstract class BaseRepository implements BaseRepositoryContract
             {
                 $this->model = $this->model->whereNotNull($attribute);
             }
+        }
+    }
+
+    protected function addPagination (array $pagination)
+    {
+        if (empty($pagination))
+        {
+            return;
+        }
+
+        if (count($pagination) == 1)
+        {
+            $this->model = $this->model->take($pagination[0]);
+        }
+        else
+        {
+            $this->model = $this->model->limit($pagination[0])->offset($pagination[1]);
         }
     }
 
