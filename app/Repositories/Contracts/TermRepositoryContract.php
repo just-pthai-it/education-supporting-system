@@ -2,9 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface TermRepositoryContract
+interface TermRepositoryContract extends BaseRepositoryContract
 {
-    public function insert ($data);
 
-    public function getMultiple ();
 }

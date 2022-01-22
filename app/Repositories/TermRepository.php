@@ -3,16 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Term;
+use App\Repositories\Abstracts\BaseRepository;
 
-class TermRepository implements Contracts\TermRepositoryContract
+class TermRepository extends BaseRepository implements Contracts\TermRepositoryContract
 {
-    public function insert ($data)
+    function model () : string
     {
-        Term::create($data)->id;
-    }
-
-    public function getMultiple ()
-    {
-        return Term::orderBy('id', 'desc')->limit(14)->pluck('id', 'term')->toArray();
+        return Term::class;
     }
 }
