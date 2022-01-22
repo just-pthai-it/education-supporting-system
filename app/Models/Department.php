@@ -42,7 +42,7 @@ class Department extends Model
     {
         if (empty($e))
         {
-            return $query->select(GFunction::uuidFromBin('uuid'), ...$this->column);
+            return $query->select([...$this->fillable, GFunction::uuidFromBin('uuid')]);
         }
 
         return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
