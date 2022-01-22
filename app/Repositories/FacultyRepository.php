@@ -14,6 +14,7 @@ class FacultyRepository extends BaseRepository implements Contracts\FacultyRepos
 
     public function findAllWithDepartments ()
     {
-        return Faculty::with(['departments:id,name,id_faculty'])->get(['id', 'name']);
+        $this->createModel();
+        return $this->model->with(['departments:id,name,id_faculty'])->get(['id', 'name']);
     }
 }
