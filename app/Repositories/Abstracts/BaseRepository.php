@@ -105,24 +105,14 @@ abstract class BaseRepository implements BaseRepositoryContract
     }
 
     public function find (array $columns = ['*'], array $conditions = [], array $orders = [],
-                          int   $limit = null, int $offset = null, array $scopes = [],
-                          array $postFunctions = [])
+                          array $pagination = [], array $scopes = [], array $postFunctions = [])
     {
         $this->createModel();
 
         $this->addScopes($scopes);
         $this->addWhere($conditions);
         $this->addOrderBy($orders);
-
-        if ($offset)
-        {
-            $this->model = $this->model->offset($offset);
-        }
-
-        if ($limit)
-        {
-            $this->model = $this->model->limit($limit);
-        }
+        $this->addPagination($pagination);
 
         $result = $this->model->get($columns);
         $this->addPostFunction($result, $postFunctions);
