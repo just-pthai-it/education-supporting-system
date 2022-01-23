@@ -46,4 +46,12 @@ class DepartmentController extends Controller
                                                                                $request->status);
         return FixedScheduleResource::collection($fixed_schedules);
     }
+
+
+    public function getModuleClassesByStudySessions (Request $request, $id_department)
+    {
+        return response($this->departmentService->getModuleClassesByStudySessions($id_department,
+                                                                                  $request->term,
+                                                                                  $request->ss));
+    }
 }

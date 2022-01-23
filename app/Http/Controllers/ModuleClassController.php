@@ -21,18 +21,4 @@ class ModuleClassController extends Controller
     {
         $this->moduleClassService->updateModuleClass($request->ids, $request->id_teacher);
     }
-
-    public function getModuleClassesByIdTeacher (Request $request, $id_teacher)
-    {
-        return response($this->moduleClassService->getModuleClassesByIdTeacher(auth()->user()->id_user,
-                                                                               $request->term,
-                                                                               $request->ss));
-    }
-
-    public function getModuleClassesByIdDepartment (Request $request, $id_department)
-    {
-        return response($this->moduleClassService->getModuleClassesByIdDepartment($id_department,
-                                                                                  $request->term,
-                                                                                  $request->ss));
-    }
 }

@@ -174,7 +174,8 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         {
             try
             {
-                $this->moduleClassRepository->insertPivotMultiple($id_module_class, $id_students);
+                $this->moduleClassRepository->insertPivot($id_module_class, $id_students,
+                                                          'students');
             }
             catch (PDOException $error)
             {
@@ -202,9 +203,10 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         $this->excelService = app()->make('excel_schedule');
         $this->fileUploadHandler->handleFileUpload($input['file']);
         $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),
-                                              $input['id_study_session'], $input['is_international']);
-//var_dump($data);
-//exit();
+                                              $input['id_study_session'],
+                                              $input['is_international']);
+        //var_dump($data);
+        //exit();
         $modules_missing = $this->_getIDModulesMissing($data['id_modules']);
         $this->_checkExceptions($modules_missing);
         $this->_createAndUpdateData($data);

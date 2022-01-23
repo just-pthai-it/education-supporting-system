@@ -13,17 +13,13 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class TeacherController extends Controller
 {
     private TeacherServiceContract $teacherService;
-    private ScheduleServiceContract $scheduleService;
 
     /**
-     * @param TeacherServiceContract  $teacherService
-     * @param ScheduleServiceContract $scheduleService
+     * @param TeacherServiceContract $teacherService
      */
-    public function __construct (TeacherServiceContract  $teacherService,
-                                 ScheduleServiceContract $scheduleService)
+    public function __construct (TeacherServiceContract $teacherService)
     {
-        $this->teacherService  = $teacherService;
-        $this->scheduleService = $scheduleService;
+        $this->teacherService = $teacherService;
     }
 
     public function getTeachersByIdDepartment ($id_department)
@@ -34,8 +30,8 @@ class TeacherController extends Controller
     public function getSchedules (Request $request, $id_teacher)
     {
         $schedules = $this->teacherService->getSchedules(auth()->user()->id_user,
-                                                                 $request->start,
-                                                                 $request->end);
+                                                         $request->start,
+                                                         $request->end);
         return ScheduleResource::collection($schedules)->all();
     }
 
@@ -52,5 +48,12 @@ class TeacherController extends Controller
         $fixed_schedules = $this->teacherService->getFixedSchedulesByStatus(auth()->user()->id_user,
                                                                             $request->status);
         return FixedScheduleResource::collection($fixed_schedules);
+    }
+
+    public function getModuleClassesByStudySessions (Request $request, $id_teacher)
+    {
+        return response($this->teacherService->getModuleClassesByStudySessions(auth()->user()->id_user,
+                                                                               $request->term,
+                                                                               $request->ss));
     }
 }
