@@ -3,16 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Feedback;
+use App\Repositories\Abstracts\BaseRepository;
 
-class FeedbackRepository implements Contracts\FeedbackRepositoryContract
+class FeedbackRepository extends BaseRepository implements Contracts\FeedbackRepositoryContract
 {
-    public function insert ($feedback)
+    public function model () : string
     {
-        Feedback::create($feedback);
-    }
-
-    public function findAll ()
-    {
-        return Feedback::latest('id')->get(['title', 'content', 'feedback_type', 'create_at', 'id_bug']);
+        return Feedback::class;
     }
 }

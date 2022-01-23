@@ -2,9 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface FeedbackRepositoryContract
+interface FeedbackRepositoryContract extends BaseRepositoryContract
 {
-    public function insert ($feedback);
 
-    public function findAll ();
 }

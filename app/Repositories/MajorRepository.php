@@ -2,7 +2,13 @@
 
 namespace App\Repositories;
 
-class MajorRepository implements Contracts\MajorRepositoryContract
-{
+use App\Models\Major;
+use App\Repositories\Abstracts\BaseRepository;
 
+class MajorRepository extends BaseRepository implements Contracts\MajorRepositoryContract
+{
+    function model () : string
+    {
+        return Major::class;
+    }
 }

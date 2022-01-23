@@ -24,6 +24,7 @@ class FeedbackService implements Contracts\FeedbackServiceContract
 
     public function getAllFeedbacks ()
     {
-        return $this->feedbackRepository->findAll();
+        return $this->feedbackRepository->find(['title', 'content', 'feedback_type', 'create_at', 'is_bug'],
+                                               [], [['id', 'desc']]);
     }
 }

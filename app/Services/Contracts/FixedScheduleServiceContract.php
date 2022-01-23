@@ -6,5 +6,5 @@ interface FixedScheduleServiceContract
 {
     public function createFixedSchedule ($fixed_schedule);
 
-    public function updateFixedSchedule ($object);
+    public function updateFixedSchedule ($fixed_schedule);
 }
