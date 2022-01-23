@@ -2,9 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface ModuleRepositoryContract
+interface ModuleRepositoryContract extends BaseRepositoryContract
 {
-    public function upsertMultiple ($modules);
-
     public function getIDModulesMissing ($id_modules);
 }

@@ -4,19 +4,21 @@ namespace App\Repositories;
 
 use App\Models\Module;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\Abstracts\BaseRepository;
 
-class ModuleRepository implements Contracts\ModuleRepositoryContract
+class ModuleRepository extends BaseRepository implements Contracts\ModuleRepositoryContract
 {
-    public function upsertMultiple ($modules)
+    public function model () : string
     {
-        Module::upsert($modules, ['id'], ['id' => DB::raw('id')]);
+        return Module::class;
     }
 
     public function getIDModulesMissing ($id_modules)
     {
+        $this->createModel();
         $this->_createTemporaryTable($id_modules);
-        return Module::rightJoin('temp_module', 'id', 'id_module')
-                     ->whereNull('id')->pluck('id_module')->toArray();
+        return $this->model->rightJoin('temp_module', 'id', 'id_module')
+                           ->whereNull('id')->pluck('id_module')->toArray();
     }
 
     public function _createTemporaryTable ($id_modules)
@@ -29,6 +31,4 @@ class ModuleRepository implements Contracts\ModuleRepositoryContract
         DB::unprepared($sql_query);
         DB::table('temp_module')->insert($id_modules);
     }
-
-
 }

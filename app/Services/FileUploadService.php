@@ -335,7 +335,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
 
     private function _createModules ($modules)
     {
-        $this->moduleRepository->upsertMultiple($modules);
+        $this->moduleRepository->upsert($modules);
     }
 
     private function _createManyCurriculumModule ($id_curriculum, $id_modules)
