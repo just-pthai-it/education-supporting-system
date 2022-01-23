@@ -95,7 +95,14 @@ abstract class BaseRepository implements BaseRepositoryContract
     public function updateByIds ($ids, $values)
     {
         $this->createModel();
-        $this->model->whereIn('id', $ids)->update($values);
+        if (is_array($ids))
+        {
+            $this->model->whereIn('id', $ids)->update($values);
+        }
+        else
+        {
+            $this->model->where('id', '=', $ids)->update($values);
+        }
     }
 
     public function updateIncrementByIds ($ids, $column, int $step = 1)
