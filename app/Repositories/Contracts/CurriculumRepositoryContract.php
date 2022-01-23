@@ -2,9 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface CurriculumRepositoryContract
+interface CurriculumRepositoryContract extends BaseRepositoryContract
 {
-    public function insertGetId ($curriculum);
 
-    public function insertPivot ($id_curriculum, $id_modules);
 }

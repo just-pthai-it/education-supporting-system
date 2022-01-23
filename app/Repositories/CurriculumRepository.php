@@ -3,16 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Curriculum;
+use App\Repositories\Abstracts\BaseRepository;
 
-class CurriculumRepository implements Contracts\CurriculumRepositoryContract
+class CurriculumRepository extends BaseRepository implements Contracts\CurriculumRepositoryContract
 {
-    public function insertGetId ($curriculum)
+    public function model () : string
     {
-        return Curriculum::insertGetId($curriculum);
-    }
-
-    public function insertPivot ($id_curriculum, $id_modules)
-    {
-        Curriculum::find($id_curriculum)->modules()->attach($id_modules);
+        return Curriculum::class;
     }
 }

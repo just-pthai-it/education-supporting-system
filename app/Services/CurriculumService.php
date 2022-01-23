@@ -18,6 +18,6 @@ class CurriculumService implements Contracts\CurriculumServiceContract
 
     public function createCurriculumGetId ($curriculum)
     {
-        return $this->curriculumRepository->insertGetId($this->curriculumRepository);
+        return $this->curriculumRepository->insertGetId($curriculum);
     }
 }

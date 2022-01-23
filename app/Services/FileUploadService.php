@@ -342,6 +342,6 @@ class FileUploadService implements Contracts\FileUploadServiceContract
 
     private function _createManyCurriculumModule ($id_curriculum, $id_modules)
     {
-        $this->curriculumRepository->insertPivot($id_curriculum, $id_modules);
+        $this->curriculumRepository->insertPivot($id_curriculum, $id_modules, 'modules');
     }
 }
