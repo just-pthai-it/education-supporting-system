@@ -24,7 +24,7 @@ abstract class BaseRepository implements BaseRepositoryContract
     /**
      * @return mixed
      */
-    public function createModel () : mixed
+    public function createModel ()
     {
         try
         {
@@ -55,13 +55,13 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->model->insert($objects);
     }
 
-    public function insertPivot (int|string $id, array $array, string $relation)
+    public function insertPivot ($id, array $array, string $relation)
     {
         $this->createModel();
         $this->model->find($id)->$relation->attach($array);
     }
 
-    public function syncPivot (int|string $id, array $array, string $relation)
+    public function syncPivot ($id, array $array, string $relation)
     {
         $this->createModel();
         $this->model->find($id)->$relation->sync($array);
