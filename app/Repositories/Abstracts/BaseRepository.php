@@ -82,7 +82,7 @@ abstract class BaseRepository implements BaseRepositoryContract
     {
         $this->createModel();
         $this->addWhere($conditions);
-        $this->model->update();
+        $this->model->update($values);
     }
 
     public function updateIncrement (string $column, int $step = 1, array $conditions = [])
