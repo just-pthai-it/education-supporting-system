@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Contracts\ClassServiceContract;
 use Illuminate\Http\Request;
 
-class FacultyClassController extends Controller
+class ClassController extends Controller
 {
     private ClassServiceContract $facultyClassService;
 
@@ -17,10 +17,9 @@ class FacultyClassController extends Controller
         $this->facultyClassService = $facultyClassService;
     }
 
-    public function getFacultyClasses (Request $request)
+    public function getClassesByIdAcademicYearsAndIdFaculties (Request $request)
     {
-        $data = $this->facultyClassService->getFacultyClasses($request->id_academic_years,
-                                                              $request->id_faculties);
-        return response($data)->header('Content-Type', 'application/data');
+        return $this->facultyClassService->getClassesByIdAcademicYearsAndIdFaculties($request->id_academic_years,
+                                                                                     $request->id_faculties);
     }
 }

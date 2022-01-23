@@ -8,7 +8,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\FacultyClassController;
+use App\Http\Controllers\ClassController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\ModuleClassController;
 use App\Http\Controllers\ResourceController;
@@ -79,7 +79,8 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     Route::get('academic-year2',
                [AcademicYearController::class, 'getAcademicYearsWithTrainingType']);
 
-    Route::get('faculty-class', [FacultyClassController::class, 'getFacultyClasses']);
+    Route::get('faculty-class',
+               [ClassController::class, 'getClassesByIdAcademicYearsAndIdFaculties']);
 
     Route::get('module-class/{id_teacher}',
                [ModuleClassController::class, 'getModuleClassesByIdTeacher']);
