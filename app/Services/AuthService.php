@@ -82,7 +82,9 @@ class AuthService implements Contracts\AuthServiceContract
         switch (auth()->user()->id_role)
         {
             case 5;
-                $data = $this->otherDepartmentDepository->get(auth()->user()->id_user);
+                $data = $this->otherDepartmentDepository->findByIds(auth()->user()->id_user, [], [],
+                                                                    [['withUuid']],
+                                                                    [['makeVisible', ['uuid']]]);
                 break;
 
             case 4:

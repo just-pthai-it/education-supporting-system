@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface OtherDepartmentRepositoryContract
+interface OtherDepartmentRepositoryContract extends BaseRepositoryContract
 {
-    public function get ($id);
+
 }

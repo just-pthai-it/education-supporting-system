@@ -3,11 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\OtherDepartment;
+use App\Repositories\Abstracts\BaseRepository;
 
-class OtherDepartmentRepository implements Contracts\OtherDepartmentRepositoryContract
+class OtherDepartmentRepository extends BaseRepository implements Contracts\OtherDepartmentRepositoryContract
 {
-    public function get ($id)
+    public function model () : string
     {
-        return OtherDepartment::withUuid()->find($id)->makeVisible(['uuid']);
+        return OtherDepartment::class;
     }
 }
