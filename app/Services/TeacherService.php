@@ -42,11 +42,6 @@ class TeacherService implements Contracts\TeacherServiceContract
         $this->studySessionRepository  = $studySessionRepository;
     }
 
-    public function getTeachersByIdDepartment ($id_department)
-    {
-        return $this->teacherRepository->findByIdDepartment2($id_department);
-    }
-
     public function getSchedules ($id_teacher, $start, $end)
     {
         return $this->scheduleDepository->findAllByIdTeacher($id_teacher, $start, $end);

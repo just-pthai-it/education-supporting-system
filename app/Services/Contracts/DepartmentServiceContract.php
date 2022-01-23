@@ -11,4 +11,6 @@ interface DepartmentServiceContract
     public function getFixedSchedulesByStatus ($id_department, $status);
 
     public function getModuleClassesByStudySessions ($id_department, $term, $study_sessions);
+
+    public function getTeachers ($id_department);
 }

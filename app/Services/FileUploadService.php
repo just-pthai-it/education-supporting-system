@@ -205,8 +205,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),
                                               $input['id_study_session'],
                                               $input['is_international']);
-        //var_dump($data);
-        //exit();
+
         $modules_missing = $this->_getIDModulesMissing($data['id_modules']);
         $this->_checkExceptions($modules_missing);
         $this->_createAndUpdateData($data);
@@ -279,8 +278,11 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     {
         $this->excelService = app()->make('excel_exam_schedule');
         $this->fileUploadHandler->handleFileUpload($input['file']);
-        $this->excelService->setParameters($this->teacherRepository->findByIdDepartment($input['id_department']));
-        $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName());
+        $teachers = $this->teacherRepository->pluck([['id', 'name']],
+                                                    [['id_department', '=', $input['id_department']]])
+                                            ->toArray();
+        $data     = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),
+                                                  $teachers);
         $this->_createAndUpdateData3($data);
     }
 

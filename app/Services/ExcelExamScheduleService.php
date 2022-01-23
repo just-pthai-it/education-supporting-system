@@ -7,11 +7,12 @@ use App\Imports\FileImport;
 
 class ExcelExamScheduleService implements Contracts\ExcelServiceContract
 {
-    private $teachers;
+    private array $teachers;
 
     public function readData ($file_name, ...$params) : array
     {
-        $raw_data = $this->_getData($file_name);
+        $this->teachers = $params[0];
+        $raw_data       = $this->_getData($file_name);
         return $this->_formatData($raw_data);
     }
 
@@ -103,7 +104,7 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
     private function _createExamSchedulesTeachers (&$exam_schedules_teaches, $id_module_class,
                                                    $teacher_name, $position)
     {
-        $id_teacher = $this->teachers[$teacher_name];
+        $id_teacher                                            = $this->teachers[$teacher_name];
         $exam_schedules_teaches[$id_module_class][$id_teacher] = ['position' => $position];
     }
 

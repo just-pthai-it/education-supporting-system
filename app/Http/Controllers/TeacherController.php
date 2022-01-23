@@ -22,11 +22,6 @@ class TeacherController extends Controller
         $this->teacherService = $teacherService;
     }
 
-    public function getTeachersByIdDepartment ($id_department)
-    {
-        return response($this->teacherService->getTeachersByIdDepartment($id_department));
-    }
-
     public function getSchedules (Request $request, $id_teacher)
     {
         $schedules = $this->teacherService->getSchedules(auth()->user()->id_user,

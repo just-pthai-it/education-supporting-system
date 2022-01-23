@@ -54,4 +54,9 @@ class DepartmentController extends Controller
                                                                                   $request->term,
                                                                                   $request->ss));
     }
+
+    public function getTeachers ($id_department)
+    {
+        return $this->departmentService->getTeachers($id_department);
+    }
 }

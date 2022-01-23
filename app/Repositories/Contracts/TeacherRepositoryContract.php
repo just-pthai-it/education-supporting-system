@@ -2,12 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface TeacherRepositoryContract
+interface TeacherRepositoryContract extends BaseRepositoryContract
 {
-    public function findById ($id);
-
-    public function findByIdDepartment ($id_department);
-
-    public function findByIdDepartment2 ($id_department);
 
 }

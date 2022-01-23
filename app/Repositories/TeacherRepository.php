@@ -3,21 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Teacher;
+use App\Repositories\Abstracts\BaseRepository;
 
-class TeacherRepository implements Contracts\TeacherRepositoryContract
+class TeacherRepository extends BaseRepository implements Contracts\TeacherRepositoryContract
 {
-    public function findById ($id)
+    public function model () : string
     {
-        return Teacher::withUuid()->find($id)->makeVisible(['uuid']);
-    }
-
-    public function findByIdDepartment ($id_department)
-    {
-        return Teacher::where('id_department', '=', $id_department)->pluck('id', 'name')->toArray();
-    }
-
-    public function findByIdDepartment2 ($id_department)
-    {
-        return Teacher::where('id_department', '=', $id_department)->get(['id', 'name'])->toArray();
+        return Teacher::class;
     }
 }

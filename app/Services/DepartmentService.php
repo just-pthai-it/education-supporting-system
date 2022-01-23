@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\GFunction;
+use App\Repositories\Contracts\TeacherRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\DepartmentRepositoryContract;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
@@ -18,6 +19,7 @@ class DepartmentService implements Contracts\DepartmentServiceContract
     private ScheduleRepositoryContract $scheduleDepository;
     private ModuleClassRepositoryContract $moduleClassRepository;
     private StudySessionRepositoryContract $studySessionRepository;
+    private TeacherRepositoryContract $teacherRepository;
 
     /**
      * @param DepartmentRepositoryContract    $departmentRepository
@@ -26,13 +28,15 @@ class DepartmentService implements Contracts\DepartmentServiceContract
      * @param ScheduleRepositoryContract      $scheduleDepository
      * @param ModuleClassRepositoryContract   $moduleClassRepository
      * @param StudySessionRepositoryContract  $studySessionRepository
+     * @param TeacherRepositoryContract       $teacherRepository
      */
     public function __construct (DepartmentRepositoryContract    $departmentRepository,
                                  FixedScheduleRepositoryContract $fixedScheduleRepository,
                                  ExamScheduleRepositoryContract  $examScheduleRepository,
                                  ScheduleRepositoryContract      $scheduleDepository,
                                  ModuleClassRepositoryContract   $moduleClassRepository,
-                                 StudySessionRepositoryContract  $studySessionRepository)
+                                 StudySessionRepositoryContract  $studySessionRepository,
+                                 TeacherRepositoryContract       $teacherRepository)
     {
         $this->departmentRepository    = $departmentRepository;
         $this->fixedScheduleRepository = $fixedScheduleRepository;
@@ -40,6 +44,7 @@ class DepartmentService implements Contracts\DepartmentServiceContract
         $this->scheduleDepository      = $scheduleDepository;
         $this->moduleClassRepository   = $moduleClassRepository;
         $this->studySessionRepository  = $studySessionRepository;
+        $this->teacherRepository       = $teacherRepository;
     }
 
     public function getSchedules ($id_department, $start, $end)
@@ -68,5 +73,11 @@ class DepartmentService implements Contracts\DepartmentServiceContract
     {
         return $this->studySessionRepository->pluck([['id']], [['name', 'in', $study_sessions]])
                                             ->toArray();
+    }
+
+    public function getTeachers ($id_department)
+    {
+        return $this->teacherRepository->find(['id', 'name'],
+                                              [['id_department', '=', $id_department]]);
     }
 }

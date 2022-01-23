@@ -90,7 +90,9 @@ class AuthService implements Contracts\AuthServiceContract
             case 4:
             case 2:
             case 3:
-                $data = $this->teacherDepository->findById(auth()->user()->id_user);
+                $data = $this->teacherDepository->findByIds(auth()->user()->id_user, [], [],
+                                                            [['withUuid']],
+                                                            [['makeVisible', ['uuid']]]);
                 break;
 
             default:

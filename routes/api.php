@@ -107,11 +107,10 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
             Route::get('exam-schedules', [DepartmentController::class, 'getExamSchedules']);
 
-            Route::get('teachers', [TeacherController::class, 'getTeachersByIdDepartment']);
-
             Route::get('fixed-schedules',
                        [DepartmentController::class, 'getFixedSchedulesByStatus']);
 
+            Route::get('teachers', [DepartmentController::class, 'getTeachers']);
         });
     });
 
