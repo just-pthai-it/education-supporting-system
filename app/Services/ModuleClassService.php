@@ -42,14 +42,20 @@ class ModuleClassService implements Contracts\ModuleClassServiceContract
     public function getModuleClassesByIdTeacher ($id_teacher, $term, $study_sessions)
     {
         $study_sessions    = GFunction::getOfficialStudySessions($term, $study_sessions);
-        $id_study_sessions = $this->studySessionRepository->findByNames($study_sessions);
+        $id_study_sessions = $this->_getIdStudySessions($study_sessions);
         return $this->moduleClassDepository->findByIdTeacher([$id_teacher], $id_study_sessions);
     }
 
     public function getModuleClassesByIdDepartment ($id_department, $term, $study_sessions)
     {
         $study_sessions    = GFunction::getOfficialStudySessions($term, $study_sessions);
-        $id_study_sessions = $this->studySessionRepository->findByNames($study_sessions);
+        $id_study_sessions = $this->_getIdStudySessions($study_sessions);
         return $this->moduleClassDepository->findByIdDepartment($id_department, $id_study_sessions);
+    }
+
+    private function _getIdStudySessions (array $study_sessions)
+    {
+        return $this->studySessionRepository->pluck([['id']], [['name', 'in', $study_sessions]])
+                                            ->toArray();
     }
 }

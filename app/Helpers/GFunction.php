@@ -104,7 +104,7 @@ class GFunction
         return DB::raw('UuidFromBin(' . $column_name . ') as ' . $column_name);
     }
 
-    public static function getOfficialStudySessions ($term, $study_sessions)
+    public static function getOfficialStudySessions ($term, $study_sessions) : array
     {
         $study_sessions = explode(',', $study_sessions);
         foreach ($study_sessions as &$study_session)

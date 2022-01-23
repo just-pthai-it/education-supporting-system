@@ -2,9 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface StudySessionRepositoryContract
+interface StudySessionRepositoryContract extends BaseRepositoryContract
 {
-    public function findRecent ();
 
-    public function findByNames ($study_sessions);
 }

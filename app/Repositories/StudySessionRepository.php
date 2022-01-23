@@ -3,17 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\StudySession;
+use App\Repositories\Abstracts\BaseRepository;
 
-class StudySessionRepository implements Contracts\StudySessionRepositoryContract
+class StudySessionRepository extends BaseRepository implements Contracts\StudySessionRepositoryContract
 {
-    public function findRecent ()
+    function model () : string
     {
-        return StudySession::orderBy('id', 'desc')->limit(7)
-                           ->get(['id as id_study_year', 'name'])->toArray();
-    }
-
-    public function findByNames ($study_sessions)
-    {
-        return StudySession::whereIn('name', $study_sessions)->pluck('id')->toArray();
+        return StudySession::class;
     }
 }

@@ -18,6 +18,7 @@ class StudySessionService implements Contracts\StudySessionServiceContract
 
     public function getRecentStudySessions ()
     {
-        return $this->studySessionRepository->findRecent();
+        return $this->studySessionRepository->find(['id as id_study_year', 'name'], [],
+                                                   [['id', 'desc']], [7]);
     }
 }
