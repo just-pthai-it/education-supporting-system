@@ -297,14 +297,15 @@ class FileUploadService implements Contracts\FileUploadServiceContract
 
     private function _createManyExamSchedules ($exam_schedules)
     {
-        $this->examScheduleRepository->upsertMultiple($exam_schedules);
+        $this->examScheduleRepository->upsert($exam_schedules, [],
+                                              ['id_module_class' => DB::raw('id_module_class')]);
     }
 
     private function _createManyExamSchedulesTeachers ($exam_schedules_teachers)
     {
         foreach ($exam_schedules_teachers as $id_module_class => $id_teachers)
         {
-            $this->examScheduleRepository->insertPivot($id_module_class, $id_teachers);
+            $this->examScheduleRepository->syncPivot($id_module_class, $id_teachers, 'teachers');
         }
     }
 

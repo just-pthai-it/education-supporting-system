@@ -19,7 +19,6 @@ class ExamSchedule extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id',
         'id_module_class',
         'method',
         'time_start',
@@ -40,7 +39,7 @@ class ExamSchedule extends Model
     public function teachers () : BelongsToMany
     {
         return $this->belongsToMany(Teacher::class, 'exam_schedule_teacher',
-                                    'id_exam_schedule', 'id_teacher')
+                                    'id_module_class', 'id_teacher')
                     ->withPivot('position');
     }
 }

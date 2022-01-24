@@ -79,7 +79,7 @@ class Teacher extends Model
     public function examSchedules () : BelongsToMany
     {
         return $this->belongsToMany(ExamSchedule::class, 'exam_schedule_teacher',
-                                    'id_teacher', 'id_exam_schedule')
+                                    'id_teacher', 'id_module_class')
                     ->withPivot('position');
 
     }

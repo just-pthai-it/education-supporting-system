@@ -16,8 +16,9 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
         $this->examScheduleRepository = $examScheduleRepository;
     }
 
-    public function updateExamSchedule ($data)
+    public function updateExamSchedule ($exam_schedule)
     {
-        $this->examScheduleRepository->update($data);
+        $id = array_shift($exam_schedule);
+        $this->examScheduleRepository->updateByIds($id, $exam_schedule);
     }
 }
