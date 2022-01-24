@@ -30,7 +30,7 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
         $exam_schedules_teachers = [];
         foreach ($raw_data as $sheet)
         {
-            $flag = false;
+            $is_start = false;
             foreach ($sheet as $row)
             {
                 if ($row[0] == 'STT')
@@ -49,17 +49,16 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
                             break;
                         }
                     }
-                    $flag = true;
+                    $is_start = true;
                     continue;
                 }
 
-                if ($flag)
+                if ($is_start)
                 {
                     if (is_null($row[0]))
                     {
                         break;
                     }
-
 
                     $id_room = $row[$last_teacher_index + 1] ==
                                null ? $row[11] : substr($row[$last_teacher_index + 1], 2);
@@ -111,7 +110,15 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
     private function _createDateTime ($date, $time) : array
     {
         preg_replace('/\s+/', ' ', $time);
-        $date       = GFunction::excelValueToDate($date);
+        if (is_numeric($date))
+        {
+            $date = GFunction::excelValueToDate($date);
+        }
+        else
+        {
+            $date = GFunction::formatDate($date);
+        }
+
         $arr        = explode('-', $time);
         $time_start = $date . ' ' . substr($arr[0], strlen($arr[0]) - 5) . ':00.000';
         $time_end   = $date . ' ' . substr($arr[1], 0, 5) . ':00.000';

@@ -82,6 +82,10 @@ class GFunction
                $arr[$arr_length - 1];
     }
 
+    /*
+     * dd/MM-dd/MM/yy to dd/MM/YY
+     * @example: 01/02-01/03/22 => 01/02/2022
+     */
     public static function convertToDate ($temp_date) : string
     {
         $date = substr_replace($temp_date, '/20' . substr($temp_date, 12), 5);
