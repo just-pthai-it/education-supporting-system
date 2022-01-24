@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface SchoolYearRepositoryContract
+interface SchoolYearRepositoryContract extends BaseRepositoryContract
 {
 
 }
