@@ -38,7 +38,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
 
     private function _getScheduleById ($id)
     {
-        return $this->scheduleRepository->findById($id, ['date', 'shift', 'id_room']);
+        return $this->scheduleRepository->findByIds($id, ['date', 'shift', 'id_room']);
     }
 
     public function updateFixedSchedule ($fixed_schedule)
