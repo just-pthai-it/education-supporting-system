@@ -58,13 +58,13 @@ abstract class BaseRepository implements BaseRepositoryContract
     public function insertPivot ($id, array $array, string $relation)
     {
         $this->createModel();
-        $this->model->find($id)->$relation->attach($array);
+        $this->model->find($id)->$relation()->attach($array);
     }
 
     public function syncPivot ($id, array $array, string $relation)
     {
         $this->createModel();
-        $this->model->find($id)->$relation->sync($array);
+        $this->model->find($id)->$relation()->sync($array);
     }
 
     public function upsert ($objects, array $uniqueColumns = [], array $columnsUpdate = [])
