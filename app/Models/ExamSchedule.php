@@ -15,7 +15,8 @@ class ExamSchedule extends Model
     public const table_as = 'exam_schedule as es';
 
     protected $table = 'exam_schedule';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_module_class';
+    protected $keyType = 'string';
     public $timestamps = false;
 
     protected $fillable = [
