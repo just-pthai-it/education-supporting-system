@@ -36,6 +36,7 @@ class FixedScheduleResource extends JsonResource
             'timeAccept'      => $this->time_accept,
             'timeSetRoom'     => $this->timme_set_room,
             'status'          => $this->status,
+            'reason'          => $this->reason,
         ];
     }
 }
