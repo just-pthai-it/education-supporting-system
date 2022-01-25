@@ -199,12 +199,10 @@ class FileUploadService implements Contracts\FileUploadServiceContract
      */
     public function importScheduleFile ($input)
     {
-        echo 1;
         $this->excelService = app()->make('excel_schedule');
         $this->fileUploadHandler->handleFileUpload($input['file']);
         $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),
-                                              $input['id_study_session'],
-                                              $input['is_international']);
+                                              $input['id_study_session']);
 
         $modules_missing = $this->_getIDModulesMissing($data['id_modules']);
         $this->_checkExceptions($modules_missing);

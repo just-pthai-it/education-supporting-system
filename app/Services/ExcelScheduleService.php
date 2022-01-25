@@ -8,8 +8,7 @@ use App\Imports\FileImport;
 
 class ExcelScheduleService implements Contracts\ExcelServiceContract
 {
-    private $id_study_session;
-    private $is_international;
+    private int $id_study_session;
 
     /**
      * @throws Exception
@@ -18,8 +17,7 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
     {
         $raw_data = $this->_getData($file_name);
 
-        $this->id_study_session = $params[0];
-        $this->is_international = $params[1];
+        $this->id_study_session = intval($params[0]);
 
         return $this->_formatData($raw_data);
     }
@@ -41,6 +39,8 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
 
         foreach ($raw_data as $sheet)
         {
+            $is_start = false;
+
             $current_id_module         = '';
             $current_module_class_name = '';
             $current_credit            = '';
@@ -53,20 +53,47 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
             $day_index   = [];
             $other_index = [];
 
-            $sheet_length = count($sheet);
-            for ($i = 0; $i < $sheet_length; $i++)
+            foreach ($sheet as $row)
             {
-                if (isset($other_index['date']) &&
-                    $sheet[$i][$other_index['faculty']] != null)
+                if ($row[1] == 'STT')
                 {
-                    $current_id_module         = $sheet[$i][2] ?? $current_id_module;
-                    $current_module_class_name = $sheet[$i][4] ?? $current_module_class_name;
-                    $current_credit            = $sheet[$i][2] ?? $current_credit;
-                    $max_attempt               = $sheet[$i][5] ?? $max_attempt;
-                    $real_attempt              = $sheet[$i][6] ?? $real_attempt;
-                    $current_class_type        = $sheet[$i][7] ?? $current_class_type;
-                    $current_date              = $sheet[$i][$other_index['date']] ?? $current_date;
-                    $times                     = $sheet[$i][$other_index['date'] + 1] ?? $times;
+                    for ($i = 3; ; $i++)
+                    {
+                        if ($row[$i] == 'Thời gian')
+                        {
+                            $other_index['date']    = $i;
+                            $other_index['faculty'] = $i + 17;
+                        }
+
+                        if ($row[$i] == 'Thứ 2')
+                        {
+                            $day_index['monday']    = $i;
+                            $day_index['tuesday']   = $i += 2;
+                            $day_index['wednesday'] = $i += 2;
+                            $day_index['thursday']  = $i += 2;
+                            $day_index['friday']    = $i += 2;
+                            $day_index['saturday']  = $i + 2;
+                            break;
+                        }
+                    }
+                    continue;
+                }
+
+                if ($row[1] == 1)
+                {
+                    $is_start = true;
+                }
+
+                if ($is_start && !is_null($row[$other_index['faculty']]))
+                {
+                    $current_id_module         = $row[2] ?? $current_id_module;
+                    $current_module_class_name = $row[4] ?? $current_module_class_name;
+                    $current_credit            = $row[2] ?? $current_credit;
+                    $max_attempt               = $row[5] ?? $max_attempt;
+                    $real_attempt              = $row[6] ?? $real_attempt;
+                    $current_class_type        = $row[7] ?? $current_class_type;
+                    $current_date              = $row[$other_index['date']] ?? $current_date;
+                    $times                     = $row[$other_index['date'] + 1] ?? $times;
 
                     $this->_createModuleClass($module_classes, $current_id_module,
                                               $current_module_class_name, $current_class_type,
@@ -79,16 +106,15 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
                         $Special_module_classes[$current_module_class_name] = end($module_classes)['id'];
                     }
 
-                    $k = -1;
+                    $j = -1;
                     foreach ($day_index as $e)
                     {
-                        $k++;
-                        if ($sheet[$i][$e] != null &&
-                            $sheet[$i][$e + 1] != null &&
-                            $e > 10)
+                        $j++;
+                        if (!is_null($row[$e]) &&
+                            !is_null($row[$e + 1]))
                         {
-                            $period  = $sheet[$i][$e] ?? '';
-                            $id_room = $sheet[$i][$e + 1] ?? '';
+                            $period  = $row[$e] ?? '';
+                            $id_room = $row[$e + 1] ?? '';
                             $period  = preg_replace('/[ ]+/', '', $period);
                             $id_room = preg_replace('/[ ]+/', '', $id_room);
 
@@ -98,33 +124,14 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
                             }
 
                             $this->_createSchedule($schedules, end($module_classes)['id'],
-                                                   $current_date, $period, $id_room, $times, $k);
+                                                   $current_date, $period, $id_room, $times, $j);
                             break;
                         }
                     }
                 }
-
-                if ($sheet[$i][1] == 'STT')
+                else if ($is_start && is_null($row[$other_index['faculty']]))
                 {
-                    for ($j = 3; ; $j++)
-                    {
-                        if ($sheet[$i][$j] == 'Thời gian')
-                        {
-                            $other_index['date']    = $j;
-                            $other_index['faculty'] = $j + 17;
-                        }
-                        if ($sheet[$i][$j] == 'Thứ 2')
-                        {
-                            $day_index['monday']    = $j;
-                            $day_index['tuesday']   = $j += 2;
-                            $day_index['wednesday'] = $j += 2;
-                            $day_index['thursday']  = $j += 2;
-                            $day_index['friday']    = $j += 2;
-                            $day_index['saturday']  = $j + 2;
-                            break;
-                        }
-                    }
-                    $i++;
+                    break;
                 }
             }
         }
@@ -153,7 +160,7 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
                                                              'TH' ? 3 : ($class_type ==
                                                                          'DA' ? 4 : 1)),
             'id_study_session' => $this->id_study_session,
-            'is_international' => intval($this->is_international),
+            'is_international' => strpos($id_module_class, '(QT') === false ? 0 : 1,
             'id_module'        => $id_module,
         ];
     }
