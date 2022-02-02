@@ -31,6 +31,7 @@ class FixedSchedule extends Model
         'time_accept',
         'time_set_room',
         'status',
+        'reason_deny',
         'id_notification',
     ];
 
