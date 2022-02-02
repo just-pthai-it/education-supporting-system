@@ -17,6 +17,7 @@ class CustomUserProvider extends EloquentUserProvider implements UserProvider
         $columns = [
             'id',
             'password',
+            'email',
             'id_role',
             'id_user',
             GFunction::uuidFromBin('uuid'),

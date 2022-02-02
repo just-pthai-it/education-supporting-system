@@ -36,6 +36,7 @@ class FixedScheduleController extends Controller
                                                                          'new_id_room',
                                                                          'time_accept',
                                                                          'time_set_room',
-                                                                         'status',]));
+                                                                         'status',
+                                                                         'reason_deny']));
     }
 }

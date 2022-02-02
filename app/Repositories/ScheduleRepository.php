@@ -49,4 +49,11 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                            ->with(['moduleClass:id,name,id_teacher',
                                    'moduleClass.teacher:id,name'])->get();
     }
+
+    public function findTeacherEmailByIdSchedule (int $id_schedule)
+    {
+        $this->createModel();
+        return $this->model->find($id_schedule)->moduleClass()->first(['id_teacher'])->teacher()
+                           ->first(['id'])->account()->first(['email'])->email;
+    }
 }

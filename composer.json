@@ -17,7 +17,7 @@
     "aws/aws-sdk-php": "^3.191",
     "fideloper/proxy": "^4.4",
     "fruitcake/laravel-cors": "^2.0",
-    "guzzlehttp/guzzle": "^7.0.1",
+    "guzzlehttp/guzzle": "^7.4",
     "kreait/firebase-php": "^5.14",
     "laravel/framework": "^8.40",
     "laravel/tinker": "^2.5",

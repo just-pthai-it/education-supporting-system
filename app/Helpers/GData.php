@@ -4,6 +4,41 @@ namespace App\Helpers;
 
 class GData
 {
+    public static array $mail_data = [
+        'change_schedule_request' => [
+            'confirm'     => [
+                'view'    => 'mail-forms.change-schedule-request',
+                'subject' => 'Xác nhận yêu cầu thay đổi lịch giảng',
+                'content' => 'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng với lí do:',
+            ],
+            'accept'      => [
+                'view'    => 'mail-forms.change-schedule-request',
+                'subject' => 'Yêu cầu thay đổi lịch giảng được phê duyệt',
+                'content' => 'Yêu cầu thay đổi lịch giảng đã được trưởng bộ môn phê duyệt',
+            ],
+            'accept_room' => [
+                'view'    => 'mail-forms.change-schedule-request',
+                'subject' => 'Yêu cầu thay đổi lịch giảng được cấp phòng học',
+                'content' => 'Yêu cầu thay đổi lịch giảng đã được phòng quản lý giảng đường cấp phòng học',
+            ],
+            'cancel'      => [
+                'view'    => 'mail-forms.change-schedule-request',
+                'subject' => 'Hủy yêu cầu thay đổi lịch giảng',
+                'content' => 'Hủy thành công yêu cầu thay đổi lịch giảng',
+            ],
+            'deny'        => [
+                'view'    => 'mail-forms.change-schedule-request',
+                'subject' => 'Yêu cầu tay đổi lịch giảng bị từ chối',
+                'content' => 'Yêu cầu thay đổi lịch giảng đã bị trưởng bộ môn từ chối với lí do:',
+            ],
+            'deny_room'   => [
+                'view'    => 'mail-forms.change-schedule-request',
+                'subject' => 'Yêu cầu tay đổi lịch giảng không được cấp phòng',
+                'content' => 'Yêu cầu thay đổi lịch giảng đã bị phòng quản lý giảng đường từ chối do không tìm được phòng trống',
+            ],
+        ],
+    ];
+
     public static array $id_faculties_not_query = [
         'LLCT', 'GDTC', 'GDQP'
     ];
