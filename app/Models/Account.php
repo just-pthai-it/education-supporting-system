@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,28 @@ class Account extends Model
     protected $hidden = [
         'uuid',
     ];
+
+    /**
+     * @throws Exception
+     */
+    public function accountable () : BelongsTo
+    {
+        switch ($this->original['id_role'])
+            {
+            case 1:
+                return $this->belongsTo(Student::class, 'id_user', 'id');
+            case 2:
+            case 3:
+            case 4:
+                return $this->belongsTo(Teacher::class, 'id_user', 'id');
+            case 5:
+                return $this->belongsTo(OtherDepartment::class, 'id_user', 'id');
+            case 6:
+                return $this->belongsTo(Department::class, 'id_user', 'id');
+            default:
+                throw new Exception();
+        }
+    }
 
     public function student () : HasOne
     {

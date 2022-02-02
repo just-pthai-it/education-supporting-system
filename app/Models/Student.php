@@ -36,9 +36,9 @@ class Student extends Model
         'uuid',
     ];
 
-    public function account () : BelongsTo
+    public function account () : HasOne
     {
-        return $this->belongsTo(Account::class, 'id_account', 'id');
+        return $this->hasOne(Account::class, 'id_user', 'id');
     }
 
     public function class_ () : BelongsTo

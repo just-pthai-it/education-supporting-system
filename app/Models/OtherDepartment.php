@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Helpers\GFunction;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OtherDepartment extends Model
 {
@@ -45,8 +45,8 @@ class OtherDepartment extends Model
         return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
     }
 
-    public function account () : BelongsTo
+    public function account () : HasOne
     {
-        return $this->belongsTo(Account::class, 'id_account', 'id');
+        return $this->hasOne(Account::class, 'id_user', 'id');
     }
 }
