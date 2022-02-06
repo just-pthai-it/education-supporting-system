@@ -181,13 +181,17 @@ abstract class BaseRepository implements BaseRepositoryContract
     //    }
 
 
-    //    public function paginate ($perPage = 1, array $columns = ['*'])
-    //    {
-    //        //reset model
-    //        $this->createModel();
-    //
-    //        return $this->model->paginate($perPage, $columns);
-    //    }
+    public function paginate (array $columns = ['*'], array $conditions = [], array $orders = [],
+                              int   $pagination = 1, array $scopes = [])
+    {
+        $this->createModel();
+
+        $this->addScopes($scopes);
+        $this->addWhere($conditions);
+        $this->addOrderBy($orders);
+
+        return $this->model->paginate($pagination, $columns);
+    }
 
     //    public function checkExistBy (array $condition)
     //    {

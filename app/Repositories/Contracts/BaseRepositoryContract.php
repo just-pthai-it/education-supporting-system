@@ -39,4 +39,6 @@ interface BaseRepositoryContract
 
     public function count (array $conditions = []);
 
+    public function paginate (array $columns = ['*'], array $conditions = [], array $orders = [],
+                              int   $pagination = 1, array $scopes = []);
 }
