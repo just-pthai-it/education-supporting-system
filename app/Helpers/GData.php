@@ -9,7 +9,7 @@ class GData
             'confirm'     => [
                 'view'    => 'mail-forms.change-schedule-request',
                 'subject' => 'Xác nhận yêu cầu thay đổi lịch giảng',
-                'content' => 'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng với lí do:',
+                'content' => 'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng',
             ],
             'accept'      => [
                 'view'    => 'mail-forms.change-schedule-request',

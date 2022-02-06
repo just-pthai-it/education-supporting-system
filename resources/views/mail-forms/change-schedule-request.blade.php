@@ -40,6 +40,10 @@
 <body>
 <div>
     <p> {{ $content }}</p>
+    @php
+        $reason_deny = $reason_deny ?? null;
+    @endphp
+
     @if (!is_null($reason_deny))
         <p> {{ $reason_deny }}</p>
     @endif
