@@ -54,7 +54,7 @@ class TeacherService implements Contracts\TeacherServiceContract
 
     public function getFixedSchedulesByStatus ($id_teacher, $status)
     {
-        return $this->fixedScheduleRepository->findByStatusAndIdTeacher($id_teacher, $status);
+        return $this->fixedScheduleRepository->paginateByStatusAndIdTeacher($id_teacher, $status);
     }
 
     public function getModuleClassesByStudySessions ($id_teacher, $term, $study_sessions)

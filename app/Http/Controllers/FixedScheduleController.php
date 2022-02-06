@@ -39,4 +39,11 @@ class FixedScheduleController extends Controller
                                                                          'status',
                                                                          'reason_deny']));
     }
+
+    public function paginateFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
+    {
+        $fixedSchedules = $this->fixedScheduleService->paginateFixedSchedulesByStatus($request->status,
+                                                                                      $request->pagination);
+        return FixedScheduleResource::collection($fixedSchedules);
+    }
 }

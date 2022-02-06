@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface FixedScheduleRepositoryContract extends BaseRepositoryContract
 {
-    public function findByStatusAndIdDepartment ($id_department, $status);
+    public function paginateByStatusAndIdDepartment ($id_department, $status);
 
-    public function findByStatusAndIdTeacher ($id_teacher, $status);
+    public function paginateByStatusAndIdTeacher ($id_teacher, $status);
 }

@@ -13,7 +13,7 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
         return FixedSchedule::class;
     }
 
-    public function findByStatusAndIdDepartment ($id_department, $status)
+    public function paginateByStatusAndIdDepartment ($id_department, $status)
     {
         $this->createModel();
         return $this->model->whereHas('schedule', function (Builder $query) use ($id_department)
@@ -31,7 +31,7 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
                            ->paginate(20);
     }
 
-    public function findByStatusAndIdTeacher ($id_teacher, $status)
+    public function paginateByStatusAndIdTeacher ($id_teacher, $status)
     {
         $this->createModel();
         return $this->model->whereHas('schedule', function (Builder $query) use ($id_teacher)

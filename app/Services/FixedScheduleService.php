@@ -109,4 +109,10 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     {
         return $this->scheduleRepository->findTeacherEmailByIdSchedule($id_schedule);
     }
+
+    public function paginateFixedSchedulesByStatus (string $status, string $pagination)
+    {
+        return $this->fixedScheduleRepository->paginate(['*'], [], [['id', 'desc']],
+                                                        $pagination, [['status', $status]]);
+    }
 }
