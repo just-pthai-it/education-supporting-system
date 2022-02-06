@@ -17,11 +17,10 @@ class ScheduleResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param Request $request
-     * @param array   $a
      *
      * @return array
      */
-    public function toArray ($request, array $a = []) : array
+    public function toArray ($request) : array
     {
         $arr         = explode('-', $this->id_module_class);
         $id_module   = $arr[0];
@@ -34,9 +33,9 @@ class ScheduleResource extends JsonResource
             {
                 GData::$current[$id_module] = array_shift(GData::$colors);
             }
-            $color          = GData::$current[$id_module];
-            $teacher        = is_null($this->moduleClass->teacher) ? null : $this->moduleClass->teacher->name;
-            $fixedSchedules = [];
+            $color                = GData::$current[$id_module];
+            $teacher              = is_null($this->moduleClass->teacher) ? null : $this->moduleClass->teacher->name;
+            $this->fixedSchedules = [];
         }
         else
         {
@@ -44,9 +43,21 @@ class ScheduleResource extends JsonResource
             {
                 GData::$current[$this->id_module_class] = array_shift(GData::$colors);
             }
-            $color          = GData::$current[$this->id_module_class];
-            $teacher        = $this->moduleClass->teacher;
-            $fixedSchedules = $this->fixedSchedules;
+            $color                = GData::$current[$this->id_module_class];
+            $teacher              = $this->moduleClass->teacher;
+            $this->fixedSchedules = $this->fixedSchedules->map(function ($item, $key)
+            {
+                return [
+                    'idSchedule' => $item->id_schedule,
+                    'oldDate'    => $item->old_date,
+                    'oldShift'   => $item->old_shift,
+                    'oldIdRoom'  => $item->old_id_room,
+                    'newDate'    => $item->new_date,
+                    'newShift'   => $item->new_shift,
+                    'newIdRoom'  => $item->id_schedule,
+                    'status'     => $item->status,
+                ];
+            });
         }
 
         return [
@@ -61,7 +72,7 @@ class ScheduleResource extends JsonResource
             'moduleName'    => $module_name,
             'teacher'       => $teacher,
             'color'         => $color,
-            'fixedSchedule' => $fixedSchedules,
+            'fixedSchedule' => $this->fixedSchedules,
         ];
     }
 }

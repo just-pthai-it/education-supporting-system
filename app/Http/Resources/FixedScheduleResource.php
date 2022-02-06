@@ -2,9 +2,7 @@
 
 namespace App\Http\Resources;
 
-use JsonSerializable;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FixedScheduleResource extends JsonResource
@@ -16,7 +14,7 @@ class FixedScheduleResource extends JsonResource
      *
      * @return array
      */
-    public function toArray ($request)
+    public function toArray ($request) : array
     {
         return [
             'id'              => $this->id,
