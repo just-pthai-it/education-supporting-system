@@ -7,7 +7,6 @@ use App\Services\TeacherService;
 use App\Services\FeedbackService;
 use Illuminate\Support\Facades\URL;
 use App\Services\DepartmentService;
-use App\Services\FCMService;
 use App\Services\MailService;
 use App\Services\AcademicYearService;
 use App\Services\AccountService;
@@ -22,7 +21,6 @@ use App\Services\Contracts\RoomServiceContract;
 use App\Services\Contracts\TeacherServiceContract;
 use App\Services\Contracts\FeedbackServiceContract;
 use App\Services\Contracts\DepartmentServiceContract;
-use App\Services\Contracts\FCMServiceContract;
 use App\Services\Contracts\MailServiceContract;
 use App\Services\Contracts\AcademicYearServiceContract;
 use App\Services\Contracts\AccountServiceContract;
@@ -57,18 +55,17 @@ class AppServiceProvider extends ServiceProvider
         StudySessionServiceContract::class  => StudySessionService::class,
         ModuleClassServiceContract::class   => ModuleClassService::class,
         DepartmentServiceContract::class    => DepartmentService::class,
-        FileUploadServiceContract::class => FileUploadService::class,
-        FeedbackServiceContract::class   => FeedbackService::class,
-        ScheduleServiceContract::class   => ScheduleService::class,
-        TeacherServiceContract::class    => TeacherService::class,
-        AccountServiceContract::class    => AccountService::class,
-        FacultyServiceContract::class    => FacultyService::class,
-        NotifyServiceContract::class     => NotifyService::class,
-        ClassServiceContract::class      => ClassService::class,
-        AuthServiceContract::class       => AuthService::class,
-        RoomServiceContract::class       => RoomService::class,
-        MailServiceContract::class       => MailService::class,
-        FCMServiceContract::class        => FCMService::class,
+        FileUploadServiceContract::class    => FileUploadService::class,
+        FeedbackServiceContract::class      => FeedbackService::class,
+        ScheduleServiceContract::class      => ScheduleService::class,
+        TeacherServiceContract::class       => TeacherService::class,
+        AccountServiceContract::class       => AccountService::class,
+        FacultyServiceContract::class       => FacultyService::class,
+        NotifyServiceContract::class        => NotifyService::class,
+        ClassServiceContract::class         => ClassService::class,
+        AuthServiceContract::class          => AuthService::class,
+        RoomServiceContract::class          => RoomService::class,
+        MailServiceContract::class          => MailService::class,
 
     ];
 
