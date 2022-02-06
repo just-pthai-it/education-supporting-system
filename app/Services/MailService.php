@@ -11,7 +11,7 @@ class MailService implements Contracts\MailServiceContract
     {
         foreach ($receivers as $receiver)
         {
-            Mail::to($receiver)->send(new FixedScheduleMailNotify($data));
+            Mail::to($receiver)->queue(new FixedScheduleMailNotify($data));
         }
     }
 }
