@@ -207,9 +207,9 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
             case '10,11,12':
                 return '4';
             case '13,14,15':
-                return '5-1';
+                return '5_1';
             case '13,14,15,16':
-                return '5-2';
+                return '5_2';
             default:
                 throw new Exception();
         }
