@@ -21,20 +21,20 @@ class DepartmentController extends Controller
         $this->departmentService = $departmentService;
     }
 
-    public function getSchedules (Request $request, $id_department)
+    public function getSchedulesByDate (Request $request, $id_department)
     {
-        $schedules = $this->departmentService->getSchedules($id_department,
-                                                            $request->start,
-                                                            $request->end);
+        $schedules = $this->departmentService->getSchedulesByDate($id_department,
+                                                                  $request->start,
+                                                                  $request->end);
 
         return ScheduleResource::collection($schedules)->all();
     }
 
-    public function getExamSchedules (Request $request, $id_department)
+    public function getExamSchedulesByDate (Request $request, $id_department)
     {
-        $exam_schedules = $this->departmentService->getExamSchedules($id_department,
-                                                                     $request->start,
-                                                                     $request->end);
+        $exam_schedules = $this->departmentService->getExamSchedulesByDate($id_department,
+                                                                           $request->start,
+                                                                           $request->end);
 
         return ExamScheduleResource::collection($exam_schedules)->all();
     }

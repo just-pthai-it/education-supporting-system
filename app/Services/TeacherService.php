@@ -42,12 +42,12 @@ class TeacherService implements Contracts\TeacherServiceContract
         $this->studySessionRepository  = $studySessionRepository;
     }
 
-    public function getSchedules ($id_teacher, $start, $end)
+    public function getSchedulesByDate ($id_teacher, $start, $end)
     {
-        return $this->scheduleDepository->findAllByIdTeacher($id_teacher, $start, $end);
+        return $this->scheduleDepository->findAllByIdTeacherAndDate($id_teacher, $start, $end);
     }
 
-    public function getExamSchedules ($id_teacher, $start, $end)
+    public function getExamSchedulesByDate ($id_teacher, $start, $end)
     {
         return $this->examScheduleRepository->findByIdTeacher($id_teacher, $start, $end);
     }

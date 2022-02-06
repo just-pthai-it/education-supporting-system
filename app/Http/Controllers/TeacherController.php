@@ -22,19 +22,19 @@ class TeacherController extends Controller
         $this->teacherService = $teacherService;
     }
 
-    public function getSchedules (Request $request, $id_teacher)
+    public function getSchedulesByDate (Request $request, $id_teacher)
     {
-        $schedules = $this->teacherService->getSchedules(auth()->user()->id_user,
-                                                         $request->start,
-                                                         $request->end);
+        $schedules = $this->teacherService->getSchedulesByDate(auth()->user()->id_user,
+                                                               $request->start,
+                                                               $request->end);
         return ScheduleResource::collection($schedules)->all();
     }
 
-    public function getExamSchedules (Request $request, $id_teacher)
+    public function getExamSchedulesByDate (Request $request, $id_teacher)
     {
-        $exam_schedules = $this->teacherService->getExamSchedules(auth()->user()->id_user,
-                                                                  $request->start,
-                                                                  $request->end);
+        $exam_schedules = $this->teacherService->getExamSchedulesByDate(auth()->user()->id_user,
+                                                                        $request->start,
+                                                                        $request->end);
         return ExamScheduleResource::collection($exam_schedules)->all();
     }
 

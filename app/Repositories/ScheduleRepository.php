@@ -14,7 +14,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
         return Schedule::class;
     }
 
-    public function findAllByIdTeacher ($id_teacher, $start, $end)
+    public function findAllByIdTeacherAndDate ($id_teacher, $start, $end)
     {
         $this->createModel();
         return $this->model->whereHas('moduleClass', function (Builder $query)
@@ -41,7 +41,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                   ])->get();
     }
 
-    public function findAllByIdDepartment ($id_department, $start, $end)
+    public function findAllByIdDepartmentAndDate ($id_department, $start, $end)
     {
         $this->createModel();
         return $this->model->whereHas('moduleClass', function (Builder $query) use ($id_department)

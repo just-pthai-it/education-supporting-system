@@ -47,12 +47,12 @@ class DepartmentService implements Contracts\DepartmentServiceContract
         $this->teacherRepository       = $teacherRepository;
     }
 
-    public function getSchedules ($id_department, $start, $end)
+    public function getSchedulesByDate ($id_department, $start, $end)
     {
-        return $this->scheduleDepository->findAllByIdDepartment($id_department, $start, $end);
+        return $this->scheduleDepository->findAllByIdDepartmentAndDate($id_department, $start, $end);
     }
 
-    public function getExamSchedules ($id_department, $start, $end)
+    public function getExamSchedulesByDate ($id_department, $start, $end)
     {
         return $this->examScheduleRepository->findByIdDepartment($id_department, $start, $end);
     }
