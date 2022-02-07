@@ -27,7 +27,7 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
             });
         })->status($status)->orderBy('id', 'desc')
                            ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
-                                   'schedule.moduleClass.teacher:id,name', 'newRoom:id', 'oldRoom:id'])
+                                   'schedule.moduleClass.teacher:id,name'])
                            ->paginate(20);
     }
 
@@ -41,8 +41,7 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
                 $query->where('id_teacher', '=', $id_teacher);
             });
         })->status($status)->orderBy('id', 'desc')
-                           ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
-                                   'schedule.moduleClass.teacher:id,name', 'newRoom:id', 'oldRoom:id'])
+                           ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name'])
                            ->paginate(20);
     }
 }

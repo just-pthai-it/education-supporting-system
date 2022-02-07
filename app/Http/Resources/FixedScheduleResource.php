@@ -19,7 +19,7 @@ class FixedScheduleResource extends JsonResource
         return [
             'id'              => $this->id,
             'idSchedule'      => $this->id_schedule,
-            'teacher'         => $this->schedule->moduleClass->teacher->name,
+            'teacher'         => $this->schedule->moduleClass->teacher->name ?? null,
             'moduleClassName' => $this->schedule->moduleClass->name,
             'oldSchedule'     => [
                 'date'  => $this->old_date,
@@ -33,7 +33,7 @@ class FixedScheduleResource extends JsonResource
             ],
             'timeRequest'     => $this->time_request,
             'timeAccept'      => $this->time_accept,
-            'timeSetRoom'     => $this->timme_set_room,
+            'timeSetRoom'     => $this->time_set_room,
             'status'          => $this->status,
             'reason'          => $this->reason,
         ];
