@@ -18,6 +18,7 @@ class FixedScheduleResource extends JsonResource
     {
         return [
             'id'              => $this->id,
+            'idSchedule'      => $this->id_schedule,
             'teacher'         => $this->schedule->moduleClass->teacher->name,
             'moduleClassName' => $this->schedule->moduleClass->name,
             'oldSchedule'     => [
