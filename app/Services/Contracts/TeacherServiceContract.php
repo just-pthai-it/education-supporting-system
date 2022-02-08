@@ -4,7 +4,7 @@ namespace App\Services\Contracts;
 
 interface TeacherServiceContract
 {
-    public function getSchedulesByDate ($id_teacher, $start, $end);
+    public function getSchedulesByDate ($id_teacher, $start, $end, $shift);
 
     public function getExamSchedulesByDate ($id_teacher, $start, $end);
 

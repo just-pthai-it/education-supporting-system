@@ -25,8 +25,8 @@ class TeacherController extends Controller
     public function getSchedulesByDate (Request $request, $id_teacher)
     {
         $schedules = $this->teacherService->getSchedulesByDate(auth()->user()->id_user,
-                                                               $request->start,
-                                                               $request->end);
+                                                               $request->start, $request->end,
+                                                               $request->shift);
         return ScheduleResource::collection($schedules)->all();
     }
 

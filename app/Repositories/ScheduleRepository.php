@@ -14,13 +14,13 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
         return Schedule::class;
     }
 
-    public function findAllByIdTeacherAndDate ($id_teacher, $start, $end)
+    public function findAllByIdTeacherAndDate ($id_teacher, $start, $end, $shift)
     {
         $this->createModel();
         return $this->model->whereHas('moduleClass', function (Builder $query)
         {
             $query->where('id_teacher', '0884');
-        })->whereBetween('date', [$start, $end])
+        })->whereBetween('date', [$start, $end])->shift($shift)
                            ->with([
                                       'moduleClass'    => function ($query)
                                       {
