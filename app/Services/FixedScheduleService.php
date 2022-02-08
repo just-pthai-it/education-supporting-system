@@ -112,7 +112,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
 
     public function paginateFixedSchedulesByStatus (string $status, string $pagination)
     {
-        return $this->fixedScheduleRepository->paginate(['*'], [], [['id', 'desc']],
-                                                        $pagination, [['status', $status]]);
+        return $this->fixedScheduleRepository->paginate(['*'], [['status', 'in', [-2, 1, 2]]], [['id', 'desc']],
+                                                        $pagination);
     }
 }
