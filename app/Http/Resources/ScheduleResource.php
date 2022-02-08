@@ -22,6 +22,8 @@ class ScheduleResource extends JsonResource
      */
     public function toArray ($request) : array
     {
+        $from        = null;
+        $to          = 1;
         $arr         = explode('-', $this->id_module_class);
         $id_module   = $arr[0];
         $module_name = str_replace('-' . $arr[1] . '-' . $arr[2] . '-' . $arr[3],
@@ -43,11 +45,14 @@ class ScheduleResource extends JsonResource
             {
                 GData::$current[$this->id_module_class] = array_shift(GData::$colors);
             }
-            $color                = GData::$current[$this->id_module_class];
-            $teacher              = $this->moduleClass->teacher;
-            $this->fixedSchedules = $this->fixedSchedules->map(function ($item, $key)
+            $color   = GData::$current[$this->id_module_class];
+            $teacher = $this->moduleClass->teacher;
+
+            $this->fixedSchedules = $this->fixedSchedules->each(function ($item, $key) use (
+                &$from, &$to
+            )
             {
-                return [
+                $fixedSchedule = [
                     'idSchedule' => $item->id_schedule,
                     'oldDate'    => $item->old_date,
                     'oldShift'   => $item->old_shift,
@@ -57,6 +62,15 @@ class ScheduleResource extends JsonResource
                     'newIdRoom'  => $item->id_schedule,
                     'status'     => $item->status,
                 ];
+
+                if ($item->status != 0)
+                {
+                    $from = $fixedSchedule;
+                }
+                else
+                {
+                    $to = $fixedSchedule;
+                }
             });
         }
 
@@ -72,7 +86,8 @@ class ScheduleResource extends JsonResource
             'moduleName'    => $module_name,
             'teacher'       => $teacher,
             'color'         => $color,
-            'fixedSchedule' => $this->fixedSchedules,
+            'from'          => $from ?? null,
+            'to'            => $to ?? null,
         ];
     }
 }
