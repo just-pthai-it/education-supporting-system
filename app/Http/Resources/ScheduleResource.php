@@ -23,7 +23,7 @@ class ScheduleResource extends JsonResource
     public function toArray ($request) : array
     {
         $from        = null;
-        $to          = 1;
+        $to          = null;
         $arr         = explode('-', $this->id_module_class);
         $id_module   = $arr[0];
         $module_name = str_replace('-' . $arr[1] . '-' . $arr[2] . '-' . $arr[3],
