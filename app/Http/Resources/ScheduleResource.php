@@ -59,7 +59,7 @@ class ScheduleResource extends JsonResource
                     'oldIdRoom'  => $item->old_id_room,
                     'newDate'    => $item->new_date,
                     'newShift'   => $item->new_shift,
-                    'newIdRoom'  => $item->id_schedule,
+                    'newIdRoom'  => $item->new_id_room,
                     'status'     => $item->status,
                 ];
 
