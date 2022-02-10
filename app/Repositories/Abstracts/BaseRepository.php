@@ -37,6 +37,11 @@ abstract class BaseRepository implements BaseRepositoryContract
         }
     }
 
+    public function filter (array $parameters)
+    {
+        $this->model->filter($parameters);
+    }
+
     public function insert (array $object)
     {
         $this->createModel();
