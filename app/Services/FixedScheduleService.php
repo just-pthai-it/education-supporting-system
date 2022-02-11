@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Exception;
 use App\Helpers\GData;
+use App\Helpers\GFArray;
+use Illuminate\Support\Arr;
 use App\Services\Contracts\MailServiceContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
@@ -33,29 +35,24 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
      */
     public function createFixedSchedule ($fixed_schedule)
     {
-        $this->_fillData($fixed_schedule);
+        $this->_completeInputData($fixed_schedule);
         $this->fixedScheduleRepository->insert($fixed_schedule);
         $this->_sendMail(auth()->user()->email, $fixed_schedule);
     }
 
-    private function _fillData (&$fixed_schedule)
+    private function _getFixedScheduleById ($ids, array $columns = ['*'])
     {
-        $schedule = $this->_getScheduleById($fixed_schedule['id_schedule']);
-
-        $fixed_schedule['old_date']    = $schedule->date;
-        $fixed_schedule['old_shift']   = $schedule->shift;
-        $fixed_schedule['old_id_room'] = $schedule->id_room;
-        $fixed_schedule['status']      = 0;
+        return $this->fixedScheduleRepository->findByIds($ids, $columns);
     }
 
-    private function _getFixedSchedules ($ids)
+    private function _getScheduleById ($id, array $columns = ['*'])
     {
-        return $this->fixedScheduleRepository->findByIds($ids);
+        return $this->scheduleRepository->findByIds($id, $columns);
     }
 
-    private function _getScheduleById ($id)
+    private function _updateScheduleById ($id, array $columns = ['*'])
     {
-        return $this->scheduleRepository->findByIds($id, ['date', 'shift', 'id_room']);
+        $this->scheduleRepository->updateByIds($id, $columns);
     }
 
     /**
@@ -79,6 +76,9 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
             case 2:
                 return array_merge(GData::$mail_data['change_schedule_request']['accept_room'],
                                    $data);
+            case 3:
+                return array_merge(GData::$mail_data['change_schedule_request']['accept_straight'],
+                                   $data);
             default:
                 throw new Exception('send mail fixed schedule');
         }
@@ -98,11 +98,54 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
      */
     public function updateFixedSchedule ($fixed_schedule)
     {
-        $id = array_shift($fixed_schedule);
-        $this->fixedScheduleRepository->updateByIds($id, $fixed_schedule);
-        $fixed_schedule = $this->_getFixedSchedules($id)->getOriginal();
+        $this->_completeInputData($fixed_schedule);
+        $this->fixedScheduleRepository->updateByIds($fixed_schedule['id'],
+                                                    Arr::except($fixed_schedule, ['id']));
+        $fixed_schedule = $this->_getFixedScheduleById($fixed_schedule['id']);
+        $this->_checkIfNeedToUpdateSchedule($fixed_schedule->getOriginal());
         $this->_sendMail($this->_getTeacherEmailByIdSchedule($fixed_schedule['id_schedule']),
-                         $fixed_schedule);
+                         $fixed_schedule->getOriginal());
+    }
+
+    private function _completeInputData (&$fixedSchedule)
+    {
+        if (isset($fixedSchedule['time']))
+        {
+            switch ($fixedSchedule['status'])
+            {
+                case 1:
+                    $fixedSchedule['time_accept'] = $fixedSchedule['time'];
+                    break;
+                case 2:
+                    $fixedSchedule['time_set_room'] = $fixedSchedule['time'];
+                    break;
+                default:
+                    $fixedSchedule['time_accept']   = $fixedSchedule['time'];
+                    $fixedSchedule['time_set_room'] = $fixedSchedule['time'];
+            }
+            unset($fixedSchedule['time']);
+        }
+        else
+        {
+            $schedule = $this->_getScheduleById($fixedSchedule['id_schedule'],
+                                                ['date as old_date', 'shift as old_shift',
+                                                 'id_room as old_id_room']);
+
+            $fixedSchedule           = array_merge($fixedSchedule, $schedule->getOriginal());
+            $fixedSchedule['status'] = 0;
+        }
+    }
+
+    private function _checkIfNeedToUpdateSchedule (array $fixedSchedule)
+    {
+        if (in_array($fixedSchedule['status'], [2, 3]))
+        {
+            $this->_updateScheduleById($fixedSchedule['id_schedule'],
+                                       GFArray::onlyKeys($fixedSchedule,
+                                                         ['new_date'    => 'date',
+                                                          'new_shift'   => 'shift',
+                                                          'new_id_room' => 'id_room']));
+        }
     }
 
     private function _getTeacherEmailByIdSchedule (int $id_schedule)

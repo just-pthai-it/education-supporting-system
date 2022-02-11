@@ -26,7 +26,6 @@ class FixedScheduleController extends Controller
                                                                          'new_shift',
                                                                          'new_id_room',
                                                                          'time_request',
-                                                                         'time_set_room',
                                                                          'reason',]));
     }
 
@@ -34,8 +33,7 @@ class FixedScheduleController extends Controller
     {
         $this->fixedScheduleService->updateFixedSchedule($request->only(['id',
                                                                          'new_id_room',
-                                                                         'time_accept',
-                                                                         'time_set_room',
+                                                                         'time',
                                                                          'status',
                                                                          'reason_deny']));
     }
