@@ -42,7 +42,15 @@ class FixedSchedule extends Model
             return $query;
         }
 
-        return $query->where('status', '=', $status);
+        $values = explode(',', $status);
+        if (count($values) == 1)
+        {
+            return $query->where('status', '=', $values[0]);
+        }
+        else
+        {
+            return $query->whereIn('status', $values);
+        }
     }
 
     public function schedule () : BelongsTo

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,16 @@ class Schedule extends Model
         'id_room',
         'note',
     ];
+
+    public function scopeShift (Builder $query, $shift) : Builder
+    {
+        if (is_null($shift))
+        {
+            return $query;
+        }
+
+        return $query->where('shift', '=', $shift);
+    }
 
     public function moduleClass () : BelongsTo
     {
