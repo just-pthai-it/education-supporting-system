@@ -63,13 +63,15 @@ class ScheduleResource extends JsonResource
                     'status'     => $item->status,
                 ];
 
-                if ($item->status != 0)
-                {
-                    $from = $fixedSchedule;
-                }
-                else
+                if (in_array($item->status, [0, 1]))
                 {
                     $to = $fixedSchedule;
+                }
+
+                if (in_array($item->status, [2, 3]) &&
+                    is_null($from))
+                {
+                    $from = $fixedSchedule;
                 }
             });
         }

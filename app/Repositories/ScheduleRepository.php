@@ -29,14 +29,11 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                       },
                                       'fixedSchedules' => function ($query)
                                       {
-                                          return $query->whereIn('status', [0, 1, 2])
+                                          return $query->whereIn('status', [0, 1, 2, 3])
                                                        ->select('id_schedule', 'old_date',
                                                                 'old_shift', 'old_id_room',
                                                                 'new_date', 'new_shift',
-                                                                'new_id_room', 'status')
-                                                       ->orderBy('status')
-                                                       ->orderBy('id')
-                                                       ->limit(2);
+                                                                'new_id_room', 'status');
                                       },
                                   ])->get();
     }
