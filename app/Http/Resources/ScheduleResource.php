@@ -22,8 +22,6 @@ class ScheduleResource extends JsonResource
      */
     public function toArray ($request) : array
     {
-        $from        = null;
-        $to          = null;
         $arr         = explode('-', $this->id_module_class);
         $id_module   = $arr[0];
         $module_name = str_replace('-' . $arr[1] . '-' . $arr[2] . '-' . $arr[3],
@@ -48,11 +46,10 @@ class ScheduleResource extends JsonResource
             $color   = GData::$current[$this->id_module_class];
             $teacher = $this->moduleClass->teacher;
 
-            $this->fixedSchedules = $this->fixedSchedules->each(function ($item, $key) use (
-                &$from, &$to
-            )
+            $this->fixedSchedules = $this->fixedSchedules->map(function ($item, $key)
             {
-                $fixedSchedule = [
+                return [
+                    'id'         => $item->id,
                     'idSchedule' => $item->id_schedule,
                     'oldDate'    => $item->old_date,
                     'oldShift'   => $item->old_shift,
@@ -62,34 +59,22 @@ class ScheduleResource extends JsonResource
                     'newIdRoom'  => $item->new_id_room,
                     'status'     => $item->status,
                 ];
-
-                if (in_array($item->status, [0, 1]))
-                {
-                    $to = $fixedSchedule;
-                }
-
-                if (in_array($item->status, [2, 3]) &&
-                    is_null($from))
-                {
-                    $from = $fixedSchedule;
-                }
             });
         }
 
         return [
-            'id'            => $this->id,
-            'idModuleClass' => $this->id_module_class,
-            'name'          => $this->moduleClass->name,
-            'idRoom'        => $this->id_room,
-            'shift'         => $this->shift,
-            'date'          => $this->date . ' 00:00:00.000',
-            'idModule'      => $id_module,
-            'note'          => $this->note,
-            'moduleName'    => $module_name,
-            'teacher'       => $teacher,
-            'color'         => $color,
-            'from'          => $from ?? null,
-            'to'            => $to ?? null,
+            'id'             => $this->id,
+            'idModuleClass'  => $this->id_module_class,
+            'name'           => $this->moduleClass->name,
+            'idRoom'         => $this->id_room,
+            'shift'          => $this->shift,
+            'date'           => $this->date . ' 00:00:00.000',
+            'idModule'       => $id_module,
+            'note'           => $this->note,
+            'moduleName'     => $module_name,
+            'teacher'        => $teacher,
+            'color'          => $color,
+            'fixedSchedules' => $this->fixedSchedules,
         ];
     }
 }
