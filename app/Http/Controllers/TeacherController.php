@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\TeacherResource;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\TeacherServiceContract;
-use App\Services\Contracts\ScheduleServiceContract;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TeacherController extends Controller
@@ -20,6 +20,12 @@ class TeacherController extends Controller
     public function __construct (TeacherServiceContract $teacherService)
     {
         $this->teacherService = $teacherService;
+    }
+
+    public function get ($id_teacher) : TeacherResource
+    {
+        TeacherResource::withoutWrapping();
+        return new TeacherResource($this->teacherService->get($id_teacher));
     }
 
     public function getSchedulesByDate (Request $request, $id_teacher)
