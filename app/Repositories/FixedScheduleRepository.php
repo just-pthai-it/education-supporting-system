@@ -13,19 +13,29 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
         return FixedSchedule::class;
     }
 
-    public function paginateByStatusAndIdDepartment ($id_department, $status)
+    public function paginateByIdDepartment ($id_department, array $conditions)
     {
         $this->createModel();
-        return $this->model->whereHas('schedule', function (Builder $query) use ($id_department)
-        {
-            $query->whereHas('moduleClass', function (Builder $query) use ($id_department)
+        $this->model = $this->model->whereHas('schedule',
+            function (Builder $query) use ($id_department)
             {
-                $query->whereHas('module', function (Builder $query) use ($id_department)
+                $query->whereHas('moduleClass', function (Builder $query) use ($id_department)
                 {
-                    return $query->where('id_department', '=', $id_department);
-                })->where('id_teacher', '=', '0884');
-            });
-        })->status($status)->orderBy('id', 'desc')
+                    $query->whereHas('module', function (Builder $query) use ($id_department)
+                    {
+                        return $query->where('id_department', '=', $id_department);
+                    })->where('id_teacher', '=', '0884');
+                });
+            })->status($conditions['status']);
+        if (isset($conditions['old_date']))
+        {
+            $this->model = $this->model->whereBetween('old_date',
+                                                      explode(',', $conditions['old_date']))
+                                       ->orWhereBetween('new_date',
+                                                        explode(',', $conditions['new_date']));
+        }
+
+        return $this->model->orderBy('id', 'desc')
                            ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
                                    'schedule.moduleClass.teacher:id,name'])
                            ->paginate(20);

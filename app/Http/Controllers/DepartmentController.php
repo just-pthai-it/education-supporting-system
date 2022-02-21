@@ -39,11 +39,11 @@ class DepartmentController extends Controller
         return ExamScheduleResource::collection($exam_schedules)->all();
     }
 
-    public function getFixedSchedulesByStatus (Request $request,
-                                                       $id_department) : AnonymousResourceCollection
+    public function getFixedSchedules (Request $request,
+                                               $id_department) : AnonymousResourceCollection
     {
-        $fixed_schedules = $this->departmentService->getFixedSchedulesByStatus($id_department,
-                                                                               $request->status);
+        $fixed_schedules = $this->departmentService->getFixedSchedules($id_department,
+                                                                       $request->all());
         return FixedScheduleResource::collection($fixed_schedules);
     }
 
