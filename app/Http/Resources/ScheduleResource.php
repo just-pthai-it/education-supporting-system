@@ -51,7 +51,7 @@ class ScheduleResource extends JsonResource
                 return [
                     'id'           => $item->id,
                     'idSchedule'   => $item->id_schedule,
-                    'time_request' => $item->time_request,
+                    'timeRequest' => $item->time_request,
                     'oldDate'      => $item->old_date,
                     'oldShift'     => $item->old_shift,
                     'oldIdRoom'    => $item->old_id_room,
