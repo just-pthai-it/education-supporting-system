@@ -32,8 +32,7 @@ trait Filterable
 
     private function where (Builder $query, $field, $operator, $value)
     {
-        $operator = str_replace('equal', '=', $operator);
-        $method   = 'filter' . Str::studly($field);
+        $method = 'filter' . Str::studly($field);
 
         if ($value == 'all')
         {
@@ -56,33 +55,41 @@ trait Filterable
             $field = $this->filterable[$field];
         }
 
+        $method = 'where';
+        if (strpos($operator, '|') !== false)
+        {
+            $operator = str_replace('|', '', $operator);
+            $method   = 'orWhere';
+        }
+        $operator = str_replace('equal', '=', $operator);
+
         if (in_array($field, $this->filterable))
         {
             switch ($operator)
             {
                 case 'between':
-                    $query->whereBetween("{$this->table}.{$field}", explode(',', $value));
+                    $query->{$method . 'Between'}("{$this->table}.{$field}", explode(',', $value));
                     break;
                 case 'in':
-                    $query->whereIn("{$this->table}.{$field}", explode(',', $value));
+                    $query->{$method . 'In'}("{$this->table}.{$field}", explode(',', $value));
                     break;
                 case 'not in':
-                    $query->whereNotIn("{$this->table}.{$field}", explode(',', $value));
+                    $query->{$method . 'NotIn'}("{$this->table}.{$field}", explode(',', $value));
                     break;
                 case 'like':
-                    $query->where("{$this->table}.{$field}", 'like', $value);
+                    $query->{$method}("{$this->table}.{$field}", 'like', $value);
                     break;
                 case 'not like':
-                    $query->where("{$this->table}.{$field}", 'not like', $value);
+                    $query->{$method}("{$this->table}.{$field}", 'not like', $value);
                     break;
                 case 'null':
-                    $query->whereNull("{$this->table}.{$field}");
+                    $query->{$method . 'Null'}("{$this->table}.{$field}");
                     break;
                 case 'not null':
-                    $query->whereNotNull("{$this->table}.{$field}");
+                    $query->{$method . 'NotNull'}("{$this->table}.{$field}");
                     break;
                 default:
-                    $query->where("{$this->table}.{$field}", $operator, $value);
+                    $query->{$method}("{$this->table}.{$field}", $operator, $value);
             }
         }
     }
