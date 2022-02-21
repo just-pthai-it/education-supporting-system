@@ -27,7 +27,9 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
                     })->where('id_teacher', '=', '0884');
                 });
             })->status($conditions['status']);
-        if (isset($conditions['old_date']))
+
+        if (isset($conditions['old_date']) &&
+            isset($conditions['new_date']))
         {
             $this->model = $this->model->whereBetween('old_date',
                                                       explode(',', $conditions['old_date']))
@@ -35,10 +37,16 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
                                                         explode(',', $conditions['new_date']));
         }
 
-        return $this->model->orderBy('id', 'desc')
-                           ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
-                                   'schedule.moduleClass.teacher:id,name'])
-                           ->paginate(20);
+        $this->model = $this->model->orderBy('id', 'desc')
+                                   ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
+                                           'schedule.moduleClass.teacher:id,name']);
+
+        if (isset($conditions['page']))
+        {
+            return $this->model->paginate($conditions['pagination'] ?? 20);
+        }
+
+        return $this->model->get();
     }
 
     public function paginateByStatusAndIdTeacher ($id_teacher, $status)
