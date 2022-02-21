@@ -49,15 +49,16 @@ class ScheduleResource extends JsonResource
             $this->fixedSchedules = $this->fixedSchedules->map(function ($item, $key)
             {
                 return [
-                    'id'         => $item->id,
-                    'idSchedule' => $item->id_schedule,
-                    'oldDate'    => $item->old_date,
-                    'oldShift'   => $item->old_shift,
-                    'oldIdRoom'  => $item->old_id_room,
-                    'newDate'    => $item->new_date,
-                    'newShift'   => $item->new_shift,
-                    'newIdRoom'  => $item->new_id_room,
-                    'status'     => $item->status,
+                    'id'           => $item->id,
+                    'idSchedule'   => $item->id_schedule,
+                    'time_request' => $item->time_request,
+                    'oldDate'      => $item->old_date,
+                    'oldShift'     => $item->old_shift,
+                    'oldIdRoom'    => $item->old_id_room,
+                    'newDate'      => $item->new_date,
+                    'newShift'     => $item->new_shift,
+                    'newIdRoom'    => $item->new_id_room,
+                    'status'       => $item->status,
                 ];
             });
         }
