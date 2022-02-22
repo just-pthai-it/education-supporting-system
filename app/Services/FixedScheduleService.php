@@ -125,13 +125,13 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
             }
             unset($fixedSchedule['time']);
         }
-        else
+        else if (isset($fixedSchedule['reason']))
         {
             $schedule = $this->_getScheduleById($fixedSchedule['id_schedule'],
                                                 ['date as old_date', 'shift as old_shift',
                                                  'id_room as old_id_room']);
 
-            $fixedSchedule           = array_merge($fixedSchedule, $schedule->getOriginal());
+            $fixedSchedule = array_merge($fixedSchedule, $schedule->getOriginal());;
             $fixedSchedule['status'] = 0;
         }
     }
