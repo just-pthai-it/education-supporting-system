@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use App\Http\Resources\LoginResponse;
 use App\Exceptions\InvalidFormRequestException;
 use App\Http\FormRequest\LoginForm;
 use App\Services\Contracts\AuthServiceContract;
@@ -25,11 +27,12 @@ class AuthController extends Controller
     /**
      * @throws InvalidFormRequestException
      */
-    public function login (Request $request)
+    public function login (Request $request) : JsonResponse
     {
         $this->loginForm->validate($request);
-        $arr = $this->authService->login($request->username, $request->password);
-        return response(array('data' => $arr['data'], 'localData' => $arr['local_data']))->header('Authorization', 'Bearer ' . $arr['token']);
+        $data = $this->authService->login($request->username, $request->password);
+        return (new LoginResponse($data['response']))
+            ->response()->header('Authorization', "Bearer {$data['token']}");
     }
 
     public function logout ()
