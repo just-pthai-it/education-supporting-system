@@ -23,23 +23,17 @@ class OtherDepartment extends Model
         'id',
         'name',
         'address',
-        'id_account'
     ];
 
     protected $hidden = [
         'uuid',
     ];
 
-    private array $column = [
-        'name',
-        'address',
-    ];
-
     public function scopeWithUuid ($query, ...$e)
     {
         if (empty($e))
         {
-            return $query->select(GFunction::uuidFromBin('uuid'), ...$this->column);
+            return $query->select([...$this->fillable, GFunction::uuidFromBin('uuid')]);
         }
 
         return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
