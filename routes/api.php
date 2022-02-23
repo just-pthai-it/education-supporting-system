@@ -160,5 +160,5 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     });
 
 
-    Route::get('users', [UserController::class, 'getUserInfo']);
+    Route::get('me', [UserController::class, 'getUserInfo']);
 });

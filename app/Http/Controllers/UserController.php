@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LoginResponse;
 use App\Services\Contracts\AuthServiceContract;
 
 class UserController extends Controller
@@ -16,9 +17,9 @@ class UserController extends Controller
         $this->authService = $authService;
     }
 
-    public function getUserInfo ()
+    public function getUserInfo () : LoginResponse
     {
         $data = $this->authService->getUserInfo();
-        return response($data);
+        return new LoginResponse($data);
     }
 }
