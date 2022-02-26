@@ -36,8 +36,10 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     public function createFixedSchedule ($fixed_schedule)
     {
         $this->_completeInputData($fixed_schedule);
-        $this->fixedScheduleRepository->insert($fixed_schedule);
+        $id = $this->fixedScheduleRepository->insertGetId($fixed_schedule);
         $this->_sendMail(auth()->user()->email, $fixed_schedule);
+
+        return $id;
     }
 
     private function _getFixedScheduleById ($ids, array $columns = ['*'])
