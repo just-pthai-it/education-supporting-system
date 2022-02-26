@@ -19,6 +19,6 @@ class ScheduleController extends Controller
 
     public function updateSchedules (Request $request)
     {
-        $this->scheduleService->updateSchedules($request->only(['id', 'note']));
+        $this->scheduleService->updateSchedules($request->all());
     }
 }
