@@ -17,9 +17,9 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
     public function findAllByIdTeacherAndDate ($id_teacher, $start, $end, $shift)
     {
         $this->createModel();
-        return $this->model->whereHas('moduleClass', function (Builder $query)
+        return $this->model->whereHas('moduleClass', function (Builder $query) use ($id_teacher)
         {
-            $query->where('id_teacher', '0884');
+            $query->where('id_teacher', $id_teacher);
         })->whereBetween('date', [$start, $end])->shift($shift)
                            ->with([
                                       'moduleClass'    => function ($query)
