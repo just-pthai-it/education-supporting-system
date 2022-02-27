@@ -40,7 +40,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 {
     Route::group(['prefix' => 'schedules'], function ()
     {
-        Route::put('update', [ScheduleController::class, 'updateSchedules']);
+        Route::patch('update', [ScheduleController::class, 'updateSchedules']);
     });
 
 
