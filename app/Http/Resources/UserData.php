@@ -3,10 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LoginResponse extends JsonResource
+class UserData extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,6 +19,7 @@ class LoginResponse extends JsonResource
         if (!is_null($this->department))
         {
             return [
+                'id'                      => $this->id,
                 'name'                    => $this->name,
                 'isFemale'                => $this->is_female,
                 'birth'                   => $this->birth,
