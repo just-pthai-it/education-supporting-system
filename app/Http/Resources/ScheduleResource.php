@@ -34,7 +34,6 @@ class ScheduleResource extends JsonResource
                 GData::$current[$id_module] = array_shift(GData::$colors);
             }
             $color                = GData::$current[$id_module];
-            $teacher              = is_null($this->moduleClass->teacher) ? null : $this->moduleClass->teacher->name;
             $this->fixedSchedules = [];
         }
         else
@@ -44,7 +43,6 @@ class ScheduleResource extends JsonResource
                 GData::$current[$this->id_module_class] = array_shift(GData::$colors);
             }
             $color   = GData::$current[$this->id_module_class];
-            $teacher = $this->moduleClass->teacher;
 
             $this->fixedSchedules = $this->fixedSchedules->map(function ($item, $key)
             {
@@ -73,7 +71,7 @@ class ScheduleResource extends JsonResource
             'idModule'       => $id_module,
             'note'           => $this->note,
             'moduleName'     => $module_name,
-            'teacher'        => $teacher,
+            'teacher'        => $this->moduleClass->teacher,
             'color'          => $color,
             'fixedSchedules' => $this->fixedSchedules,
         ];
