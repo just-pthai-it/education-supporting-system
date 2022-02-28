@@ -18,16 +18,16 @@ class TeacherResource extends JsonResource
     public function toArray ($request) : array
     {
         return [
-            'id'                        => $this->id,
-            'name'                      => $this->name,
-            'is_female'                 => $this->is_female,
-            'birth'                     => $this->birth,
-            'university_teacher_degree' => $this->university_teacher_degree,
-            'department'                => [
+            'id'                      => $this->id,
+            'name'                    => $this->name,
+            'isFemale'                => $this->is_female,
+            'birth'                   => $this->birth,
+            'universityTeacherDegree' => $this->university_teacher_degree,
+            'department'              => [
                 'id'   => $this->department->id,
                 'name' => $this->department->name,
             ],
-            'faculty'                   => [
+            'faculty'                 => [
                 'id'   => $this->department->faculty->id,
                 'name' => $this->department->faculty->name,
             ],
