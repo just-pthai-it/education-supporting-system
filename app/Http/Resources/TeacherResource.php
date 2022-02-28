@@ -23,8 +23,14 @@ class TeacherResource extends JsonResource
             'is_female'                 => $this->is_female,
             'birth'                     => $this->birth,
             'university_teacher_degree' => $this->university_teacher_degree,
-            'department'                => $this->department->name,
-            'faculty'                   => $this->department->faculty->name,
+            'department'                => [
+                'id'   => $this->department->id,
+                'name' => $this->department->name,
+            ],
+            'faculty'                   => [
+                'id'   => $this->department->faculty->id,
+                'name' => $this->department->faculty->name,
+            ],
         ];
     }
 }
