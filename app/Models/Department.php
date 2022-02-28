@@ -32,11 +32,6 @@ class Department extends Model
         'uuid',
     ];
 
-    public function account () : BelongsTo
-    {
-        return $this->belongsTo(Account::class, 'id_account', 'id');
-    }
-
     public function faculty () : BelongsTo
     {
         return $this->belongsTo(Faculty::class, 'id_faculty', 'id');
