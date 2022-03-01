@@ -22,7 +22,7 @@ class User extends Authenticatable implements JWTSubject
         'qldt_password',
         'email',
         'phone_number',
-        'id_user_type',
+        'id_role',
         'id_user',
         'uuid',
     ];
