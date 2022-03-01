@@ -31,10 +31,13 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
         if (isset($conditions['old_date']) &&
             isset($conditions['new_date']))
         {
-            $this->model = $this->model->whereBetween('old_date',
-                                                      explode(',', $conditions['old_date']))
-                                       ->orWhereBetween('new_date',
-                                                        explode(',', $conditions['new_date']));
+            $this->model = $this->model->where(function ($query) use ($conditions)
+            {
+                $query->whereBetween('old_date',
+                                     explode(',', $conditions['old_date']))
+                      ->orWhereBetween('new_date',
+                                       explode(',', $conditions['new_date']));
+            });
         }
 
         $this->model = $this->model->orderBy('id', 'desc')
