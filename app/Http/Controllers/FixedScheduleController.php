@@ -22,7 +22,6 @@ class FixedScheduleController extends Controller
 
     public function createFixedSchedule (Request $request)
     {
-        Gate::authorize('update-schedule', [$request->all()]);
         $id = $this->fixedScheduleService->createFixedSchedule($request->all());
         return response(['data' => $id], 201);
     }
