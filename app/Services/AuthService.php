@@ -74,8 +74,8 @@ class AuthService implements Contracts\AuthServiceContract
     {
         switch (auth()->user()->id_role)
         {
-            case 6:
-            case 7:
+            case 9:
+            case 10:
                 $data = $this->otherDepartmentDepository->findByIds(auth()->user()->id_user,
                                                                     [], [], [['withUuid']],
                                                                     [['makeVisible', ['uuid']]]);
@@ -85,6 +85,9 @@ class AuthService implements Contracts\AuthServiceContract
             case 3:
             case 4:
             case 5:
+            case 6:
+            case 7:
+            case 8:
                 $data = $this->teacherDepository->findByIds(auth()->user()->id_user,
                                                             [], [], [['withUuid'],
                                                                      ['with', 'department:id,name,id_faculty',
@@ -96,7 +99,13 @@ class AuthService implements Contracts\AuthServiceContract
                 throw new InvalidAccountException();
         }
 
+        return $this->_completeUserData($data);
+    }
+
+    private function _completeUserData ($data)
+    {
         $data->uuid_account = auth()->user()->uuid;
+        $data->id_role      = auth()->user()->id_role;
         $data->permissions  = $this->_getAccountPermissions();
 
         return $data;

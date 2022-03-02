@@ -21,6 +21,7 @@ class UserData extends JsonResource
             return [
                 'id'                      => $this->id,
                 'name'                    => $this->name,
+                'idRole'                  => $this->id_role,
                 'isFemale'                => $this->is_female,
                 'birth'                   => $this->birth,
                 'universityTeacherDegree' => $this->university_teacher_degree,
@@ -41,7 +42,9 @@ class UserData extends JsonResource
         else
         {
             return [
+                'id'          => $this->id,
                 'name'        => $this->name,
+                'idRole'      => $this->id_role,
                 'address'     => $this->address,
                 'uuid'        => $this->uuid,
                 'uuidAccount' => $this->uuid_account,
