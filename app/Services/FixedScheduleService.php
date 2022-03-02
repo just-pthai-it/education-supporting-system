@@ -37,6 +37,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     {
         $this->_completeInputData($fixed_schedule);
         $id = $this->fixedScheduleRepository->insertGetId($fixed_schedule);
+        $this->_checkIfNeedToUpdateSchedule($fixed_schedule);
         $this->_sendMail(auth()->user()->email, $fixed_schedule);
 
         return $id;
@@ -91,8 +92,11 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
      */
     private function _sendMail (string $receiver, array $data)
     {
-        $data = $this->_getMailData($data);
-        $this->mailService->sendFixedScheduleMailNotify([$receiver], $data);
+        if ($data['status'] != 4)
+        {
+            $data = $this->_getMailData($data);
+            $this->mailService->sendFixedScheduleMailNotify([$receiver], $data);
+        }
     }
 
     /**
@@ -134,13 +138,12 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
                                                  'id_room as old_id_room']);
 
             $fixedSchedule = array_merge($fixedSchedule, $schedule->getOriginal());;
-            $fixedSchedule['status'] = 0;
         }
     }
 
     private function _checkIfNeedToUpdateSchedule (array $fixedSchedule)
     {
-        if (in_array($fixedSchedule['status'], [2, 3]))
+        if (in_array($fixedSchedule['status'], [2, 3, 4]))
         {
             $this->_updateScheduleById($fixedSchedule['id_schedule'],
                                        GFArray::onlyKeys($fixedSchedule,

@@ -21,22 +21,13 @@ class FixedScheduleController extends Controller
 
     public function createFixedSchedule (Request $request)
     {
-        $id = $this->fixedScheduleService->createFixedSchedule($request->only(['id_schedule',
-                                                                         'new_date',
-                                                                         'new_shift',
-                                                                         'new_id_room',
-                                                                         'time_request',
-                                                                         'reason',]));
+        $id = $this->fixedScheduleService->createFixedSchedule($request->all());
         return response(['data' => $id], 201);
     }
 
     public function updateFixedSchedule (Request $request)
     {
-        $this->fixedScheduleService->updateFixedSchedule($request->only(['id',
-                                                                         'new_id_room',
-                                                                         'time',
-                                                                         'status',
-                                                                         'reason_deny']));
+        $this->fixedScheduleService->updateFixedSchedule($request->all());
     }
 
     public function paginateFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
