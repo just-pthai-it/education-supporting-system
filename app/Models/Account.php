@@ -50,9 +50,12 @@ class Account extends Model
             case 3:
             case 4:
             case 5:
-                return $this->belongsTo(Teacher::class, 'id_user', 'id');
             case 6:
             case 7:
+            case 8:
+                return $this->belongsTo(Teacher::class, 'id_user', 'id');
+            case 9:
+            case 10:
                 return $this->belongsTo(OtherDepartment::class, 'id_user', 'id');
             default:
                 throw new Exception();
