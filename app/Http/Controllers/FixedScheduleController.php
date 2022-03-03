@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\FixedScheduleServiceContract;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -21,27 +22,20 @@ class FixedScheduleController extends Controller
 
     public function createFixedSchedule (Request $request)
     {
-        $this->fixedScheduleService->createFixedSchedule($request->only(['id_schedule',
-                                                                         'new_date',
-                                                                         'new_shift',
-                                                                         'new_id_room',
-                                                                         'time_request',
-                                                                         'time_set_room',
-                                                                         'reason',]));
+        Gate::authorize('create-fixed-schedule', [$request->all()]);
+        $id = $this->fixedScheduleService->createFixedSchedule($request->all());
+        return response(['data' => $id], 201);
     }
 
     public function updateFixedSchedule (Request $request)
     {
-        $this->fixedScheduleService->updateFixedSchedule($request->only(['id',
-                                                                         'new_id_room',
-                                                                         'time_accept',
-                                                                         'time_set_room',
-                                                                         'status',
-                                                                         'reason_deny']));
+        Gate::authorize('update-fixed-schedule', [$request->all()]);
+        $this->fixedScheduleService->updateFixedSchedule($request->all());
     }
 
     public function paginateFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
     {
+        Gate::authorize('get-fixed-schedule');
         $fixedSchedules = $this->fixedScheduleService->paginateFixedSchedulesByStatus($request->status,
                                                                                       $request->pagination);
         return FixedScheduleResource::collection($fixedSchedules);

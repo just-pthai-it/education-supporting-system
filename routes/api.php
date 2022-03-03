@@ -40,7 +40,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 {
     Route::group(['prefix' => 'schedules'], function ()
     {
-        Route::put('update', [ScheduleController::class, 'updateSchedules']);
+        Route::patch('update', [ScheduleController::class, 'updateSchedules']);
     });
 
 
@@ -48,6 +48,8 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     {
         Route::group(['prefix' => '{id_teacher}'], function ()
         {
+            Route::get('', [TeacherController::class, 'get']);
+
             Route::get('module-classes',
                        [TeacherController::class, 'getModuleClassesByStudySessions']);
 
@@ -109,7 +111,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
             Route::get('exam-schedules', [DepartmentController::class, 'getExamSchedulesByDate']);
 
             Route::get('fixed-schedules',
-                       [DepartmentController::class, 'getFixedSchedulesByStatus']);
+                       [DepartmentController::class, 'getFixedSchedules']);
 
             Route::get('teachers', [DepartmentController::class, 'getTeachers']);
         });
@@ -158,5 +160,5 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     });
 
 
-    Route::get('users', [UserController::class, 'getUserInfo']);
+    Route::get('me', [UserController::class, 'getUserInfo']);
 });

@@ -32,27 +32,6 @@ class Department extends Model
         'uuid',
     ];
 
-    private array $column = [
-        'name',
-        'address',
-        'id_faculty',
-    ];
-
-    public function scopeWithUuid ($query, ...$e)
-    {
-        if (empty($e))
-        {
-            return $query->select([...$this->fillable, GFunction::uuidFromBin('uuid')]);
-        }
-
-        return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
-    }
-
-    public function account () : BelongsTo
-    {
-        return $this->belongsTo(Account::class, 'id_account', 'id');
-    }
-
     public function faculty () : BelongsTo
     {
         return $this->belongsTo(Faculty::class, 'id_faculty', 'id');

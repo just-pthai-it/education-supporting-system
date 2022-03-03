@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use App\Http\Resources\TeacherResource;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\TeacherServiceContract;
-use App\Services\Contracts\ScheduleServiceContract;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TeacherController extends Controller
@@ -22,9 +23,16 @@ class TeacherController extends Controller
         $this->teacherService = $teacherService;
     }
 
+    public function get ($id_teacher) : TeacherResource
+    {
+        TeacherResource::withoutWrapping();
+        return new TeacherResource($this->teacherService->get($id_teacher));
+    }
+
     public function getSchedulesByDate (Request $request, $id_teacher)
     {
-        $schedules = $this->teacherService->getSchedulesByDate(auth()->user()->id_user,
+        Gate::authorize('get-teacher-schedule');
+        $schedules = $this->teacherService->getSchedulesByDate($id_teacher,
                                                                $request->start, $request->end,
                                                                $request->shift);
         return ScheduleResource::collection($schedules)->all();
@@ -32,6 +40,7 @@ class TeacherController extends Controller
 
     public function getExamSchedulesByDate (Request $request, $id_teacher)
     {
+        Gate::authorize('get-teacher-exam-schedule');
         $exam_schedules = $this->teacherService->getExamSchedulesByDate(auth()->user()->id_user,
                                                                         $request->start,
                                                                         $request->end);
@@ -40,6 +49,7 @@ class TeacherController extends Controller
 
     public function getFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
     {
+        Gate::authorize('get-teacher-fixed-schedule');
         $fixed_schedules = $this->teacherService->getFixedSchedulesByStatus(auth()->user()->id_user,
                                                                             $request->status);
         return FixedScheduleResource::collection($fixed_schedules);

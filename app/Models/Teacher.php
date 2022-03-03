@@ -55,7 +55,7 @@ class Teacher extends Model
     {
         if (empty($e))
         {
-            return $query->select(GFunction::uuidFromBin('uuid'), ...$this->column);
+            return $query->select([...$this->fillable, GFunction::uuidFromBin('uuid')]);
         }
 
         return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
@@ -81,6 +81,5 @@ class Teacher extends Model
         return $this->belongsToMany(ExamSchedule::class, 'exam_schedule_teacher',
                                     'id_teacher', 'id_module_class')
                     ->withPivot('position');
-
     }
 }

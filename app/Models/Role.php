@@ -26,7 +26,8 @@ class Role extends Model
     public function permissions () : BelongsToMany
     {
         return $this->belongsToMany(Permission::class, 'role_permission', 'id_role',
-                                    'id_permission');
+                                    'id_permission')
+                    ->where('is_granted', '=', 1);
     }
 
     public function accounts () : HasMany

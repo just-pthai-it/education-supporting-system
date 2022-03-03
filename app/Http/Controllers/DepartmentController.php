@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
@@ -23,6 +24,7 @@ class DepartmentController extends Controller
 
     public function getSchedulesByDate (Request $request, $id_department)
     {
+        Gate::authorize('get-department-schedule');
         $schedules = $this->departmentService->getSchedulesByDate($id_department,
                                                                   $request->start,
                                                                   $request->end);
@@ -32,6 +34,7 @@ class DepartmentController extends Controller
 
     public function getExamSchedulesByDate (Request $request, $id_department)
     {
+        Gate::authorize('get-department-exam-schedule');
         $exam_schedules = $this->departmentService->getExamSchedulesByDate($id_department,
                                                                            $request->start,
                                                                            $request->end);
@@ -39,11 +42,12 @@ class DepartmentController extends Controller
         return ExamScheduleResource::collection($exam_schedules)->all();
     }
 
-    public function getFixedSchedulesByStatus (Request $request,
-                                                       $id_department) : AnonymousResourceCollection
+    public function getFixedSchedules (Request $request,
+                                               $id_department) : AnonymousResourceCollection
     {
-        $fixed_schedules = $this->departmentService->getFixedSchedulesByStatus($id_department,
-                                                                               $request->status);
+        Gate::authorize('get-department-fixed-schedule', [$request->all()]);
+        $fixed_schedules = $this->departmentService->getFixedSchedules($id_department,
+                                                                       $request->all());
         return FixedScheduleResource::collection($fixed_schedules);
     }
 

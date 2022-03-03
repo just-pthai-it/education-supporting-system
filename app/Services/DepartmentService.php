@@ -49,7 +49,8 @@ class DepartmentService implements Contracts\DepartmentServiceContract
 
     public function getSchedulesByDate ($id_department, $start, $end)
     {
-        return $this->scheduleDepository->findAllByIdDepartmentAndDate($id_department, $start, $end);
+        return $this->scheduleDepository->findAllByIdDepartmentAndDate($id_department, $start,
+                                                                       $end);
     }
 
     public function getExamSchedulesByDate ($id_department, $start, $end)
@@ -57,9 +58,9 @@ class DepartmentService implements Contracts\DepartmentServiceContract
         return $this->examScheduleRepository->findByIdDepartment($id_department, $start, $end);
     }
 
-    public function getFixedSchedulesByStatus ($id_department, $status)
+    public function getFixedSchedules ($id_department, array $conditions)
     {
-        return $this->fixedScheduleRepository->paginateByStatusAndIdDepartment($id_department, $status);
+        return $this->fixedScheduleRepository->findByIdDepartment($id_department, $conditions);
     }
 
     public function getModuleClassesByStudySessions ($id_department, $term, $study_sessions)

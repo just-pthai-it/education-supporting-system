@@ -13,25 +13,46 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
         return FixedSchedule::class;
     }
 
-    public function paginateByStatusAndIdDepartment ($id_department, $status)
+    public function findByIdDepartment ($id_department, array $conditions)
     {
         $this->createModel();
-        return $this->model->whereHas('schedule', function (Builder $query) use ($id_department)
-        {
-            $query->whereHas('moduleClass', function (Builder $query) use ($id_department)
+        $this->model = $this->model->whereHas('schedule',
+            function (Builder $query) use ($id_department)
             {
-                $query->whereHas('module', function (Builder $query) use ($id_department)
+                $query->whereHas('moduleClass', function (Builder $query) use ($id_department)
                 {
-                    return $query->where('id_department', '=', $id_department);
-                })->where('id_teacher', '=', '0884');
+                    $query->whereHas('module', function (Builder $query) use ($id_department)
+                    {
+                        return $query->where('id_department', '=', $id_department);
+                    });
+                });
+            })->status($conditions['status']);
+
+        if (isset($conditions['old_date']) &&
+            isset($conditions['new_date']))
+        {
+            $this->model = $this->model->where(function ($query) use ($conditions)
+            {
+                $query->whereBetween('old_date',
+                                     explode(',', $conditions['old_date']))
+                      ->orWhereBetween('new_date',
+                                       explode(',', $conditions['new_date']));
             });
-        })->status($status)->orderBy('id', 'desc')
-                           ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
-                                   'schedule.moduleClass.teacher:id,name'])
-                           ->paginate(20);
+        }
+
+        $this->model = $this->model->orderBy('id', 'desc')
+                                   ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
+                                           'schedule.moduleClass.teacher:id,name']);
+
+        if (isset($conditions['page']))
+        {
+            return $this->model->paginate($conditions['pagination'] ?? 20);
+        }
+
+        return $this->model->get();
     }
 
-    public function paginateByStatusAndIdTeacher ($id_teacher, $status)
+    public function findByIdTeacher ($id_teacher, $status)
     {
         $this->createModel();
         return $this->model->whereHas('schedule', function (Builder $query) use ($id_teacher)

@@ -4,9 +4,6 @@ namespace App\Services;
 
 use App\Exceptions\InvalidAccountException;
 use App\Repositories\Contracts\RoleRepositoryContract;
-use App\Repositories\Contracts\DepartmentRepositoryContract;
-use App\Repositories\Contracts\FacultyRepositoryContract;
-use App\Repositories\Contracts\PermissionRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\TeacherRepositoryContract;
 
@@ -35,14 +32,12 @@ class AuthService implements Contracts\AuthServiceContract
      */
     public function login ($username, $password) : array
     {
-        $token      = $this->_authenticate($username, $password);
-        $data       = $this->getUserInfo();
-        $local_data = ['currentTerm' => \config('app.current_term')];
+        $token = $this->_authenticate($username, $password);
+        $data  = $this->getUserInfo();
 
         return [
-            'local_data' => $local_data,
-            'data'       => $data,
-            'token'      => $token,
+            'response' => $data,
+            'token'    => $token,
         ];
     }
 
@@ -64,7 +59,6 @@ class AuthService implements Contracts\AuthServiceContract
             $credential['username'] = $username_email;
         }
 
-
         if (!$token = auth()->attempt($credential))
         {
             throw new InvalidAccountException();
@@ -78,20 +72,26 @@ class AuthService implements Contracts\AuthServiceContract
      */
     public function getUserInfo ()
     {
-        $permissions = $this->_getAccountPermissions();
         switch (auth()->user()->id_role)
         {
-            case 5;
-                $data = $this->otherDepartmentDepository->findByIds(auth()->user()->id_user, [], [],
-                                                                    [['withUuid']],
+            case 9:
+            case 10:
+                $data = $this->otherDepartmentDepository->findByIds(auth()->user()->id_user,
+                                                                    [], [], [['withUuid']],
                                                                     [['makeVisible', ['uuid']]]);
                 break;
 
-            case 4:
             case 2:
             case 3:
-                $data = $this->teacherDepository->findByIds(auth()->user()->id_user, [], [],
-                                                            [['withUuid']],
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                $data = $this->teacherDepository->findByIds(auth()->user()->id_user,
+                                                            [], [], [['withUuid'],
+                                                                     ['with', 'department:id,name,id_faculty',
+                                                                      'department.faculty:id,name']],
                                                             [['makeVisible', ['uuid']]]);
                 break;
 
@@ -99,8 +99,15 @@ class AuthService implements Contracts\AuthServiceContract
                 throw new InvalidAccountException();
         }
 
+        return $this->_completeUserData($data);
+    }
+
+    private function _completeUserData ($data)
+    {
         $data->uuid_account = auth()->user()->uuid;
-        $data->permissions  = $permissions;
+        $data->id_role      = auth()->user()->id_role;
+        $data->permissions  = $this->_getAccountPermissions();
+
         return $data;
     }
 

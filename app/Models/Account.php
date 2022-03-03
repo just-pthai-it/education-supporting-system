@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Account extends Model
@@ -50,39 +49,17 @@ class Account extends Model
             case 2:
             case 3:
             case 4:
-                return $this->belongsTo(Teacher::class, 'id_user', 'id');
             case 5:
-                return $this->belongsTo(OtherDepartment::class, 'id_user', 'id');
             case 6:
-                return $this->belongsTo(Department::class, 'id_user', 'id');
+            case 7:
+            case 8:
+                return $this->belongsTo(Teacher::class, 'id_user', 'id');
+            case 9:
+            case 10:
+                return $this->belongsTo(OtherDepartment::class, 'id_user', 'id');
             default:
                 throw new Exception();
         }
-    }
-
-    public function student () : HasOne
-    {
-        return $this->hasOne(Student::class, 'id_account', 'id');
-    }
-
-    public function teacher () : hasOne
-    {
-        return $this->hasOne(Teacher::class, 'id_account', 'id');
-    }
-
-    public function otherDepartment () : hasOne
-    {
-        return $this->hasOne(OtherDepartment::class, 'id_account', 'id');
-    }
-
-    public function department () : hasOne
-    {
-        return $this->hasOne(Department::class, 'id_account', 'id');
-    }
-
-    public function faculty () : hasOne
-    {
-        return $this->hasOne(Faculty::class, 'id_account', 'id');
     }
 
     public function devices () : HasMany

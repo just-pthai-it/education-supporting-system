@@ -42,6 +42,12 @@ class TeacherService implements Contracts\TeacherServiceContract
         $this->studySessionRepository  = $studySessionRepository;
     }
 
+    public function get ($id_teacher)
+    {
+        return $this->teacherRepository->findByIds($id_teacher, ['*'], [],
+                                                   [['with', 'department:id,name,id_faculty', 'department.faculty:id,name']]);
+    }
+
     public function getSchedulesByDate ($id_teacher, $start, $end, $shift)
     {
         return $this->scheduleDepository->findAllByIdTeacherAndDate($id_teacher, $start, $end,
@@ -55,7 +61,7 @@ class TeacherService implements Contracts\TeacherServiceContract
 
     public function getFixedSchedulesByStatus ($id_teacher, $status)
     {
-        return $this->fixedScheduleRepository->paginateByStatusAndIdTeacher($id_teacher, $status);
+        return $this->fixedScheduleRepository->findByIdTeacher($id_teacher, $status);
     }
 
     public function getModuleClassesByStudySessions ($id_teacher, $term, $study_sessions)

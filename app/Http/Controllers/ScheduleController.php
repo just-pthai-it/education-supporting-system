@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Services\Contracts\ScheduleServiceContract;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,7 @@ class ScheduleController extends Controller
 
     public function updateSchedules (Request $request)
     {
-        $this->scheduleService->updateSchedules($request->only(['id', 'note']));
+        Gate::authorize('update-schedule', [$request->all()]);
+        $this->scheduleService->updateSchedules($request->all());
     }
 }

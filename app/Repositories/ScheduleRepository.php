@@ -17,9 +17,9 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
     public function findAllByIdTeacherAndDate ($id_teacher, $start, $end, $shift)
     {
         $this->createModel();
-        return $this->model->whereHas('moduleClass', function (Builder $query)
+        return $this->model->whereHas('moduleClass', function (Builder $query) use ($id_teacher)
         {
-            $query->where('id_teacher', '0884');
+            $query->where('id_teacher', $id_teacher);
         })->whereBetween('date', [$start, $end])->shift($shift)
                            ->with([
                                       'moduleClass'    => function ($query)
@@ -29,14 +29,12 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                       },
                                       'fixedSchedules' => function ($query)
                                       {
-                                          return $query->whereIn('status', [0, 1, 2])
-                                                       ->select('id_schedule', 'old_date',
-                                                                'old_shift', 'old_id_room',
-                                                                'new_date', 'new_shift',
-                                                                'new_id_room', 'status')
-                                                       ->orderBy('status')
-                                                       ->orderBy('id')
-                                                       ->limit(2);
+                                          return $query->whereIn('status', [0, 1, 2, 3, 4])
+                                                       ->select('id', 'id_schedule', 'time_request',
+                                                                'old_date', 'old_shift',
+                                                                'old_id_room', 'new_date',
+                                                                'new_shift', 'new_id_room',
+                                                                'status');
                                       },
                                   ])->get();
     }
@@ -52,7 +50,17 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
             });
         })->whereBetween('date', [$start, $end])
                            ->with(['moduleClass:id,name,id_teacher',
-                                   'moduleClass.teacher:id,name'])->get();
+                                   'moduleClass.teacher:id,name',
+                                   'fixedSchedules' => function ($query)
+                                   {
+                                       return $query->whereIn('status', [0, 1, 2, 3, 4])
+                                                    ->select('id', 'id_schedule', 'time_request',
+                                                             'old_date', 'old_shift',
+                                                             'old_id_room', 'new_date',
+                                                             'new_shift', 'new_id_room',
+                                                             'status');
+                                   },
+                                  ])->get();
     }
 
     public function findTeacherEmailByIdSchedule (int $id_schedule)
