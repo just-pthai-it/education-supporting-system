@@ -33,8 +33,7 @@ class ScheduleResource extends JsonResource
             {
                 GData::$current[$id_module] = array_shift(GData::$colors);
             }
-            $color                = GData::$current[$id_module];
-            $this->fixedSchedules = [];
+            $color = GData::$current[$id_module];
         }
         else
         {
@@ -42,24 +41,24 @@ class ScheduleResource extends JsonResource
             {
                 GData::$current[$this->id_module_class] = array_shift(GData::$colors);
             }
-            $color   = GData::$current[$this->id_module_class];
-
-            $this->fixedSchedules = $this->fixedSchedules->map(function ($item, $key)
-            {
-                return [
-                    'id'           => $item->id,
-                    'idSchedule'   => $item->id_schedule,
-                    'timeRequest' => $item->time_request,
-                    'oldDate'      => $item->old_date,
-                    'oldShift'     => $item->old_shift,
-                    'oldIdRoom'    => $item->old_id_room,
-                    'newDate'      => $item->new_date,
-                    'newShift'     => $item->new_shift,
-                    'newIdRoom'    => $item->new_id_room,
-                    'status'       => $item->status,
-                ];
-            });
+            $color = GData::$current[$this->id_module_class];
         }
+
+        $this->fixedSchedules = $this->fixedSchedules->map(function ($item, $key)
+        {
+            return [
+                'id'          => $item->id,
+                'idSchedule'  => $item->id_schedule,
+                'timeRequest' => $item->time_request,
+                'oldDate'     => $item->old_date,
+                'oldShift'    => $item->old_shift,
+                'oldIdRoom'   => $item->old_id_room,
+                'newDate'     => $item->new_date,
+                'newShift'    => $item->new_shift,
+                'newIdRoom'   => $item->new_id_room,
+                'status'      => $item->status,
+            ];
+        });
 
         return [
             'id'             => $this->id,
