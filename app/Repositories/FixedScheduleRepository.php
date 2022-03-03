@@ -24,7 +24,7 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
                     $query->whereHas('module', function (Builder $query) use ($id_department)
                     {
                         return $query->where('id_department', '=', $id_department);
-                    })->where('id_teacher', '=', '0884');
+                    });
                 });
             })->status($conditions['status']);
 
