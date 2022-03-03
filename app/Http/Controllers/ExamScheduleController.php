@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use App\Services\Contracts\ExamScheduleServiceContract;
 
 class ExamScheduleController extends Controller
@@ -19,13 +20,7 @@ class ExamScheduleController extends Controller
 
     public function updateExamSchedule (Request $request)
     {
-        $this->examScheduleService->updateExamSchedule($request->only(['id',
-                                                                       'id_module_class',
-                                                                       'method',
-                                                                       'time_start',
-                                                                       'time_end',
-                                                                       'id_room',
-                                                                       'note',
-                                                                      ]));
+        Gate::authorize('update-exam-schedule');
+        $this->examScheduleService->updateExamSchedule($request->all());
     }
 }

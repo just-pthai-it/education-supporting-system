@@ -84,5 +84,29 @@ class AuthServiceProvider extends ServiceProvider
 
             return in_array(7, $permissions);
         });
+
+        Gate::define('get-teacher-exam-schedule', function (User $user)
+        {
+            $permissions = Role::find($user->id_role)->permissions()
+                               ->pluck('permission.id')->toArray();
+
+            return in_array(5, $permissions);
+        });
+
+        Gate::define('get-department-exam-schedule', function (User $user)
+        {
+            $permissions = Role::find($user->id_role)->permissions()
+                               ->pluck('permission.id')->toArray();
+
+            return in_array(8, $permissions);
+        });
+
+        Gate::define('update-exam-schedule', function (User $user)
+        {
+            $permissions = Role::find($user->id_role)->permissions()
+                               ->pluck('permission.id')->toArray();
+
+            return in_array(11, $permissions);
+        });
     }
 }

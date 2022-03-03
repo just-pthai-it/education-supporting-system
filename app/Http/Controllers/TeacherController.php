@@ -40,6 +40,7 @@ class TeacherController extends Controller
 
     public function getExamSchedulesByDate (Request $request, $id_teacher)
     {
+        Gate::authorize('get-teacher-exam-schedule');
         $exam_schedules = $this->teacherService->getExamSchedulesByDate(auth()->user()->id_user,
                                                                         $request->start,
                                                                         $request->end);

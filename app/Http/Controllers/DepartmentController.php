@@ -34,6 +34,7 @@ class DepartmentController extends Controller
 
     public function getExamSchedulesByDate (Request $request, $id_department)
     {
+        Gate::authorize('get-department-exam-schedule');
         $exam_schedules = $this->departmentService->getExamSchedulesByDate($id_department,
                                                                            $request->start,
                                                                            $request->end);
