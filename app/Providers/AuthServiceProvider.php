@@ -38,20 +38,6 @@ class AuthServiceProvider extends ServiceProvider
             return in_array(10, $permissions);
         });
 
-        Gate::define('get-department-fixed-schedule', function (User $user)
-        {
-            $permissions = Role::find($user->id_role)->permissions()
-                               ->pluck('permission.id')->toArray();
-            return in_array(30, $permissions);
-        });
-
-        Gate::define('get-fixed-schedule', function (User $user)
-        {
-            $permissions = Role::find($user->id_role)->permissions()
-                               ->pluck('permission.id')->toArray();
-            return in_array(31, $permissions);
-        });
-
         Gate::define('create-fixed-schedule', function (User $user, array $input)
         {
             $permissions = Role::find($user->id_role)->permissions()
@@ -67,6 +53,29 @@ class AuthServiceProvider extends ServiceProvider
             return in_array((in_array($input['status'], [2, -2])
                 ? 17 : (in_array($input['status'], [3, 1, -1])
                     ? 13 : -1)), $permissions);
+        });
+
+        Gate::define('get-teacher-fixed-schedule', function (User $user)
+        {
+            $permissions = Role::find($user->id_role)->permissions()
+                               ->pluck('permission.id')->toArray();
+
+            return in_array(29, $permissions);
+        });
+
+        Gate::define('get-department-fixed-schedule', function (User $user, array $input)
+        {
+            $permissions = Role::find($user->id_role)->permissions()
+                               ->pluck('permission.id')->toArray();
+            return in_array((isset($input['page']) || isset($input['pagination']) ? 30 : 28),
+                $permissions);
+        });
+
+        Gate::define('get-fixed-schedule', function (User $user)
+        {
+            $permissions = Role::find($user->id_role)->permissions()
+                               ->pluck('permission.id')->toArray();
+            return in_array(31, $permissions);
         });
 
         Gate::define('get-teacher-schedule', function (User $user)

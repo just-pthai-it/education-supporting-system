@@ -45,6 +45,7 @@ class DepartmentController extends Controller
     public function getFixedSchedules (Request $request,
                                                $id_department) : AnonymousResourceCollection
     {
+        Gate::authorize('get-department-fixed-schedule');
         $fixed_schedules = $this->departmentService->getFixedSchedules($id_department,
                                                                        $request->all());
         return FixedScheduleResource::collection($fixed_schedules);
