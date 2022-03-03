@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\TeacherResource;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\ExamScheduleResource;
@@ -30,6 +31,7 @@ class TeacherController extends Controller
 
     public function getSchedulesByDate (Request $request, $id_teacher)
     {
+        Gate::authorize('get-teacher-schedule');
         $schedules = $this->teacherService->getSchedulesByDate($id_teacher,
                                                                $request->start, $request->end,
                                                                $request->shift);

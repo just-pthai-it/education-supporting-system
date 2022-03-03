@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
@@ -23,6 +24,7 @@ class DepartmentController extends Controller
 
     public function getSchedulesByDate (Request $request, $id_department)
     {
+        Gate::authorize('get-department-schedule');
         $schedules = $this->departmentService->getSchedulesByDate($id_department,
                                                                   $request->start,
                                                                   $request->end);
