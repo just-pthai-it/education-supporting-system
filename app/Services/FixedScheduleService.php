@@ -5,6 +5,7 @@ namespace App\Services;
 use Exception;
 use App\Helpers\GData;
 use App\Helpers\GFArray;
+use App\Helpers\GFunction;
 use Illuminate\Support\Arr;
 use App\Services\Contracts\MailServiceContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
@@ -92,10 +93,17 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
      */
     private function _sendMail (string $receiver, array $data)
     {
-        if ($data['status'] != 4)
+        try
         {
-            $data = $this->_getMailData($data);
-            $this->mailService->sendFixedScheduleMailNotify([$receiver], $data);
+            if ($data['status'] != 4)
+            {
+                $data = $this->_getMailData($data);
+                $this->mailService->sendFixedScheduleMailNotify([$receiver], $data);
+            }
+        }
+        catch (Exception $exception)
+        {
+            GFunction::printError($exception);
         }
     }
 
