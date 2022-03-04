@@ -11,6 +11,14 @@ trait Filterable
     {
         foreach ($parameters as $field => $parameterValue)
         {
+            $method = 'filter' . Str::studly($field);
+
+            if (method_exists($this, $method))
+            {
+                $this->$method($query, $parameterValue);
+                return;
+            }
+
             if (!is_array($parameterValue))
             {
                 continue;
@@ -32,16 +40,8 @@ trait Filterable
 
     private function where (Builder $query, $field, $operator, $value)
     {
-        $method = 'filter' . Str::studly($field);
-
         if ($value == 'all')
         {
-            return;
-        }
-
-        if (method_exists($this, $method))
-        {
-            $this->$method($query, $value);
             return;
         }
 
