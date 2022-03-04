@@ -22,14 +22,12 @@ class DepartmentController extends Controller
         $this->departmentService = $departmentService;
     }
 
-    public function getSchedulesByDate (Request $request, $id_department)
+    public function getSchedules (Request $request,
+                                          $id_department) : AnonymousResourceCollection
     {
         Gate::authorize('get-department-schedule');
-        $schedules = $this->departmentService->getSchedulesByDate($id_department,
-                                                                  $request->start,
-                                                                  $request->end);
-
-        return ScheduleResource::collection($schedules)->all();
+        $schedules = $this->departmentService->getSchedules($id_department, $request->all());
+        return ScheduleResource::collection($schedules);
     }
 
     public function getExamSchedulesByDate (Request $request, $id_department)

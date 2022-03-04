@@ -53,7 +53,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
             Route::get('module-classes',
                        [TeacherController::class, 'getModuleClassesByStudySessions']);
 
-            Route::get('schedules', [TeacherController::class, 'getSchedulesByDate']);
+            Route::get('schedules', [TeacherController::class, 'getSchedules']);
 
             Route::get('exam-schedules', [TeacherController::class, 'getExamSchedulesByDate']);
 
@@ -106,7 +106,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
             Route::get('module-classes',
                        [DepartmentController::class, 'getModuleClassesByStudySessions']);
 
-            Route::get('schedules', [DepartmentController::class, 'getSchedulesByDate']);
+            Route::get('schedules', [DepartmentController::class, 'getSchedules']);
 
             Route::get('exam-schedules', [DepartmentController::class, 'getExamSchedulesByDate']);
 

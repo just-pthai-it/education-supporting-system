@@ -4,7 +4,7 @@ namespace App\Services\Contracts;
 
 interface DepartmentServiceContract
 {
-    public function getSchedulesByDate ($id_department, $start, $end);
+    public function getSchedules ($id_department, array $inputs);
 
     public function getExamSchedulesByDate ($id_department, $start, $end);
 

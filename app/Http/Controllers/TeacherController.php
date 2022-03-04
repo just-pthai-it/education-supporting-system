@@ -29,13 +29,11 @@ class TeacherController extends Controller
         return new TeacherResource($this->teacherService->get($id_teacher));
     }
 
-    public function getSchedulesByDate (Request $request, $id_teacher)
+    public function getSchedules (Request $request, $id_teacher) : AnonymousResourceCollection
     {
         Gate::authorize('get-teacher-schedule');
-        $schedules = $this->teacherService->getSchedulesByDate($id_teacher,
-                                                               $request->start, $request->end,
-                                                               $request->shift);
-        return ScheduleResource::collection($schedules)->all();
+        $schedules = $this->teacherService->getSchedules($id_teacher, $request->all());
+        return ScheduleResource::collection($schedules);
     }
 
     public function getExamSchedulesByDate (Request $request, $id_teacher)

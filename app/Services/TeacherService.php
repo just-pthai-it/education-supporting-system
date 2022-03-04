@@ -48,10 +48,9 @@ class TeacherService implements Contracts\TeacherServiceContract
                                                    [['with', 'department:id,name,id_faculty', 'department.faculty:id,name']]);
     }
 
-    public function getSchedulesByDate ($id_teacher, $start, $end, $shift)
+    public function getSchedules ($id_teacher, array $inputs)
     {
-        return $this->scheduleDepository->findAllByIdTeacherAndDate($id_teacher, $start, $end,
-                                                                    $shift);
+        return $this->scheduleDepository->findAllByIdTeacher($id_teacher, $inputs);
     }
 
     public function getExamSchedulesByDate ($id_teacher, $start, $end)

@@ -6,7 +6,7 @@ interface TeacherServiceContract
 {
     public function get ($id_teacher);
 
-    public function getSchedulesByDate ($id_teacher, $start, $end, $shift);
+    public function getSchedules ($id_teacher, array $inputs);
 
     public function getExamSchedulesByDate ($id_teacher, $start, $end);
 

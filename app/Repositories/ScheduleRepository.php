@@ -14,14 +14,13 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
         return Schedule::class;
     }
 
-    public function findAllByIdTeacherAndDate ($id_teacher, $start, $end, $shift)
+    public function findAllByIdTeacher ($id_teacher, array $inputs)
     {
         $this->createModel();
         return $this->model->whereHas('moduleClass', function (Builder $query) use ($id_teacher)
         {
             $query->where('id_teacher', $id_teacher);
-        })->whereBetween('date', [$start, $end])->shift($shift)
-                           ->with([
+        })->filter($inputs)->with([
                                       'moduleClass'    => function ($query)
                                       {
                                           return $query->select('id', 'name',
@@ -39,7 +38,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                   ])->get();
     }
 
-    public function findAllByIdDepartmentAndDate ($id_department, $start, $end)
+    public function findAllByIdDepartment ($id_department, array $inputs)
     {
         $this->createModel();
         return $this->model->whereHas('moduleClass', function (Builder $query) use ($id_department)
@@ -48,8 +47,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
             {
                 $query->where('id_department', '=', $id_department);
             });
-        })->whereBetween('date', [$start, $end])
-                           ->with(['moduleClass:id,name,id_teacher',
+        })->filter($inputs)->with(['moduleClass:id,name,id_teacher',
                                    'moduleClass.teacher:id,name',
                                    'fixedSchedules' => function ($query)
                                    {

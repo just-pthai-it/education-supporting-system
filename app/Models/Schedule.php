@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Schedule extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
     public const table = 'schedule';
     public const table_as = 'schedule as sdu';
@@ -28,15 +29,12 @@ class Schedule extends Model
         'note',
     ];
 
-    public function scopeShift (Builder $query, $shift) : Builder
-    {
-        if (is_null($shift))
-        {
-            return $query;
-        }
+    private array $filterable = [
+        'date',
+        'shift',
+    ];
 
-        return $query->where('shift', '=', $shift);
-    }
+    private array $sortable = [];
 
     public function moduleClass () : BelongsTo
     {
