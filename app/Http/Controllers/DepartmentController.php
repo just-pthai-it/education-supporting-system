@@ -30,14 +30,13 @@ class DepartmentController extends Controller
         return ScheduleResource::collection($schedules);
     }
 
-    public function getExamSchedulesByDate (Request $request, $id_department)
+    public function getExamSchedules (Request $request,
+                                              $id_department) : AnonymousResourceCollection
     {
         Gate::authorize('get-department-exam-schedule');
-        $exam_schedules = $this->departmentService->getExamSchedulesByDate($id_department,
-                                                                           $request->start,
-                                                                           $request->end);
-
-        return ExamScheduleResource::collection($exam_schedules)->all();
+        $exam_schedules = $this->departmentService->getExamSchedules($id_department,
+                                                                     $request->all());
+        return ExamScheduleResource::collection($exam_schedules);
     }
 
     public function getFixedSchedules (Request $request,

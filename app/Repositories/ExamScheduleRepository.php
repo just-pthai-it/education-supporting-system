@@ -13,21 +13,20 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
         return ExamSchedule::class;
     }
 
-    public function findByIdTeacher ($id_teacher, $start, $end)
+    public function findByIdTeacher ($id_teacher, array $inputs)
     {
         $this->createModel();
         return $this->model->whereHas('teachers', function (Builder $query) use ($id_teacher)
         {
             $query->where('teacher.id', '=', $id_teacher);
-        })->whereBetween('time_start', [$start, $end])
-                           ->with(['moduleClass:id,name',
+        })->filter($inputs)->with(['moduleClass:id,name',
                                    'teachers' => function ($query)
                                    {
-                                       return $query->orderBy('position')->select('id', 'name');
+                                       return $query->select('id', 'name')->orderBy('position');
                                    }])->get();
     }
 
-    public function findByIdDepartment ($id_department, $start, $end)
+    public function findByIdDepartment ($id_department, array $inputs)
     {
         $this->createModel();
         return $this->model->whereHas('moduleClass', function (Builder $query) use ($id_department)
@@ -36,11 +35,10 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
             {
                 $query->where('id_department', '=', $id_department);
             });
-        })->whereBetween('time_start', [$start, $end])
-                           ->with(['moduleClass:id,name',
+        })->filter($inputs)->with(['moduleClass:id,name',
                                    'teachers' => function ($query)
                                    {
-                                       return $query->orderBy('position')->select('id', 'name');
+                                       return $query->select('id', 'name')->orderBy('position');
                                    }])->get();
     }
 }

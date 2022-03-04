@@ -52,9 +52,9 @@ class DepartmentService implements Contracts\DepartmentServiceContract
         return $this->scheduleDepository->findAllByIdDepartment($id_department, $inputs);
     }
 
-    public function getExamSchedulesByDate ($id_department, $start, $end)
+    public function getExamSchedules ($id_department, array $inputs)
     {
-        return $this->examScheduleRepository->findByIdDepartment($id_department, $start, $end);
+        return $this->examScheduleRepository->findByIdDepartment($id_department, $inputs);
     }
 
     public function getFixedSchedules ($id_department, array $inputs)

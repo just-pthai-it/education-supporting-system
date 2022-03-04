@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ExamSchedule extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
     public const table = 'exam_schedule';
     public const table_as = 'exam_schedule as es';
@@ -31,6 +32,12 @@ class ExamSchedule extends Model
     protected $hidden = [
         'pivot',
     ];
+
+    private array $filterable = [
+        'time_start',
+    ];
+
+    private array $sortable = [];
 
     public function moduleClass () : BelongsTo
     {

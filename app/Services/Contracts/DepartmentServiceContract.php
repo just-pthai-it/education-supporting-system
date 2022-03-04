@@ -6,7 +6,7 @@ interface DepartmentServiceContract
 {
     public function getSchedules ($id_department, array $inputs);
 
-    public function getExamSchedulesByDate ($id_department, $start, $end);
+    public function getExamSchedules ($id_department, array $inputs);
 
     public function getFixedSchedules ($id_department, array $inputs);
 

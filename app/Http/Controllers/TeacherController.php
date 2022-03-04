@@ -36,13 +36,12 @@ class TeacherController extends Controller
         return ScheduleResource::collection($schedules);
     }
 
-    public function getExamSchedulesByDate (Request $request, $id_teacher)
+    public function getExamSchedules (Request $request, $id_teacher) : AnonymousResourceCollection
     {
         Gate::authorize('get-teacher-exam-schedule');
-        $exam_schedules = $this->teacherService->getExamSchedulesByDate(auth()->user()->id_user,
-                                                                        $request->start,
-                                                                        $request->end);
-        return ExamScheduleResource::collection($exam_schedules)->all();
+        $exam_schedules = $this->teacherService->getExamSchedules(auth()->user()->id_user,
+                                                                  $request->all());
+        return ExamScheduleResource::collection($exam_schedules);
     }
 
     public function getFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection

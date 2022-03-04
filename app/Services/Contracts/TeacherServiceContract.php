@@ -8,7 +8,7 @@ interface TeacherServiceContract
 
     public function getSchedules ($id_teacher, array $inputs);
 
-    public function getExamSchedulesByDate ($id_teacher, $start, $end);
+    public function getExamSchedules ($id_teacher, array $inputs);
 
     public function getFixedSchedulesByStatus ($id_teacher, array $inputs);
 
