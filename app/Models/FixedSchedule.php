@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FixedSchedule extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
     public const table = 'fixed_schedule';
     public const table_as = 'fixed_schedule as fs';
@@ -34,6 +36,23 @@ class FixedSchedule extends Model
         'reason_deny',
         'id_notification',
     ];
+
+    private array $filterable = [
+        'status',
+    ];
+
+    private array $sortable = [
+        'id',
+    ];
+
+    public function filterDateRange (Builder $query, $values)
+    {
+        $query->where(function ($query) use ($values)
+        {
+            $query->whereBetween('old_date', explode(',', $values))
+                  ->orWhereBetween('new_date', explode(',', $values));
+        });
+    }
 
     public function scopeStatus ($query, $status)
     {

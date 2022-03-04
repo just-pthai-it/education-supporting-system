@@ -51,7 +51,7 @@ class TeacherController extends Controller
     {
         Gate::authorize('get-teacher-fixed-schedule');
         $fixed_schedules = $this->teacherService->getFixedSchedulesByStatus(auth()->user()->id_user,
-                                                                            $request->status);
+                                                                            $request->all());
         return FixedScheduleResource::collection($fixed_schedules);
     }
 

@@ -13,7 +13,7 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
         return FixedSchedule::class;
     }
 
-    public function findByIdDepartment ($id_department, array $conditions)
+    public function findByIdDepartment ($id_department, array $inputs)
     {
         $this->createModel();
         $this->model = $this->model->whereHas('schedule',
@@ -26,33 +26,18 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
                         return $query->where('id_department', '=', $id_department);
                     });
                 });
-            })->status($conditions['status']);
-
-        if (isset($conditions['old_date']) &&
-            isset($conditions['new_date']))
-        {
-            $this->model = $this->model->where(function ($query) use ($conditions)
-            {
-                $query->whereBetween('old_date',
-                                     explode(',', $conditions['old_date']))
-                      ->orWhereBetween('new_date',
-                                       explode(',', $conditions['new_date']));
-            });
-        }
-
-        $this->model = $this->model->orderBy('id', 'desc')
-                                   ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
+            })->filter($inputs)->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
                                            'schedule.moduleClass.teacher:id,name']);
 
-        if (isset($conditions['page']))
+        if (isset($inputs['page']))
         {
-            return $this->model->paginate($conditions['pagination'] ?? 20);
+            return $this->model->paginate($inputs['pagination'] ?? 20);
         }
 
         return $this->model->get();
     }
 
-    public function findByIdTeacher ($id_teacher, $status)
+    public function findByIdTeacher ($id_teacher, array $inputs)
     {
         $this->createModel();
         return $this->model->whereHas('schedule', function (Builder $query) use ($id_teacher)
@@ -61,8 +46,7 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
             {
                 $query->where('id_teacher', '=', $id_teacher);
             });
-        })->status($status)->orderBy('id', 'desc')
-                           ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name'])
-                           ->paginate(20);
+        })->filter($inputs)->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name'])
+                           ->paginate($inputs['pagination'] ?? 20);
     }
 }

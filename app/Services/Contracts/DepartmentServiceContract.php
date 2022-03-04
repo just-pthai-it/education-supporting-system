@@ -8,7 +8,7 @@ interface DepartmentServiceContract
 
     public function getExamSchedulesByDate ($id_department, $start, $end);
 
-    public function getFixedSchedules ($id_department, array $conditions);
+    public function getFixedSchedules ($id_department, array $inputs);
 
     public function getModuleClassesByStudySessions ($id_department, $term, $study_sessions);
 

@@ -59,9 +59,9 @@ class TeacherService implements Contracts\TeacherServiceContract
         return $this->examScheduleRepository->findByIdTeacher($id_teacher, $start, $end);
     }
 
-    public function getFixedSchedulesByStatus ($id_teacher, $status)
+    public function getFixedSchedulesByStatus ($id_teacher, array $inputs)
     {
-        return $this->fixedScheduleRepository->findByIdTeacher($id_teacher, $status);
+        return $this->fixedScheduleRepository->findByIdTeacher($id_teacher, $inputs);
     }
 
     public function getModuleClassesByStudySessions ($id_teacher, $term, $study_sessions)
