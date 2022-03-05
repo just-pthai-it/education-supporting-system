@@ -12,5 +12,5 @@ interface DepartmentServiceContract
 
     public function getModuleClasses ($id_department, array $inputs);
 
-    public function getTeachers ($id_department);
+    public function getTeachers (string $id_department, array $inputs);
 }

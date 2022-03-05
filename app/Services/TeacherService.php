@@ -42,7 +42,7 @@ class TeacherService implements Contracts\TeacherServiceContract
         $this->studySessionRepository  = $studySessionRepository;
     }
 
-    public function get ($id_teacher)
+    public function getById ($id_teacher)
     {
         return $this->teacherRepository->findByIds($id_teacher, ['*'], [],
                                                    [['with', 'department:id,name,id_faculty', 'department.faculty:id,name']]);

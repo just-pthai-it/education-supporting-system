@@ -88,9 +88,10 @@ class DepartmentService implements Contracts\DepartmentServiceContract
         return implode(',', $id_study_sessions);
     }
 
-    public function getTeachers ($id_department)
+    public function getTeachers (string $id_department, array $inputs)
     {
         return $this->teacherRepository->find(['id', 'name'],
-                                              [['id_department', '=', $id_department]]);
+                                              [['id_department', '=', $id_department]], [], [],
+                                              [['filter', $inputs]]);
     }
 }

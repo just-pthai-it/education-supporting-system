@@ -26,8 +26,7 @@ class TeacherController extends Controller
 
     public function get ($id_teacher) : TeacherResource
     {
-        TeacherResource::withoutWrapping();
-        return new TeacherResource($this->teacherService->get($id_teacher));
+        return new TeacherResource($this->teacherService->getById($id_teacher));
     }
 
     public function getSchedules (Request $request, $id_teacher) : AnonymousResourceCollection

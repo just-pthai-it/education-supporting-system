@@ -57,8 +57,9 @@ class DepartmentController extends Controller
         return ModuleClassResource::collection($response);
     }
 
-    public function getTeachers ($id_department)
+    public function getTeachers (Request $request, $id_department)
     {
-        return $this->departmentService->getTeachers($id_department);
+        $data = $this->departmentService->getTeachers($id_department, $request->all());
+        return response(['data' => $data]);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Services\Contracts;
 
 interface TeacherServiceContract
 {
-    public function get ($id_teacher);
+    public function getById ($id_teacher);
 
     public function getSchedules ($id_teacher, array $inputs);
 
