@@ -128,7 +128,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'rooms'], function ()
     {
-        Route::get('', [RoomController::class, 'getAllIdRooms']);
+        Route::get('', [RoomController::class, 'getAll']);
     });
 
 

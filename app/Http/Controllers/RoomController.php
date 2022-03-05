@@ -17,8 +17,8 @@ class RoomController extends Controller
         $this->roomService = $roomService;
     }
 
-    public function getAllIdRooms ()
+    public function getAll (Request $request)
     {
-        return $this->roomService->getAlIdRooms();
+        return response(['data' => $this->roomService->getAll()]);
     }
 }
