@@ -4,7 +4,7 @@ namespace App\Services\Contracts;
 
 interface FeedbackServiceContract
 {
-    public function createFeedback ($feedback);
+    public function create ($feedback);
 
-    public function getAllFeedbacks ();
+    public function getAll (array $inputs);
 }

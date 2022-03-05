@@ -16,15 +16,16 @@ class FeedbackService implements Contracts\FeedbackServiceContract
         $this->feedbackRepository = $feedbackRepository;
     }
 
-    public function createFeedback ($feedback)
+    public function create ($feedback)
     {
-        $feedback['id_account'] = auth()->user()->id;
-        $this->feedbackRepository->insert($feedback);
+        $this->feedbackRepository->insert(array_merge($feedback,
+                                                      ['id_account' => auth()->user()->id]));
     }
 
-    public function getAllFeedbacks ()
+    public function getAll (array $inputs)
     {
-        return $this->feedbackRepository->find(['title', 'content', 'feedback_type', 'create_at', 'is_bug'],
-                                               [], [['id', 'desc']]);
+        return $this->feedbackRepository->paginate(['id', 'title', 'content', 'feedback_type', 'create_at', 'is_bug'],
+                                                   [], [], $inputs['pagination'] ?? 20,
+                                                   [['filter', $inputs]]);
     }
 }
