@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\FacultyRepositoryContract;
-use App\Helpers\GData;
 
 class FacultyService implements Contracts\FacultyServiceContract
 {
@@ -17,15 +16,10 @@ class FacultyService implements Contracts\FacultyServiceContract
         $this->facultyDepository = $facultyDepository;
     }
 
-    public function getAllWithDepartments ()
+    public function getAll (array $inputs)
     {
-        return $this->facultyDepository->findAllWithDepartments();
-    }
-
-    public function getIdFaculties ()
-    {
-        return $this->facultyDepository->find(['id', 'name'],
-                                              [['id', 'not in', GData::$id_faculties_not_query]],
-                                              [['id']]);
+        return $this->facultyDepository->find(['id', 'name'], [], [], [],
+                                              [['with', 'departments:id,name,id_faculty'],
+                                               ['filter', $inputs]]);
     }
 }

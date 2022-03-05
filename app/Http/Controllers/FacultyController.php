@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Resources\FacultyResource;
 use App\Services\Contracts\FacultyServiceContract;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FacultyController extends Controller
 {
@@ -17,13 +19,8 @@ class FacultyController extends Controller
         $this->facultyService = $facultyService;
     }
 
-    public function getAllWithDepartments ()
+    public function getAll (Request $request) : AnonymousResourceCollection
     {
-        return FacultyResource::collection($this->facultyService->getAllWithDepartments())->all();
-    }
-
-    public function getIDFaculties ()
-    {
-        return $this->facultyService->getIdFaculties();
+        return FacultyResource::collection($this->facultyService->getAll($request->all()));
     }
 }

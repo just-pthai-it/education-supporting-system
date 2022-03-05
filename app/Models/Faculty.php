@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Helpers\GFunction;
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Faculty extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
     public const table = 'faculty';
     public const table_as = 'faculty as fac';
@@ -30,20 +31,9 @@ class Faculty extends Model
         'uuid',
     ];
 
-    private array $column = [
-        'name',
-        'address',
-    ];
+    private array $filterable = [];
 
-    public function scopeWithUuid ($query, ...$e)
-    {
-        if (empty($e))
-        {
-            return $query->select(GFunction::uuidFromBin('uuid'), ...$this->column);
-        }
-
-        return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
-    }
+    private array $sortable = [];
 
     public function departments () : HasMany
     {

@@ -74,8 +74,6 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     });
 
 
-    Route::get('faculty', [FacultyController::class, 'getIDFaculties']);
-
     Route::get('academic-year', [AcademicYearController::class, 'getRecentAcademicYears']);
 
     Route::get('academic-year2',
@@ -136,7 +134,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'faculties'], function ()
     {
-        Route::get('', [FacultyController::class, 'getAllWithDepartments']);
+        Route::get('', [FacultyController::class, 'getAll']);
     });
 
 
