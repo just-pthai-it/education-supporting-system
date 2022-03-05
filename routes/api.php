@@ -104,7 +104,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::group(['prefix' => '{id_department}'], function ()
         {
             Route::get('module-classes',
-                       [DepartmentController::class, 'getModuleClassesByStudySessions']);
+                       [DepartmentController::class, 'getModuleClasses']);
 
             Route::get('schedules', [DepartmentController::class, 'getSchedules']);
 

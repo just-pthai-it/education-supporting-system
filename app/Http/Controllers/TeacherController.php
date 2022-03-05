@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\TeacherResource;
 use App\Http\Resources\ScheduleResource;
+use App\Http\Resources\ModuleClassResource;
 use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\TeacherServiceContract;
@@ -52,10 +53,11 @@ class TeacherController extends Controller
         return FixedScheduleResource::collection($fixed_schedules);
     }
 
-    public function getModuleClassesByStudySessions (Request $request, $id_teacher)
+    public function getModuleClassesByStudySessions (Request $request,
+                                                             $id_teacher) : AnonymousResourceCollection
     {
-        return response($this->teacherService->getModuleClassesByStudySessions(auth()->user()->id_user,
-                                                                               $request->term,
-                                                                               $request->ss));
+        $response = $this->teacherService->getModuleClasses(auth()->user()->id_user,
+                                                            $request->all());
+        return ModuleClassResource::collection($response);
     }
 }

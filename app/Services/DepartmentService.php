@@ -62,17 +62,30 @@ class DepartmentService implements Contracts\DepartmentServiceContract
         return $this->fixedScheduleRepository->findByIdDepartment($id_department, $inputs);
     }
 
-    public function getModuleClassesByStudySessions ($id_department, $term, $study_sessions)
+    public function getModuleClasses ($id_department, array $inputs)
     {
-        $study_sessions    = GFunction::getOfficialStudySessions($term, $study_sessions);
-        $id_study_sessions = $this->_getIdStudySessions($study_sessions);
-        return $this->moduleClassRepository->findByIdDepartment($id_department, $id_study_sessions);
+        $inputs = $this->_formatInputs($inputs);
+        return $this->moduleClassRepository->findByIdDepartment($id_department, $inputs);
     }
 
-    private function _getIdStudySessions (array $study_sessions)
+    private function _formatInputs (array $inputs) : array
     {
-        return $this->studySessionRepository->pluck([['id']], [['name', 'in', $study_sessions]])
-                                            ->toArray();
+        if (isset($inputs['study_sessions']))
+        {
+            $id_study_sessions = $this->_getIdStudySessions($inputs['study_sessions']);
+        }
+
+        return array_merge($inputs,
+                           !isset($id_study_sessions) ? [] : ['id_study_session' => ['in' => $id_study_sessions]]);
+    }
+
+    private function _getIdStudySessions (string $study_sessions) : string
+    {
+        $id_study_sessions = $this->studySessionRepository->pluck([['id']],
+                                                                  [['name', 'in',
+                                                                    explode(',', $study_sessions)]])
+                                                          ->toArray();
+        return implode(',', $id_study_sessions);
     }
 
     public function getTeachers ($id_department)

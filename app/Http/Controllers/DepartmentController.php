@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\ScheduleResource;
+use App\Http\Resources\ModuleClassResource;
 use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\DepartmentServiceContract;
@@ -49,11 +50,11 @@ class DepartmentController extends Controller
     }
 
 
-    public function getModuleClassesByStudySessions (Request $request, $id_department)
+    public function getModuleClasses (Request $request,
+                                              $id_department) : AnonymousResourceCollection
     {
-        return response($this->departmentService->getModuleClassesByStudySessions($id_department,
-                                                                                  $request->term,
-                                                                                  $request->ss));
+        $response = $this->departmentService->getModuleClasses($id_department, $request->all());
+        return ModuleClassResource::collection($response);
     }
 
     public function getTeachers ($id_department)

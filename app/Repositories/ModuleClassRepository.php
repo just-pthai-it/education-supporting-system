@@ -15,16 +15,16 @@ class ModuleClassRepository extends BaseRepository implements Contracts\ModuleCl
         return ModuleClass::class;
     }
 
-    public function findByIdDepartment ($id_department, $id_study_sessions)
+    public function findByIdDepartment ($id_department, array $inputs)
     {
         $this->createModel();
-        return $this->model->join(Module::table_as, 'module_class.id_module', '=', 'md.id')
+        return $this->model->filter($inputs)
+                           ->join(Module::table_as, 'module_class.id_module', '=', 'md.id')
                            ->where('md.id_department', '=', $id_department)
                            ->leftJoin(Teacher::table_as, 'tea.id', '=', 'module_class.id_teacher')
-                           ->whereIn('module_class.id_study_session', $id_study_sessions)
                            ->orderBy('module_class.id')
-                           ->get(['module_class.id', 'module_class.name', 'credit', 'number_plan as numberPlan',
-                                  'class_type as classType', 'tea.name as teacher']);
+                           ->get(['module_class.id', 'module_class.name', 'credit', 'number_reality',
+                                  'class_type', 'tea.name as teacher']);
     }
 
     public function getIDModuleClassesMissing ($id_module_classes)

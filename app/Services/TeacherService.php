@@ -63,18 +63,31 @@ class TeacherService implements Contracts\TeacherServiceContract
         return $this->fixedScheduleRepository->findByIdTeacher($id_teacher, $inputs);
     }
 
-    public function getModuleClassesByStudySessions ($id_teacher, $term, $study_sessions)
+    public function getModuleClasses ($id_teacher, array $inputs)
     {
-        $study_sessions    = GFunction::getOfficialStudySessions($term, $study_sessions);
-        $id_study_sessions = $this->_getIdStudySessions($study_sessions);
-        return $this->moduleClassRepository->find(['id as id_module_class', 'name as module_class_name'],
-                                                  [['id_study_session', 'in', $id_study_sessions],
-                                                   ['id_teacher', '=', $id_teacher]]);
+        $inputs = $this->_formatInputs($inputs);
+        return $this->moduleClassRepository->find(['id', 'name'],
+                                                  [['id_teacher', '=', $id_teacher]], [], [],
+                                                   [['filter', $inputs]]);
     }
 
-    private function _getIdStudySessions (array $study_sessions)
+    private function _formatInputs (array $inputs) : array
     {
-        return $this->studySessionRepository->pluck([['id']], [['name', 'in', $study_sessions]])
-                                            ->toArray();
+        if (isset($inputs['study_sessions']))
+        {
+            $id_study_sessions = $this->_getIdStudySessions($inputs['study_sessions']);
+        }
+
+        return array_merge($inputs,
+                           !isset($id_study_sessions) ? [] : ['id_study_session' => ['in' => $id_study_sessions]]);
+    }
+
+    private function _getIdStudySessions (string $study_sessions) : string
+    {
+        $id_study_sessions = $this->studySessionRepository->pluck([['id']],
+                                                                  [['name', 'in',
+                                                                    explode(',', $study_sessions)]])
+                                                          ->toArray();
+        return implode(',', $id_study_sessions);
     }
 }

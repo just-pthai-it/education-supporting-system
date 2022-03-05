@@ -12,5 +12,5 @@ interface TeacherServiceContract
 
     public function getFixedSchedules ($id_teacher, array $inputs);
 
-    public function getModuleClassesByStudySessions ($id_teacher, $term, $study_sessions);
+    public function getModuleClasses ($id_teacher, array $inputs);
 }
