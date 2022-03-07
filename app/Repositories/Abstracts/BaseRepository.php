@@ -54,6 +54,12 @@ abstract class BaseRepository implements BaseRepositoryContract
         return $this->model->create($object)->id;
     }
 
+    public function insertGetObject(array $object)
+    {
+        $this->createModel();
+        return $this->model->create($object);
+    }
+
     public function insertMultiple (array $objects)
     {
         $this->createModel();

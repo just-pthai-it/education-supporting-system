@@ -8,6 +8,8 @@ interface BaseRepositoryContract
 
     public function insertGetId (array $object);
 
+    public function insertGetObject(array $object);
+
     public function insertMultiple (array $objects);
 
     public function insertPivot ($id, array $array, string $relation);
