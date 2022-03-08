@@ -7,6 +7,7 @@ use App\Helpers\GData;
 use App\Helpers\GFArray;
 use App\Helpers\GFunction;
 use Illuminate\Support\Arr;
+use App\Models\FixedSchedule;
 use App\Services\Contracts\MailServiceContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
@@ -34,14 +35,14 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     /**
      * @throws Exception
      */
-    public function createFixedSchedule ($fixed_schedule)
+    public function createFixedSchedule ($fixedScheduleArr)
     {
-        $this->_completeInputData($fixed_schedule);
-        $id = $this->fixedScheduleRepository->insertGetId($fixed_schedule);
-        $this->_checkIfNeedToUpdateSchedule($fixed_schedule);
-        $this->_sendMail(auth()->user()->email, $fixed_schedule);
+        $this->_completeInputData($fixedScheduleArr);
+        $fixedSchedule = $this->fixedScheduleRepository->insertGetObject($fixedScheduleArr);
+        $this->_checkIfNeedToUpdateSchedule($fixedSchedule);
+        $this->_sendMail($fixedSchedule);
 
-        return $id;
+        return $fixedSchedule->id;
     }
 
     private function _getFixedScheduleById ($ids, array $columns = ['*'])
@@ -62,27 +63,24 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     /**
      * @throws Exception
      */
-    private function _getMailData (array $data) : array
+    private function _getMailData (int $status) : array
     {
-        switch ($data['status'])
+        switch ($status)
         {
             case -3:
-                return array_merge(GData::$mail_data['change_schedule_request']['cancel'], $data);
+                return GData::$mail_data['change_schedule_request']['cancel'];
             case -2:
-                return array_merge(GData::$mail_data['change_schedule_request']['deny_room'],
-                                   $data);
+                return GData::$mail_data['change_schedule_request']['deny_room'];
             case -1:
-                return array_merge(GData::$mail_data['change_schedule_request']['deny'], $data);
+                return GData::$mail_data['change_schedule_request']['deny'];
             case 0:
-                return array_merge(GData::$mail_data['change_schedule_request']['confirm'], $data);
+                return GData::$mail_data['change_schedule_request']['confirm'];
             case 1:
-                return array_merge(GData::$mail_data['change_schedule_request']['accept'], $data);
+                return GData::$mail_data['change_schedule_request']['accept'];
             case 2:
-                return array_merge(GData::$mail_data['change_schedule_request']['accept_room'],
-                                   $data);
+                return GData::$mail_data['change_schedule_request']['accept_room'];
             case 3:
-                return array_merge(GData::$mail_data['change_schedule_request']['accept_straight'],
-                                   $data);
+                return GData::$mail_data['change_schedule_request']['accept_straight'];
             default:
                 throw new Exception('send mail fixed schedule');
         }
@@ -91,79 +89,76 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     /**
      * @throws Exception
      */
-    private function _sendMail (string $receiver, array $data)
+    private function _sendMail (FixedSchedule $fixedSchedule)
     {
-        try
+        if ($fixedSchedule->status != 4)
         {
-            if ($data['status'] != 4)
+            try
             {
-                $data = $this->_getMailData($data);
-                $this->mailService->sendFixedScheduleMailNotify([$receiver], $data);
+                $package = [
+                    'basic_data'     => $this->_getMailData($fixedSchedule->status),
+                    'fixed_schedule' => $fixedSchedule,
+                ];
+                $this->mailService->sendFixedScheduleMailNotify($package);
             }
-        }
-        catch (Exception $exception)
-        {
-            GFunction::printError($exception);
+            catch (Exception $exception)
+            {
+                GFunction::printError($exception);
+            }
         }
     }
 
     /**
      * @throws Exception
      */
-    public function updateFixedSchedule ($fixed_schedule)
+    public function updateFixedSchedule ($fixedScheduleArr)
     {
-        $this->_completeInputData($fixed_schedule);
-        $this->fixedScheduleRepository->updateByIds($fixed_schedule['id'],
-                                                    Arr::except($fixed_schedule, ['id']));
-        $fixed_schedule = $this->_getFixedScheduleById($fixed_schedule['id']);
-        $this->_checkIfNeedToUpdateSchedule($fixed_schedule->getOriginal());
-        $this->_sendMail($this->_getTeacherEmailByIdSchedule($fixed_schedule['id_schedule']),
-                         $fixed_schedule->getOriginal());
+        $this->_completeInputData($fixedScheduleArr);
+        $this->fixedScheduleRepository->updateByIds($fixedScheduleArr['id'],
+                                                    Arr::except($fixedScheduleArr, ['id']));
+        $fixedSchedule = $this->_getFixedScheduleById($fixedScheduleArr['id']);
+        $this->_checkIfNeedToUpdateSchedule($fixedSchedule);
+        $this->_sendMail($fixedSchedule);
     }
 
-    private function _completeInputData (&$fixedSchedule)
+    private function _completeInputData (&$fixedScheduleArr)
     {
-        if (isset($fixedSchedule['time']))
+        if (isset($fixedScheduleArr['time']))
         {
-            switch ($fixedSchedule['status'])
+            switch ($fixedScheduleArr['status'])
             {
                 case 1:
-                    $fixedSchedule['time_accept'] = $fixedSchedule['time'];
+                    $fixedScheduleArr['time_accept'] = $fixedScheduleArr['time'];
                     break;
                 case 2:
-                    $fixedSchedule['time_set_room'] = $fixedSchedule['time'];
+                    $fixedScheduleArr['time_set_room'] = $fixedScheduleArr['time'];
                     break;
                 default:
-                    $fixedSchedule['time_accept']   = $fixedSchedule['time'];
-                    $fixedSchedule['time_set_room'] = $fixedSchedule['time'];
+                    $fixedScheduleArr['time_accept']   = $fixedScheduleArr['time'];
+                    $fixedScheduleArr['time_set_room'] = $fixedScheduleArr['time'];
             }
-            unset($fixedSchedule['time']);
+            unset($fixedScheduleArr['time']);
         }
-        else if (isset($fixedSchedule['reason']))
+        else if (isset($fixedScheduleArr['reason']))
         {
-            $schedule = $this->_getScheduleById($fixedSchedule['id_schedule'],
+            $schedule = $this->_getScheduleById($fixedScheduleArr['id_schedule'],
                                                 ['date as old_date', 'shift as old_shift',
                                                  'id_room as old_id_room']);
 
-            $fixedSchedule = array_merge($fixedSchedule, $schedule->getOriginal());;
+            $fixedScheduleArr = array_merge($fixedScheduleArr, $schedule->getOriginal());;
         }
     }
 
-    private function _checkIfNeedToUpdateSchedule (array $fixedSchedule)
+    private function _checkIfNeedToUpdateSchedule (FixedSchedule $fixedSchedule)
     {
-        if (in_array($fixedSchedule['status'], [2, 3, 4]))
+        if (in_array($fixedSchedule->status, [2, 3, 4]))
         {
-            $this->_updateScheduleById($fixedSchedule['id_schedule'],
-                                       GFArray::onlyKeys($fixedSchedule,
+            $this->_updateScheduleById($fixedSchedule->id_schedule,
+                                       GFArray::onlyKeys($fixedSchedule->getOriginal(),
                                                          ['new_date'    => 'date',
                                                           'new_shift'   => 'shift',
                                                           'new_id_room' => 'id_room']));
         }
-    }
-
-    private function _getTeacherEmailByIdSchedule (int $id_schedule)
-    {
-        return $this->scheduleRepository->findTeacherEmailByIdSchedule($id_schedule);
     }
 
     public function paginateFixedSchedulesByStatus (string $status, string $pagination)
