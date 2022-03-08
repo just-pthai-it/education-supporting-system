@@ -7,11 +7,8 @@ use Illuminate\Support\Facades\Mail;
 
 class MailService implements Contracts\MailServiceContract
 {
-    public function sendFixedScheduleMailNotify (array $receivers, array $data)
+    public function sendFixedScheduleMailNotify (array $package)
     {
-        foreach ($receivers as $receiver)
-        {
-            Mail::to($receiver)->queue(new FixedScheduleMailNotify($data));
-        }
+        Mail::queue(new FixedScheduleMailNotify($package));
     }
 }
