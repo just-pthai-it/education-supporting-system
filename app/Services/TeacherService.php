@@ -68,18 +68,18 @@ class TeacherService implements Contracts\TeacherServiceContract
         $inputs = $this->_formatInputs($inputs);
         return $this->moduleClassRepository->find(['id', 'name'],
                                                   [['id_teacher', '=', $id_teacher]], [], [],
-                                                   [['filter', $inputs]]);
+                                                  [['filter', $inputs]]);
     }
 
     private function _formatInputs (array $inputs) : array
     {
         if (isset($inputs['study_sessions']))
         {
-            $id_study_sessions = $this->_getIdStudySessions($inputs['study_sessions']);
+            $id_study_sessions = $this->_getIdStudySessions($inputs['study_sessions']);;
+            $inputs = array_merge($inputs, ['id_study_session' => ['in' => $id_study_sessions]]);
         }
 
-        return array_merge($inputs,
-                           !isset($id_study_sessions) ? [] : ['id_study_session' => ['in' => $id_study_sessions]]);
+        return $inputs;
     }
 
     private function _getIdStudySessions (string $study_sessions) : string

@@ -35,7 +35,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     /**
      * @throws Exception
      */
-    public function createFixedSchedule ($fixedScheduleArr)
+    public function create ($fixedScheduleArr)
     {
         $this->_completeInputData($fixedScheduleArr);
         $fixedSchedule = $this->fixedScheduleRepository->insertGetObject($fixedScheduleArr);
@@ -111,7 +111,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     /**
      * @throws Exception
      */
-    public function updateFixedSchedule ($fixedScheduleArr)
+    public function update ($fixedScheduleArr)
     {
         $this->_completeInputData($fixedScheduleArr);
         $this->fixedScheduleRepository->updateByIds($fixedScheduleArr['id'],
@@ -161,20 +161,10 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         }
     }
 
-    public function paginateFixedSchedulesByStatus (string $status, string $pagination)
+    public function read (array $inputs)
     {
-        $array  = [];
-        $array2 = [];
-        if ($status == 'all')
-        {
-            $array = [['status', 'in', [-2, 1, 2]]];
-        }
-        else
-        {
-            $array2 = [['status', $status]];
-        }
-
-        return $this->fixedScheduleRepository->paginate(['*'], $array, [['id', 'desc']],
-                                                        $pagination, $array2);
+        return $this->fixedScheduleRepository->paginate(['*'], [], [],
+                                                        $inputs['pagination'] ?? 20,
+                                                        [['filter', $inputs]]);
     }
 }

@@ -118,11 +118,11 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'fixed-schedules'], function ()
     {
-        Route::get('', [FixedScheduleController::class, 'paginateFixedSchedulesByStatus']);
+        Route::get('', [FixedScheduleController::class, 'read']);
 
-        Route::post('create', [FixedScheduleController::class, 'createFixedSchedule']);
+        Route::post('create', [FixedScheduleController::class, 'create']);
 
-        Route::put('update', [FixedScheduleController::class, 'updateFixedSchedule']);
+        Route::put('update', [FixedScheduleController::class, 'update']);
     });
 
 

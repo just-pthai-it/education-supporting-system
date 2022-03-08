@@ -20,24 +20,23 @@ class FixedScheduleController extends Controller
         $this->fixedScheduleService = $fixedScheduleService;
     }
 
-    public function createFixedSchedule (Request $request)
+    public function create (Request $request)
     {
         Gate::authorize('create-fixed-schedule', [$request->all()]);
-        $id = $this->fixedScheduleService->createFixedSchedule($request->all());
+        $id = $this->fixedScheduleService->create($request->all());
         return response(['data' => $id], 201);
     }
 
-    public function updateFixedSchedule (Request $request)
+    public function update (Request $request)
     {
         Gate::authorize('update-fixed-schedule', [$request->all()]);
-        $this->fixedScheduleService->updateFixedSchedule($request->all());
+        $this->fixedScheduleService->update($request->all());
     }
 
-    public function paginateFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
+    public function read (Request $request) : AnonymousResourceCollection
     {
         Gate::authorize('get-fixed-schedule');
-        $fixedSchedules = $this->fixedScheduleService->paginateFixedSchedulesByStatus($request->status,
-                                                                                      $request->pagination);
+        $fixedSchedules = $this->fixedScheduleService->read($request->all());
         return FixedScheduleResource::collection($fixedSchedules);
     }
 }
