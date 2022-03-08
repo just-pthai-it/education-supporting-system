@@ -143,7 +143,7 @@
                                         <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
                                             :
                                         </td>
-                                        <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;" colspan="3">{{ reasonDeny }}</td>
+                                        <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;" colspan="3">{{ $fixed_schedule['reason_deny'] }}</td>
                                     </tr>
                                 @endif
                                 </tbody>
