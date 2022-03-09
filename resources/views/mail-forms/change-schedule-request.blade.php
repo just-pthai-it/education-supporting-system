@@ -67,13 +67,13 @@
                                         :
                                     </td>
                                     <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-                                        {{ $fixed_schedule['new_date'] }}
+                                        {{ $fixed_schedule['old_date'] }}
                                     </td>
                                     <td style="padding: 0 1rem 0 0;">
                                         <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png"/>
                                     </td>
                                     <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-                                        {{ $fixed_schedule['new_shift'] }}
+                                        {{ $fixed_schedule['new_date'] }}
                                     </td>
                                 </tr>
                                 <tr>
