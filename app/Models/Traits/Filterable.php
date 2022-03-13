@@ -19,6 +19,11 @@ trait Filterable
                 return;
             }
 
+            if (in_array($field, ['limit', 'offset']))
+            {
+                $this->_limitOffset($query, $field, $parameterValue);
+            }
+
             if (!is_array($parameterValue))
             {
                 continue;
@@ -28,17 +33,17 @@ trait Filterable
             {
                 if ($operator != 'sort')
                 {
-                    $this->where($query, $field, $operator, $value);
+                    $this->_where($query, $field, $operator, $value);
                 }
                 else
                 {
-                    $this->orderBy($query, $field, $value);
+                    $this->_orderBy($query, $field, $value);
                 }
             }
         }
     }
 
-    private function where (Builder $query, $field, $operator, $value)
+    private function _where (Builder $query, $field, $operator, $value)
     {
         if ($value == 'all')
         {
@@ -94,7 +99,7 @@ trait Filterable
         }
     }
 
-    private function orderBy (Builder $query, $field, $value)
+    private function _orderBy (Builder $query, $field, $value)
     {
         if (empty($this->sortable) || !is_array($this->sortable))
         {
@@ -110,5 +115,10 @@ trait Filterable
         {
             $query->orderBy($field, $value);
         }
+    }
+
+    private function _limitOffset (Builder $query, string $field, string $value)
+    {
+        $query->{$field}($value);
     }
 }
