@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ class StudySession extends Model
     public const table = 'study_session';
     public const table_as = 'study_session as ss';
 
-    use HasFactory;
+    use HasFactory, Filterable;
 
     protected $table = 'study_session';
     protected $primaryKey = 'id';
@@ -22,6 +23,12 @@ class StudySession extends Model
         'id',
         'name',
         'id_term',
+    ];
+
+    private array $filterable = [];
+
+    private array $sortable = [
+        'id',
     ];
 
     public function term () : BelongsTo

@@ -90,7 +90,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::put('update', [ModuleClassController::class, 'updateModuleClass']);
     });
 
-    Route::get('study-session', [StudySessionController::class, 'getRecentStudySessions']);
+    Route::get('study-sessions', [StudySessionController::class, 'readMany']);
 
     Route::post('/account/change-password', [AccountController::class, 'changePassword']);
 

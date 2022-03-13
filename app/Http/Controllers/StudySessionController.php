@@ -17,8 +17,8 @@ class StudySessionController extends Controller
         $this->studySessionService = $studySessionService;
     }
 
-    public function getRecentStudySessions ()
+    public function readMany (Request $request)
     {
-        return $this->studySessionService->getRecentStudySessions();
+        return $this->studySessionService->readMany($request->all());
     }
 }

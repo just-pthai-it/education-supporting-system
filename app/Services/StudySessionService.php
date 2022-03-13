@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
 use App\Repositories\Contracts\StudySessionRepositoryContract;
 
 class StudySessionService implements Contracts\StudySessionServiceContract
@@ -16,8 +17,8 @@ class StudySessionService implements Contracts\StudySessionServiceContract
         $this->studySessionRepository = $studySessionRepository;
     }
 
-    public function getRecentStudySessions ()
+    public function readMany (array $inputs)
     {
-        return $this->studySessionRepository->find(['id', 'name'], [], [['id', 'desc']], [7]);
+        return $this->studySessionRepository->find(['id', 'name'], [], [], [], [['filter', $inputs]]);
     }
 }
