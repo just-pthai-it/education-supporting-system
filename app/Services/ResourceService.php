@@ -20,7 +20,7 @@ use PDOException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 
-class FileUploadService implements Contracts\FileUploadServiceContract
+class ResourceService implements Contracts\ResourceServiceContract
 {
     private FileUploadHandler $fileUploadHandler;
     private ModuleClassRepositoryContract $moduleClassRepository;
