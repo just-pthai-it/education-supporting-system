@@ -35,7 +35,15 @@ class Schedule extends Model
             return $query;
         }
 
-        return $query->where('shift', '=', $shift);
+        $values = explode(',', $shift);
+        if (count($values) == 1)
+        {
+            return $query->where('shift', '=', $values[0]);
+        }
+        else
+        {
+            return $query->whereIn('shift', $values);
+        }
     }
 
     public function moduleClass () : BelongsTo
