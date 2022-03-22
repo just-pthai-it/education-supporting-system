@@ -41,7 +41,8 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
         }
 
         $this->model = $this->model->orderBy('id', 'desc')
-                                   ->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name,id_teacher',
+                                   ->with(['schedule:id,id_module_class',
+                                           'schedule.moduleClass:id,name,id_teacher,number_reality',
                                            'schedule.moduleClass.teacher:id,name']);
 
         if (isset($conditions['page']))
