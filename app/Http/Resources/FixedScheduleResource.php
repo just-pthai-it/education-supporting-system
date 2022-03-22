@@ -17,28 +17,29 @@ class FixedScheduleResource extends JsonResource
     public function toArray ($request) : array
     {
         return [
-            'id'              => $this->id,
-            'idSchedule'      => $this->id_schedule,
-            'teacher'         => [
+            'id'                       => $this->id,
+            'idSchedule'               => $this->id_schedule,
+            'teacher'                  => [
                 'id'   => $this->schedule->moduleClass->teacher->id ?? null,
                 'name' => $this->schedule->moduleClass->teacher->name ?? null,
             ],
-            'moduleClassName' => $this->schedule->moduleClass->name,
-            'oldSchedule'     => [
+            'moduleClassName'          => $this->schedule->moduleClass->name,
+            'moduleClassNumberReality' => $this->schedule->moduleClass->number_reality,
+            'oldSchedule'              => [
                 'date'  => $this->old_date,
                 'shift' => $this->old_shift,
                 'room'  => $this->old_id_room,
             ],
-            'newSchedule'     => [
+            'newSchedule'              => [
                 'date'  => $this->new_date,
                 'shift' => $this->new_shift,
                 'room'  => $this->new_id_room,
             ],
-            'timeRequest'     => $this->time_request,
-            'timeAccept'      => $this->time_accept,
-            'timeSetRoom'     => $this->time_set_room,
-            'status'          => $this->status,
-            'reason'          => $this->reason,
+            'timeRequest'              => $this->time_request,
+            'timeAccept'               => $this->time_accept,
+            'timeSetRoom'              => $this->time_set_room,
+            'status'                   => $this->status,
+            'reason'                   => $this->reason,
         ];
     }
 }
