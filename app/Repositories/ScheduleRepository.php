@@ -24,7 +24,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                            ->with([
                                       'moduleClass'    => function ($query)
                                       {
-                                          return $query->select('id', 'name',
+                                          return $query->select('id', 'name', 'number_reality',
                                                                 DB::raw('\'self\' as teacher'));
                                       },
                                       'fixedSchedules' => function ($query)
@@ -49,7 +49,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                 $query->where('id_department', '=', $id_department);
             });
         })->whereBetween('date', [$start, $end])
-                           ->with(['moduleClass:id,name,id_teacher',
+                           ->with(['moduleClass:id,name,id_teacher,number_reality',
                                    'moduleClass.teacher:id,name',
                                    'fixedSchedules' => function ($query)
                                    {
