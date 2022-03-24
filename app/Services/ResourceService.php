@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use PDOException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
+use App\Repositories\Contracts\StudySessionRepositoryContract;
 
 class ResourceService implements Contracts\ResourceServiceContract
 {
@@ -31,6 +32,7 @@ class ResourceService implements Contracts\ResourceServiceContract
     private ScheduleRepositoryContract $scheduleRepository;
     private ExamScheduleRepositoryContract $examScheduleRepository;
     private CurriculumRepositoryContract $curriculumRepository;
+    private StudySessionRepositoryContract $studySessionRepository;
     private ExcelServiceContract $excelService;
 
     /**
@@ -43,6 +45,7 @@ class ResourceService implements Contracts\ResourceServiceContract
      * @param ScheduleRepositoryContract     $scheduleRepository
      * @param ExamScheduleRepositoryContract $examScheduleRepository
      * @param CurriculumRepositoryContract   $curriculumRepository
+     * @param StudySessionRepositoryContract $studySessionRepository
      */
     public function __construct (FileUploadHandler              $fileUploadHandler,
                                  ModuleClassRepositoryContract  $moduleClassRepository,
@@ -52,7 +55,8 @@ class ResourceService implements Contracts\ResourceServiceContract
                                  ClassRepositoryContract        $classRepository,
                                  ScheduleRepositoryContract     $scheduleRepository,
                                  ExamScheduleRepositoryContract $examScheduleRepository,
-                                 CurriculumRepositoryContract   $curriculumRepository)
+                                 CurriculumRepositoryContract   $curriculumRepository,
+                                 StudySessionRepositoryContract $studySessionRepository)
     {
         $this->fileUploadHandler      = $fileUploadHandler;
         $this->moduleClassRepository  = $moduleClassRepository;
@@ -63,6 +67,7 @@ class ResourceService implements Contracts\ResourceServiceContract
         $this->scheduleRepository     = $scheduleRepository;
         $this->examScheduleRepository = $examScheduleRepository;
         $this->curriculumRepository   = $curriculumRepository;
+        $this->studySessionRepository = $studySessionRepository;
     }
 
     /**
@@ -201,8 +206,10 @@ class ResourceService implements Contracts\ResourceServiceContract
     {
         $this->excelService = app()->make('excel_schedule');
         $this->fileUploadHandler->handleFileUpload($input['file']);
+        $idStudySession = $this->studySessionRepository->find(['id'],
+                                                              [['name', '=', $input['study_session']]])[0]->id;;
         $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),
-                                              $input['id_study_session']);
+                                              $idStudySession);
 
         $modules_missing = $this->_getIDModulesMissing($data['id_modules']);
         $this->_checkExceptions($modules_missing);
