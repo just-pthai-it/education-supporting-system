@@ -276,7 +276,7 @@ class ResourceService implements Contracts\ResourceServiceContract
     {
         $this->excelService = app()->make('excel_exam_schedule');
         $this->fileUploadHandler->handleFileUpload($input['file']);
-        $teachers = $this->teacherRepository->pluck([['id', 'name']],
+        $teachers = $this->teacherRepository->pluck(['id', 'name'],
                                                     [['id_department', '=', $input['id_department']]])
                                             ->toArray();
         $data     = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),

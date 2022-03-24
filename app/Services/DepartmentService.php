@@ -72,7 +72,7 @@ class DepartmentService implements Contracts\DepartmentServiceContract
 
     private function _getIdStudySessions (array $study_sessions)
     {
-        return $this->studySessionRepository->pluck([['id']], [['name', 'in', $study_sessions]])
+        return $this->studySessionRepository->pluck(['id'], [['name', 'in', $study_sessions]])
                                             ->toArray();
     }
 

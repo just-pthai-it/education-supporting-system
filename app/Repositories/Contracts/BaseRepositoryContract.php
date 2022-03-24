@@ -27,13 +27,13 @@ interface BaseRepositoryContract
     public function updateIncrementByIds ($ids, $column, int $step = 1);
 
     public function find (array $columns = ['*'], array $conditions = [], array $orders = [],
-                          array $pagination = [], array $scopes = [], array $postFunctions = []);
+                          array $limitOffset = [], array $scopes = [], array $postFunctions = []);
 
     public function findByIds ($ids, array $columns = ['*'], array $orders = [],
                                array $scopes = [], array $postFunctions = []);
 
     public function pluck (array $columns = [['id']], array $conditions = [], array $orders = [],
-                           array $pagination = [], array $scopes = []);
+                           array $limitOffset = [], array $scopes = []);
 
     public function delete (array $conditions = []);
 
