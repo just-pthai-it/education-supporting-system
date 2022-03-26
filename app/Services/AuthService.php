@@ -72,23 +72,16 @@ class AuthService implements Contracts\AuthServiceContract
      */
     public function getUserInfo ()
     {
-        switch (auth()->user()->id_role)
+        switch (auth()->user()->accountable_type)
         {
-            case 9:
-            case 10:
-                $data = $this->otherDepartmentDepository->findByIds(auth()->user()->id_user,
+            case 'App\Models\OtherDepartment':
+                $data = $this->otherDepartmentDepository->findByIds(auth()->user()->accountable_id,
                                                                     [], [], [['withUuid']],
                                                                     [['makeVisible', ['uuid']]]);
                 break;
 
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-                $data = $this->teacherDepository->findByIds(auth()->user()->id_user,
+            case 'App\Models\Teacher':
+                $data = $this->teacherDepository->findByIds(auth()->user()->accountable_id,
                                                             [], [], [['withUuid'],
                                                                      ['with', 'department:id,name,id_faculty',
                                                                       'department.faculty:id,name']],

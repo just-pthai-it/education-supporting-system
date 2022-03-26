@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Exception;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Account extends Model
 {
@@ -18,7 +21,6 @@ class Account extends Model
     public const table_as = 'account as acc';
 
     protected $table = 'account';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
@@ -29,7 +31,8 @@ class Account extends Model
         'email',
         'phone_number',
         'id_role',
-        'id_user',
+        'accountable_type',
+        'accountable_id',
         'uuid',
     ];
 
@@ -40,26 +43,9 @@ class Account extends Model
     /**
      * @throws Exception
      */
-    public function accountable () : BelongsTo
+    public function accountable () : MorphTo
     {
-        switch ($this->original['id_role'])
-            {
-            case 1:
-                return $this->belongsTo(Student::class, 'id_user', 'id');
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-                return $this->belongsTo(Teacher::class, 'id_user', 'id');
-            case 9:
-            case 10:
-                return $this->belongsTo(OtherDepartment::class, 'id_user', 'id');
-            default:
-                throw new Exception();
-        }
+        return $this->morphTo();
     }
 
     public function devices () : HasMany
@@ -69,13 +55,18 @@ class Account extends Model
 
     public function notifications () : BelongsToMany
     {
-        return $this->belongsToMany(Notification::class, 'notification_account',
-                                    'id_account', 'id_notification');
+        return $this->belongsToMany(Notification::class, 'notification_account', 'id_notification',
+                                    'id_account');
     }
 
-    public function sendNotification () : HasMany
+    public function notification () : HasOne
     {
-        return $this->hasMany(Notification::class, 'id_sender', 'id');
+        return $this->hasOne(Notification::class, 'id_account', 'id');
+    }
+
+    public function tags () : BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'account_tag', 'id_tag', 'id_account');
     }
 
     public function feedbacks () : HasMany

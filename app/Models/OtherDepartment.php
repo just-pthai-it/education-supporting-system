@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\GFunction;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,8 +39,8 @@ class OtherDepartment extends Model
         return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
     }
 
-    public function account () : HasOne
+    public function account () : MorphOne
     {
-        return $this->hasOne(Account::class, 'id_user', 'id');
+        return $this->morphOne(Account::class, 'accountable');
     }
 }

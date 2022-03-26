@@ -41,7 +41,7 @@ class TeacherController extends Controller
     public function getExamSchedulesByDate (Request $request, $id_teacher)
     {
         Gate::authorize('get-teacher-exam-schedule');
-        $exam_schedules = $this->teacherService->getExamSchedulesByDate(auth()->user()->id_user,
+        $exam_schedules = $this->teacherService->getExamSchedulesByDate(auth()->user()->accountable_id,
                                                                         $request->start,
                                                                         $request->end);
         return ExamScheduleResource::collection($exam_schedules)->all();
@@ -50,14 +50,14 @@ class TeacherController extends Controller
     public function getFixedSchedulesByStatus (Request $request) : AnonymousResourceCollection
     {
         Gate::authorize('get-teacher-fixed-schedule');
-        $fixed_schedules = $this->teacherService->getFixedSchedulesByStatus(auth()->user()->id_user,
+        $fixed_schedules = $this->teacherService->getFixedSchedulesByStatus(auth()->user()->accountable_id,
                                                                             $request->status);
         return FixedScheduleResource::collection($fixed_schedules);
     }
 
     public function getModuleClassesByStudySessions (Request $request, $id_teacher)
     {
-        return response($this->teacherService->getModuleClassesByStudySessions(auth()->user()->id_user,
+        return response($this->teacherService->getModuleClassesByStudySessions(auth()->user()->accountable_id,
                                                                                $request->term,
                                                                                $request->ss));
     }

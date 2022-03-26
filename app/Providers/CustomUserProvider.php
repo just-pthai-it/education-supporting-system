@@ -19,7 +19,8 @@ class CustomUserProvider extends EloquentUserProvider implements UserProvider
             'password',
             'email',
             'id_role',
-            'id_user',
+            'accountable_type',
+            'accountable_id',
             GFunction::uuidFromBin('uuid'),
         ];
 
@@ -63,7 +64,8 @@ class CustomUserProvider extends EloquentUserProvider implements UserProvider
             'id',
             'password',
             'id_role',
-            'id_user',
+            'accountable_type',
+            'accountable_id',
             GFunction::uuidFromBin('uuid'),
         ];
 
