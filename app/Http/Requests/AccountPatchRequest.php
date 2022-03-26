@@ -24,8 +24,8 @@ class AccountPatchRequest extends FormRequest
     public function rules () : array
     {
         return [
-            'email'        => 'required',
-            'phone_number' => 'required',
+            'email'        => '',
+            'phone_number' => '',
         ];
     }
 }
