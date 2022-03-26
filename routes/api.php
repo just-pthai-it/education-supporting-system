@@ -16,6 +16,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StudySessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExamScheduleController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FixedScheduleController;
 
 /*
@@ -98,6 +99,17 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
+    Route::group(['prefix' => 'accounts'], function ()
+    {
+        Route::group(['prefix' => '{uuid_account}'], function ()
+        {
+        });
+
+        Route::group(['prefix' => 'update'], function ()
+        {
+            Route::patch('{id_account}', [AccountController::class, 'update']);
+        });
+    });
 
     Route::group(['prefix' => 'departments'], function ()
     {
@@ -161,4 +173,9 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
 
     Route::get('me', [UserController::class, 'getUserInfo']);
+});
+
+Route::get('bad-request', function ()
+{
+    return response('', 400);
 });

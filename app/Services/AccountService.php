@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\GFunction;
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Exceptions\InvalidAccountException;
 
@@ -47,5 +48,11 @@ class AccountService implements Contracts\AccountServiceContract
     private function _updatePassword ($id_account, $password)
     {
         $this->accountDepository->updatePassword($id_account, bcrypt($password));
+    }
+
+    public function update ($uuidAccount, $values)
+    {
+        $this->accountDepository->update($values,
+                                         [['uuid', '=', GFunction::uuidToBin($uuidAccount)]]);
     }
 }
