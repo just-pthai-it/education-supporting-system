@@ -81,4 +81,12 @@ class DepartmentService implements Contracts\DepartmentServiceContract
         return $this->teacherRepository->find(['id', 'name'],
                                               [['id_department', '=', $id_department]]);
     }
+
+    public function destroyModuleClassesByStudySession (string $idDepartment,
+                                                        string $studySession)
+    {
+        $idStudySession = $this->_getIdStudySessions([$studySession])[0];
+        $this->moduleClassRepository->softDeleteByIdDepartmentAndIdStudySession($idDepartment,
+                                                                                $idStudySession);
+    }
 }

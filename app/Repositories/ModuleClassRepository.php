@@ -46,4 +46,13 @@ class ModuleClassRepository extends BaseRepository implements Contracts\ModuleCl
         DB::table('temp')->insert($id_module_classes);
     }
 
+
+    public function softDeleteByIdDepartmentAndIdStudySession (string $idDepartment, int $idStudySession)
+    {
+        $this->createModel();
+        $this->model->join(Module::table_as, 'module_class.id_module', '=', 'md.id')
+                    ->where('id_department', '=', $idDepartment)
+                    ->where('id_study_session', '=', $idStudySession)
+                    ->update(['deleted_at' => now()]);
+    }
 }

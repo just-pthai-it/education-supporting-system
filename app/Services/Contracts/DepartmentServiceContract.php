@@ -13,4 +13,7 @@ interface DepartmentServiceContract
     public function getModuleClassesByStudySessions ($id_department, $term, $study_sessions);
 
     public function getTeachers ($id_department);
+
+    public function destroyModuleClassesByStudySession (string $idDepartment,
+                                                        string $studySession);
 }

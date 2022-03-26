@@ -26,6 +26,7 @@ class Schedule extends Model
         'shift',
         'id_room',
         'note',
+        'deleted_at',
     ];
 
     public function scopeShift (Builder $query, $shift) : Builder

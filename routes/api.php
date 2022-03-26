@@ -126,6 +126,9 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
                        [DepartmentController::class, 'getFixedSchedules']);
 
             Route::get('teachers', [DepartmentController::class, 'getTeachers']);
+
+            Route::delete('module-classes/delete',
+                          [DepartmentController::class, 'destroyModuleClassesByStudySession']);
         });
     });
 

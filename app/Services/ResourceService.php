@@ -234,7 +234,7 @@ class ResourceService implements Contracts\ResourceServiceContract
 
     private function _createManyModuleClasses ($module_classes)
     {
-        $this->moduleClassRepository->insertMultiple($module_classes);
+        $this->moduleClassRepository->upsert($module_classes, [], ['deleted_at' => null]);
     }
 
     private function _createManySchedules ($schedules)
