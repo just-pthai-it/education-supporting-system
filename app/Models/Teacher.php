@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Helpers\GFunction;
 use App\Models\Traits\Filterable;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Teacher extends Model
@@ -66,9 +66,9 @@ class Teacher extends Model
         return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
     }
 
-    public function account () : HasOne
+    public function account () : MorphOne
     {
-        return $this->hasOne(Account::class, 'id_user', 'id');
+        return $this->morphOne(Account::class, 'accountable');
     }
 
     public function moduleClasses () : HasMany

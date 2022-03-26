@@ -52,7 +52,7 @@ class AuthServiceProvider extends ServiceProvider
                                ->pluck('permission.id')->toArray();
             return in_array((in_array($input['status'], [2, -2])
                 ? 17 : (in_array($input['status'], [3, 1, -1])
-                    ? 13 : -1)), $permissions);
+                    ? 13 : 32)), $permissions);
         });
 
         Gate::define('get-teacher-fixed-schedule', function (User $user)

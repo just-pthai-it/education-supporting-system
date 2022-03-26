@@ -84,7 +84,7 @@ class TeacherService implements Contracts\TeacherServiceContract
 
     private function _getIdStudySessions (string $study_sessions) : string
     {
-        $id_study_sessions = $this->studySessionRepository->pluck([['id']],
+        $id_study_sessions = $this->studySessionRepository->pluck(['id'],
                                                                   [['name', 'in',
                                                                     explode(',', $study_sessions)]])
                                                           ->toArray();

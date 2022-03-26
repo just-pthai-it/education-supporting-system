@@ -45,6 +45,6 @@ class FixedScheduleMailNotify extends Mailable
         $this->fixedSchedule->load(['schedule:id,id_module_class',
                                     'schedule.moduleClass:id,name,id_teacher',
                                     'schedule.moduleClass.teacher:id,name,is_female',
-                                    'schedule.moduleClass.teacher.account:id_user,email']);
+                                    'schedule.moduleClass.teacher.account:accountable_id,email']);
     }
 }

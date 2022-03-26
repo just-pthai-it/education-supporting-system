@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AccountPatchRequest;
 use App\Exceptions\InvalidFormRequestException;
 use App\Http\FormRequest\ChangePasswordForm;
 use App\Services\Contracts\AccountServiceContract;
@@ -29,5 +30,10 @@ class AccountController extends Controller
     {
         $this->form->validate($request);
         $this->accountService->changePassword($request->only('password', 'new_password'));
+    }
+
+    public function update (AccountPatchRequest $request, $uuidAccount)
+    {
+        $this->accountService->update($uuidAccount, $request->validated());
     }
 }

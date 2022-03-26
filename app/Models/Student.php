@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,9 +36,9 @@ class Student extends Model
         'uuid',
     ];
 
-    public function account () : HasOne
+    public function account () : MorphOne
     {
-        return $this->hasOne(Account::class, 'id_user', 'id');
+        return $this->morphOne(Account::class, 'accountable');
     }
 
     public function class_ () : BelongsTo

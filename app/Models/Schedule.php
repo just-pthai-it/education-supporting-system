@@ -27,6 +27,7 @@ class Schedule extends Model
         'shift',
         'id_room',
         'note',
+        'deleted_at',
     ];
 
     private array $filterable = [

@@ -19,8 +19,9 @@ use Illuminate\Support\Facades\DB;
 use PDOException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
+use App\Repositories\Contracts\StudySessionRepositoryContract;
 
-class FileUploadService implements Contracts\FileUploadServiceContract
+class ResourceService implements Contracts\ResourceServiceContract
 {
     private FileUploadHandler $fileUploadHandler;
     private ModuleClassRepositoryContract $moduleClassRepository;
@@ -31,6 +32,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     private ScheduleRepositoryContract $scheduleRepository;
     private ExamScheduleRepositoryContract $examScheduleRepository;
     private CurriculumRepositoryContract $curriculumRepository;
+    private StudySessionRepositoryContract $studySessionRepository;
     private ExcelServiceContract $excelService;
 
     /**
@@ -43,6 +45,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
      * @param ScheduleRepositoryContract     $scheduleRepository
      * @param ExamScheduleRepositoryContract $examScheduleRepository
      * @param CurriculumRepositoryContract   $curriculumRepository
+     * @param StudySessionRepositoryContract $studySessionRepository
      */
     public function __construct (FileUploadHandler              $fileUploadHandler,
                                  ModuleClassRepositoryContract  $moduleClassRepository,
@@ -52,7 +55,8 @@ class FileUploadService implements Contracts\FileUploadServiceContract
                                  ClassRepositoryContract        $classRepository,
                                  ScheduleRepositoryContract     $scheduleRepository,
                                  ExamScheduleRepositoryContract $examScheduleRepository,
-                                 CurriculumRepositoryContract   $curriculumRepository)
+                                 CurriculumRepositoryContract   $curriculumRepository,
+                                 StudySessionRepositoryContract $studySessionRepository)
     {
         $this->fileUploadHandler      = $fileUploadHandler;
         $this->moduleClassRepository  = $moduleClassRepository;
@@ -63,6 +67,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
         $this->scheduleRepository     = $scheduleRepository;
         $this->examScheduleRepository = $examScheduleRepository;
         $this->curriculumRepository   = $curriculumRepository;
+        $this->studySessionRepository = $studySessionRepository;
     }
 
     /**
@@ -201,8 +206,10 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     {
         $this->excelService = app()->make('excel_schedule');
         $this->fileUploadHandler->handleFileUpload($input['file']);
+        $idStudySession = $this->studySessionRepository->find(['id'],
+                                                              [['name', '=', $input['study_session']]])[0]->id;;
         $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),
-                                              $input['id_study_session']);
+                                              $idStudySession);
 
         $modules_missing = $this->_getIDModulesMissing($data['id_modules']);
         $this->_checkExceptions($modules_missing);
@@ -227,7 +234,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
 
     private function _createManyModuleClasses ($module_classes)
     {
-        $this->moduleClassRepository->insertMultiple($module_classes);
+        $this->moduleClassRepository->upsert($module_classes, [], ['deleted_at' => null]);
     }
 
     private function _createManySchedules ($schedules)
@@ -276,7 +283,7 @@ class FileUploadService implements Contracts\FileUploadServiceContract
     {
         $this->excelService = app()->make('excel_exam_schedule');
         $this->fileUploadHandler->handleFileUpload($input['file']);
-        $teachers = $this->teacherRepository->pluck([['id', 'name']],
+        $teachers = $this->teacherRepository->pluck(['id', 'name'],
                                                     [['id_department', '=', $input['id_department']]])
                                             ->toArray();
         $data     = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),

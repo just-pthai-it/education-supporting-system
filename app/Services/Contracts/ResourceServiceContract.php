@@ -2,7 +2,7 @@
 
 namespace App\Services\Contracts;
 
-interface FileUploadServiceContract
+interface ResourceServiceContract
 {
     public function importRollCallFile ($input);
 

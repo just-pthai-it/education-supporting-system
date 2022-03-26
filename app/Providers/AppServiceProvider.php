@@ -27,7 +27,7 @@ use App\Services\Contracts\AccountServiceContract;
 use App\Services\Contracts\AuthServiceContract;
 use App\Services\Contracts\ClassServiceContract;
 use App\Services\Contracts\FacultyServiceContract;
-use App\Services\Contracts\FileUploadServiceContract;
+use App\Services\Contracts\ResourceServiceContract;
 use App\Services\Contracts\ModuleClassServiceContract;
 use App\Services\Contracts\NotificationServiceContract;
 use App\Services\Contracts\NotifyServiceContract;
@@ -35,7 +35,7 @@ use App\Services\Contracts\ScheduleServiceContract;
 use App\Services\ClassService;
 use App\Services\Contracts\StudySessionServiceContract;
 use App\Services\FacultyService;
-use App\Services\FileUploadService;
+use App\Services\ResourceService;
 use App\Services\ModuleClassService;
 use App\Services\NotificationService;
 use App\Services\NotifyService;
@@ -55,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
         StudySessionServiceContract::class  => StudySessionService::class,
         ModuleClassServiceContract::class   => ModuleClassService::class,
         DepartmentServiceContract::class    => DepartmentService::class,
-        FileUploadServiceContract::class    => FileUploadService::class,
+        ResourceServiceContract::class      => ResourceService::class,
         FeedbackServiceContract::class      => FeedbackService::class,
         ScheduleServiceContract::class      => ScheduleService::class,
         TeacherServiceContract::class       => TeacherService::class,

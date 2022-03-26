@@ -40,7 +40,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 {
     Route::group(['prefix' => 'schedules'], function ()
     {
-        Route::patch('update', [ScheduleController::class, 'updateSchedules']);
+        Route::patch('update', [ScheduleController::class, 'update']);
     });
 
 
@@ -96,6 +96,17 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
+    Route::group(['prefix' => 'accounts'], function ()
+    {
+        Route::group(['prefix' => '{uuid_account}'], function ()
+        {
+        });
+
+        Route::group(['prefix' => 'update'], function ()
+        {
+            Route::patch('{id_account}', [AccountController::class, 'update']);
+        });
+    });
 
     Route::group(['prefix' => 'departments'], function ()
     {
@@ -112,6 +123,9 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
                        [DepartmentController::class, 'getFixedSchedules']);
 
             Route::get('teachers', [DepartmentController::class, 'getTeachers']);
+
+            Route::delete('module-classes/delete',
+                          [DepartmentController::class, 'destroyModuleClassesByStudySession']);
         });
     });
 
@@ -128,7 +142,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'rooms'], function ()
     {
-        Route::get('', [RoomController::class, 'getAll']);
+        Route::get('', [RoomController::class, 'read']);
     });
 
 
@@ -159,4 +173,9 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
 
     Route::get('me', [UserController::class, 'getUserInfo']);
+});
+
+Route::get('bad-request', function ()
+{
+    return response('', 400);
 });

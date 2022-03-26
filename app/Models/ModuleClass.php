@@ -32,6 +32,7 @@ class ModuleClass extends Model
         'is_international',
         'id_module',
         'id_teacher',
+        'deleted_at',
     ];
 
     protected $hidden = [

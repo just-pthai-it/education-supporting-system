@@ -16,7 +16,7 @@ class RoomService implements Contracts\RoomServiceContract
         $this->roomDepository = $roomDepository;
     }
 
-    public function getAll ()
+    public function read ()
     {
         return $this->roomDepository->pluck();
     }

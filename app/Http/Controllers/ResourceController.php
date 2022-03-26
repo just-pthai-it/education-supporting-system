@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Contracts\FileUploadServiceContract;
+use App\Services\Contracts\ResourceServiceContract;
 use Illuminate\Http\Request;
 
 class ResourceController extends Controller
 {
-    private FileUploadServiceContract $fileUploadService;
+    private ResourceServiceContract $fileUploadService;
 
     /**
-     * @param FileUploadServiceContract $fileUploadServiceContract
+     * @param ResourceServiceContract $fileUploadServiceContract
      */
-    public function __construct (FileUploadServiceContract $fileUploadServiceContract)
+    public function __construct (ResourceServiceContract $fileUploadServiceContract)
     {
         $this->fileUploadService = $fileUploadServiceContract;
     }

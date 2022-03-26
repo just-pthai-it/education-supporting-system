@@ -54,7 +54,7 @@ abstract class BaseRepository implements BaseRepositoryContract
         return $this->model->create($object)->id;
     }
 
-    public function insertGetObject(array $object)
+    public function insertGetObject (array $object)
     {
         $this->createModel();
         return $this->model->create($object);
@@ -123,14 +123,14 @@ abstract class BaseRepository implements BaseRepositoryContract
     }
 
     public function find (array $columns = ['*'], array $conditions = [], array $orders = [],
-                          array $pagination = [], array $scopes = [], array $postFunctions = [])
+                          array $limitOffset = [], array $scopes = [], array $postFunctions = [])
     {
         $this->createModel();
 
         $this->addScopes($scopes);
         $this->addWhere($conditions);
         $this->addOrderBy($orders);
-        $this->addPagination($pagination);
+        $this->addLimitOffset($limitOffset);
 
         $result = $this->model->get($columns);
         $this->addPostFunction($result, $postFunctions);
@@ -151,16 +151,21 @@ abstract class BaseRepository implements BaseRepositoryContract
         return $result;
     }
 
-    public function pluck (array $columns = [['id']], array $conditions = [], array $orders = [],
-                           array $pagination = [], array $scopes = [])
+    public function pluck (array $columns = ['id'], array $conditions = [], array $orders = [],
+                           array $limitOffset = [], array $scopes = [])
     {
         $this->createModel();
         $this->addScopes($scopes);
         $this->addWhere($conditions);
-        $this->addPagination($pagination);
+        $this->addLimitOffset($limitOffset);
 
-        return $this->model->select(...$columns[0])
-                           ->pluck(...(count($columns) == 2 ? $columns[1] : $columns[0]));
+        return $this->model->pluck($columns[0], $columns[1] ?? null);
+    }
+
+    public function deleteByIds (array $ids)
+    {
+        $this->createModel();
+        $this->model->whereIn('id', $ids)->delete();
     }
 
     public function delete (array $conditions = [])
@@ -168,12 +173,6 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->createModel();
         $this->addWhere($conditions);
         return $this->model->delete();
-    }
-
-    public function deleteByIds (array $ids)
-    {
-        $this->createModel();
-        $this->model->whereIn('id', $ids)->delete();
     }
 
     public function count (array $conditions = [])
@@ -260,74 +259,37 @@ abstract class BaseRepository implements BaseRepositoryContract
             $operator  = $condition[1];
             $value     = $condition[2] ?? null;
 
-            if ($operator == "=")
+            $method = 'where';
+            if (strpos($operator, '|') !== false)
             {
-                $this->model = $this->model->where($attribute, "=", $value);
+                $operator = str_replace('|', '', $operator);
+                $method   = 'orWhere';
             }
 
-            if ($operator == ">")
+            switch ($operator)
             {
-                $this->model = $this->model->where($attribute, ">", $value);
-            }
-
-            if ($operator == ">=")
-            {
-                $this->model = $this->model->where($attribute, ">=", $value);
-            }
-
-            if ($operator == "<")
-            {
-                $this->model = $this->model->where($attribute, "<", $value);
-            }
-
-            if ($operator == "<=")
-            {
-                $this->model = $this->model->where($attribute, "<=", $value);
-            }
-
-            if ($operator == "<>")
-            {
-                $this->model = $this->model->where($attribute, "<>", $value);
-            }
-
-            if ($operator == "!=")
-            {
-                $this->model = $this->model->where($attribute, "!=", $value);
-            }
-
-            if ($operator == "in")
-            {
-                $this->model = $this->model->whereIn($attribute, $value);
-            }
-
-            if ($operator == "not in")
-            {
-                $this->model = $this->model->whereNotIn($attribute, $value);
-            }
-
-            if ($operator == "like")
-            {
-                $this->model = $this->model->where($attribute, "like", $value);
-            }
-
-            if ($operator == "not like")
-            {
-                $this->model = $this->model->where($attribute, "not like", $value);
-            }
-
-            if ($operator == "null")
-            {
-                $this->model = $this->model->whereNull($attribute);
-            }
-
-            if ($operator == "not null")
-            {
-                $this->model = $this->model->whereNotNull($attribute);
+                case 'between':
+                    $this->model = $this->model->{"{$method}Between"}($attribute);
+                    break;
+                case 'in':
+                    $this->model = $this->model->{"{$method}In"}($attribute, $value);
+                    break;
+                case 'not in':
+                    $this->model = $this->model->{"{$method}NotIn"}($attribute, $value);
+                    break;
+                case 'null':
+                    $this->model = $this->model->{"{$method}Null"}($attribute);
+                    break;
+                case 'not null':
+                    $this->model = $this->model->{"{$method}NotNull"}($attribute);
+                    break;
+                default:
+                    $this->model = $this->model->{$method}($attribute, $operator, $value);
             }
         }
     }
 
-    protected function addPagination (array $pagination)
+    protected function addLimitOffset (array $pagination)
     {
         if (empty($pagination))
         {

@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface DummyRepositoryContract
+interface DummyRepositoryContract extends BaseRepositoryContract
 {
 
 }

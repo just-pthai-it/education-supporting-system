@@ -62,4 +62,10 @@ class DepartmentController extends Controller
         $data = $this->departmentService->getTeachers($id_department, $request->all());
         return response(['data' => $data]);
     }
+
+    public function destroyModuleClassesByStudySession (Request $request, $idDepartment)
+    {
+        $this->departmentService->destroyModuleClassesByStudySession($idDepartment,
+                                                                     $request->study_session);
+    }
 }

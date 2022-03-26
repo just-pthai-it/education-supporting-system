@@ -81,7 +81,7 @@ class DepartmentService implements Contracts\DepartmentServiceContract
 
     private function _getIdStudySessions (string $study_sessions) : string
     {
-        $id_study_sessions = $this->studySessionRepository->pluck([['id']],
+        $id_study_sessions = $this->studySessionRepository->pluck(['id'],
                                                                   [['name', 'in',
                                                                     explode(',', $study_sessions)]])
                                                           ->toArray();
@@ -93,5 +93,13 @@ class DepartmentService implements Contracts\DepartmentServiceContract
         return $this->teacherRepository->find(['id', 'name'],
                                               [['id_department', '=', $id_department]], [], [],
                                               [['filter', $inputs]]);
+    }
+
+    public function destroyModuleClassesByStudySession (string $idDepartment,
+                                                        string $studySession)
+    {
+        $idStudySession = $this->_getIdStudySessions([$studySession])[0];
+        $this->moduleClassRepository->softDeleteByIdDepartmentAndIdStudySession($idDepartment,
+                                                                                $idStudySession);
     }
 }

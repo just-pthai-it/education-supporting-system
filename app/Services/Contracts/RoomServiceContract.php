@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface RoomServiceContract
 {
-    public function getAll ();
+    public function read ();
 }
