@@ -99,6 +99,8 @@ class AuthService implements Contracts\AuthServiceContract
     {
         $data->uuid_account = auth()->user()->uuid;
         $data->id_role      = auth()->user()->id_role;
+        $data->email        = auth()->user()->email;
+        $data->phone_number = auth()->user()->phone_number;
         $data->permissions  = $this->_getAccountPermissions();
 
         return $data;

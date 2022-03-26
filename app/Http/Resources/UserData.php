@@ -24,6 +24,8 @@ class UserData extends JsonResource
                 'idRole'                  => $this->id_role,
                 'isFemale'                => $this->is_female,
                 'birth'                   => $this->birth,
+                'email'                   => $this->email,
+                'phone_number'            => $this->phone_number,
                 'universityTeacherDegree' => $this->university_teacher_degree,
                 'uuid'                    => $this->uuid,
                 'uuidAccount'             => $this->uuid_account,
