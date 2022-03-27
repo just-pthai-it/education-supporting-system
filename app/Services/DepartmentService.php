@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Helpers\GFunction;
 use App\Repositories\Contracts\TeacherRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\DepartmentRepositoryContract;
@@ -72,20 +71,19 @@ class DepartmentService implements Contracts\DepartmentServiceContract
     {
         if (isset($inputs['study_sessions']))
         {
-            $id_study_sessions = $this->_getIdStudySessions($inputs['study_sessions']);
+            $idStudySessions = $this->_readIdStudySessionsByNames($inputs['study_sessions']);
+            $idStudySessions = implode(',', $idStudySessions);;
+            $inputs = array_merge($inputs, ['id_study_session' => ['in' => $idStudySessions]]);
         }
 
-        return array_merge($inputs,
-                           !isset($id_study_sessions) ? [] : ['id_study_session' => ['in' => $id_study_sessions]]);
+        return $inputs;
     }
 
-    private function _getIdStudySessions (string $study_sessions) : string
+    private function _readIdStudySessionsByNames (string $studySessions)
     {
-        $id_study_sessions = $this->studySessionRepository->pluck(['id'],
-                                                                  [['name', 'in',
-                                                                    explode(',', $study_sessions)]])
-                                                          ->toArray();
-        return implode(',', $id_study_sessions);
+        $studySessions = explode(',', $studySessions);
+        return $this->studySessionRepository->pluck(['id'], [['name', 'in', $studySessions]])
+                                            ->toArray();
     }
 
     public function getTeachers (string $id_department, array $inputs)
@@ -98,7 +96,7 @@ class DepartmentService implements Contracts\DepartmentServiceContract
     public function destroyModuleClassesByStudySession (string $idDepartment,
                                                         string $studySession)
     {
-        $idStudySession = $this->_getIdStudySessions([$studySession])[0];
+        $idStudySession = $this->_readIdStudySessionsByNames($studySession)[0];
         $this->moduleClassRepository->softDeleteByIdDepartmentAndIdStudySession($idDepartment,
                                                                                 $idStudySession);
     }

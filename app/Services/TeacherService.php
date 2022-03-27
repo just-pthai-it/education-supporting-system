@@ -75,19 +75,18 @@ class TeacherService implements Contracts\TeacherServiceContract
     {
         if (isset($inputs['study_sessions']))
         {
-            $id_study_sessions = $this->_getIdStudySessions($inputs['study_sessions']);;
-            $inputs = array_merge($inputs, ['id_study_session' => ['in' => $id_study_sessions]]);
+            $idStudySessions = $this->_readIdStudySessionsByNames($inputs['study_sessions']);
+            $idStudySessions = implode(',', $idStudySessions);;
+            $inputs = array_merge($inputs, ['id_study_session' => ['in' => $idStudySessions]]);
         }
 
         return $inputs;
     }
 
-    private function _getIdStudySessions (string $study_sessions) : string
+    private function _readIdStudySessionsByNames (string $studySessions)
     {
-        $id_study_sessions = $this->studySessionRepository->pluck(['id'],
-                                                                  [['name', 'in',
-                                                                    explode(',', $study_sessions)]])
-                                                          ->toArray();
-        return implode(',', $id_study_sessions);
+        $studySessions = explode(',', $studySessions);
+        return $this->studySessionRepository->pluck(['id'], [['name', 'in', $studySessions]])
+                                            ->toArray();
     }
 }
