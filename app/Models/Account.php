@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Exception;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,8 +54,8 @@ class Account extends Model
 
     public function notifications () : BelongsToMany
     {
-        return $this->belongsToMany(Notification::class, 'notification_account', 'id_notification',
-                                    'id_account');
+        return $this->belongsToMany(Notification::class, 'notification_account', 'id_account',
+                                    'id_notification')->withPivot(['read_at']);
     }
 
     public function notification () : HasOne
@@ -66,7 +65,7 @@ class Account extends Model
 
     public function tags () : BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'account_tag', 'id_tag', 'id_account');
+        return $this->belongsToMany(Tag::class, 'account_tag', 'id_account', 'id_tag');
     }
 
     public function feedbacks () : HasMany

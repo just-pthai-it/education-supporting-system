@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\GFunction;
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Exceptions\InvalidAccountException;
+use App\Repositories\Contracts\NotificationRepositoryContract;
 
 class AccountService implements Contracts\AccountServiceContract
 {
@@ -54,5 +55,10 @@ class AccountService implements Contracts\AccountServiceContract
     {
         $this->accountDepository->update($values,
                                          [['uuid', '=', GFunction::uuidToBin($uuidAccount)]]);
+    }
+
+    public function readManyNotifications (string $uuidAccount, array $inputs)
+    {
+        return $this->accountDepository->findNotifications($uuidAccount, $inputs)[0]->notifications;
     }
 }

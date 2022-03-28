@@ -4,16 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tag extends Model
 {
     use HasFactory;
 
-    public const table = 'tag';
-    public const table_as = 'tag as tag';
+    public const table = 'tags';
+    public const table_as = 'tags as tags';
 
-    protected $table = 'tag';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
@@ -24,5 +23,16 @@ class Tag extends Model
     ];
 
     protected $hidden = [];
+
+    public function notifications () : BelongsToMany
+    {
+        return $this->belongsToMany(Notification::class, 'notification_tag', 'id_tag',
+                                    'id_notification');
+    }
+
+    public function accounts () : BelongsToMany
+    {
+        return $this->belongsToMany(Account::class, 'account_tag', 'id_tag', 'id_account');
+    }
 
 }

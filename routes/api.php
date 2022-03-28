@@ -103,6 +103,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     {
         Route::group(['prefix' => '{uuid_account}'], function ()
         {
+            Route::get('notifications', [AccountController::class, 'readManyNotifications']);
         });
 
         Route::group(['prefix' => 'update'], function ()
@@ -172,6 +173,11 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     Route::group(['prefix' => 'exam-schedules'], function ()
     {
         Route::put('update', [ExamScheduleController::class, 'updateExamSchedule']);
+    });
+
+    Route::group(['prefix' => 'notifications'], function ()
+    {
+        Route::post('create', [NotificationController::class, 'store']);
     });
 
 

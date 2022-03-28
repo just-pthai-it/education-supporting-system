@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\TagRepository;
 use App\Repositories\RoomRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\FeedbackRepository;
@@ -12,6 +13,7 @@ use App\Repositories\AccountRepository;
 use App\Repositories\ClassRepository;
 use App\Repositories\ExamScheduleRepository;
 use App\Repositories\FixedScheduleRepository;
+use App\Repositories\Contracts\TagRepositoryContract;
 use App\Repositories\Contracts\RoomRepositoryContract;
 use App\Repositories\Contracts\RoleRepositoryContract;
 use App\Repositories\Contracts\FeedbackRepositoryContract;
@@ -73,6 +75,7 @@ class RepositoryServiceProvider extends ServiceProvider
         TermRepositoryContract::class            => TermRepository::class,
         RoomRepositoryContract::class            => RoomRepository::class,
         RoleRepositoryContract::class            => RoleRepository::class,
+        TagRepositoryContract::class             => TagRepository::class,
     ];
 
     /**

@@ -2,17 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface NotificationRepositoryContract
+interface NotificationRepositoryContract extends BaseRepositoryContract
 {
-    public function insertGetID ($data);
 
-    public function insertPivotMultiple ($id_notification, $id_accounts);
-
-    public function getNotifications1 ($id_sender, $num);
-
-    public function getNotifications2 ($id_notifications);
-
-    public function getIDNotifications ($id_account, $offset);
-
-    public function update ($id_sender, $id_notifications);
 }

@@ -2,164 +2,108 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use App\Repositories\Contracts\TagRepositoryContract;
 use App\Repositories\Contracts\AccountRepositoryContract;
-use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
-use App\Repositories\Contracts\DataVersionTeacherRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
-use App\Repositories\Contracts\StudentRepositoryContract;
-use App\Helpers\GFunction;
-use App\Services\Contracts\NotificationServiceContract;
 
 class NotificationService implements Contracts\NotificationServiceContract
 {
-    private DataVersionStudentRepositoryContract $dataVersionStudentDepository;
-    private DataVersionTeacherRepositoryContract $dataVersionTeacherRepository;
-    private NotificationRepositoryContract $notificationDepository;
-    private AccountRepositoryContract $accountDepository;
-    private StudentRepositoryContract $studentDepository;
+    private NotificationRepositoryContract $notificationRepository;
+    private AccountRepositoryContract $accountRepository;
+    private TagRepositoryContract $tagRepository;
 
     /**
-     * @param DataVersionStudentRepositoryContract $dataVersionStudentDepository
-     * @param DataVersionTeacherRepositoryContract $dataVersionTeacherRepository
-     * @param NotificationRepositoryContract       $notificationDepository
-     * @param AccountRepositoryContract            $accountDepository
-     * @param StudentRepositoryContract            $studentDepository
+     * @param NotificationRepositoryContract $notificationRepository
+     * @param AccountRepositoryContract      $accountRepository
+     * @param TagRepositoryContract          $tagRepository
      */
-    public function __construct (DataVersionStudentRepositoryContract $dataVersionStudentDepository,
-                                 DataVersionTeacherRepositoryContract $dataVersionTeacherRepository,
-                                 NotificationRepositoryContract       $notificationDepository,
-                                 AccountRepositoryContract            $accountDepository,
-                                 StudentRepositoryContract            $studentDepository)
+    public function __construct (NotificationRepositoryContract $notificationRepository,
+                                 AccountRepositoryContract      $accountRepository,
+                                 TagRepositoryContract          $tagRepository)
     {
-        $this->dataVersionStudentDepository = $dataVersionStudentDepository;
-        $this->dataVersionTeacherRepository = $dataVersionTeacherRepository;
-        $this->notificationDepository       = $notificationDepository;
-        $this->accountDepository            = $accountDepository;
-        $this->studentDepository            = $studentDepository;
+        $this->notificationRepository = $notificationRepository;
+        $this->accountRepository      = $accountRepository;
+        $this->tagRepository          = $tagRepository;
     }
 
-    public function pushFCNotification ($notification, $classes) : array
+
+    public function store (array $inputs)
     {
-        $id_students = $this->_getIDStudentsBFC($classes);
-        $id_accounts = $this->_sharedFunctions($notification, $id_students);
+        $this->_completePostInputs($inputs);
+        $notificationArray = Arr::except($inputs, ['tag_names', 'accountable_ids']);
+        $idNotification    = $this->notificationRepository->insertGetId($notificationArray);
 
-        return $id_accounts;
-    }
-
-    private function _getIDStudentsBFC ($classs)
-    {
-        return $this->studentDepository->getIDStudents1($classs);
-    }
-
-    public function pushMCNotification ($notification, $classes) : array
-    {
-        $id_students = $this->_getIDStudentsBMC($classes);
-        $id_accounts = $this->_sharedFunctions($notification, $id_students);
-        return $id_accounts;
-    }
-
-    private function _getIDStudentsBMC ($classes)
-    {
-        return $this->studentDepository->getIDStudents2($classes);
-    }
-
-    private function _sharedFunctions ($notification, $id_students) : array
-    {
-        $id_accounts     = $this->_getIDAccounts(GFunction::formatArray($id_students,
-                                                                        'id_student'));
-        $id_notification = $this->_createNotification($notification);
-        $this->_createNotificationAccount($id_accounts, $id_notification);
-        $this->_updateNotificationDataVersionStudent($id_students);
-
-        return $id_accounts;
-    }
-
-    private function _getIDAccounts ($id_students) : array
-    {
-        return empty($id_students) ? [] : $this->accountDepository->getIDAccounts1($id_students);
-    }
-
-    private function _createNotification ($notification)
-    {
-        $notification = $this->_setUpNotification($notification);
-        return $this->notificationDepository->insertGetID($notification);
-    }
-
-    private function _setUpNotification ($notification) : array
-    {
-        return [
-            'title'       => GFunction::formatString($notification['title']),
-            'content'     => GFunction::formatString($notification['content']),
-            'type'        => $notification['type'],
-            'id_sender'   => $notification['id_sender'],
-            'time_create' => GFunction::getDateTimeNow(),
-            'time_start'  => $notification['time_start'],
-            'time_end'    => $notification['time_end']
-        ];
-    }
-
-    private function _createNotificationAccount ($id_accounts, $id_notification)
-    {
-        if (empty($id_accounts))
+        if (!empty($inputs['tag_names']))
         {
-            return;
+            $tags       = $this->_readTagsByNames($inputs['tag_names']);
+            $idTags     = $this->_getIdTagsFromTags($tags);
+            $idAccounts = $this->_getIdAccountsFromTags($tags);
+            $this->_createNotificationTag($idNotification, $idTags);
+        }
+        else
+        {
+            $idAccounts = $this->_readIdAccountsByNotifiableIds($inputs['accountable_ids']);
         }
 
-        $this->notificationDepository->insertPivotMultiple($id_notification, $id_accounts);
+        $this->_createNotificationAccount($idNotification, $idAccounts);
     }
 
-    public function setDelete ($id_sender, $id_notifications)
+    private function _completePostInputs (&$inputs)
     {
-        $this->notificationDepository->update($id_sender, $id_notifications);
-        $id_accounts = $this->accountDepository->getIDAccounts2($id_notifications);
-        $id_students = $this->_getIDStudentsByIDAccounts($id_accounts);
-        $this->_updateNotificationDataVersionStudent($id_students);
+        $inputs['id_account'] = auth()->user()->id;
     }
 
-    private function _getIDStudentsByIDAccounts ($id_accounts)
+    public function _readTagsByNames (array $tagNames)
     {
-        return $this->studentDepository->getIDStudents3($id_accounts);
-    }
+        $conditions = [];
 
-    private function _updateNotificationDataVersionStudent ($id_students)
-    {
-        $this->dataVersionStudentDepository->updateMultiple($id_students, 'notification');
-    }
-
-    public function getReceivedNotifications ($id_account, $offset) : array
-    {
-        $id_notifications = $this->notificationDepository->getIDNotifications($id_account, $offset);
-        $data             = $this->notificationDepository->getNotifications2($id_notifications);
-        return $this->_formatNotificationResponse($data);
-    }
-
-    private function _formatNotificationResponse ($data) : array
-    {
-        $response = [];
-        foreach ($data as $part)
+        foreach ($tagNames as $tagName)
         {
-            foreach ($part as $notification)
+            if (!empty($conditions))
             {
-                $response['senders'][] = [
-                    'id_sender'   => $notification['id_sender'],
-                    'sender_name' => $notification['sender_name'],
-                ];
-                unset($notification['sender_name']);
-
-                $response['notifications'][] = $notification;
+                $conditions[] = ['name', '|like', $tagName];
+            }
+            else
+            {
+                $conditions[] = ['name', 'like', $tagName];
             }
         }
 
-        if (isset($response['senders']))
-        {
-            $response['senders'] = array_values(array_unique($response['senders'], SORT_REGULAR));
-        }
-
-        return $response;
+        return $this->tagRepository->find(['id'], $conditions, [], [], [['with', 'accounts:id']]);
     }
 
-    public function getSentNotifications ($id_sender, $offset)
+    private function _getIdTagsFromTags (Collection $tags) : array
     {
-        return $this->notificationDepository->getNotifications1($id_sender, $offset);
+        return $tags->pluck('id')->toArray();
+    }
+
+    private function _getIdAccountsFromTags (Collection $tags) : array
+    {
+        $idAccounts = [];
+
+        $tags->each(function ($item, $key) use (&$idAccounts)
+        {
+            $idAccounts = array_merge($idAccounts, $item->accounts->pluck('id')->toArray());
+        });
+
+        return $idAccounts;
+    }
+
+    private function _readIdAccountsByNotifiableIds (array $notifiableIds)
+    {
+        return $this->accountRepository->pluck(['id'], [['accountable_id', 'in', $notifiableIds]])
+                                       ->toArray();
+    }
+
+    private function _createNotificationAccount (string $idNotification, array $idAccounts)
+    {
+        $this->notificationRepository->insertPivot($idNotification, $idAccounts, 'accounts');
+    }
+
+    private function _createNotificationTag (string $idNotification, array $idTags)
+    {
+        $this->notificationRepository->insertPivot($idNotification, $idTags, 'tags');
     }
 }
