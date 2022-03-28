@@ -4,20 +4,21 @@ namespace App\Helpers;
 
 class GFArray
 {
-    public static function onlyKeys (array $array, array $columns) : array
+    public static function onlyKeys (array $array, array $keys) : array
     {
         $data = [];
-        foreach ($columns as $key => $column)
+        foreach ($keys as $key => $value)
         {
             if (key_exists($key, $array) && is_string($key))
             {
-                $data[$column] = $array[$key];
+                $data[$value] = $array[$key];
             }
             else
             {
-                $data[$column] = $array[$column];
+                $data[$value] = $array[$value];
             }
         }
+
         return $data;
     }
 }
