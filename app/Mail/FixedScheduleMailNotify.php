@@ -16,12 +16,11 @@ class FixedScheduleMailNotify extends Mailable
     private FixedSchedule $fixedSchedule;
 
     /**
-     * @param array $package
+     * @param array $data
      */
-    public function __construct (array $package)
+    public function __construct (array $data)
     {
-        $this->data          = $package['basic_data'];
-        $this->fixedSchedule = $package['fixed_schedule'];
+        $this->data = $data;
     }
 
     /**
@@ -30,21 +29,7 @@ class FixedScheduleMailNotify extends Mailable
      */
     public function build () : FixedScheduleMailNotify
     {
-        $this->_loadFixedScheduleRelationship();
-        return $this->to($this->fixedSchedule->schedule->moduleClass->teacher->account->email)
-                    ->view($this->data['view'])
-                    ->with(['content'        => $this->data['content'],
-                            'fixed_schedule' => $this->fixedSchedule->getOriginal(),
-                            'module_class'   => $this->fixedSchedule->schedule->moduleClass->getOriginal(),
-                            'teacher'        => $this->fixedSchedule->schedule->moduleClass->teacher->getOriginal()])
-                    ->subject($this->data['subject']);
-    }
-
-    private function _loadFixedScheduleRelationship ()
-    {
-        $this->fixedSchedule->load(['schedule:id,id_module_class',
-                                    'schedule.moduleClass:id,name,id_teacher',
-                                    'schedule.moduleClass.teacher:id,name,is_female',
-                                    'schedule.moduleClass.teacher.account:accountable_id,email']);
+        return $this->to($this->data['recipient'])->view($this->data['view'])
+                    ->with($this->data)->subject($this->data['subject']);
     }
 }

@@ -32,7 +32,7 @@ class Teacher extends Model
         'schedule_data_version',
         'notification_data_version',
         'is_head_of_department',
-        'id_head_of_faculty',
+        'is_head_of_faculty',
         'is_active',
         'deleted_at',
         'uuid',

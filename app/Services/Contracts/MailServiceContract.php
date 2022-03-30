@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface MailServiceContract
 {
-    public function sendFixedScheduleMailNotify (array $package);
+    public function sendFixedScheduleMailNotification (array $data);
 }
