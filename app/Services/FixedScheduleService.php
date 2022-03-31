@@ -3,31 +3,23 @@
 namespace App\Services;
 
 use Exception;
-use App\Helpers\GData;
-use App\Helpers\GFArray;
-use App\Helpers\GFunction;
 use Illuminate\Support\Arr;
-use App\Models\FixedSchedule;
-use App\Services\Contracts\MailServiceContract;
+use App\Events\FixedScheduleUpdated;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
 
 class FixedScheduleService implements Contracts\FixedScheduleServiceContract
 {
-    private MailServiceContract $mailService;
     private FixedScheduleRepositoryContract $fixedScheduleRepository;
     private ScheduleRepositoryContract $scheduleRepository;
 
     /**
-     * @param MailServiceContract             $mailService
      * @param FixedScheduleRepositoryContract $fixedScheduleRepository
      * @param ScheduleRepositoryContract      $scheduleRepository
      */
-    public function __construct (MailServiceContract             $mailService,
-                                 FixedScheduleRepositoryContract $fixedScheduleRepository,
+    public function __construct (FixedScheduleRepositoryContract $fixedScheduleRepository,
                                  ScheduleRepositoryContract      $scheduleRepository)
     {
-        $this->mailService             = $mailService;
         $this->fixedScheduleRepository = $fixedScheduleRepository;
         $this->scheduleRepository      = $scheduleRepository;
     }
@@ -39,8 +31,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     {
         $this->_completeInputData($fixedScheduleArr);
         $fixedSchedule = $this->fixedScheduleRepository->insertGetObject($fixedScheduleArr);
-        $this->_checkIfNeedToUpdateSchedule($fixedSchedule);
-        $this->_sendMail($fixedSchedule);
+        FixedScheduleUpdated::dispatch($fixedSchedule);
 
         return $fixedSchedule->id;
     }
@@ -55,59 +46,6 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         return $this->scheduleRepository->findByIds($id, $columns);
     }
 
-    private function _updateScheduleById ($id, array $columns = ['*'])
-    {
-        $this->scheduleRepository->updateByIds($id, $columns);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function _getMailData (int $status) : array
-    {
-        switch ($status)
-        {
-            case -3:
-                return GData::$mail_data['change_schedule_request']['cancel'];
-            case -2:
-                return GData::$mail_data['change_schedule_request']['deny_room'];
-            case -1:
-                return GData::$mail_data['change_schedule_request']['deny'];
-            case 0:
-                return GData::$mail_data['change_schedule_request']['confirm'];
-            case 1:
-                return GData::$mail_data['change_schedule_request']['accept'];
-            case 2:
-                return GData::$mail_data['change_schedule_request']['accept_room'];
-            case 3:
-                return GData::$mail_data['change_schedule_request']['accept_straight'];
-            default:
-                throw new Exception('send mail fixed schedule');
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function _sendMail (FixedSchedule $fixedSchedule)
-    {
-        if ($fixedSchedule->status != 4)
-        {
-            try
-            {
-                $package = [
-                    'basic_data'     => $this->_getMailData($fixedSchedule->status),
-                    'fixed_schedule' => $fixedSchedule,
-                ];
-                $this->mailService->sendFixedScheduleMailNotify($package);
-            }
-            catch (Exception $exception)
-            {
-                GFunction::printError($exception);
-            }
-        }
-    }
-
     /**
      * @throws Exception
      */
@@ -117,8 +55,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         $this->fixedScheduleRepository->updateByIds($fixedScheduleArr['id'],
                                                     Arr::except($fixedScheduleArr, ['id']));
         $fixedSchedule = $this->_getFixedScheduleById($fixedScheduleArr['id']);
-        $this->_checkIfNeedToUpdateSchedule($fixedSchedule);
-        $this->_sendMail($fixedSchedule);
+        FixedScheduleUpdated::dispatch($fixedSchedule);
     }
 
     private function _completeInputData (&$fixedScheduleArr)
@@ -149,22 +86,15 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         }
     }
 
-    private function _checkIfNeedToUpdateSchedule (FixedSchedule $fixedSchedule)
-    {
-        if (in_array($fixedSchedule->status, [2, 3, 4]))
-        {
-            $this->_updateScheduleById($fixedSchedule->id_schedule,
-                                       GFArray::onlyKeys($fixedSchedule->getOriginal(),
-                                                         ['new_date'    => 'date',
-                                                          'new_shift'   => 'shift',
-                                                          'new_id_room' => 'id_room']));
-        }
-    }
-
-    public function read (array $inputs)
+    public function paginateFixedSchedulesByStatus (string $status, string $pagination)
     {
         return $this->fixedScheduleRepository->paginate(['*'], [], [],
                                                         $inputs['pagination'] ?? 20,
                                                         [['filter', $inputs]]);
+    }
+
+    public function read (array $inputs)
+    {
+        // TODO: Implement read() method.
     }
 }

@@ -2,47 +2,55 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Notification extends Model
 {
     use HasFactory;
 
-    public const table = 'notification';
-    public const table_as = 'notification as noti';
+    public const table = 'notifications';
+    public const table_as = 'notifications as noti';
 
-    protected $table = 'notification';
     protected $primaryKey = 'id';
-    public $timestamps = false;
 
     protected $fillable = [
         'id',
-        'title',
-        'content',
+        'data',
         'type',
-        'id_sender',
-        'time_create',
-        'time_start',
-        'time_end',
-        'is_delete'
+        'created_at',
+        'updated_at',
+        'id_account',
     ];
 
     protected $hidden = [
-        'is_delete',
-        'pivot',
     ];
 
-    public function sender () : BelongsTo
+    protected $casts = [
+        'data' => 'array',
+    ];
+
+    protected function serializeDate (DateTimeInterface $date) : string
     {
-        return $this->belongsTo(Account::class, 'id_sender', 'id');
+        return $date->format('Y-m-d H:m:s');
+    }
+
+    public function tags () : BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'notification_tag', 'id_notification', 'id_tag');
+    }
+
+    public function account () : BelongsTo
+    {
+        return $this->belongsTo(Account::class, 'id_account', 'id');
     }
 
     public function accounts () : BelongsToMany
     {
-        return $this->belongsToMany(Account::class, 'notification_account',
-                                    'id_notification', 'id_account');
+        return $this->belongsToMany(Account::class, 'notification_account', 'id_notification',
+                                    'id_account')->withPivot(['read_at']);
     }
 }

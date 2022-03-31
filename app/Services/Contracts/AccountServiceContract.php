@@ -7,4 +7,6 @@ interface AccountServiceContract
     public function changePassword ($input);
 
     public function update ($uuidAccount, $values);
+
+    public function readManyNotifications (string $uuidAccount, array $inputs);
 }

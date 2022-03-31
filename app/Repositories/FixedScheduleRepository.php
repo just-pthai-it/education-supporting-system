@@ -30,9 +30,9 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
                                        'schedule.moduleClass:id,name,id_teacher,number_reality',
                                        'schedule.moduleClass.teacher:id,name']);
 
-        if (isset($inputs['page']))
+        if (isset($inputs['page'], $inputs['pagination']))
         {
-            return $this->model->paginate($inputs['pagination'] ?? 20);
+            return $this->model->paginate($inputs['pagination']);
         }
 
         return $this->model->get();

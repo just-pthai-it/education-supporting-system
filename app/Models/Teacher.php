@@ -30,9 +30,12 @@ class Teacher extends Model
         'birth',
         'university_teacher_degree',
         'id_department',
-        'is_delete',
         'schedule_data_version',
         'notification_data_version',
+        'is_head_of_department',
+        'is_head_of_faculty',
+        'is_active',
+        'deleted_at',
         'uuid',
     ];
 

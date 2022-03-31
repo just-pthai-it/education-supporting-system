@@ -6,40 +6,44 @@ class GData
 {
     public static array $mail_data = [
         'change_schedule_request' => [
-            'confirm'         => [
+            'confirm'                   => [
                 'view'    => 'mail-forms.change-schedule-request',
                 'subject' => 'Xác nhân yêu cầu thay đổi lịch giảng dạy.',
                 'content' => "Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng dạy của",
             ],
-            'accept'          => [
+            'accept'                    => [
                 'view'    => 'mail-forms.change-schedule-request',
                 'subject' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy.',
                 'content' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của',
             ],
-            'accept_straight' => [
+            'accept_straight'           => [
                 'view'    => 'mail-forms.change-schedule-request',
                 'subject' => 'Yêu cầu thay đổi lịch giảng dạy đã được phê duyệt.',
                 'content' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của',
             ],
-            'accept_room'     => [
+            'accept_room'               => [
                 'view'    => 'mail-forms.change-schedule-request',
                 'subject' => 'Phòng quản lí giảng đường đã phê duyệt yêu cầu thay đôi lịch giảng dạy.',
                 'content' => 'Phòng quản lí giảng đường đã phê duyệt và cấp phòng cho yêu cầu thay đổi lịch giảng dạy của',
             ],
-            'cancel'          => [
+            'cancel'                    => [
                 'view'    => 'mail-forms.change-schedule-request',
                 'subject' => 'Xác nhận hủy yêu cầy thay đổi lịch giảng dạy.',
                 'content' => 'Hệ thống đã hủy yêu cầu thay đổi lịch giảng dạy của',
             ],
-            'deny'            => [
+            'deny'                      => [
                 'view'    => 'mail-forms.change-schedule-request',
                 'subject' => 'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy.',
                 'content' => 'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy của',
             ],
-            'deny_room'       => [
+            'deny_room'                 => [
                 'view'    => 'mail-forms.change-schedule-request',
                 'subject' => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy.',
                 'content' => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy của',
+            ],
+            'notify_head_of_department' => [
+                'view'    => 'mail-forms.change-schedule-request-2',
+                'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng.',
             ],
         ],
     ];

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use DateTime;
 use Illuminate\Http\Request;
 
 class DefaultHeader
@@ -23,6 +24,8 @@ class DefaultHeader
                               ->header('Access-Control-Allow-Methods',
                                        'HEAD, GET, POST, PUT, DELETE')
                               ->header('Access-Control-Allow-Headers', 'origin, x-requested-with')
-                              ->header('Access-Control-Allow-Origin', '*');
+                              ->header('Access-Control-Allow-Origin', '*')
+                              ->header('Expires',
+                                       (new DateTime('+5 seconds'))->format('D, d M Y H:i:s T'));
     }
 }
