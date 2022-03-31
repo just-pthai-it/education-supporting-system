@@ -29,8 +29,10 @@ class CreateFixedSchedulesTable extends Migration
             $table->string('reason_deny', 500)->nullable();
             $table->tinyInteger('status')->default(0)->index();
             $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
-            $table->dateTime('set_room_at')->nullable();
+            $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
+                  ->useCurrentOnUpdate();
             $table->dateTime('accepted_at')->nullable();
+            $table->dateTime('set_room_at')->nullable();
         });
     }
 

@@ -27,9 +27,12 @@ class CreateAccountsTable extends Migration
             $table->string('accountable_type', 100);
             $table->string('accountable_id', 50)->unique();
             $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
-            $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'));
-            $table->binary('uuid', 16)->unique();
+            $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
+                  ->useCurrentOnUpdate();
         });
+
+        DB::statement('alter table accounts add uuid binary(16) not null;');
+        DB::statement('create unique index accounts_uuid_uindex on accounts (uuid);');
     }
 
     /**

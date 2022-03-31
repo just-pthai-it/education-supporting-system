@@ -24,13 +24,6 @@ class CreateSchedulesTable extends Migration
             $table->string('note', 1000);
             $table->dateTime('deleted_at')->nullable();
         });
-
-
-        Schema::table('schedules', function ($table)
-        {
-            $table->foreign('id_module_class')->references('id')->on('module_classes');
-            $table->foreign('id_room')->references('id')->on('rooms');
-        });
     }
 
     /**
