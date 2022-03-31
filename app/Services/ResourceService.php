@@ -215,7 +215,7 @@ class ResourceService implements Contracts\ResourceServiceContract
         $this->_checkExceptions($modules_missing);
         $this->_createAndUpdateData($data);
         $this->_updateCacheData($data['special_module_classes'], $input['id_department'],
-                                $input['id_study_session']);
+                                $idStudySession);
     }
 
     private function _getIDModulesMissing ($id_modules)
