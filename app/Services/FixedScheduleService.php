@@ -86,15 +86,10 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         }
     }
 
-    public function paginateFixedSchedulesByStatus (string $status, string $pagination)
+    public function read (array $inputs)
     {
         return $this->fixedScheduleRepository->paginate(['*'], [], [],
                                                         $inputs['pagination'] ?? 20,
                                                         [['filter', $inputs]]);
-    }
-
-    public function read (array $inputs)
-    {
-        // TODO: Implement read() method.
     }
 }
