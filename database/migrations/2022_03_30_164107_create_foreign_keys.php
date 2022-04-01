@@ -69,7 +69,7 @@ class CreateForeignKeys extends Migration
         });
 
 
-        Schema::table('feedbacks', function ($table)
+        Schema::table('feedback', function ($table)
         {
             $table->foreign('id_account')->references('id')->on('accounts');
         });
