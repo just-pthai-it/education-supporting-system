@@ -10,13 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StudySession extends Model
 {
-    public const table = 'study_session';
-    public const table_as = 'study_session as ss';
-
     use HasFactory, Filterable;
 
-    protected $table = 'study_session';
-    protected $primaryKey = 'id';
+    public const table = 'study_sessions';
+    public const table_as = 'study_sessions as sss';
+
     public $timestamps = false;
 
     protected $fillable = [

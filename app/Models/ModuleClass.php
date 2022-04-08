@@ -14,22 +14,20 @@ class ModuleClass extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'module_class';
-    public const table_as = 'module_class as mc';
+    public const table = 'module_classes';
+    public const table_as = 'module_classes as mcs';
 
-    protected $table = 'module_class';
-    protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $timestamps = false;
 
     protected $fillable = [
         'id',
         'name',
+        'type',
         'number_plan',
         'number_reality',
-        'class_type',
-        'id_study_session',
         'is_international',
+        'id_study_session',
         'id_module',
         'id_teacher',
         'deleted_at',
@@ -67,7 +65,8 @@ class ModuleClass extends Model
 
     public function students () : BelongsToMany
     {
-        return $this->belongsToMany(Student::class, 'participate', 'id_module_class', 'id_student');
+        return $this->belongsToMany(Student::class, 'module_class-student', 'id_module_class',
+                                    'id_student');
     }
 
     public function examSchedule () : HasOne

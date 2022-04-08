@@ -18,7 +18,7 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
         $this->createModel();
         return $this->model->whereHas('teachers', function (Builder $query) use ($id_teacher)
         {
-            $query->where('teacher.id', '=', $id_teacher);
+            $query->where('teachers.id', '=', $id_teacher);
         })->filter($inputs)->with(['moduleClass:id,name',
                                    'teachers' => function ($query)
                                    {

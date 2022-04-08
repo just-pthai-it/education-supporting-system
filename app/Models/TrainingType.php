@@ -2,21 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TrainingType extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
-    public const table = 'training_type';
-    public const table_as = 'training_type as tt';
+    public const table = 'training_types';
+    public const table_as = 'training_types as tts';
 
-    use HasFactory;
-
-    protected $table = 'training_type';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [

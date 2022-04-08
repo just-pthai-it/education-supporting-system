@@ -46,7 +46,7 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
         $fixedSchedule->load(['schedule:id,id_module_class',
                               'schedule.moduleClass:id,name,id_teacher',
                               'schedule.moduleClass.teacher:id,name,is_female,id_department',
-                              'schedule.moduleClass.teacher.account:accountable_id,email']);
+                              'schedule.moduleClass.teachers.account:accountable_id,email']);
     }
 
     /**

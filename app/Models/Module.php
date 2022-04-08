@@ -12,11 +12,9 @@ class Module extends Model
 {
     use HasFactory;
 
-    public const table = 'module';
-    public const table_as = 'module as md';
+    public const table = 'modules';
+    public const table_as = 'modules as mds';
 
-    protected $table = 'module';
-    protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $timestamps = false;
 

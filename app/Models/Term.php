@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,13 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Term extends Model
 {
-    public const table = 'term';
-    public const table_as = 'term as te';
+    use HasFactory, Filterable;
 
-    use HasFactory;
+    public const table = 'terms';
+    public const table_as = 'terms as tes';
 
-    protected $table = 'term';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [

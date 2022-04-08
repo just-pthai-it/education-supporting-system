@@ -35,9 +35,9 @@ class FixedScheduleResource extends JsonResource
                 'shift' => $this->new_shift,
                 'room'  => $this->new_id_room,
             ],
-            'timeRequest'              => $this->time_request,
-            'timeAccept'               => $this->time_accept,
-            'timeSetRoom'              => $this->time_set_room,
+            'createdAt'                => $this->created_at,
+            'acceptedAt'               => $this->accepted_at,
+            'setRoomAt'                => $this->set_room_at,
             'status'                   => $this->status,
             'reason'                   => $this->reason,
         ];

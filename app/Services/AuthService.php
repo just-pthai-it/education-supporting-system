@@ -76,16 +76,14 @@ class AuthService implements Contracts\AuthServiceContract
         {
             case 'App\Models\OtherDepartment':
                 $data = $this->otherDepartmentDepository->findByIds(auth()->user()->accountable_id,
-                                                                    [], [], [['withUuid']],
-                                                                    [['makeVisible', ['uuid']]]);
+                                                                    ['*'], [], [], []);
                 break;
 
             case 'App\Models\Teacher':
                 $data = $this->teacherDepository->findByIds(auth()->user()->accountable_id,
-                                                            [], [], [['withUuid'],
-                                                                     ['with', 'department:id,name,id_faculty',
-                                                                      'department.faculty:id,name']],
-                                                            [['makeVisible', ['uuid']]]);
+                                                            ['*'], [],
+                                                            [['with', 'department:id,name,id_faculty',
+                                                              'department.faculty:id,name']], []);
                 break;
 
             default:
@@ -100,7 +98,7 @@ class AuthService implements Contracts\AuthServiceContract
         $data->uuid_account = auth()->user()->uuid;
         $data->id_role      = auth()->user()->id_role;
         $data->email        = auth()->user()->email;
-        $data->phone_number = auth()->user()->phone_number;
+        $data->phone        = auth()->user()->phone;
         $data->permissions  = $this->_getAccountPermissions();
 
         return $data;

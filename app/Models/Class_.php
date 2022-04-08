@@ -11,18 +11,17 @@ class Class_ extends Model
 {
     use HasFactory;
 
-    public const table = 'class';
-    public const table_as = 'class as cl';
+    public const table = 'classes';
+    public const table_as = 'classes as cls';
 
-    protected $table = 'class';
-    protected $primaryKey = 'id';
+    protected $table = 'classes';
     protected $keyType = 'string';
     public $timestamps = false;
 
     protected $fillable = [
         'id',
-        'id_academic_year',
         'name',
+        'id_academic_year',
         'id_faculty',
     ];
 

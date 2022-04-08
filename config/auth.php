@@ -43,7 +43,7 @@ return [
 
         'api' => [
             'driver'   => 'jwt',
-            'provider' => 'users',
+            'provider' => 'accounts',
             'hash'     => false,
         ],
     ],
@@ -66,10 +66,14 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'users'    => [
             'driver' => 'custom',
             'model'  => App\Models\User::class,
         ],
+        'accounts' => [
+            'driver' => 'custom',
+            'model'  => App\Models\Account::class,
+        ]
 
         // 'users' => [
         //     'driver' => 'database',

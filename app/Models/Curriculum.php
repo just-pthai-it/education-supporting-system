@@ -10,11 +10,9 @@ class Curriculum extends Model
 {
     use HasFactory;
 
-    public const table = 'curriculum';
-    public const table_as = 'curriculum as cc';
+    public const table = 'curriculums';
+    public const table_as = 'curriculums as ccs';
 
-    protected $table = 'curriculum';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [

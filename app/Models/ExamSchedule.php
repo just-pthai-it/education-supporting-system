@@ -12,10 +12,9 @@ class ExamSchedule extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'exam_schedule';
-    public const table_as = 'exam_schedule as es';
+    public const table = 'exam_schedules';
+    public const table_as = 'exam_schedules as ess';
 
-    protected $table = 'exam_schedule';
     protected $primaryKey = 'id_module_class';
     protected $keyType = 'string';
     public $timestamps = false;
@@ -23,8 +22,8 @@ class ExamSchedule extends Model
     protected $fillable = [
         'id_module_class',
         'method',
-        'time_start',
-        'time_end',
+        'start_at',
+        'end_at',
         'id_room',
         'note',
     ];
@@ -34,7 +33,7 @@ class ExamSchedule extends Model
     ];
 
     private array $filterable = [
-        'time_start',
+        'start_at',
     ];
 
     private array $sortable = [];
@@ -48,6 +47,6 @@ class ExamSchedule extends Model
     {
         return $this->belongsToMany(Teacher::class, 'exam_schedule_teacher',
                                     'id_module_class', 'id_teacher')
-                    ->withPivot('position');
+                    ->withPivot(['position']);
     }
 }

@@ -11,11 +11,9 @@ class Major extends Model
 {
     use HasFactory;
 
-    public const table = 'major';
-    public const table_as = 'major as mj';
+    public const table = 'majors';
+    public const table_as = 'majors as mjs';
 
-    protected $table = 'major';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
@@ -32,6 +30,6 @@ class Major extends Model
     public function academicYears () : BelongsToMany
     {
         return $this->belongsToMany(AcademicYear::class, 'academic_year_major', 'id_major',
-                                    'id_academic_year')->withPivot('id_curriculum');
+                                    'id_academic_year')->withPivot(['id_curriculum']);
     }
 }

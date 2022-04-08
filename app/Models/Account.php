@@ -3,23 +3,26 @@
 namespace App\Models;
 
 use Exception;
+use App\Models\Traits\Filterable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Account extends Model
+class Account extends Authenticatable implements JWTSubject
 {
-    use HasFactory;
+    use HasFactory, Filterable, Notifiable;
 
-    public const table = 'account';
-    public const table_as = 'account as acc';
+    public const table = 'accounts';
+    public const table_as = 'accounts as accs';
 
-    protected $table = 'account';
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,15 +31,25 @@ class Account extends Model
         'password',
         'qldt_password',
         'email',
-        'phone_number',
+        'phone',
         'id_role',
         'accountable_type',
         'accountable_id',
+        'created_at',
+        'updated_at',
         'uuid',
     ];
 
     protected $hidden = [
         'uuid',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
     ];
 
     /**
@@ -54,7 +67,7 @@ class Account extends Model
 
     public function notifications () : BelongsToMany
     {
-        return $this->belongsToMany(Notification::class, 'notification_account', 'id_account',
+        return $this->belongsToMany(Notification::class, 'account_notification', 'id_account',
                                     'id_notification')->withPivot(['read_at']);
     }
 
@@ -100,5 +113,15 @@ class Account extends Model
             'id',
             'id',
         );
+    }
+
+    public function getJWTIdentifier ()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims () : array
+    {
+        return [];
     }
 }

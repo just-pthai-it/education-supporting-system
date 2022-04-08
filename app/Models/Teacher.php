@@ -15,11 +15,9 @@ class Teacher extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'teacher';
-    public const table_as = 'teacher as tea';
+    public const table = 'teachers';
+    public const table_as = 'teachers as teas';
 
-    protected $table = 'teacher';
-    protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $timestamps = false;
 
@@ -29,18 +27,14 @@ class Teacher extends Model
         'is_female',
         'birth',
         'university_teacher_degree',
-        'id_department',
-        'schedule_data_version',
-        'notification_data_version',
         'is_head_of_department',
         'is_head_of_faculty',
         'is_active',
+        'id_department',
         'deleted_at',
-        'uuid',
     ];
 
     protected $hidden = [
-        'uuid',
         'is_delete',
         'pivot',
     ];
@@ -48,26 +42,6 @@ class Teacher extends Model
     private array $filterable = [];
 
     private array $sortable = [];
-
-    private array $column = [
-        'name',
-        'is_female',
-        'birth',
-        'university_teacher_degree',
-        'id_department',
-        'schedule_data_version',
-        'notification_data_version',
-    ];
-
-    public function scopeWithUuid ($query, ...$e)
-    {
-        if (empty($e))
-        {
-            return $query->select([...$this->fillable, GFunction::uuidFromBin('uuid')]);
-        }
-
-        return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
-    }
 
     public function account () : MorphOne
     {

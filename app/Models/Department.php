@@ -12,11 +12,9 @@ class Department extends Model
 {
     use HasFactory;
 
-    public const table = 'department';
-    public const table_as = 'department as dep';
+    public const table = 'departments';
+    public const table_as = 'departments as deps';
 
-    protected $table = 'department';
-    protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $timestamps = false;
 
@@ -25,11 +23,6 @@ class Department extends Model
         'name',
         'address',
         'id_faculty',
-        'uuid'
-    ];
-
-    protected $hidden = [
-        'uuid',
     ];
 
     public function faculty () : BelongsTo

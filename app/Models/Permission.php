@@ -10,11 +10,9 @@ class Permission extends Model
 {
     use HasFactory;
 
-    public const table = 'permission';
-    public const table_as = 'permission as per';
+    public const table = 'permissions';
+    public const table_as = 'permissions as pers';
 
-    protected $table = 'permission';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
@@ -24,6 +22,6 @@ class Permission extends Model
 
     public function roles () : BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'role_permission', 'id_permission', 'id_role');
+        return $this->belongsToMany(Role::class, 'permission_role', 'id_permission', 'id_role');
     }
 }

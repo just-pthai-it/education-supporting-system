@@ -12,11 +12,9 @@ class AcademicYear extends Model
 {
     use HasFactory;
 
-    public const table = 'academic_year';
-    public const table_as = 'academic_year as sy';
+    public const table = 'academic_years';
+    public const table_as = 'academic_years as ays';
 
-    protected $table = 'academic_year';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
@@ -35,9 +33,9 @@ class AcademicYear extends Model
         return $this->belongsTo(TrainingType::class, 'id_training_type', 'id');
     }
 
-    public function academicYears () : BelongsToMany
+    public function majors () : BelongsToMany
     {
         return $this->belongsToMany(Major::class, 'academic_year_major', 'id_academic_year',
-                                    'id_major')->withPivot('id_curriculum');
+                                    'id_major')->withPivot(['id_curriculum']);
     }
 }

@@ -94,8 +94,8 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
         $exam_schedules[] = [
             'id_module_class' => $id_module_class,
             'method'          => $method,
-            'time_start'      => $date_time[0],
-            'time_end'        => $date_time[1],
+            'start_at'        => $date_time[0],
+            'end_at'          => $date_time[1],
             'id_room'         => $id_room,
         ];
     }

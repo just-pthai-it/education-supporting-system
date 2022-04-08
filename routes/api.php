@@ -16,6 +16,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StudySessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExamScheduleController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FixedScheduleController;
 
 /*

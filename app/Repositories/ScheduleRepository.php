@@ -29,7 +29,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                       'fixedSchedules' => function ($query)
                                       {
                                           return $query->whereIn('status', [0, 1, 2, 3, 4])
-                                                       ->select('id', 'id_schedule', 'time_request',
+                                                       ->select('id', 'id_schedule', 'created_at',
                                                                 'old_date', 'old_shift',
                                                                 'old_id_room', 'new_date',
                                                                 'new_shift', 'new_id_room',
@@ -52,7 +52,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                    'fixedSchedules' => function ($query)
                                    {
                                        return $query->whereIn('status', [0, 1, 2, 3, 4])
-                                                    ->select('id', 'id_schedule', 'time_request',
+                                                    ->select('id', 'id_schedule', 'created_at',
                                                              'old_date', 'old_shift',
                                                              'old_id_room', 'new_date',
                                                              'new_shift', 'new_id_room',

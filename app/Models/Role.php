@@ -11,11 +11,9 @@ class Role extends Model
 {
     use HasFactory;
 
-    public const table = 'role';
-    public const table_as = 'account as rl';
+    public const table = 'roles';
+    public const table_as = 'roles as rls';
 
-    protected $table = 'role';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
@@ -25,7 +23,7 @@ class Role extends Model
 
     public function permissions () : BelongsToMany
     {
-        return $this->belongsToMany(Permission::class, 'role_permission', 'id_role',
+        return $this->belongsToMany(Permission::class, 'permission_role', 'id_role',
                                     'id_permission')
                     ->where('is_granted', '=', 1);
     }

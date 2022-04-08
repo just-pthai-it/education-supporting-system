@@ -14,27 +14,28 @@ class Feedback extends Model
     public const table = 'feedback';
     public const table_as = 'feedback as fb';
 
-    protected $table = 'feedback';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
         'id',
-        'title',
-        'content',
-        'feedback_type',
-        'create_at',
+        'data',
+        'type',
         'is_bug',
         'id_account',
+        'created_at',
     ];
 
     private array $filterable = [
-        'feedback_type',
+        'type',
         'is_bug',
     ];
 
     private array $sortable = [
         'id',
+    ];
+
+    protected $casts = [
+        'data' => 'array'
     ];
 
     public function account () : BelongsTo

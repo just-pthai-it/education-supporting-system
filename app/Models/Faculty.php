@@ -12,11 +12,9 @@ class Faculty extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'faculty';
-    public const table_as = 'faculty as fac';
+    public const table = 'faculties';
+    public const table_as = 'faculties as facs';
 
-    protected $table = 'faculty';
-    protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $timestamps = false;
 
@@ -24,11 +22,6 @@ class Faculty extends Model
         'id',
         'name',
         'address',
-        'uuid'
-    ];
-
-    protected $hidden = [
-        'uuid',
     ];
 
     private array $filterable = [];

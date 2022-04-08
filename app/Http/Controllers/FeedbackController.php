@@ -20,6 +20,7 @@ class FeedbackController extends Controller
     public function create (Request $request)
     {
         $this->feedbackService->create($request->all());
+        return response('', 201);
     }
 
     public function getAll (Request $request)

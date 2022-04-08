@@ -24,7 +24,7 @@ class FeedbackService implements Contracts\FeedbackServiceContract
 
     public function getAll (array $inputs)
     {
-        return $this->feedbackRepository->paginate(['id', 'title', 'content', 'feedback_type', 'create_at', 'is_bug'],
+        return $this->feedbackRepository->paginate(['id', 'data', 'type', 'is_bug', 'created_at'],
                                                    [], [], $inputs['pagination'] ?? 20,
                                                    [['filter', $inputs]]);
     }

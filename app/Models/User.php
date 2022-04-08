@@ -11,7 +11,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'account';
+    protected $table = 'accounts';
     protected $primaryKey = 'id';
     public $timestamps = false;
 
@@ -21,7 +21,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'qldt_password',
         'email',
-        'phone_number',
+        'phone',
         'id_role',
         'accountable_type',
         'accountable_id',

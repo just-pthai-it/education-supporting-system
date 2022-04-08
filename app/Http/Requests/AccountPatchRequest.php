@@ -25,7 +25,7 @@ class AccountPatchRequest extends FormRequest
     {
         return [
             'email'        => '',
-            'phone_number' => '',
+            'phone' => '',
         ];
     }
 }

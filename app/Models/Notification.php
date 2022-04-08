@@ -15,7 +15,7 @@ class Notification extends Model
     public const table = 'notifications';
     public const table_as = 'notifications as noti';
 
-    protected $primaryKey = 'id';
+    public $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -33,11 +33,6 @@ class Notification extends Model
         'data' => 'array',
     ];
 
-    protected function serializeDate (DateTimeInterface $date) : string
-    {
-        return $date->format('Y-m-d H:m:s');
-    }
-
     public function tags () : BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'notification_tag', 'id_notification', 'id_tag');
@@ -50,7 +45,7 @@ class Notification extends Model
 
     public function accounts () : BelongsToMany
     {
-        return $this->belongsToMany(Account::class, 'notification_account', 'id_notification',
+        return $this->belongsToMany(Account::class, 'account_notification', 'id_notification',
                                     'id_account')->withPivot(['read_at']);
     }
 }

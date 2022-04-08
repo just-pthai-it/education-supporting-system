@@ -25,9 +25,8 @@ class UserData extends JsonResource
                 'isFemale'                => $this->is_female,
                 'birth'                   => $this->birth,
                 'email'                   => $this->email,
-                'phone_number'            => $this->phone_number,
+                'phone'                   => $this->phone,
                 'universityTeacherDegree' => $this->university_teacher_degree,
-                'uuid'                    => $this->uuid,
                 'uuidAccount'             => $this->uuid_account,
                 'department'              => is_null($this->department) ? null : [
                     'id'   => $this->department->id,
@@ -48,7 +47,6 @@ class UserData extends JsonResource
                 'name'        => $this->name,
                 'idRole'      => $this->id_role,
                 'address'     => $this->address,
-                'uuid'        => $this->uuid,
                 'uuidAccount' => $this->uuid_account,
                 'permissions' => $this->permissions,
             ];

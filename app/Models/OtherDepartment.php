@@ -11,11 +11,9 @@ class OtherDepartment extends Model
 {
     use HasFactory;
 
-    public const table = 'other_department';
-    public const table_as = 'other_department as od';
+    public const table = 'other_departments';
+    public const table_as = 'other_departments as ods';
 
-    protected $table = 'other_department';
-    protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $timestamps = false;
 
@@ -28,16 +26,6 @@ class OtherDepartment extends Model
     protected $hidden = [
         'uuid',
     ];
-
-    public function scopeWithUuid ($query, ...$e)
-    {
-        if (empty($e))
-        {
-            return $query->select([...$this->fillable, GFunction::uuidFromBin('uuid')]);
-        }
-
-        return $query->select(GFunction::uuidFromBin('uuid'), ...$e);
-    }
 
     public function account () : MorphOne
     {

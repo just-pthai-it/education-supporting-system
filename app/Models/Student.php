@@ -11,13 +11,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Student extends Model
 {
-    public const table = 'student';
-    public const table_as = 'student as stu';
-
     use HasFactory;
 
-    protected $table = 'student';
-    protected $primaryKey = 'id';
+    public const table = 'students';
+    public const table_as = 'students as stus';
+
     protected $keyType = 'string';
     public $timestamps = false;
 
@@ -26,14 +24,8 @@ class Student extends Model
         'name',
         'is_female',
         'birth',
-        'id_class',
-        'id_card_number',
         'address',
-        'schedule_data_version',
-        'notification_data_version',
-        'module_score_data_version',
-        'exam_schedule_data_version',
-        'uuid',
+        'id_class',
     ];
 
     public function account () : MorphOne
@@ -43,12 +35,12 @@ class Student extends Model
 
     public function class_ () : BelongsTo
     {
-        return $this->belongsTo(Class_::class, 'id_faculty', 'id');
+        return $this->belongsTo(Class_::class, 'id_class', 'id');
     }
 
     public function moduleClasses () : BelongsToMany
     {
-        return $this->belongsToMany(ModuleClass::class, 'participate',
+        return $this->belongsToMany(ModuleClass::class, 'module_class_student',
                                     'id_student', 'id_module_class');
     }
 

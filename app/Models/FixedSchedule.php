@@ -12,11 +12,9 @@ class FixedSchedule extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'fixed_schedule';
-    public const table_as = 'fixed_schedule as fs';
+    public const table = 'fixed_schedules';
+    public const table_as = 'fixed_schedules as fss';
 
-    protected $table = 'fixed_schedule';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
@@ -28,13 +26,13 @@ class FixedSchedule extends Model
         'old_date',
         'old_shift',
         'old_id_room',
-        'time_request',
         'reason',
-        'time_accept',
-        'time_set_room',
-        'status',
         'reason_deny',
-        'id_notification',
+        'status',
+        'created_at',
+        'updated_at',
+        'accepted_at',
+        'set_room_at',
     ];
 
     private array $filterable = [
@@ -52,24 +50,6 @@ class FixedSchedule extends Model
             $query->whereBetween('old_date', explode(',', $values))
                   ->orWhereBetween('new_date', explode(',', $values));
         });
-    }
-
-    public function scopeStatus ($query, $status)
-    {
-        if ($status == 'all')
-        {
-            return $query;
-        }
-
-        $values = explode(',', $status);
-        if (count($values) == 1)
-        {
-            return $query->where('status', '=', $values[0]);
-        }
-        else
-        {
-            return $query->whereIn('status', $values);
-        }
     }
 
     public function schedule () : BelongsTo
