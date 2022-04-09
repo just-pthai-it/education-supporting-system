@@ -31,6 +31,9 @@ class TeacherResource extends JsonResource
                 'id'   => $this->department->faculty->id,
                 'name' => $this->department->faculty->name,
             ],
+            'isHeadOfDepartment'      => $this->is_head_of_department,
+            'isHeadOfFaculty'         => $this->is_head_of_faculty,
+            'isActive'                => $this->is_active,
         ];
     }
 }

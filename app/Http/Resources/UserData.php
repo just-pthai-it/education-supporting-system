@@ -33,6 +33,8 @@ class UserData extends JsonResource
                     'name' => $this->department->name,
                 ],
                 'faculty'                 => is_null($this->department) ? null : $this->department->faculty,
+                'isHeadOfDepartment'      => $this->is_head_of_department,
+                'isHeadOfFaculty'         => $this->is_head_of_faculty,
                 'permissions'             => $this->permissions,
             ];
         }
