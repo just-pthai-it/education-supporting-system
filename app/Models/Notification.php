@@ -13,7 +13,7 @@ class Notification extends Model
     use HasFactory;
 
     public const table = 'notifications';
-    public const table_as = 'notifications as noti';
+    public const table_as = 'notifications as notis';
 
     public $timestamps = false;
 

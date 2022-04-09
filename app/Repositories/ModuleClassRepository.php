@@ -19,12 +19,12 @@ class ModuleClassRepository extends BaseRepository implements Contracts\ModuleCl
     {
         $this->createModel();
         return $this->model->filter($inputs)
-                           ->join(Module::table_as, 'module_class.id_module', '=', 'md.id')
-                           ->where('md.id_department', '=', $id_department)
-                           ->leftJoin(Teacher::table_as, 'tea.id', '=', 'module_class.id_teacher')
-                           ->orderBy('module_class.id')
-                           ->get(['module_class.id', 'module_class.name', 'credit', 'number_reality',
-                                  'class_type', 'tea.name as teacher']);
+                           ->join(Module::table_as, 'module_classes.id_module', '=', 'mds.id')
+                           ->where('mds.id_department', '=', $id_department)
+                           ->leftJoin(Teacher::table_as, 'teas.id', '=', 'module_classes.id_teacher')
+                           ->orderBy('module_classes.id')
+                           ->get(['module_classes.id', 'module_classes.name', 'credit', 'number_reality',
+                                  'type', 'teas.name as teacher']);
     }
 
     public function getIDModuleClassesMissing ($id_module_classes)
@@ -47,10 +47,11 @@ class ModuleClassRepository extends BaseRepository implements Contracts\ModuleCl
     }
 
 
-    public function softDeleteByIdDepartmentAndIdStudySession (string $idDepartment, int $idStudySession)
+    public function softDeleteByIdDepartmentAndIdStudySession (string $idDepartment,
+                                                               int    $idStudySession)
     {
         $this->createModel();
-        $this->model->join(Module::table_as, 'module_class.id_module', '=', 'md.id')
+        $this->model->join(Module::table_as, 'module_classes.id_module', '=', 'mds.id')
                     ->where('id_department', '=', $idDepartment)
                     ->where('id_study_session', '=', $idStudySession)
                     ->update(['deleted_at' => now()]);

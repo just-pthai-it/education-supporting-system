@@ -21,20 +21,24 @@ class AcademicYearRepository implements Contracts\AcademicYearRepositoryContract
 
     public function getAcademicYears3 ()
     {
-        $array = DB::table(AcademicYear::table_as)->join(TrainingType::table_as, 'sy.id_training_type', '=', 'tt.id')
-                   ->get(['tt.name as trainingType', 'sy.name as academicYear']);
-        $result = array();
-        $count = count($array);
-        
-        for ($i=0; $i < $count; $i++) {
+        $array  = DB::table(AcademicYear::table_as)
+                    ->join(TrainingType::table_as, 'ays.id_training_type', '=', 'tt.id')
+                    ->get(['tts.name as trainingType', 'sys.name as academicYear']);
+        $result = [];
+        $count  = count($array);
+
+        for ($i = 0; $i < $count; $i++)
+        {
             $curr = $array[$i];
             $type = $curr->trainingType;
             $year = $curr->academicYear;
 
-            if (!isset($result[$type])){
-                $result[$type] = array(0 => $year);
+            if (!isset($result[$type]))
+            {
+                $result[$type] = [0 => $year];
             }
-            else {   
+            else
+            {
                 array_push($result[$type], $year);
             }
         }

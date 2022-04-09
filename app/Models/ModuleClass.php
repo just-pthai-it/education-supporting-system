@@ -65,7 +65,7 @@ class ModuleClass extends Model
 
     public function students () : BelongsToMany
     {
-        return $this->belongsToMany(Student::class, 'module_class-student', 'id_module_class',
+        return $this->belongsToMany(Student::class, 'module_class_student', 'id_module_class',
                                     'id_student');
     }
 

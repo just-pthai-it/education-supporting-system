@@ -11,7 +11,7 @@ class Tag extends Model
     use HasFactory;
 
     public const table = 'tags';
-    public const table_as = 'tags as tags';
+    public const table_as = 'tags';
 
     public $timestamps = false;
 

@@ -147,7 +147,7 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
 
 
     private function _createModuleClass (&$module_classes, $id_module, $module_class_name,
-                                         $class_type, $max_attempt, $real_attempt)
+                                         $type, $max_attempt, $real_attempt)
     {
         $id_module_class = GFunction::convertToIDModuleClass($id_module, $module_class_name);
 
@@ -156,9 +156,9 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
             'name'             => $module_class_name,
             'number_plan'      => $max_attempt,
             'number_reality'   => $real_attempt,
-            'class_type'       => $class_type == 'BT' ? 2 : ($class_type ==
-                                                             'TH' ? 3 : ($class_type ==
-                                                                         'DA' ? 4 : 1)),
+            'type'             => $type == 'BT' ? 2 : ($type ==
+                                                       'TH' ? 3 : ($type ==
+                                                                   'DA' ? 4 : 1)),
             'id_study_session' => $this->id_study_session,
             'is_international' => strpos($id_module_class, '(QT') === false ? 0 : 1,
             'id_module'        => $id_module,

@@ -12,7 +12,7 @@ class Room extends Model
     use HasFactory, Filterable;
 
     public const table = 'rooms';
-    public const table_as = 'rooms as ros';
+    public const table_as = 'rooms as rms';
 
     protected $keyType = 'string';
     public $timestamps = false;

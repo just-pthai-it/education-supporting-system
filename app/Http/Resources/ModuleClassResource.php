@@ -21,7 +21,7 @@ class ModuleClassResource extends JsonResource
             'name'          => $this->name,
             'credit'        => $this->credit,
             'numberReality' => $this->number_reality,
-            'classType'     => $this->class_type,
+            'type'          => $this->type,
             'teacher'       => $this->teacher,
         ];
     }
