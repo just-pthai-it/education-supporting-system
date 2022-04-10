@@ -22,7 +22,7 @@ class AcademicYearRepository implements Contracts\AcademicYearRepositoryContract
     public function getAcademicYears3 ()
     {
         $array  = DB::table(AcademicYear::table_as)
-                    ->join(TrainingType::table_as, 'ays.id_training_type', '=', 'tt.id')
+                    ->join(TrainingType::table_as, 'sys.id_training_type', '=', 'tt.id')
                     ->get(['tts.name as trainingType', 'sys.name as academicYear']);
         $result = [];
         $count  = count($array);

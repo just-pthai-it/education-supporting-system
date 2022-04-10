@@ -13,7 +13,7 @@ class AcademicYear extends Model
     use HasFactory;
 
     public const table = 'academic_years';
-    public const table_as = 'academic_years as ays';
+    public const table_as = 'academic_years as sys';
 
     public $timestamps = false;
 
