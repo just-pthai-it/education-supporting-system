@@ -43,7 +43,7 @@ class FixedSchedule extends Model
         'id',
     ];
 
-    public function filterDateRange (Builder $query, $values)
+    public function filterDate (Builder $query, $values)
     {
         $query->where(function ($query) use ($values)
         {
