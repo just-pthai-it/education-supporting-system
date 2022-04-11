@@ -166,11 +166,11 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     });
 
 
-    Route::group(['prefix' => 'feedbacks'], function ()
+    Route::group(['prefix' => 'feedback'], function ()
     {
         Route::post('create', [FeedbackController::class, 'create']);
 
-        Route::get('', [FeedbackController::class, 'getAll']);
+        Route::get('', [FeedbackController::class, 'readMany']);
     });
 
 

@@ -23,8 +23,8 @@ class FeedbackController extends Controller
         return response('', 201);
     }
 
-    public function getAll (Request $request)
+    public function readMany (Request $request)
     {
-        return $this->feedbackService->getAll($request->all());
+        return $this->feedbackService->readMany($request->all());
     }
 }

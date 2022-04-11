@@ -18,11 +18,11 @@ class FeedbackService implements Contracts\FeedbackServiceContract
 
     public function create ($feedback)
     {
-        $this->feedbackRepository->insert(array_merge($feedback,
-                                                      ['id_account' => auth()->user()->id]));
+        $feedback = array_merge($feedback, ['id_account' => auth()->user()->id]);
+        $this->feedbackRepository->insert($feedback);
     }
 
-    public function getAll (array $inputs)
+    public function readMany (array $inputs)
     {
         return $this->feedbackRepository->paginate(['id', 'data', 'type', 'is_bug', 'created_at'],
                                                    [], [], $inputs['pagination'] ?? 20,

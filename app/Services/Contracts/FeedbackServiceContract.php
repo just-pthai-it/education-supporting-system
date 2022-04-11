@@ -6,5 +6,5 @@ interface FeedbackServiceContract
 {
     public function create ($feedback);
 
-    public function getAll (array $inputs);
+    public function readMany (array $inputs);
 }
