@@ -25,12 +25,12 @@ class Feedback extends Model
         'created_at',
     ];
 
-    protected array $filterable = [
+    private array $filterable = [
         'type',
         'is_bug',
     ];
 
-    protected array $sortable = [
+    private array $sortable = [
         'id',
     ];
 

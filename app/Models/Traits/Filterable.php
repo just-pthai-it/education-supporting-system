@@ -7,14 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Filterable
 {
-    protected array $filterable = [
-        'status',
-    ];
-
-    protected array $sortable = [
-        'id',
-    ];
-
     public function scopeFilter (Builder $query, $parameters)
     {
         foreach ($parameters as $key => $parameterValue)

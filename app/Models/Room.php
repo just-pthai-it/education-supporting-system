@@ -26,9 +26,9 @@ class Room extends Model
         'projector',
     ];
 
-    protected array $filterable = [];
+    private array $filterable = [];
 
-    protected array $sortable = [];
+    private array $sortable = [];
 
     public function schedules () : HasMany
     {

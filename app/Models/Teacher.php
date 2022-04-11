@@ -39,9 +39,9 @@ class Teacher extends Model
         'pivot',
     ];
 
-    protected array $filterable = [];
+    private array $filterable = [];
 
-    protected array $sortable = [];
+    private array $sortable = [];
 
     public function account () : MorphOne
     {

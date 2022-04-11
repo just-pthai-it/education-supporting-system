@@ -14,7 +14,7 @@ class AcademicYear extends Model
     use HasFactory, Filterable;
 
     public const table = 'academic_years';
-    public const table_as = 'academic_years as sys';
+    public const table_as = 'academic_years as ays';
 
     protected $keyType = 'string';
     public $timestamps = false;
@@ -25,9 +25,9 @@ class AcademicYear extends Model
         'id_training_type',
     ];
 
-    protected array $filterable = [];
+    private array $filterable = [];
 
-    protected array $sortable = [
+    private array $sortable = [
         'id',
     ];
 

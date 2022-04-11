@@ -37,11 +37,11 @@ class ModuleClass extends Model
         'pivot'
     ];
 
-    protected array $filterable = [
+    private array $filterable = [
         'id_study_session',
     ];
 
-    protected array $sortable = [];
+    private array $sortable = [];
 
     public function studySession () : BelongsTo
     {

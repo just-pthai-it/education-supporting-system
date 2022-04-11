@@ -28,12 +28,12 @@ class Schedule extends Model
         'deleted_at',
     ];
 
-    protected array $filterable = [
+    private array $filterable = [
         'date',
         'shift',
     ];
 
-    protected array $sortable = [];
+    private array $sortable = [];
 
     public function moduleClass () : BelongsTo
     {
