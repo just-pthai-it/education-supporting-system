@@ -32,7 +32,7 @@ interface BaseRepositoryContract
     public function findByIds ($ids, array $columns = ['*'], array $orders = [],
                                array $scopes = [], array $postFunctions = []);
 
-    public function pluck (array $columns = [['id']], array $conditions = [], array $orders = [],
+    public function pluck (array $columns = ['id'], array $conditions = [], array $orders = [],
                            array $limitOffset = [], array $scopes = []);
 
     public function delete (array $conditions = []);

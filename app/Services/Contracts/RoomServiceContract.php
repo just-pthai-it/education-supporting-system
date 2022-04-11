@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface RoomServiceContract
 {
-    public function read ();
+    public function readMany (array $inputs);
 }

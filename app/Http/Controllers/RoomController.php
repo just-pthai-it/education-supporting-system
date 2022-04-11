@@ -17,8 +17,8 @@ class RoomController extends Controller
         $this->roomService = $roomService;
     }
 
-    public function read (Request $request)
+    public function readMany (Request $request)
     {
-        return response(['data' => $this->roomService->read()]);
+        return response(['data' => $this->roomService->readMany($request->all())]);
     }
 }

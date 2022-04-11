@@ -150,7 +150,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'rooms'], function ()
     {
-        Route::get('', [RoomController::class, 'read']);
+        Route::get('', [RoomController::class, 'readMany']);
     });
 
 

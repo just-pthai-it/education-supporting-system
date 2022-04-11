@@ -16,8 +16,8 @@ class RoomService implements Contracts\RoomServiceContract
         $this->roomDepository = $roomDepository;
     }
 
-    public function read ()
+    public function readMany (array $inputs)
     {
-        return $this->roomDepository->pluck();
+        return $this->roomDepository->pluck(['id'], [], [], [], [['filter', $inputs]]);
     }
 }
