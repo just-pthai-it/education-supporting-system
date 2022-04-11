@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Arr;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 
 class ScheduleService implements Contracts\ScheduleServiceContract
@@ -18,7 +19,6 @@ class ScheduleService implements Contracts\ScheduleServiceContract
 
     public function update ($schedule)
     {
-        $id = array_shift($schedule);
-        $this->scheduleDepository->updateByIds($id, $schedule);
+        $this->scheduleDepository->updateByIds($schedule['id'], Arr::except($schedule, ['id']));
     }
 }
