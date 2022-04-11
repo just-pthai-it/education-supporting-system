@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Services\Contracts\AcademicYearServiceContract;
 
 class AcademicYearController extends Controller
@@ -16,15 +17,8 @@ class AcademicYearController extends Controller
         $this->academicYearService = $academicYearService;
     }
 
-    public function getRecentAcademicYears ()
+    public function readMany (Request $request)
     {
-        $data = $this->academicYearService->getRecentAcademicYears();
-        return response($data)->header('Content-Type', 'application/data');
-    }
-
-    public function getAcademicYearsWithTrainingType ()
-    {
-        $data = $this->academicYearService->getAcademicYearsWithTrainingType();
-        return response($data)->header('Content-Type', 'application/data');
+        return $this->academicYearService->readMany($request->all());
     }
 }

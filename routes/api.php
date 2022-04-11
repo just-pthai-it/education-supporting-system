@@ -76,10 +76,10 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     });
 
 
-    Route::get('academic-year', [AcademicYearController::class, 'getRecentAcademicYears']);
-
-    Route::get('academic-year2',
-               [AcademicYearController::class, 'getAcademicYearsWithTrainingType']);
+    Route::group(['prefix' => 'academic-years'], function ()
+    {
+        Route::get('', [AcademicYearController::class, 'readMany']);
+    });
 
     Route::group(['prefix' => 'training-types'], function ()
     {

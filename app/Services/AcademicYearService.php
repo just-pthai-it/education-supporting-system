@@ -16,13 +16,8 @@ class AcademicYearService implements Contracts\AcademicYearServiceContract
         $this->academicYearRepository = $academicYearRepository;
     }
 
-    public function getRecentAcademicYears ()
+    public function readMany (array $inputs)
     {
-        return $this->academicYearRepository->getAcademicYears1();
-    }
-
-    public function getAcademicYearsWithTrainingType ()
-    {
-        return $this->academicYearRepository->getAcademicYears3();
+        return $this->academicYearRepository->find(['id', 'name'], [], [], [], [['filter', $inputs]]);
     }
 }
