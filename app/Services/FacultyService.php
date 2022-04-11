@@ -16,7 +16,7 @@ class FacultyService implements Contracts\FacultyServiceContract
         $this->facultyDepository = $facultyDepository;
     }
 
-    public function getAll (array $inputs)
+    public function readMany (array $inputs)
     {
         return $this->facultyDepository->find(['id', 'name'], [], [], [],
                                               [['with', 'departments:id,name,id_faculty'],

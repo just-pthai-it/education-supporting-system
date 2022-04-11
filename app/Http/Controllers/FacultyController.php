@@ -19,8 +19,9 @@ class FacultyController extends Controller
         $this->facultyService = $facultyService;
     }
 
-    public function getAll (Request $request) : AnonymousResourceCollection
+    public function readMany (Request $request) : AnonymousResourceCollection
     {
-        return FacultyResource::collection($this->facultyService->getAll($request->all()));
+        $faculties = $this->facultyService->readMany($request->all());
+        return FacultyResource::collection($faculties);
     }
 }

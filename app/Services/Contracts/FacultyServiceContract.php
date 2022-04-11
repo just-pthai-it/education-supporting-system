@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface FacultyServiceContract
 {
-    public function getAll (array $inputs);
+    public function readMany (array $inputs);
 }
