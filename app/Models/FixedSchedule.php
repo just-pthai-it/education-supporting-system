@@ -35,11 +35,11 @@ class FixedSchedule extends Model
         'set_room_at',
     ];
 
-    private array $filterable = [
+    protected array $filterable = [
         'status',
     ];
 
-    private array $sortable = [
+    protected array $sortable = [
         'id',
     ];
 

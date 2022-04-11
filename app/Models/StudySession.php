@@ -23,9 +23,9 @@ class StudySession extends Model
         'id_term',
     ];
 
-    private array $filterable = [];
+    protected array $filterable = [];
 
-    private array $sortable = [
+    protected array $sortable = [
         'id',
     ];
 

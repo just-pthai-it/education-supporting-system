@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AcademicYear extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
     public const table = 'academic_years';
     public const table_as = 'academic_years as sys';
@@ -22,6 +23,12 @@ class AcademicYear extends Model
         'id',
         'name',
         'id_training_type',
+    ];
+
+    protected array $filterable = [];
+
+    protected array $sortable = [
+        'id',
     ];
 
     public function classes () : HasMany

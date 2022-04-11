@@ -32,11 +32,11 @@ class ExamSchedule extends Model
         'pivot',
     ];
 
-    private array $filterable = [
+    protected array $filterable = [
         'start_at',
     ];
 
-    private array $sortable = [];
+    protected array $sortable = [];
 
     public function moduleClass () : BelongsTo
     {

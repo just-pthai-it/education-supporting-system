@@ -7,11 +7,19 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Filterable
 {
+    protected array $filterable = [
+        'status',
+    ];
+
+    protected array $sortable = [
+        'id',
+    ];
+
     public function scopeFilter (Builder $query, $parameters)
     {
-        foreach ($parameters as $field => $parameterValue)
+        foreach ($parameters as $key => $parameterValue)
         {
-            $method = 'filter' . Str::studly($field);
+            $method = 'filter' . Str::studly($key);
 
             if (method_exists($this, $method))
             {
@@ -19,9 +27,9 @@ trait Filterable
                 return;
             }
 
-            if (in_array($field, ['limit', 'offset']))
+            if (in_array($key, ['limit', 'offset']))
             {
-                $this->_limitOffset($query, $field, $parameterValue);
+                $this->_limitOffset($query, $key, $parameterValue);
             }
 
             if (!is_array($parameterValue))
@@ -33,11 +41,11 @@ trait Filterable
             {
                 if ($operator != 'sort')
                 {
-                    $this->_where($query, $field, $operator, $value);
+                    $this->_where($query, $key, $operator, $value);
                 }
                 else
                 {
-                    $this->_orderBy($query, $field, $value);
+                    $this->_orderBy($query, $key, $value);
                 }
             }
         }

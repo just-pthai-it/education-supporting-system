@@ -24,9 +24,9 @@ class Faculty extends Model
         'address',
     ];
 
-    private array $filterable = [];
+    protected array $filterable = [];
 
-    private array $sortable = [];
+    protected array $sortable = [];
 
     public function departments () : HasMany
     {
