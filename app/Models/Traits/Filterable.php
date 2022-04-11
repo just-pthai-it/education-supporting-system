@@ -16,7 +16,7 @@ trait Filterable
             if (method_exists($this, $method))
             {
                 $this->$method($query, $parameterValue);
-                return;
+                continue;
             }
 
             if (in_array($key, ['limit', 'offset']))

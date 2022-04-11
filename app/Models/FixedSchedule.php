@@ -41,6 +41,9 @@ class FixedSchedule extends Model
 
     private array $sortable = [
         'id',
+        'old_date',
+        'old_shift',
+        'old_id_room',
     ];
 
     public function filterDate (Builder $query, $values)
