@@ -176,7 +176,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'exam-schedules'], function ()
     {
-        Route::put('update', [ExamScheduleController::class, 'updateExamSchedule']);
+        Route::put('update', [ExamScheduleController::class, 'update']);
     });
 
     Route::group(['prefix' => 'notifications'], function ()

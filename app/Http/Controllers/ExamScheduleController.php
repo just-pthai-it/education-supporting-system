@@ -18,9 +18,9 @@ class ExamScheduleController extends Controller
         $this->examScheduleService = $examScheduleService;
     }
 
-    public function updateExamSchedule (Request $request)
+    public function update (Request $request)
     {
         Gate::authorize('update-exam-schedule');
-        $this->examScheduleService->updateExamSchedule($request->all());
+        $this->examScheduleService->update($request->all());
     }
 }

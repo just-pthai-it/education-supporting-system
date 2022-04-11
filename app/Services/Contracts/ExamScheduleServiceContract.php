@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface ExamScheduleServiceContract
 {
-    public function updateExamSchedule ($exam_schedule);
+    public function update ($examSchedule);
 }

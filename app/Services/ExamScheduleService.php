@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Arr;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 
 class ExamScheduleService implements Contracts\ExamScheduleServiceContract
@@ -16,9 +17,9 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
         $this->examScheduleRepository = $examScheduleRepository;
     }
 
-    public function updateExamSchedule ($exam_schedule)
+    public function update ($examSchedule)
     {
-        $id = array_shift($exam_schedule);
-        $this->examScheduleRepository->updateByIds($id, $exam_schedule);
+        $this->examScheduleRepository->updateByIds($examSchedule['id'],
+                                                   Arr::except($examSchedule, ['id']));
     }
 }
