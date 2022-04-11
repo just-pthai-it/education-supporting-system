@@ -12,6 +12,7 @@ use App\Repositories\AcademicYearRepository;
 use App\Repositories\AccountRepository;
 use App\Repositories\ClassRepository;
 use App\Repositories\ExamScheduleRepository;
+use App\Repositories\TrainingTypeRepository;
 use App\Repositories\FixedScheduleRepository;
 use App\Repositories\Contracts\TagRepositoryContract;
 use App\Repositories\Contracts\RoomRepositoryContract;
@@ -29,6 +30,7 @@ use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\ModuleRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
+use App\Repositories\Contracts\TrainingTypeRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
@@ -76,6 +78,7 @@ class RepositoryServiceProvider extends ServiceProvider
         RoomRepositoryContract::class            => RoomRepository::class,
         RoleRepositoryContract::class            => RoleRepository::class,
         TagRepositoryContract::class             => TagRepository::class,
+        TrainingTypeRepositoryContract::class    => TrainingTypeRepository::class,
     ];
 
     /**

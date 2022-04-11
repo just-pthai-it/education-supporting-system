@@ -12,6 +12,7 @@ use App\Services\AcademicYearService;
 use App\Services\AccountService;
 use App\Services\AuthService;
 use App\Services\ExamScheduleService;
+use App\Services\TrainingTypeService;
 use App\Services\ExcelRollCallService;
 use App\Services\ExcelScheduleService;
 use App\Services\FixedScheduleService;
@@ -43,6 +44,7 @@ use App\Services\ScheduleService;
 use App\Services\StudySessionService;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Contracts\ExamScheduleServiceContract;
+use App\Services\Contracts\TrainingTypeServiceContract;
 use App\Services\Contracts\FixedScheduleServiceContract;
 
 class AppServiceProvider extends ServiceProvider
@@ -66,6 +68,7 @@ class AppServiceProvider extends ServiceProvider
         AuthServiceContract::class          => AuthService::class,
         RoomServiceContract::class          => RoomService::class,
         MailServiceContract::class          => MailService::class,
+        TrainingTypeServiceContract::class  => TrainingTypeService::class,
 
     ];
 

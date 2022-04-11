@@ -17,6 +17,7 @@ use App\Http\Controllers\StudySessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExamScheduleController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\TrainingTypeController;
 use App\Http\Controllers\FixedScheduleController;
 
 /*
@@ -79,6 +80,11 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::get('academic-year2',
                [AcademicYearController::class, 'getAcademicYearsWithTrainingType']);
+
+    Route::group(['prefix' => 'training-types'], function ()
+    {
+        Route::get('', [TrainingTypeController::class, 'readMany']);
+    });
 
     Route::get('faculty-class',
                [ClassController::class, 'getClassesByIdAcademicYearsAndIdFaculties']);

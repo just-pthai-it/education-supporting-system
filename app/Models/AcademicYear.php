@@ -15,6 +15,7 @@ class AcademicYear extends Model
     public const table = 'academic_years';
     public const table_as = 'academic_years as sys';
 
+    protected $keyType = 'string';
     public $timestamps = false;
 
     protected $fillable = [
