@@ -8,5 +8,5 @@ interface FixedScheduleServiceContract
 
     public function update ($fixedScheduleArr);
 
-    public function read(array $inputs);
+    public function readMany(array $inputs);
 }

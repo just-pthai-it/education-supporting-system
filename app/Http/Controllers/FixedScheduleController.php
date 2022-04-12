@@ -33,10 +33,10 @@ class FixedScheduleController extends Controller
         $this->fixedScheduleService->update($request->all());
     }
 
-    public function read (Request $request) : AnonymousResourceCollection
+    public function readMany (Request $request) : AnonymousResourceCollection
     {
         Gate::authorize('get-fixed-schedule');
-        $fixedSchedules = $this->fixedScheduleService->read($request->all());
+        $fixedSchedules = $this->fixedScheduleService->readMany($request->all());
         return FixedScheduleResource::collection($fixedSchedules);
     }
 }

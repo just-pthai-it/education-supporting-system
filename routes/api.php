@@ -141,7 +141,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'fixed-schedules'], function ()
     {
-        Route::get('', [FixedScheduleController::class, 'read']);
+        Route::get('', [FixedScheduleController::class, 'readMany']);
 
         Route::post('create', [FixedScheduleController::class, 'create']);
 
