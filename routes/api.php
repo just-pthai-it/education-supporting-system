@@ -86,8 +86,12 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::get('', [TrainingTypeController::class, 'readMany']);
     });
 
-    Route::get('faculty-class',
-               [ClassController::class, 'getClassesByIdAcademicYearsAndIdFaculties']);
+
+    Route::group(['prefix' => 'classes'], function ()
+    {
+        Route::get('', [ClassController::class, 'readMany']);
+    });
+
 
     Route::get('module-class/{id_teacher}',
                [ModuleClassController::class, 'getModuleClassesByIdTeacher']);

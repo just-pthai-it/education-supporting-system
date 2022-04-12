@@ -17,9 +17,8 @@ class ClassController extends Controller
         $this->facultyClassService = $facultyClassService;
     }
 
-    public function getClassesByIdAcademicYearsAndIdFaculties (Request $request)
+    public function readMany (Request $request)
     {
-        return $this->facultyClassService->getClassesByIdAcademicYearsAndIdFaculties($request->id_academic_years,
-                                                                                     $request->id_faculties);
+        return $this->facultyClassService->readMany($request->all());
     }
 }
