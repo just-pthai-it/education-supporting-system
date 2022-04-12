@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AccountPatchRequest extends FormRequest
+class ChangePasswordRequest extends FormRequest
 {
     protected $redirect = '/api/bad-request';
 
@@ -24,7 +24,8 @@ class AccountPatchRequest extends FormRequest
     public function rules () : array
     {
         return [
-            'phone' => '',
+            'password'     => '',
+            'new_password' => ''
         ];
     }
 }

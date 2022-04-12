@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Helpers\GFunction;
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Exceptions\InvalidAccountException;
-use App\Repositories\Contracts\NotificationRepositoryContract;
 
 class AccountService implements Contracts\AccountServiceContract
 {
@@ -20,45 +19,43 @@ class AccountService implements Contracts\AccountServiceContract
     }
 
     /**
-     * @param $input *
+     * @param string $uuidAccount
+     * @param int    $idAccount
+     * @param array  $inputs
      *
      * @throws InvalidAccountException
      */
-    public function changePassword ($input)
+    public function changePassword (string $uuidAccount, int $idAccount, array $inputs)
     {
-        $this->_verifyAccount(auth()->user()->id, $input['password']);
-        $this->_updatePassword(auth()->user()->id, $input['new_password']);
+        $this->_verifyCredentials($uuidAccount, $idAccount, $inputs['password']);
+        $this->accountDepository->updateByIds($idAccount,
+                                              ['password' => bcrypt($inputs['new_password'])]);
     }
 
     /**
+     * @param string $uuidAccount
+     * @param int    $idAccount
+     * @param string $password
+     *
      * @throws InvalidAccountException
      */
-    private function _verifyAccount ($id_account, $password)
+    private function _verifyCredentials (string $uuidAccount, int $idAccount, string $password)
     {
-        $credential = [
-            'id'       => $id_account,
+        $credentials = [
+            'id'       => $idAccount,
+            'uuid'     => GFunction::uuidToBin($uuidAccount),
             'password' => $password
         ];
 
-        if (!auth()->attempt($credential))
+        if (!auth()->attempt($credentials))
         {
             throw new InvalidAccountException();
         }
-    }
-
-    private function _updatePassword ($id_account, $password)
-    {
-        $this->accountDepository->updatePassword($id_account, bcrypt($password));
     }
 
     public function update ($uuidAccount, $values)
     {
         $this->accountDepository->update($values,
                                          [['uuid', '=', GFunction::uuidToBin($uuidAccount)]]);
-    }
-
-    public function readManyNotifications (string $uuidAccount, array $inputs)
-    {
-        return $this->accountDepository->findNotifications($uuidAccount, $inputs)[0]->notifications;
     }
 }

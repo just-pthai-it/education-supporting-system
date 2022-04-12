@@ -3,46 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountPatchRequest;
-use App\Http\Resources\NotificationResource;
-use App\Exceptions\InvalidFormRequestException;
-use App\Http\FormRequest\ChangePasswordForm;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Services\Contracts\AccountServiceContract;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AccountController extends Controller
 {
-    private ChangePasswordForm $form;
     private AccountServiceContract $accountService;
 
     /**
-     * @param ChangePasswordForm     $form
      * @param AccountServiceContract $accountService
      */
-    public function __construct (ChangePasswordForm $form, AccountServiceContract $accountService)
+    public function __construct (AccountServiceContract $accountService)
     {
-        $this->form           = $form;
         $this->accountService = $accountService;
     }
 
-    /**
-     * @throws InvalidFormRequestException
-     */
-    public function changePassword (Request $request)
+    public function changePassword (ChangePasswordRequest $request, $uuidAccount)
     {
-        $this->form->validate($request);
-        $this->accountService->changePassword($request->only('password', 'new_password'));
+        $this->accountService->changePassword($uuidAccount, auth()->user()->id,
+                                              $request->validated());
     }
 
     public function update (AccountPatchRequest $request, $uuidAccount)
     {
         $this->accountService->update($uuidAccount, $request->validated());
-    }
-
-    public function readManyNotifications (Request $request,
-                                                   $uuidAccount) : AnonymousResourceCollection
-    {
-        $data = $this->accountService->readManyNotifications($uuidAccount, $request->all());
-        return NotificationResource::collection($data);
     }
 }

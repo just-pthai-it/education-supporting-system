@@ -4,9 +4,7 @@ namespace App\Services\Contracts;
 
 interface AccountServiceContract
 {
-    public function changePassword ($input);
+    public function changePassword (string $uuidAccount, int $idAccount, array $inputs);
 
     public function update ($uuidAccount, $values);
-
-    public function readManyNotifications (string $uuidAccount, array $inputs);
 }
