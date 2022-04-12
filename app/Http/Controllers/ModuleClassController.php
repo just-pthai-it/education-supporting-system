@@ -17,8 +17,8 @@ class ModuleClassController extends Controller
         $this->moduleClassService = $moduleClassService;
     }
 
-    public function updateModuleClass (Request $request)
+    public function updateMany (Request $request)
     {
-        $this->moduleClassService->updateModuleClass($request->ids, $request->id_teacher);
+        $this->moduleClassService->updateMany($request->all());
     }
 }

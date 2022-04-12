@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface ModuleClassServiceContract
 {
-    public function updateModuleClass ($ids, $id_teacher);
+    public function updateMany (array $inputs);
 }

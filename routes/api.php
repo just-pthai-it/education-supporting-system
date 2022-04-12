@@ -98,7 +98,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
     Route::group(['prefix' => 'module-classes'], function ()
     {
-        Route::put('update', [ModuleClassController::class, 'updateModuleClass']);
+        Route::put('update', [ModuleClassController::class, 'updateMany']);
     });
 
     Route::get('study-sessions', [StudySessionController::class, 'readMany']);
