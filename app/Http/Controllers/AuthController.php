@@ -4,32 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\UserData;
-use App\Exceptions\InvalidFormRequestException;
-use App\Http\FormRequest\LoginForm;
+use App\Http\Requests\LoginRequest;
 use App\Services\Contracts\AuthServiceContract;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    protected LoginForm $loginForm;
     private AuthServiceContract $authService;
 
     /**
-     * @param LoginForm           $loginForm
      * @param AuthServiceContract $authService
      */
-    public function __construct (LoginForm $loginForm, AuthServiceContract $authService)
+    public function __construct (AuthServiceContract $authService)
     {
-        $this->loginForm   = $loginForm;
         $this->authService = $authService;
     }
 
-    /**
-     * @throws InvalidFormRequestException
-     */
-    public function login (Request $request) : JsonResponse
+    public function login (LoginRequest $request) : JsonResponse
     {
-        $this->loginForm->validate($request);
         $data = $this->authService->login($request->username, $request->password);
         return (new UserData($data['response']))
             ->response()->header('Authorization', "Bearer {$data['token']}");
