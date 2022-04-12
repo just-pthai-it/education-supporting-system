@@ -89,6 +89,13 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->model->upsert($objects, $uniqueColumns, $columnsUpdate);
     }
 
+    public function updateGetUpdatedRows (array $values, array $conditions = [])
+    {
+        $this->createModel();
+        $this->addWhere($conditions);
+        return $this->model->update($values);
+    }
+
     public function update (array $values, array $conditions = [])
     {
         $this->createModel();

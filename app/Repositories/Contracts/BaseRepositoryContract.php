@@ -18,6 +18,8 @@ interface BaseRepositoryContract
 
     public function upsert ($objects, array $uniqueColumns = [], array $columnsUpdate = []);
 
+    public function updateGetUpdatedRows (array $values, array $conditions = []);
+
     public function update (array $values, array $conditions = []);
 
     public function updateIncrement (string $column, int $step = 1, array $conditions = []);
