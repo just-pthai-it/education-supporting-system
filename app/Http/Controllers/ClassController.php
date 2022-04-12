@@ -19,6 +19,6 @@ class ClassController extends Controller
 
     public function readMany (Request $request)
     {
-        return $this->facultyClassService->readMany($request->all());
+        return response(['data' => $this->facultyClassService->readMany($request->all())]);
     }
 }
