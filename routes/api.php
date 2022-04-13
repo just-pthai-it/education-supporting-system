@@ -101,15 +101,18 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::put('update', [ModuleClassController::class, 'updateMany']);
     });
 
-    Route::get('study-sessions', [StudySessionController::class, 'readMany']);
 
+    Route::group(['prefix' => 'study-sessions'], function ()
+    {
+        Route::get('', [StudySessionController::class, 'readMany']);
+    });
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
     Route::group(['prefix' => 'accounts'], function ()
     {
         Route::patch('change-password/{uuid_account}',
-                    [AccountController::class, 'changePassword']);
+                     [AccountController::class, 'changePassword']);
 
         Route::group(['prefix' => 'update'], function ()
         {
