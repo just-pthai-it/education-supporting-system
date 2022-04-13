@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Helpers\GFunction;
 use App\Repositories\Contracts\TeacherRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
@@ -42,32 +41,32 @@ class TeacherService implements Contracts\TeacherServiceContract
         $this->studySessionRepository  = $studySessionRepository;
     }
 
-    public function getById ($id_teacher)
+    public function read (string $idTeacher)
     {
-        return $this->teacherRepository->findByIds($id_teacher, ['*'], [],
+        return $this->teacherRepository->findByIds($idTeacher, ['*'], [],
                                                    [['with', 'department:id,name,id_faculty', 'department.faculty:id,name']]);
     }
 
-    public function getSchedules ($id_teacher, array $inputs)
+    public function getSchedules (string $idTeacher, array $inputs)
     {
-        return $this->scheduleDepository->findAllByIdTeacher($id_teacher, $inputs);
+        return $this->scheduleDepository->findAllByIdTeacher($idTeacher, $inputs);
     }
 
-    public function getExamSchedules ($id_teacher, array $inputs)
+    public function getExamSchedules (string $idTeacher, array $inputs)
     {
-        return $this->examScheduleRepository->findByIdTeacher($id_teacher, $inputs);
+        return $this->examScheduleRepository->findByIdTeacher($idTeacher, $inputs);
     }
 
-    public function getFixedSchedules ($id_teacher, array $inputs)
+    public function getFixedSchedules (string $idTeacher, array $inputs)
     {
-        return $this->fixedScheduleRepository->findByIdTeacher($id_teacher, $inputs);
+        return $this->fixedScheduleRepository->findByIdTeacher($idTeacher, $inputs);
     }
 
-    public function getModuleClasses ($id_teacher, array $inputs)
+    public function getModuleClasses (string $idTeacher, array $inputs)
     {
         $inputs = $this->_formatInputs($inputs);
         return $this->moduleClassRepository->find(['id', 'name'],
-                                                  [['id_teacher', '=', $id_teacher]], [], [],
+                                                  [['id_teacher', '=', $idTeacher]], [], [],
                                                   [['filter', $inputs]]);
     }
 

@@ -24,23 +24,23 @@ class TeacherController extends Controller
         $this->teacherService = $teacherService;
     }
 
-    public function get ($id_teacher) : TeacherResource
+    public function read (string $idTeacher) : TeacherResource
     {
-        return new TeacherResource($this->teacherService->getById($id_teacher));
+        return new TeacherResource($this->teacherService->read($idTeacher));
     }
 
-    public function getSchedules (Request $request, $id_teacher) : AnonymousResourceCollection
+    public function getSchedules (Request $request, string $idTeacher) : AnonymousResourceCollection
     {
         Gate::authorize('get-teacher-schedule');
-        $schedules = $this->teacherService->getSchedules($id_teacher, $request->all());
+        $schedules = $this->teacherService->getSchedules($idTeacher, $request->all());
         return ScheduleResource::collection($schedules);
     }
 
-    public function getExamSchedules (Request $request, $id_teacher) : AnonymousResourceCollection
+    public function getExamSchedules (Request $request,
+                                      string  $idTeacher) : AnonymousResourceCollection
     {
         Gate::authorize('get-teacher-exam-schedule');
-        $exam_schedules = $this->teacherService->getExamSchedules(auth()->user()->accountable_id,
-                                                                  $request->all());
+        $exam_schedules = $this->teacherService->getExamSchedules($idTeacher, $request->all());
         return ExamScheduleResource::collection($exam_schedules);
     }
 
@@ -52,11 +52,10 @@ class TeacherController extends Controller
         return FixedScheduleResource::collection($fixedSchedules);
     }
 
-    public function getModuleClassesByStudySessions (Request $request,
-                                                             $id_teacher) : AnonymousResourceCollection
+    public function getModuleClasses (Request $request,
+                                      string  $idTeacher) : AnonymousResourceCollection
     {
-        $response = $this->teacherService->getModuleClasses(auth()->user()->accountable_id,
-                                                            $request->all());
+        $response = $this->teacherService->getModuleClasses($idTeacher, $request->all());
         return ModuleClassResource::collection($response);
     }
 }

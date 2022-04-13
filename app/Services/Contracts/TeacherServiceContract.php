@@ -4,13 +4,13 @@ namespace App\Services\Contracts;
 
 interface TeacherServiceContract
 {
-    public function getById ($id_teacher);
+    public function read (string $idTeacher);
 
-    public function getSchedules ($id_teacher, array $inputs);
+    public function getSchedules (string $idTeacher, array $inputs);
 
-    public function getExamSchedules ($id_teacher, array $inputs);
+    public function getExamSchedules (string $idTeacher, array $inputs);
 
-    public function getFixedSchedules ($id_teacher, array $inputs);
+    public function getFixedSchedules (string $idTeacher, array $inputs);
 
-    public function getModuleClasses ($id_teacher, array $inputs);
+    public function getModuleClasses (string $idTeacher, array $inputs);
 }
