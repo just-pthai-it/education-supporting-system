@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface ScheduleServiceContract
 {
-    public function update ($schedule);
+    public function update (string $idSchedule, array $scheduleArr);
 }

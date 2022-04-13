@@ -14,12 +14,12 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
         return Schedule::class;
     }
 
-    public function findAllByIdTeacher ($id_teacher, array $inputs)
+    public function findAllByIdTeacher (string $idTeacher, array $inputs)
     {
         $this->createModel();
-        return $this->model->whereHas('moduleClass', function (Builder $query) use ($id_teacher)
+        return $this->model->whereHas('moduleClass', function (Builder $query) use ($idTeacher)
         {
-            $query->where('id_teacher', $id_teacher);
+            $query->where('id_teacher', $idTeacher);
         })->filter($inputs)->with([
                                       'moduleClass'    => function ($query)
                                       {
@@ -38,14 +38,14 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                   ])->get();
     }
 
-    public function findAllByIdDepartment ($id_department, array $inputs)
+    public function findAllByIdDepartment (string $idDepartment, array $inputs)
     {
         $this->createModel();
-        return $this->model->whereHas('moduleClass', function (Builder $query) use ($id_department)
+        return $this->model->whereHas('moduleClass', function (Builder $query) use ($idDepartment)
         {
-            $query->whereHas('module', function (Builder $query) use ($id_department)
+            $query->whereHas('module', function (Builder $query) use ($idDepartment)
             {
-                $query->where('id_department', '=', $id_department);
+                $query->where('id_department', '=', $idDepartment);
             });
         })->filter($inputs)->with(['moduleClass:id,name,id_teacher',
                                    'moduleClass.teacher:id,name',
@@ -59,12 +59,5 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                                              'status');
                                    },
                                   ])->get();
-    }
-
-    public function findTeacherEmailByIdSchedule (int $id_schedule)
-    {
-        $this->createModel();
-        return $this->model->find($id_schedule)->moduleClass()->first(['id_teacher'])->teacher()
-                           ->first(['id'])->account()->first(['email'])->email;
     }
 }

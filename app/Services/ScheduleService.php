@@ -17,8 +17,8 @@ class ScheduleService implements Contracts\ScheduleServiceContract
         $this->scheduleDepository = $scheduleDepository;
     }
 
-    public function update ($schedule)
+    public function update (string $idSchedule, array $scheduleArr)
     {
-        $this->scheduleDepository->updateByIds($schedule['id'], Arr::except($schedule, ['id']));
+        $this->scheduleDepository->updateByIds($idSchedule, $scheduleArr);
     }
 }

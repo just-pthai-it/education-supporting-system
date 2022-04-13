@@ -18,9 +18,9 @@ class ScheduleController extends Controller
         $this->scheduleService = $scheduleService;
     }
 
-    public function update (Request $request)
+    public function update (Request $request, string $idSchedule)
     {
         Gate::authorize('update-schedule', [$request->all()]);
-        $this->scheduleService->update($request->all());
+        $this->scheduleService->update($idSchedule, $request->all());
     }
 }
