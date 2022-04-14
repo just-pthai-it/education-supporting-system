@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use App\Http\Resources\ScheduleResource;
-use App\Http\Resources\ModuleClassResource;
 use App\Http\Resources\ExamScheduleResource;
 use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\DepartmentServiceContract;
@@ -21,14 +19,6 @@ class DepartmentController extends Controller
     public function __construct (DepartmentServiceContract $departmentService)
     {
         $this->departmentService = $departmentService;
-    }
-
-    public function getSchedules (Request $request,
-                                  string  $idDepartment) : AnonymousResourceCollection
-    {
-        Gate::authorize('get-department-schedule');
-        $schedules = $this->departmentService->getSchedules($idDepartment, $request->all());
-        return ScheduleResource::collection($schedules);
     }
 
     public function getExamSchedules (Request $request,
