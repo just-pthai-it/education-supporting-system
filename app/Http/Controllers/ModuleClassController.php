@@ -40,6 +40,6 @@ class ModuleClassController extends Controller
 
     public function destroyMany (Request $request)
     {
-
+        $this->moduleClassService->destroyMany($request->all());
     }
 }
