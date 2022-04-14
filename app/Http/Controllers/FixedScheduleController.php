@@ -20,6 +20,31 @@ class FixedScheduleController extends Controller
         $this->fixedScheduleService = $fixedScheduleService;
     }
 
+    public function readMany (Request $request) : AnonymousResourceCollection
+    {
+        Gate::authorize('get-fixed-schedule');
+        $fixedSchedules = $this->fixedScheduleService->readMany($request->all());
+        return FixedScheduleResource::collection($fixedSchedules);
+    }
+
+    public function readManyByIdDepartment (Request $request,
+                                            string  $idDepartment) : AnonymousResourceCollection
+    {
+        Gate::authorize('get-department-fixed-schedule', [$request->all()]);
+        $fixed_schedules = $this->fixedScheduleService->readManyByIdDepartment($idDepartment,
+                                                                               $request->all());
+        return FixedScheduleResource::collection($fixed_schedules);
+    }
+
+    public function readManyByIdTeacher (Request $request,
+                                         string  $idTeacher) : AnonymousResourceCollection
+    {
+        Gate::authorize('get-teacher-fixed-schedule');
+        $fixedSchedules = $this->fixedScheduleService->readManyByIdTeacher($idTeacher,
+                                                                           $request->all());
+        return FixedScheduleResource::collection($fixedSchedules);
+    }
+
     public function create (Request $request)
     {
         Gate::authorize('create-fixed-schedule', [$request->all()]);
@@ -31,12 +56,5 @@ class FixedScheduleController extends Controller
     {
         Gate::authorize('update-fixed-schedule', [$request->all()]);
         $this->fixedScheduleService->update($request->all());
-    }
-
-    public function readMany (Request $request) : AnonymousResourceCollection
-    {
-        Gate::authorize('get-fixed-schedule');
-        $fixedSchedules = $this->fixedScheduleService->readMany($request->all());
-        return FixedScheduleResource::collection($fixedSchedules);
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\ExamScheduleResource;
-use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\DepartmentServiceContract;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -28,15 +27,6 @@ class DepartmentController extends Controller
         $exam_schedules = $this->departmentService->getExamSchedules($idDepartment,
                                                                      $request->all());
         return ExamScheduleResource::collection($exam_schedules);
-    }
-
-    public function getFixedSchedules (Request $request,
-                                       string  $idDepartment) : AnonymousResourceCollection
-    {
-        Gate::authorize('get-department-fixed-schedule', [$request->all()]);
-        $fixed_schedules = $this->departmentService->getFixedSchedules($idDepartment,
-                                                                       $request->all());
-        return FixedScheduleResource::collection($fixed_schedules);
     }
 
     public function getTeachers (Request $request, string $idDepartment)

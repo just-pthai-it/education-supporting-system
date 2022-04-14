@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\TeacherResource;
 use App\Http\Resources\ExamScheduleResource;
-use App\Http\Resources\FixedScheduleResource;
 use App\Services\Contracts\TeacherServiceContract;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -33,13 +32,5 @@ class TeacherController extends Controller
         Gate::authorize('get-teacher-exam-schedule');
         $exam_schedules = $this->teacherService->getExamSchedules($idTeacher, $request->all());
         return ExamScheduleResource::collection($exam_schedules);
-    }
-
-    public function getFixedSchedules (Request $request,
-                                       string  $idTeacher) : AnonymousResourceCollection
-    {
-        Gate::authorize('get-teacher-fixed-schedule');
-        $fixedSchedules = $this->teacherService->getFixedSchedules($idTeacher, $request->all());
-        return FixedScheduleResource::collection($fixedSchedules);
     }
 }

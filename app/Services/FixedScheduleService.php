@@ -24,6 +24,23 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         $this->scheduleRepository      = $scheduleRepository;
     }
 
+    public function readMany (array $inputs)
+    {
+        return $this->fixedScheduleRepository->paginate(['*'], [], [],
+                                                        $inputs['pagination'] ?? 20,
+                                                        [['filter', $inputs]]);
+    }
+
+    public function readManyByIdDepartment (string $idDepartment, array $inputs)
+    {
+        return $this->fixedScheduleRepository->findByIdDepartment($idDepartment, $inputs);
+    }
+
+    public function readManyByIdTeacher (string $idTeacher, array $inputs)
+    {
+        return $this->fixedScheduleRepository->findByIdTeacher($idTeacher, $inputs);
+    }
+
     /**
      * @throws Exception
      */
@@ -84,12 +101,5 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
 
             $fixedScheduleArr = array_merge($fixedScheduleArr, $schedule->getOriginal());;
         }
-    }
-
-    public function readMany (array $inputs)
-    {
-        return $this->fixedScheduleRepository->paginate(['*'], [], [],
-                                                        $inputs['pagination'] ?? 20,
-                                                        [['filter', $inputs]]);
     }
 }
