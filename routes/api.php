@@ -4,7 +4,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\FeedbackController;
-use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
@@ -61,6 +60,8 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
             Route::get('fixed-schedules', [FixedScheduleController::class, 'readManyByIdTeacher']);
         });
+
+        Route::get('', [TeacherController::class, 'readMany']);
     });
 
     Route::group(['prefix' => 'import-data'], function ()
@@ -134,8 +135,6 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
             Route::get('fixed-schedules',
                        [FixedScheduleController::class, 'readManyByIdDepartment']);
-
-            Route::get('teachers', [DepartmentController::class, 'getTeachers']);
         });
     });
 

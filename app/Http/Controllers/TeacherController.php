@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Resources\TeacherResource;
 use App\Services\Contracts\TeacherServiceContract;
 
@@ -17,8 +18,14 @@ class TeacherController extends Controller
         $this->teacherService = $teacherService;
     }
 
-    public function read (string $idTeacher) : TeacherResource
+    public function read (Request $request, string $idTeacher) : TeacherResource
     {
         return new TeacherResource($this->teacherService->read($idTeacher));
+    }
+
+    public function readMany (Request $request)
+    {
+        $data = $this->teacherService->readMany($request->all());
+        return response(['data' => $data]);
     }
 }

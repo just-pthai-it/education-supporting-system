@@ -22,4 +22,9 @@ class TeacherService implements Contracts\TeacherServiceContract
                                                    [['with', 'department:id,name,id_faculty',
                                                      'department.faculty:id,name']]);
     }
+
+    public function readMany (array $inputs)
+    {
+        return $this->teacherRepository->find(['id', 'name'], [], [], [], [['filter', $inputs]]);
+    }
 }

@@ -16,10 +16,4 @@ class DepartmentController extends Controller
     {
         $this->departmentService = $departmentService;
     }
-
-    public function getTeachers (Request $request, string $idDepartment)
-    {
-        $data = $this->departmentService->getTeachers($idDepartment, $request->all());
-        return response(['data' => $data]);
-    }
 }
