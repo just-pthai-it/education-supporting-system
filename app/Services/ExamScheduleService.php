@@ -17,6 +17,16 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
         $this->examScheduleRepository = $examScheduleRepository;
     }
 
+    public function readManyByIdDepartment (string $idDepartment, array $inputs)
+    {
+        return $this->examScheduleRepository->findByIdDepartment($idDepartment, $inputs);
+    }
+
+    public function readManyByIdTeacher (string $idTeacher, array $inputs)
+    {
+        return $this->examScheduleRepository->findByIdTeacher($idTeacher, $inputs);
+    }
+
     public function update ($examSchedule)
     {
         $this->examScheduleRepository->updateByIds($examSchedule['id'],
