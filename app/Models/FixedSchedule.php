@@ -26,6 +26,7 @@ class FixedSchedule extends Model
         'old_date',
         'old_shift',
         'old_id_room',
+        'intend_time',
         'reason',
         'reason_deny',
         'status',

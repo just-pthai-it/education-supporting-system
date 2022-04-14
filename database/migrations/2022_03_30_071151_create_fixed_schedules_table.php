@@ -19,12 +19,13 @@ class CreateFixedSchedulesTable extends Migration
             $table->collation = 'utf8mb4_unicode_ci';
             $table->unsignedMediumInteger('id')->autoIncrement();
             $table->unsignedMediumInteger('id_schedule');
-            $table->date('new_date');
-            $table->string('new_shift', 50);
+            $table->date('new_date')->nullable();
+            $table->string('new_shift', 50)->nullable();
             $table->string('new_id_room', 50)->nullable();
             $table->date('old_date');
             $table->string('old_shift', 50);
             $table->string('old_id_room', 50);
+            $table->string('intend_time', 100)->nullable();
             $table->string('reason', 500);
             $table->string('reason_deny', 500)->nullable();
             $table->tinyInteger('status')->default(0)->index();
