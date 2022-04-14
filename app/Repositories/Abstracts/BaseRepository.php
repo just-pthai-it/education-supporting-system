@@ -169,17 +169,30 @@ abstract class BaseRepository implements BaseRepositoryContract
         return $this->model->pluck($columns[0], $columns[1] ?? null);
     }
 
-    public function deleteByIds (array $ids)
-    {
-        $this->createModel();
-        $this->model->whereIn('id', $ids)->delete();
-    }
-
     public function delete (array $conditions = [])
     {
         $this->createModel();
         $this->addWhere($conditions);
         return $this->model->delete();
+    }
+
+    public function deleteByIds ($ids)
+    {
+        $this->createModel();
+        $this->model->whereIn('id', $ids)->delete();
+    }
+
+    public function softDelete (array $conditions = [])
+    {
+        $this->createModel();
+        $this->addWhere($conditions);
+        return $this->model->update(['deleted_at' => now()]);
+    }
+
+    public function softDeleteByIds ($ids)
+    {
+        $this->createModel();
+        $this->model->whereIn('id', $ids)->update(['deleted_at' => now()]);
     }
 
     public function count (array $conditions = [])

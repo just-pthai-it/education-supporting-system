@@ -8,7 +8,7 @@ interface BaseRepositoryContract
 
     public function insertGetId (array $object);
 
-    public function insertGetObject(array $object);
+    public function insertGetObject (array $object);
 
     public function insertMultiple (array $objects);
 
@@ -39,7 +39,11 @@ interface BaseRepositoryContract
 
     public function delete (array $conditions = []);
 
-    public function deleteByIds (array $ids);
+    public function deleteByIds ($ids);
+
+    public function softDelete (array $conditions = []);
+
+    public function softDeleteByIds ($ids);
 
     public function count (array $conditions = []);
 
