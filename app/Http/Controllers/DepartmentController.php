@@ -24,48 +24,34 @@ class DepartmentController extends Controller
     }
 
     public function getSchedules (Request $request,
-                                          $id_department) : AnonymousResourceCollection
+                                  string  $idDepartment) : AnonymousResourceCollection
     {
         Gate::authorize('get-department-schedule');
-        $schedules = $this->departmentService->getSchedules($id_department, $request->all());
+        $schedules = $this->departmentService->getSchedules($idDepartment, $request->all());
         return ScheduleResource::collection($schedules);
     }
 
     public function getExamSchedules (Request $request,
-                                              $id_department) : AnonymousResourceCollection
+                                      string  $idDepartment) : AnonymousResourceCollection
     {
         Gate::authorize('get-department-exam-schedule');
-        $exam_schedules = $this->departmentService->getExamSchedules($id_department,
+        $exam_schedules = $this->departmentService->getExamSchedules($idDepartment,
                                                                      $request->all());
         return ExamScheduleResource::collection($exam_schedules);
     }
 
     public function getFixedSchedules (Request $request,
-                                               $id_department) : AnonymousResourceCollection
+                                       string  $idDepartment) : AnonymousResourceCollection
     {
         Gate::authorize('get-department-fixed-schedule', [$request->all()]);
-        $fixed_schedules = $this->departmentService->getFixedSchedules($id_department,
+        $fixed_schedules = $this->departmentService->getFixedSchedules($idDepartment,
                                                                        $request->all());
         return FixedScheduleResource::collection($fixed_schedules);
     }
 
-
-    public function getModuleClasses (Request $request,
-                                              $id_department) : AnonymousResourceCollection
+    public function getTeachers (Request $request, string $idDepartment)
     {
-        $response = $this->departmentService->getModuleClasses($id_department, $request->all());
-        return ModuleClassResource::collection($response);
-    }
-
-    public function getTeachers (Request $request, $id_department)
-    {
-        $data = $this->departmentService->getTeachers($id_department, $request->all());
+        $data = $this->departmentService->getTeachers($idDepartment, $request->all());
         return response(['data' => $data]);
-    }
-
-    public function destroyModuleClassesByStudySession (Request $request, $idDepartment)
-    {
-        $this->departmentService->destroyModuleClassesByStudySession($idDepartment,
-                                                                     $request->study_session);
     }
 }

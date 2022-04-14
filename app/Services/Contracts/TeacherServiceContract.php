@@ -11,6 +11,4 @@ interface TeacherServiceContract
     public function getExamSchedules (string $idTeacher, array $inputs);
 
     public function getFixedSchedules (string $idTeacher, array $inputs);
-
-    public function getModuleClasses (string $idTeacher, array $inputs);
 }

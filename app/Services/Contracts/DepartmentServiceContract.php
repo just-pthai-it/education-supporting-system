@@ -10,10 +10,5 @@ interface DepartmentServiceContract
 
     public function getFixedSchedules ($id_department, array $inputs);
 
-    public function getModuleClasses ($id_department, array $inputs);
-
     public function getTeachers (string $id_department, array $inputs);
-
-    public function destroyModuleClassesByStudySession (string $idDepartment,
-                                                        string $studySession);
 }

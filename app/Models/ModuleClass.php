@@ -39,6 +39,7 @@ class ModuleClass extends Model
 
     private array $filterable = [
         'id_study_session',
+        'id_teacher',
     ];
 
     private array $sortable = [];

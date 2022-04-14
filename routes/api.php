@@ -55,9 +55,6 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         {
             Route::get('', [TeacherController::class, 'read']);
 
-            Route::get('module-classes',
-                       [TeacherController::class, 'getModuleClasses']);
-
             Route::get('schedules', [TeacherController::class, 'getSchedules']);
 
             Route::get('exam-schedules', [TeacherController::class, 'getExamSchedules']);
@@ -96,12 +93,13 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     });
 
 
-    Route::get('module-class/{id_teacher}',
-               [ModuleClassController::class, 'getModuleClassesByIdTeacher']);
-
     Route::group(['prefix' => 'module-classes'], function ()
     {
+        Route::get('', [ModuleClassController::class, 'readMany']);
+
         Route::put('update', [ModuleClassController::class, 'updateMany']);
+
+        Route::delete('delete', [ModuleClassController::class, 'destroyMany']);
     });
 
 
@@ -128,7 +126,7 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
         Route::group(['prefix' => '{id_department}'], function ()
         {
             Route::get('module-classes',
-                       [DepartmentController::class, 'getModuleClasses']);
+                       [ModuleClassController::class, 'readManyByIdDepartment']);
 
             Route::get('schedules', [DepartmentController::class, 'getSchedules']);
 
@@ -138,9 +136,6 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
                        [DepartmentController::class, 'getFixedSchedules']);
 
             Route::get('teachers', [DepartmentController::class, 'getTeachers']);
-
-            Route::delete('module-classes/delete',
-                          [DepartmentController::class, 'destroyModuleClassesByStudySession']);
         });
     });
 
