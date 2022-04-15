@@ -12,6 +12,6 @@ interface FixedScheduleServiceContract
 
     public function create ($fixedScheduleArr);
 
-    public function update ($fixedScheduleArr);
+    public function update (string $idFixedSchedule, array $fixedScheduleArr);
 
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Exception;
 use Illuminate\Support\Arr;
+use App\Models\FixedSchedule;
 use App\Events\FixedScheduleUpdated;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
@@ -46,60 +47,111 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
      */
     public function create ($fixedScheduleArr)
     {
-        $this->_completeInputData($fixedScheduleArr);
+        $this->_completeCreateInputs($fixedScheduleArr);
         $fixedSchedule = $this->fixedScheduleRepository->insertGetObject($fixedScheduleArr);
         FixedScheduleUpdated::dispatch($fixedSchedule);
-
         return $fixedSchedule->id;
     }
 
-    private function _getFixedScheduleById ($ids, array $columns = ['*'])
+    private function _completeCreateInputs (array &$fixedScheduleArr)
+    {
+        switch ($fixedScheduleArr['type'] ?? null)
+        {
+            case null:
+                $fixedScheduleArr['status'] = 0;
+                break;
+
+            case 'soft':
+                $fixedScheduleArr['status'] = 5;
+                break;
+
+            case 'hard':
+                $fixedScheduleArr['status'] = 4;
+                break;
+        }
+        unset($fixedScheduleArr['type']);
+
+        $schedule = $this->_readScheduleById($fixedScheduleArr['id_schedule'],
+                                             ['date as old_date', 'shift as old_shift',
+                                              'id_room as old_id_room']);
+
+        $fixedScheduleArr = array_merge($fixedScheduleArr, $schedule->getOriginal());
+    }
+
+    private function _readFixedScheduleById ($ids, array $columns = ['*'])
     {
         return $this->fixedScheduleRepository->findByIds($ids, $columns);
     }
 
-    private function _getScheduleById ($id, array $columns = ['*'])
+    private function _readScheduleById ($id, array $columns = ['*'])
     {
         return $this->scheduleRepository->findByIds($id, $columns);
     }
 
     /**
+     * @param string $idFixedSchedule *
+     *
      * @throws Exception
      */
-    public function update ($fixedScheduleArr)
+    public function update (string $idFixedSchedule, array $fixedScheduleArr)
     {
-        $this->_completeInputData($fixedScheduleArr);
-        $this->fixedScheduleRepository->updateByIds($fixedScheduleArr['id'],
-                                                    Arr::except($fixedScheduleArr, ['id']));
-        $fixedSchedule = $this->_getFixedScheduleById($fixedScheduleArr['id']);
+        $fixedSchedule = $this->_readFixedScheduleById($idFixedSchedule);
+        $this->_completeUpdateInputs($fixedScheduleArr, $fixedSchedule);
+        $this->fixedScheduleRepository->updateByIds($idFixedSchedule, $fixedScheduleArr);
         FixedScheduleUpdated::dispatch($fixedSchedule);
     }
 
-    private function _completeInputData (&$fixedScheduleArr)
+    private function _completeUpdateInputs (array &$fixedScheduleArr, FixedSchedule &$fixedSchedule)
     {
-        if (isset($fixedScheduleArr['time']))
+        switch ($fixedScheduleArr['type'])
         {
-            switch ($fixedScheduleArr['status'])
-            {
-                case 1:
-                    $fixedScheduleArr['time_accept'] = $fixedScheduleArr['time'];
-                    break;
-                case 2:
-                    $fixedScheduleArr['time_set_room'] = $fixedScheduleArr['time'];
-                    break;
-                default:
-                    $fixedScheduleArr['time_accept']   = $fixedScheduleArr['time'];
-                    $fixedScheduleArr['time_set_room'] = $fixedScheduleArr['time'];
-            }
-            unset($fixedScheduleArr['time']);
-        }
-        else if (isset($fixedScheduleArr['reason']))
-        {
-            $schedule = $this->_getScheduleById($fixedScheduleArr['id_schedule'],
-                                                ['date as old_date', 'shift as old_shift',
-                                                 'id_room as old_id_room']);
+            case 'accept':
+                $fixedSchedule->status = 1;
 
-            $fixedScheduleArr = array_merge($fixedScheduleArr, $schedule->getOriginal());;
+                if (!is_null($fixedSchedule->intend_time))
+                {
+                    $fixedSchedule->status = 5;
+                }
+
+                if (!is_null($fixedSchedule->new_id_room))
+                {
+                    $fixedSchedule->status = 3;
+                }
+
+                $fixedSchedule->accepted_at = $fixedScheduleArr['accepted_at'];
+                break;
+
+            case 'set_room':
+                $fixedSchedule->status        = 2;
+                $fixedSchedule->new_id_room   = $fixedScheduleArr['new_id_room'];
+                $fixedSchedule->time_set_room = $fixedScheduleArr['time_set_room'];
+
+                break;
+
+            case 'deny':
+                if (auth()->user()->accountable_type == 'App\Models\Teacher')
+                {
+                    $fixedSchedule->status = -1;
+                }
+                else
+                {
+                    $fixedSchedule->status = -2;
+                }
+
+                $fixedSchedule->reason_deny = $fixedScheduleArr['reason_deny'];
+                break;
+
+            case 'cancel':
+                $fixedSchedule->status = -3;
+                break;
+
+            case 'intend_time';
+                $fixedSchedule->status      = 0;
+                $fixedSchedule->new_date    = $fixedScheduleArr['new_date'];
+                $fixedSchedule->new_shift   = $fixedScheduleArr['new_shift'];
+                $fixedSchedule->new_id_room = $fixedScheduleArr['new_id_room'] ?? null;
+                break;
         }
+        unset($fixedScheduleArr['type']);
     }
 }

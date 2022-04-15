@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\FixedScheduleResource;
+use App\Http\Requests\FixedSchedulePostRequest;
+use App\Http\Requests\FixedSchedulePatchRequest;
 use App\Services\Contracts\FixedScheduleServiceContract;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -45,16 +47,16 @@ class FixedScheduleController extends Controller
         return FixedScheduleResource::collection($fixedSchedules);
     }
 
-    public function create (Request $request)
+    public function create (FixedSchedulePostRequest $request)
     {
-        Gate::authorize('create-fixed-schedule', [$request->all()]);
-        $id = $this->fixedScheduleService->create($request->all());
+//        Gate::authorize('create-fixed-schedule', [$request->validated()]);
+        $id = $this->fixedScheduleService->create($request->validated());
         return response(['data' => $id], 201);
     }
 
-    public function update (Request $request)
+    public function update (FixedSchedulePatchRequest $request, string $idFixedSchedule)
     {
-        Gate::authorize('update-fixed-schedule', [$request->all()]);
-        $this->fixedScheduleService->update($request->all());
+//        Gate::authorize('update-fixed-schedule', [$request->validated()]);
+        $this->fixedScheduleService->update($idFixedSchedule, $request->validated());
     }
 }

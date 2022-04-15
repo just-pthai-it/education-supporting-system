@@ -45,7 +45,7 @@
               Xin chào {{ $teacher['is_female'] ? 'cô' : 'thầy' }} {{ $teacher['name'] }},<br/>
               {{ $content }}
               {{ $teacher['is_female'] ? 'cô' : 'thầy' }},
-              {{ in_array($fixed_schedule['status'], [2, 3]) ? 'lịch giảng dạy mới đã được cập nhật trên hệ thống,' : '' }}
+              {{ in_array($fixedSchedule['status'], [2, 3]) ? 'lịch giảng dạy mới đã được cập nhật trên hệ thống,' : '' }}
               thông tin chi tiết:
             </p>
             <div style="margin: 1rem 0.5rem; padding: 1rem; background-color: #f6f7f8;">
@@ -70,13 +70,13 @@
                     :
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-                    {{ $fixed_schedule['old_date'] }}
+                    {{ $fixedSchedule['old_date'] }}
                   </td>
                   <td style="padding: 0 1rem 0 0;">
                     <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png"/>
                   </td>
-                  <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-                    {{ $fixed_schedule['new_date'] }}
+                  <td style="padding-top: 0.25rem; padding-bottom: 0.25rem; {{ isset($fixedSchedule['new_date']) ? '' : 'font-style: italic;' }}">
+                    {{ $fixedSchedule['new_date'] ?? '(Chưa xác định)'}}
                   </td>
                 </tr>
                 <tr>
@@ -87,13 +87,13 @@
                     :
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-                    {{ $fixed_schedule['old_shift'] }}
+                    {{ $fixedSchedule['old_shift'] }}
                   </td>
                   <td style="padding: 0 1rem 0 0;">
                     <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png"/>
                   </td>
-                  <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-                    {{ $fixed_schedule['new_shift'] }}
+                  <td style="padding-top: 0.25rem; padding-bottom: 0.25rem; {{ isset($fixedSchedule['new_shift']) ? '' : 'font-style: italic;' }}">
+                    {{ $fixedSchedule['new_shift'] ?? '(Chưa xác định)'}}
                   </td>
                 </tr>
                 <tr>
@@ -104,15 +104,28 @@
                     :
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-                    {{ $fixed_schedule['old_id_room'] }}
+                    {{ $fixedSchedule['old_id_room'] }}
                   </td>
                   <td style="padding: 0 1rem 0 0;">
                     <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png"/>
                   </td>
-                  <td style="padding-top: 0.25rem; padding-bottom: 0.25rem; {{ isset($fixed_schedule['new_id_room']) ? '' : 'font-style: italic;' }}">
-                    {{ $fixed_schedule['new_id_room'] ?? '(Chưa xếp phòng)' }}
+                  <td style="padding-top: 0.25rem; padding-bottom: 0.25rem; {{ isset($fixedSchedule['new_id_room']) ? '' : 'font-style: italic;' }}">
+                    {{ $fixedSchedule['new_id_room'] ?? '(Chưa xếp phòng)' }}
                   </td>
                 </tr>
+                @if (!is_null($fixedSchedule['intend_time']) && is_null($fixedSchedule['new_date']))
+                  <tr>
+                    <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
+                      <b>Thời gian Chưa xác định</b>
+                    </td>
+                    <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
+                      :
+                    </td>
+                    <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
+                      {{ $fixedSchedule['intend_time'] }}
+                    </td>
+                  </tr>
+                @endif
                 <tr>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
                     <b>Trạng thái hiện tại</b>
@@ -120,26 +133,26 @@
                   <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
                     :
                   </td>
-                  <td style="font-weight: bold; {{ in_array($fixed_schedule['status'], [-3, -2, -1]) ? 'color: #ff0000' : (in_array($fixed_schedule['status'], [0, 1]) ? 'color: #1976d2' : 'color: #04af04') }}"
+                  <td style="font-weight: bold; {{ in_array($fixedSchedule['status'], [-3, -2, -1]) ? 'color: #ff0000' : (in_array($fixedSchedule['status'], [0, 1]) ? 'color: #1976d2' : 'color: #04af04') }}"
                       colspan="3">
                               <span class="pending">
                                 {{
-                                  $fixed_schedule['status'] == -3
+                                  $fixedSchedule['status'] == -3
                                   ? 'Đã hủy'
-                                  : ($fixed_schedule['status'] == -2
+                                  : ($fixedSchedule['status'] == -2
                                   ? 'Phòng QLGĐ đã từ chối'
-                                  : ($fixed_schedule['status'] == -1
+                                  : ($fixedSchedule['status'] == -1
                                   ? 'Bộ môn đã từ chối'
-                                  : ($fixed_schedule['status'] == 0
+                                  : ($fixedSchedule['status'] == 0
                                   ? 'Đang chờ bộ môn phê duyệt'
-                                  : ($fixed_schedule['status'] == 1
+                                  : ($fixedSchedule['status'] == 1
                                   ? 'Đang chờ phòng QLGĐ xếp phòng'
                                   : 'Đã phê duyệt'))))
                                   }}
                               </span>
                   </td>
                 </tr>
-                @if (isset($fixed_schedule['reason_deny']))
+                @if (isset($fixedSchedule['reason_deny']))
                   <tr>
                     <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
                       <b>Lý do từ chối</b>
@@ -148,7 +161,7 @@
                       :
                     </td>
                     <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;"
-                        colspan="3">{{ $fixed_schedule['reason_deny'] }}</td>
+                        colspan="3">{{ $fixedSchedule['reason_deny'] }}</td>
                   </tr>
                 @endif
                 </tbody>

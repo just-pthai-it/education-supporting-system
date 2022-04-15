@@ -145,7 +145,10 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 
         Route::post('create', [FixedScheduleController::class, 'create']);
 
-        Route::put('update', [FixedScheduleController::class, 'update']);
+        Route::group(['prefix' => 'update'], function ()
+        {
+            Route::patch('{id_fixed_schedule}', [FixedScheduleController::class, 'update']);
+        });
     });
 
 
