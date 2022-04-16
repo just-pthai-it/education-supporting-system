@@ -97,7 +97,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     {
         $fixedSchedule = $this->_readFixedScheduleById($idFixedSchedule);
         $this->_completeUpdateInputs($fixedScheduleArr, $fixedSchedule);
-        $this->fixedScheduleRepository->updateByIds($idFixedSchedule, $fixedScheduleArr);
+        $fixedSchedule->save();
         $this->_sendMailNotification($fixedSchedule);
     }
 
