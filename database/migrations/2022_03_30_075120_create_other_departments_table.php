@@ -18,7 +18,7 @@ class CreateOtherDepartmentsTable extends Migration
             $table->collation = 'utf8mb4_unicode_ci';
             $table->string('id', 50)->primary();
             $table->string('name', 100);
-            $table->string('address', 100);
+            $table->string('address', 100)->nullable();
         });
     }
 
