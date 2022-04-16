@@ -109,16 +109,18 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         switch ($fixedScheduleArr['type'])
         {
             case 'accept':
-                $fixedSchedule->status = 1;
 
-                if (!is_null($fixedSchedule->intend_time))
+                if (!is_null($fixedSchedule->intend_time) && is_null($fixedSchedule->new_date))
                 {
                     $fixedSchedule->status = 5;
                 }
-
-                if (!is_null($fixedSchedule->new_id_room))
+                else if (!is_null($fixedSchedule->new_id_room))
                 {
                     $fixedSchedule->status = 3;
+                }
+                else
+                {
+                    $fixedSchedule->status = 1;
                 }
 
                 $fixedSchedule->accepted_at = $fixedScheduleArr['accepted_at'];
