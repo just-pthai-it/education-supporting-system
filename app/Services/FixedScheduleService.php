@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use Exception;
-use Illuminate\Support\Arr;
 use App\Models\FixedSchedule;
 use App\Events\FixedScheduleUpdated;
+use App\Exceptions\InvalidFormRequestException;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
 
@@ -49,7 +49,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     {
         $this->_completeCreateInputs($fixedScheduleArr);
         $fixedSchedule = $this->fixedScheduleRepository->insertGetObject($fixedScheduleArr);
-        FixedScheduleUpdated::dispatch($fixedSchedule);
+        $this->_sendMailNotification($fixedSchedule);
         return $fixedSchedule->id;
     }
 
@@ -98,9 +98,12 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         $fixedSchedule = $this->_readFixedScheduleById($idFixedSchedule);
         $this->_completeUpdateInputs($fixedScheduleArr, $fixedSchedule);
         $this->fixedScheduleRepository->updateByIds($idFixedSchedule, $fixedScheduleArr);
-        FixedScheduleUpdated::dispatch($fixedSchedule);
+        $this->_sendMailNotification($fixedSchedule);
     }
 
+    /**
+     * @throws InvalidFormRequestException
+     */
     private function _completeUpdateInputs (array &$fixedScheduleArr, FixedSchedule &$fixedSchedule)
     {
         switch ($fixedScheduleArr['type'])
@@ -151,7 +154,20 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
                 $fixedSchedule->new_shift   = $fixedScheduleArr['new_shift'];
                 $fixedSchedule->new_id_room = $fixedScheduleArr['new_id_room'] ?? null;
                 break;
+
+            default:
+                throw new InvalidFormRequestException();
         }
         unset($fixedScheduleArr['type']);
+    }
+
+    private function _sendMailNotification (FixedSchedule $fixedSchedule)
+    {
+        if ($fixedSchedule->status = 4)
+        {
+            return;
+        }
+
+        FixedScheduleUpdated::dispatch($fixedSchedule);
     }
 }
