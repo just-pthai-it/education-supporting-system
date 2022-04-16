@@ -25,12 +25,10 @@ class FixedSchedulePatchRequest extends FormRequest
     {
         return [
             'type'        => 'required',
-            'new_date'    => '',
-            'new_shift'   => '',
-            'new_id_room' => '',
-            'reason_deny' => '',
-            'accepted_at' => '',
-            'set_room_at' => '',
+            'new_id_room' => 'required_if:type,set_room',
+            'reason_deny' => 'required_if:type,deny',
+            'accepted_at' => 'required_if:type,accept',
+            'set_room_at' => 'required_if:type,set_room',
         ];
     }
 }

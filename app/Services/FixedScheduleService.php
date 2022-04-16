@@ -110,51 +110,60 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         {
             case 'accept':
 
-                if (!is_null($fixedSchedule->intend_time) && is_null($fixedSchedule->new_date))
+                if (!is_null($fixedSchedule->intend_time) &&
+                    is_null($fixedSchedule->new_date) &&
+                    $fixedSchedule->status == 0)
                 {
                     $fixedSchedule->status = 5;
                 }
-                else if (!is_null($fixedSchedule->new_id_room))
+                else if (!is_null($fixedSchedule->new_id_room) && $fixedSchedule->status == 0)
                 {
                     $fixedSchedule->status = 3;
                 }
-                else
+                else if ($fixedSchedule->status == 0)
                 {
                     $fixedSchedule->status = 1;
+                }
+                else
+                {
+                    break;
                 }
 
                 $fixedSchedule->accepted_at = $fixedScheduleArr['accepted_at'];
                 break;
 
             case 'set_room':
-                $fixedSchedule->status        = 2;
-                $fixedSchedule->new_id_room   = $fixedScheduleArr['new_id_room'];
-                $fixedSchedule->time_set_room = $fixedScheduleArr['time_set_room'];
+                if ($fixedSchedule->status == 1)
+                {
+                    $fixedSchedule->status      = 2;
+                    $fixedSchedule->new_id_room = $fixedScheduleArr['new_id_room'];
+                    $fixedSchedule->set_room_at = $fixedScheduleArr['set_room_at'];
+                }
 
                 break;
 
             case 'deny':
-                if (auth()->user()->accountable_type == 'App\Models\Teacher')
+                if ($fixedSchedule->status == 0)
                 {
                     $fixedSchedule->status = -1;
                 }
-                else
+                else if ($fixedSchedule->status == 1)
                 {
                     $fixedSchedule->status = -2;
+                }
+                else
+                {
+                    break;
                 }
 
                 $fixedSchedule->reason_deny = $fixedScheduleArr['reason_deny'];
                 break;
 
             case 'cancel':
-                $fixedSchedule->status = -3;
-                break;
-
-            case 'intend_time';
-                $fixedSchedule->status      = 0;
-                $fixedSchedule->new_date    = $fixedScheduleArr['new_date'];
-                $fixedSchedule->new_shift   = $fixedScheduleArr['new_shift'];
-                $fixedSchedule->new_id_room = $fixedScheduleArr['new_id_room'] ?? null;
+                if (in_array($fixedSchedule->status, [0, 1]))
+                {
+                    $fixedSchedule->status = -3;
+                }
                 break;
 
             default:
