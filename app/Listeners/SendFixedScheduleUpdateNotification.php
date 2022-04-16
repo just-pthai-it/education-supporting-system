@@ -54,13 +54,13 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
      */
     private function _sendMailNotificationToHeadOfDepartment (FixedSchedule $fixedSchedule)
     {
-        if ($fixedSchedule->status != 0)
+        if (!in_array($fixedSchedule->status, [0, 5]))
         {
             return;
         }
 
         $teacher  = $this->_readHeadOfDepartment($fixedSchedule->schedule->moduleClass->teacher->id_department);
-        $mailData = $this->_getBasicMailData($fixedSchedule->status, true);
+        $mailData = $this->_getBasicMailDataForHeadOfDepartment();
         $this->_sendMailNotification(array_merge($mailData, [
             'recipient'  => $teacher->account->email,
             'teacher'    => $teacher->getOriginal(),
@@ -80,7 +80,7 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
     /**
      * @throws Exception
      */
-    private function _getBasicMailData (int $status, bool $isForHeadOfDepartment = false) : array
+    private function _getBasicMailData (int $status) : array
     {
         switch ($status)
         {
@@ -90,15 +90,9 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
                 return GData::$mail_data['change_schedule_request']['deny_room'];
             case -1:
                 return GData::$mail_data['change_schedule_request']['deny'];
+            case 5:
             case 0:
-                if (!$isForHeadOfDepartment)
-                {
-                    return GData::$mail_data['change_schedule_request']['confirm'];
-                }
-                else
-                {
-                    return GData::$mail_data['change_schedule_request']['notify_head_of_department'];
-                }
+                return GData::$mail_data['change_schedule_request']['confirm'];
             case 1:
                 return GData::$mail_data['change_schedule_request']['accept'];
             case 2:
@@ -108,6 +102,11 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
             default:
                 throw new Exception('send mail fixed schedule');
         }
+    }
+
+    private function _getBasicMailDataForHeadOfDepartment ()
+    {
+        return GData::$mail_data['change_schedule_request']['notify_head_of_department'];
     }
 
     private function _setUpData (array &$data, FixedSchedule $fixedSchedule)
