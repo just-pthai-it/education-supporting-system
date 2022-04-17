@@ -40,6 +40,7 @@ class FixedScheduleResource extends JsonResource
             'setRoomAt'                => $this->set_room_at,
             'status'                   => $this->status,
             'reason'                   => $this->reason,
+            'intendTime'               => $this->intend_time,
         ];
     }
 }
