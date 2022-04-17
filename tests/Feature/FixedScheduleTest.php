@@ -2,15 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Account;
 use App\Models\FixedSchedule;
-use App\Models\OtherDepartment;
-use Database\Factories\UserFactory;
-use Database\Factories\AccountFactory;
 use App\Http\Middleware\VerifyJWTToken;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class FixedScheduleTest extends TestCase
@@ -21,6 +15,7 @@ class FixedScheduleTest extends TestCase
      */
     public function test_create ()
     {
+        $this->actingAs(Account::find(5));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->post('/api/fixed-schedules/create',
                                 ['id_schedule' => 4,
@@ -34,6 +29,7 @@ class FixedScheduleTest extends TestCase
 
     public function test_create_soft ()
     {
+        $this->actingAs(Account::find(5));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->post('/api/fixed-schedules/create?type=soft',
                                 ['id_schedule' => 4,
@@ -45,6 +41,7 @@ class FixedScheduleTest extends TestCase
 
     public function test_create_hard ()
     {
+        $this->actingAs(Account::find(6));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->post('/api/fixed-schedules/create?type=hard',
                                 ['id_schedule' => 4,
@@ -72,6 +69,7 @@ class FixedScheduleTest extends TestCase
                                                        'status'      => 0,
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
+        $this->actingAs(Account::find(6));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->patch("/api/fixed-schedules/update/{$idFixedSchedule}?type=accept",
                                  ['accepted_at' => '2022-03-21 02:39:58',]);
@@ -95,6 +93,8 @@ class FixedScheduleTest extends TestCase
                                                        'status'      => 0,
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
+
+        $this->actingAs(Account::find(6));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->patch("/api/fixed-schedules/update/{$idFixedSchedule}?type=accept",
                                  ['accepted_at' => '2022-03-21 02:39:58',]);
@@ -118,6 +118,8 @@ class FixedScheduleTest extends TestCase
                                                        'status'      => 0,
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
+
+        $this->actingAs(Account::find(6));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->patch("/api/fixed-schedules/update/{$idFixedSchedule}?type=accept",
                                  ['accepted_at' => '2022-03-21 02:39:58',]);
@@ -141,6 +143,8 @@ class FixedScheduleTest extends TestCase
                                                        'status'      => 1,
                                                        'accepted_at' => '2022-03-09 09:43:45',
                                                        'set_room_at' => null,]);
+
+        $this->actingAs(Account::find(2));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->patch("/api/fixed-schedules/update/{$idFixedSchedule}?type=set_room",
                                  ['set_room_at' => '2022-03-21 02:39:58',
@@ -166,6 +170,7 @@ class FixedScheduleTest extends TestCase
                                                        'accepted_at' => '2022-03-09 09:43:45',
                                                        'set_room_at' => null,]);
 
+        $this->actingAs(Account::find(6));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->patch("/api/fixed-schedules/update/{$idFixedSchedule}?type=deny",
                                  ['reason_deny' => 'deny']);
@@ -190,6 +195,7 @@ class FixedScheduleTest extends TestCase
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
 
+        $this->actingAs(Account::find(2));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->patch("/api/fixed-schedules/update/{$idFixedSchedule}?type=deny",
                                  ['reason_deny' => 'deny']);
@@ -214,6 +220,7 @@ class FixedScheduleTest extends TestCase
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
 
+        $this->actingAs(Account::find(6));
         $this->withoutMiddleware(VerifyJWTToken::class);
         $response = $this->patch("/api/fixed-schedules/update/{$idFixedSchedule}?type=cancel");
 

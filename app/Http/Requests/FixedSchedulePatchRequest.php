@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FixedSchedulePatchRequest extends FormRequest
@@ -14,7 +15,31 @@ class FixedSchedulePatchRequest extends FormRequest
      */
     public function authorize () : bool
     {
-        return true;
+        $permissions = Role::find($this->user()->id_role)->permissions()
+                           ->pluck('permissions.id')->toArray();
+
+        if ($this->all()['type'] == 'accept' && in_array(13, $permissions))
+        {
+            return true;
+        }
+
+        if ($this->all()['type'] == 'set_room' && in_array(17, $permissions))
+        {
+            return true;
+        }
+
+        if ($this->all()['type'] == 'deny' &&
+            (in_array(17, $permissions) || in_array(13, $permissions)))
+        {
+            return true;
+        }
+
+        if ($this->all()['type'] == 'cancel' && in_array(32, $permissions))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /**

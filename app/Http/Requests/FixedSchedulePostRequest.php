@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FixedSchedulePostRequest extends FormRequest
@@ -14,7 +15,21 @@ class FixedSchedulePostRequest extends FormRequest
      */
     public function authorize () : bool
     {
-        return true;
+        $permissions = Role::find($this->user()->id_role)->permissions()
+                           ->pluck('permissions.id')->toArray();
+
+        if ((!isset($this->all()['type']) || $this->all()['type'] == 'soft') &&
+            in_array(12, $permissions))
+        {
+            return true;
+        }
+
+        if ($this->all()['type'] == 'hard' && in_array(14, $permissions))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /**
