@@ -28,12 +28,12 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                       },
                                       'fixedSchedules' => function ($query)
                                       {
-                                          return $query->whereIn('status', [0, 1, 2, 3, 4])
+                                          return $query->whereIn('status', [0, 1, 2, 3, 4, 5, 6])
                                                        ->select('id', 'id_schedule', 'created_at',
                                                                 'old_date', 'old_shift',
                                                                 'old_id_room', 'new_date',
                                                                 'new_shift', 'new_id_room',
-                                                                'status');
+                                                                'intend_time', 'status');
                                       },
                                   ])->get();
     }
@@ -51,12 +51,12 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                    'moduleClass.teacher:id,name',
                                    'fixedSchedules' => function ($query)
                                    {
-                                       return $query->whereIn('status', [0, 1, 2, 3, 4])
+                                       return $query->whereIn('status', [0, 1, 2, 3, 4, 5, 6])
                                                     ->select('id', 'id_schedule', 'created_at',
                                                              'old_date', 'old_shift',
                                                              'old_id_room', 'new_date',
                                                              'new_shift', 'new_id_room',
-                                                             'status');
+                                                             'intend_time', 'status');
                                    },
                                   ])->get();
     }
