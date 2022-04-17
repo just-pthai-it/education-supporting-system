@@ -19,16 +19,16 @@ class GData
             'set_room' => 202,
         ],
         'approve' => [
-            'normal'   => 400,
-            'soft'     => 401,
-            'straight' => 402,
+            'normal'   => 300,
+            'soft'     => 301,
+            'straight' => 302,
         ],
         'change'  => [
-            'normal' => 500,
+            'normal' => 400,
         ],
         'deny'    => [
-            'accept'   => 600,
-            'set_room' => 601
+            'accept'   => 500,
+            'set_room' => 501
         ],
     ];
 
