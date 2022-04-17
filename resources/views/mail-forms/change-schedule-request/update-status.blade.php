@@ -135,7 +135,8 @@
                     :
                   </td>
                   <td style="font-weight: bold; {{
-                                                in_array($fixed_schedule['status'], array_merge($fs_status_code['cancel'], $fs_status_code['deny'])) 
+                                                in_array($fixed_schedule['status'], array_merge(array_values($fs_status_code['cancel']),
+                                                                                                array_values($fs_status_code['deny'])))
                                                 ? 'color: #ff0000' : (in_array($fixed_schedule['status'], $fs_status_code['pending']) 
                                                 ? 'color: #1976d2' : 'color: #04af04')
                                                 }}"
