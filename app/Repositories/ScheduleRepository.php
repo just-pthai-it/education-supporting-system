@@ -31,8 +31,8 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                       'fixedSchedules' => function ($query)
                                       {
                                           return $query->whereIn('status',
-                                                                 array_merge(GData::$fsStatusCode['pending'],
-                                                                             GData::$fsStatusCode['approve']))
+                                                                 array_merge(array_values(GData::$fsStatusCode['pending']),
+                                                                             array_values(GData::$fsStatusCode['approve'])))
                                                        ->select('id', 'id_schedule', 'created_at',
                                                                 'old_date', 'old_shift',
                                                                 'old_id_room', 'new_date',
@@ -56,8 +56,8 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                    'fixedSchedules' => function ($query)
                                    {
                                        return $query->whereIn('status',
-                                                              array_merge(GData::$fsStatusCode['pending'],
-                                                                          GData::$fsStatusCode['approve']))
+                                                              array_merge(array_values(GData::$fsStatusCode['pending']),
+                                                                          array_values(GData::$fsStatusCode['approve'])))
                                                     ->select('id', 'id_schedule', 'created_at',
                                                              'old_date', 'old_shift',
                                                              'old_id_room', 'new_date',
