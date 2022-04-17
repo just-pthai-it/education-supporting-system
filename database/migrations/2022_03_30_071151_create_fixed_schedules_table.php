@@ -28,7 +28,7 @@ class CreateFixedSchedulesTable extends Migration
             $table->string('intend_time', 100)->nullable();
             $table->string('reason', 500);
             $table->string('reason_deny', 500)->nullable();
-            $table->tinyInteger('status')->default(0)->index();
+            $table->smallInteger('status')->default(0)->index();
             $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
             $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
                   ->useCurrentOnUpdate();
