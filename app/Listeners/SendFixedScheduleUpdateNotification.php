@@ -54,7 +54,8 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
      */
     private function _sendMailNotificationToHeadOfDepartment (FixedSchedule $fixedSchedule)
     {
-        if (!in_array($fixedSchedule->status, [0, 5]))
+        if (!in_array($fixedSchedule->status, [GData::$fsStatusCode['pending']['normal'],
+                                               GData::$fsStatusCode['pending']['soft']]))
         {
             return;
         }
@@ -84,21 +85,29 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
     {
         switch ($status)
         {
-            case -3:
+            case GData::$fsStatusCode['cancel']['normal']:
                 return GData::$mail_data['change_schedule_request']['cancel'];
-            case -2:
-                return GData::$mail_data['change_schedule_request']['deny_room'];
-            case -1:
-                return GData::$mail_data['change_schedule_request']['deny'];
-            case 5:
-            case 0:
-                return GData::$mail_data['change_schedule_request']['confirm'];
-            case 1:
-                return GData::$mail_data['change_schedule_request']['accept'];
-            case 2:
-                return GData::$mail_data['change_schedule_request']['accept_room'];
-            case 3:
-                return GData::$mail_data['change_schedule_request']['accept_straight'];
+
+            case GData::$fsStatusCode['deny']['set_room']:
+                return GData::$mail_data['change_schedule_request']['deny_set_room'];
+
+            case GData::$fsStatusCode['deny']['accept']:
+                return GData::$mail_data['change_schedule_request']['deny_accept'];
+
+            case GData::$fsStatusCode['pending']['normal']:
+            case GData::$fsStatusCode['pending']['soft']:
+                return GData::$mail_data['change_schedule_request']['pending'];
+
+            case GData::$fsStatusCode['pending']['set_room']:
+                return GData::$mail_data['change_schedule_request']['pending_set_room'];
+
+            case GData::$fsStatusCode['approve']['normal']:
+                return GData::$mail_data['change_schedule_request']['approve'];
+
+            case GData::$fsStatusCode['approve']['soft']:
+            case GData::$fsStatusCode['approve']['straight']:
+                return GData::$mail_data['change_schedule_request']['approve_straight'];
+
             default:
                 throw new Exception('send mail fixed schedule');
         }
@@ -116,6 +125,7 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
             'fixed_schedule' => $fixedSchedule->getOriginal(),
             'module_class'   => $fixedSchedule->schedule->moduleClass->getOriginal(),
             'teacher'        => $fixedSchedule->schedule->moduleClass->teacher->getOriginal(),
+            'fs_status_code' => GData::$fsStatusCode,
         ]);
     }
 

@@ -44,6 +44,11 @@ class ScheduleResource extends JsonResource
             $color = GData::$current[$this->id_module_class];
         }
 
+        if ($this->fixedSchedules->last()->status == GData::$fsStatusCode['approve']['soft'])
+        {
+            $color = '#cccccc';
+        }
+
         $this->fixedSchedules = $this->fixedSchedules->map(function ($item, $key)
         {
             return [

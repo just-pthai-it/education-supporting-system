@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
   <title></title>
   <meta charset="utf-8"/>
@@ -44,9 +44,10 @@
             <p>
               Xin chào {{ $teacher['is_female'] ? 'cô' : 'thầy' }} {{ $teacher['name'] }},<br/>
               {{ $content }}
-              {{ $teacher['is_female'] ? 'cô' : 'thầy' }},
-              {{ in_array($fixed_schedule['status'], [2, 3]) ? 'lịch giảng dạy mới đã được cập nhật trên hệ thống,' : '' }}
-              thông tin chi tiết:
+              {{ $teacher['is_female'] ? 'cô' : 'thầy' }}
+              {{ in_array($fixed_schedule['status'],$fs_status_code['approve'])
+                                                    ? ', lịch giảng dạy mới đã được cập nhật trên hệ thống.' : '.' }}
+              Thông tin chi tiết:
             </p>
             <div style="margin: 1rem 0.5rem; padding: 1rem; background-color: #f6f7f8;">
               <table style="width: 100%; border-collapse: collapse">
@@ -55,7 +56,7 @@
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
                     <b>Lớp học phần</b>
                   </td>
-                  <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
+                  <td style="padding: 0.25rem 1rem 0.25rem 0.125rem;">
                     :
                   </td>
                   <td colspan="3" style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
@@ -66,7 +67,7 @@
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
                     <b>Ngày học</b>
                   </td>
-                  <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
+                  <td style="padding: 0.25rem 1rem 0.25rem 0.125rem;">
                     :
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
@@ -83,7 +84,7 @@
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
                     <b>Ca học</b>
                   </td>
-                  <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
+                  <td style="padding: 0.25rem 1rem 0.25rem 0.125rem;">
                     :
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
@@ -100,7 +101,7 @@
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
                     <b>Phòng học</b>
                   </td>
-                  <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
+                  <td style="padding: 0.25rem 1rem 0.25rem 0.125rem;">
                     :
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
@@ -113,12 +114,12 @@
                     {{ $fixed_schedule['new_id_room'] ?? '(Chưa xếp phòng)' }}
                   </td>
                 </tr>
-                @if (!is_null($fixed_schedule['intend_time']) && is_null($fixed_schedule['new_date']))
+                @if (!is_null($fixed_schedule['intend_time']))
                   <tr>
                     <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-                      <b>Thời gian Chưa xác định</b>
+                      <b>Thời gian dự kiến</b>
                     </td>
-                    <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
+                    <td style="padding: 0.25rem 1rem 0.25rem 0.125rem;">
                       :
                     </td>
                     <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
@@ -130,25 +131,30 @@
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
                     <b>Trạng thái hiện tại</b>
                   </td>
-                  <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
+                  <td style="padding: 0.25rem 1rem 0.25rem 0.125rem;">
                     :
                   </td>
-                  <td style="font-weight: bold; {{ in_array($fixed_schedule['status'], [-3, -2, -1]) ? 'color: #ff0000' : (in_array($fixed_schedule['status'], [0, 1]) ? 'color: #1976d2' : 'color: #04af04') }}"
+                  <td style="font-weight: bold; {{
+                                                in_array($fixed_schedule['status'], array_merge($fs_status_code['cancel'], $fs_status_code['deny'])) 
+                                                ? 'color: #ff0000' : (in_array($fixed_schedule['status'], $fs_status_code['pending']) 
+                                                ? 'color: #1976d2' : 'color: #04af04')
+                                                }}"
                       colspan="3">
                               <span class="pending">
-                                {{
-                                  $fixed_schedule['status'] == -3
-                                  ? 'Đã hủy'
-                                  : ($fixed_schedule['status'] == -2
-                                  ? 'Phòng QLGĐ đã từ chối'
-                                  : ($fixed_schedule['status'] == -1
-                                  ? 'Bộ môn đã từ chối'
-                                  : ($fixed_schedule['status'] == 0
-                                  ? 'Đang chờ bộ môn phê duyệt'
-                                  : ($fixed_schedule['status'] == 1
-                                  ? 'Đang chờ phòng QLGĐ xếp phòng'
-                                  : 'Đã phê duyệt'))))
-                                  }}
+                               @if($fixed_schedule['status'] == $fs_status_code['cancel']['normal'])
+                                  Đã hủy
+                                @elseif($fixed_schedule['status'] == $fs_status_code['deny']['set_room'])
+                                  Phòng QLGĐ đã từ chối
+                                @elseif($fixed_schedule['status'] == $fs_status_code['deny']['accept'])
+                                  Bộ môn đã từ chối
+                                @elseif(in_array($fixed_schedule['status'], [$fs_status_code['pending']['normal'],
+                                                                                 $fs_status_code['pending']['soft']]))
+                                  Đang chờ bộ môn phê duyệt
+                                @elseif($fixed_schedule['status'] == $fs_status_code['pending']['set_room'])
+                                  Đang chờ phòng QLGĐ xếp phòng
+                                @elseif(in_array($fixed_schedule['status'], $fs_status_code['approve']))
+                                  Đã phê duyệt
+                                @endif
                               </span>
                   </td>
                 </tr>
@@ -157,7 +163,7 @@
                     <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
                       <b>Lý do từ chối</b>
                     </td>
-                    <td style="padding-top: 0.25rem; padding-left: 0.125rem; padding-bottom: 0.25rem; padding-right: 1rem;">
+                    <td style="padding: 0.25rem 1rem 0.25rem 0.125rem;">
                       :
                     </td>
                     <td style="padding-top: 0.25rem; padding-bottom: 0.25rem;"

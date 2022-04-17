@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use Exception;
+use App\Helpers\GData;
 use App\Models\FixedSchedule;
 use App\Events\FixedScheduleUpdated;
-use App\Exceptions\InvalidFormRequestException;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
 
@@ -58,15 +58,15 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         switch ($fixedScheduleArr['type'] ?? null)
         {
             case null:
-                $fixedScheduleArr['status'] = 0;
+                $fixedScheduleArr['status'] = GData::$fsStatusCode['pending']['normal'];
                 break;
 
             case 'soft':
-                $fixedScheduleArr['status'] = 5;
+                $fixedScheduleArr['status'] = GData::$fsStatusCode['pending']['soft'];
                 break;
 
             case 'hard':
-                $fixedScheduleArr['status'] = 4;
+                $fixedScheduleArr['status'] = GData::$fsStatusCode['change']['normal'];
                 break;
         }
         unset($fixedScheduleArr['type']);
@@ -101,9 +101,6 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         $this->_sendMailNotification($fixedSchedule);
     }
 
-    /**
-     * @throws InvalidFormRequestException
-     */
     private function _completeUpdateInputs (array &$fixedScheduleArr, FixedSchedule &$fixedSchedule)
     {
         switch ($fixedScheduleArr['type'])
@@ -111,18 +108,18 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
             case 'accept':
 
                 if (!is_null($fixedSchedule->intend_time) &&
-                    is_null($fixedSchedule->new_date) &&
-                    $fixedSchedule->status == 0)
+                    $fixedSchedule->status == GData::$fsStatusCode['pending']['soft'])
                 {
-                    $fixedSchedule->status = 5;
+                    $fixedSchedule->status = GData::$fsStatusCode['approve']['soft'];
                 }
-                else if (!is_null($fixedSchedule->new_id_room) && $fixedSchedule->status == 0)
+                else if (!is_null($fixedSchedule->new_id_room) &&
+                         $fixedSchedule->status == GData::$fsStatusCode['pending']['normal'])
                 {
-                    $fixedSchedule->status = 3;
+                    $fixedSchedule->status = GData::$fsStatusCode['approve']['straight'];
                 }
-                else if ($fixedSchedule->status == 0)
+                else if ($fixedSchedule->status == GData::$fsStatusCode['pending']['normal'])
                 {
-                    $fixedSchedule->status = 1;
+                    $fixedSchedule->status = GData::$fsStatusCode['pending']['set_room'];
                 }
                 else
                 {
@@ -133,9 +130,10 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
                 break;
 
             case 'set_room':
-                if ($fixedSchedule->status == 1)
+                if ($fixedSchedule->status == GData::$fsStatusCode['pending']['set_room'] &&
+                    is_null($fixedSchedule->new_id_room))
                 {
-                    $fixedSchedule->status      = 2;
+                    $fixedSchedule->status      = GData::$fsStatusCode['approve']['normal'];
                     $fixedSchedule->new_id_room = $fixedScheduleArr['new_id_room'];
                     $fixedSchedule->set_room_at = $fixedScheduleArr['set_room_at'];
                 }
@@ -143,13 +141,14 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
                 break;
 
             case 'deny':
-                if ($fixedSchedule->status == 0)
+                if ($fixedSchedule->status == GData::$fsStatusCode['pending']['normal'] ||
+                    $fixedSchedule->status == GData::$fsStatusCode['pending']['soft'])
                 {
-                    $fixedSchedule->status = -1;
+                    $fixedSchedule->status = GData::$fsStatusCode['deny']['accept'];
                 }
-                else if ($fixedSchedule->status == 1)
+                else if ($fixedSchedule->status == GData::$fsStatusCode['pending']['set_room'])
                 {
-                    $fixedSchedule->status = -2;
+                    $fixedSchedule->status = GData::$fsStatusCode['deny']['set_room'];
                 }
                 else
                 {
@@ -160,21 +159,20 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
                 break;
 
             case 'cancel':
-                if (in_array($fixedSchedule->status, [0, 1]))
+                if (in_array($fixedSchedule->status, [GData::$fsStatusCode['pending']['normal'],
+                                                      GData::$fsStatusCode['pending']['soft'],
+                                                      GData::$fsStatusCode['pending']['set_room']]))
                 {
-                    $fixedSchedule->status = -3;
+                    $fixedSchedule->status = GData::$fsStatusCode['cancel']['normal'];
                 }
                 break;
-
-            default:
-                throw new InvalidFormRequestException();
         }
         unset($fixedScheduleArr['type']);
     }
 
     private function _sendMailNotification (FixedSchedule $fixedSchedule)
     {
-        if ($fixedSchedule->status = 4)
+        if ($fixedSchedule->status == GData::$fsStatusCode['change']['normal'])
         {
             return;
         }

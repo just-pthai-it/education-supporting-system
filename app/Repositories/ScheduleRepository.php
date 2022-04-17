@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Helpers\GData;
 use App\Models\Schedule;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use App\Repositories\Abstracts\BaseRepository;
@@ -28,7 +30,9 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                       },
                                       'fixedSchedules' => function ($query)
                                       {
-                                          return $query->whereIn('status', [0, 1, 2, 3, 4, 5, 6])
+                                          return $query->whereIn('status',
+                                                                 array_merge(GData::$fsStatusCode['pending'],
+                                                                             GData::$fsStatusCode['approve']))
                                                        ->select('id', 'id_schedule', 'created_at',
                                                                 'old_date', 'old_shift',
                                                                 'old_id_room', 'new_date',
@@ -51,7 +55,9 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                    'moduleClass.teacher:id,name',
                                    'fixedSchedules' => function ($query)
                                    {
-                                       return $query->whereIn('status', [0, 1, 2, 3, 4, 5, 6])
+                                       return $query->whereIn('status',
+                                                              array_merge(GData::$fsStatusCode['pending'],
+                                                                          GData::$fsStatusCode['approve']))
                                                     ->select('id', 'id_schedule', 'created_at',
                                                              'old_date', 'old_shift',
                                                              'old_id_room', 'new_date',

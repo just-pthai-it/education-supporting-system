@@ -4,45 +4,73 @@ namespace App\Helpers;
 
 class GData
 {
+
+    /**
+     * Contains all fixed schedule status code
+     * @var array
+     */
+    public static array $fsStatusCode = [
+        'cancel'  => [
+            'normal' => 100,
+        ],
+        'pending' => [
+            'normal'   => 200,
+            'soft'     => 201,
+            'set_room' => 202,
+        ],
+        'approve' => [
+            'normal'   => 400,
+            'soft'     => 401,
+            'straight' => 402,
+        ],
+        'change'  => [
+            'normal' => 500,
+        ],
+        'deny'    => [
+            'accept'   => 600,
+            'set_room' => 601
+        ],
+    ];
+
     public static array $mail_data = [
         'change_schedule_request' => [
-            'confirm'                   => [
-                'view'    => 'mail-forms.change-schedule-request',
+            'pending'                   => [
+                'view'    => 'mail-forms.change-schedule-request.update-status',
                 'subject' => 'Xác nhân yêu cầu thay đổi lịch giảng dạy.',
                 'content' => "Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng dạy của",
             ],
-            'accept'                    => [
-                'view'    => 'mail-forms.change-schedule-request',
+            'pending_set_room'          => [
+                'view'    => 'mail-forms.change-schedule-request.update-status',
                 'subject' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy.',
                 'content' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của',
             ],
-            'accept_straight'           => [
-                'view'    => 'mail-forms.change-schedule-request',
-                'subject' => 'Yêu cầu thay đổi lịch giảng dạy đã được phê duyệt.',
-                'content' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của',
-            ],
-            'accept_room'               => [
-                'view'    => 'mail-forms.change-schedule-request',
+            'approve'                   => [
+                'view'    => 'mail-forms.change-schedule-request.update-status',
                 'subject' => 'Phòng quản lí giảng đường đã phê duyệt yêu cầu thay đôi lịch giảng dạy.',
                 'content' => 'Phòng quản lí giảng đường đã phê duyệt và cấp phòng cho yêu cầu thay đổi lịch giảng dạy của',
             ],
+            'approve_straight'          => [
+                'view'    => 'mail-forms.change-schedule-request.update-status',
+                'subject' => 'Yêu cầu thay đổi lịch giảng dạy đã được phê duyệt.',
+                'content' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của',
+            ],
             'cancel'                    => [
-                'view'    => 'mail-forms.change-schedule-request',
+                'view'    => 'mail-forms.change-schedule-request.update-status',
                 'subject' => 'Xác nhận hủy yêu cầy thay đổi lịch giảng dạy.',
                 'content' => 'Hệ thống đã hủy yêu cầu thay đổi lịch giảng dạy của',
             ],
-            'deny'                      => [
-                'view'    => 'mail-forms.change-schedule-request',
+            'deny_accept'               => [
+                'view'    => 'mail-forms.change-schedule-request.update-status',
                 'subject' => 'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy.',
                 'content' => 'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy của',
             ],
-            'deny_room'                 => [
-                'view'    => 'mail-forms.change-schedule-request',
+            'deny_set_room'             => [
+                'view'    => 'mail-forms.change-schedule-request.update-status',
                 'subject' => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy.',
                 'content' => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy của',
             ],
             'notify_head_of_department' => [
-                'view'    => 'mail-forms.change-schedule-request-2',
+                'view'    => 'mail-forms.change-schedule-request.notify-head-of-department',
                 'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng.',
             ],
         ],
