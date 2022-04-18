@@ -109,7 +109,7 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
                 return GData::$mail_data['change_schedule_request']['approve_straight'];
 
             default:
-                throw new Exception('send mail fixed schedule');
+                throw new Exception('send mail fixed schedule, status code: ' . $status);
         }
     }
 

@@ -56,7 +56,7 @@ class GData
             ],
             'cancel'                    => [
                 'view'    => 'mail-forms.change-schedule-request.update-status',
-                'subject' => 'Xác nhận hủy yêu cầy thay đổi lịch giảng dạy.',
+                'subject' => 'Xác nhận hủy yêu cầu thay đổi lịch giảng dạy.',
                 'content' => 'Hệ thống đã hủy yêu cầu thay đổi lịch giảng dạy của',
             ],
             'deny_accept'               => [
