@@ -20,11 +20,14 @@ class TeacherService implements Contracts\TeacherServiceContract
     {
         return $this->teacherRepository->findByIds($idTeacher, ['*'], [],
                                                    [['with', 'department:id,name,id_faculty',
-                                                     'department.faculty:id,name']]);
+                                                     'department.faculty:id,name',
+                                                     'account:email,phone,accountable_id']]);
     }
 
-    public function readMany (array $inputs)
+    public function readMany (array $inputs) : array
     {
-        return $this->teacherRepository->find(['id', 'name'], [], [], [], [['filter', $inputs]]);
+        $teachers = $this->teacherRepository->find(['id', 'name'], [], [], [],
+                                                   [['filter', $inputs]]);
+        return ['data' => $teachers];
     }
 }

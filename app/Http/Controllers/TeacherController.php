@@ -25,7 +25,6 @@ class TeacherController extends Controller
 
     public function readMany (Request $request)
     {
-        $data = $this->teacherService->readMany($request->all());
-        return response(['data' => $data]);
+        return $this->teacherService->readMany($request->all());
     }
 }
