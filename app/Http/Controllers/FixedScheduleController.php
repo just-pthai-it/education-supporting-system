@@ -55,6 +55,6 @@ class FixedScheduleController extends Controller
 
     public function update (FixedSchedulePatchRequest $request, string $idFixedSchedule)
     {
-        $this->fixedScheduleService->update($idFixedSchedule, $request->validated());
+        return $this->fixedScheduleService->update($idFixedSchedule, $request->validated());
     }
 }

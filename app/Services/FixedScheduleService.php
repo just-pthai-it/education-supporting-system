@@ -93,12 +93,13 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
      *
      * @throws Exception
      */
-    public function update (string $idFixedSchedule, array $fixedScheduleArr)
+    public function update (string $idFixedSchedule, array $fixedScheduleArr) : array
     {
         $fixedSchedule = $this->_readFixedScheduleById($idFixedSchedule);
         $this->_completeUpdateInputs($fixedScheduleArr, $fixedSchedule);
         $fixedSchedule->save();
         $this->_sendMailNotification($fixedSchedule);
+        return ['data' => ['status' => $fixedSchedule->status]];
     }
 
     private function _completeUpdateInputs (array &$fixedScheduleArr, FixedSchedule &$fixedSchedule)
