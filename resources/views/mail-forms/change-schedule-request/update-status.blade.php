@@ -134,14 +134,13 @@
                   <td style="padding: 0.25rem 1rem 0.25rem 0.125rem;">
                     :
                   </td>
-                  <td style="font-weight: bold; {{
-                                                in_array($fixed_schedule['status'], array_merge(array_values($fs_status_code['cancel']),
-                                                                                                array_values($fs_status_code['deny'])))
-                                                ? 'color: #ff0000' : (in_array($fixed_schedule['status'], $fs_status_code['pending']) 
-                                                ? 'color: #1976d2' : 'color: #04af04')
-                                                }}"
+                  <td style="font-weight: bold;"
                       colspan="3">
-                              <span class="pending">
+                              <span class="{{in_array($fixed_schedule['status'], array_merge(array_values($fs_status_code['cancel']),
+                                                                                                array_values($fs_status_code['deny'])))
+                                                ? 'deny' : (in_array($fixed_schedule['status'], $fs_status_code['pending'])
+                                                ? 'pending' : 'accept')
+                                                }}">
                                @if($fixed_schedule['status'] == $fs_status_code['cancel']['normal'])
                                   Đã hủy
                                 @elseif($fixed_schedule['status'] == $fs_status_code['deny']['set_room'])
