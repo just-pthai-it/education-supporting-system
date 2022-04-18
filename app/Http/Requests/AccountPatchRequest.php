@@ -24,7 +24,7 @@ class AccountPatchRequest extends FormRequest
     public function rules () : array
     {
         return [
-            'phone' => '',
+            'phone' => 'required|exclude_if:phone,',
         ];
     }
 }
