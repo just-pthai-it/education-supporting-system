@@ -4,17 +4,22 @@ namespace App\Services;
 
 use Illuminate\Support\Arr;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
+use App\Repositories\Contracts\DepartmentRepositoryContract;
 
 class ScheduleService implements Contracts\ScheduleServiceContract
 {
     private ScheduleRepositoryContract $scheduleDepository;
+    private DepartmentRepositoryContract $departmentRepository;
 
     /**
-     * @param ScheduleRepositoryContract $scheduleDepository
+     * @param ScheduleRepositoryContract   $scheduleDepository
+     * @param DepartmentRepositoryContract $departmentRepository
      */
-    public function __construct (ScheduleRepositoryContract $scheduleDepository)
+    public function __construct (ScheduleRepositoryContract   $scheduleDepository,
+                                 DepartmentRepositoryContract $departmentRepository)
     {
-        $this->scheduleDepository = $scheduleDepository;
+        $this->scheduleDepository   = $scheduleDepository;
+        $this->departmentRepository = $departmentRepository;
     }
 
     public function readManyByIdDepartment (string $idDepartment, array $inputs)
@@ -25,6 +30,11 @@ class ScheduleService implements Contracts\ScheduleServiceContract
     public function readManyByIdTeacher (string $idTeacher, array $inputs)
     {
         return $this->scheduleDepository->findAllByIdTeacher($idTeacher, $inputs);
+    }
+
+    public function readManyByTeachersInDepartment (string $idDepartment)
+    {
+//        $idTeachers = $this->departmentRepository->pluck($idDepartment, ['id'])
     }
 
     public function update (string $idSchedule, array $scheduleArr)

@@ -16,32 +16,37 @@ interface BaseRepositoryContract
 
     public function syncPivot ($id, array $array, string $relation);
 
-    public function upsert ($objects, array $uniqueColumns = [], array $columnsUpdate = []);
+    public function upsert (array $values, array $uniqueColumns = [], array $columnsUpdate = []);
 
-    public function updateGetUpdatedRows (array $values, array $conditions = []);
+    public function updateGetUpdatedRows (array $values, array $conditions = [],
+                                          array $scopes = []);
 
-    public function update (array $values, array $conditions = []);
+    public function update (array $values, array $conditions = [], array $scopes = []);
 
-    public function updateIncrement (string $column, int $step = 1, array $conditions = []);
+    public function updateByIds ($ids, array $values);
 
-    public function updateByIds ($ids, $values);
+    public function updateIncrement (string $column, array $conditions = [], int $step = 1,
+                                     array  $scopes = []);
 
-    public function updateIncrementByIds ($ids, $column, int $step = 1);
+    public function updateIncrementByIds ($ids, string $column, int $step = 1);
 
     public function find (array $columns = ['*'], array $conditions = [], array $orders = [],
                           array $limitOffset = [], array $scopes = [], array $postFunctions = []);
 
     public function findByIds ($ids, array $columns = ['*'], array $orders = [],
-                               array $scopes = [], array $postFunctions = []);
+                               array $limitOffset = [], array $postFunctions = []);
 
     public function pluck (array $columns = ['id'], array $conditions = [], array $orders = [],
                            array $limitOffset = [], array $scopes = []);
 
-    public function delete (array $conditions = []);
+    public function pluckByIds ($ids, array $columns = ['name'], array $orders = [],
+                                array $limitOffset = []);
+
+    public function delete (array $conditions = [], array $scopes = []);
 
     public function deleteByIds ($ids);
 
-    public function softDelete (array $conditions = []);
+    public function softDelete (array $conditions = [], array $scopes = []);
 
     public function softDeleteByIds ($ids);
 

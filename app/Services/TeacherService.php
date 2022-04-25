@@ -18,10 +18,10 @@ class TeacherService implements Contracts\TeacherServiceContract
 
     public function read (string $idTeacher)
     {
-        return $this->teacherRepository->findByIds($idTeacher, ['*'], [],
-                                                   [['with', 'department:id,name,id_faculty',
-                                                     'department.faculty:id,name',
-                                                     'account:email,phone,accountable_id']]);
+        return $this->teacherRepository->find(['*'], [['id', '=', $idTeacher]], [], [],
+                                              [['with', 'department:id,name,id_faculty',
+                                                'department.faculty:id,name',
+                                                'account:email,phone,accountable_id']])[0];
     }
 
     public function readMany (array $inputs) : array

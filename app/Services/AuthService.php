@@ -75,15 +75,16 @@ class AuthService implements Contracts\AuthServiceContract
         switch (auth()->user()->accountable_type)
         {
             case 'App\Models\OtherDepartment':
-                $data = $this->otherDepartmentDepository->findByIds(auth()->user()->accountable_id,
-                                                                    ['*'], [], [], []);
+                $data = $this->otherDepartmentDepository->find(['*'],
+                                                               [['id', '=', auth()->user()->accountable_id]])[0];
                 break;
 
             case 'App\Models\Teacher':
-                $data = $this->teacherDepository->findByIds(auth()->user()->accountable_id,
-                                                            ['*'], [],
-                                                            [['with', 'department:id,name,id_faculty',
-                                                              'department.faculty:id,name']], []);
+                $data = $this->teacherDepository->find(['*'],
+                                                       [['id', '=', auth()->user()->accountable_id]],
+                                                       [], [],
+                                                       [['with', 'department:id,name,id_faculty',
+                                                         'department.faculty:id,name']])[0];
                 break;
 
             default:

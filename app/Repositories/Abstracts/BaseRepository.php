@@ -78,7 +78,7 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->model->find($id)->$relation()->sync($array);
     }
 
-    public function upsert ($objects, array $uniqueColumns = [], array $columnsUpdate = [])
+    public function upsert (array $values, array $uniqueColumns = [], array $columnsUpdate = [])
     {
         if (empty($columnsUpdate))
         {
@@ -86,41 +86,38 @@ abstract class BaseRepository implements BaseRepositoryContract
         }
 
         $this->createModel();
-        $this->model->upsert($objects, $uniqueColumns, $columnsUpdate);
+        $this->model->upsert($values, $uniqueColumns, $columnsUpdate);
     }
 
-    public function updateGetUpdatedRows (array $values, array $conditions = [])
+    public function updateGetUpdatedRows (array $values, array $conditions = [], array $scopes = [])
     {
         $this->createModel();
         $this->addWhere($conditions);
+        $this->addScopes($scopes);
         return $this->model->update($values);
     }
 
-    public function update (array $values, array $conditions = [])
+    public function update (array $values, array $conditions = [], array $scopes = [])
     {
         $this->createModel();
         $this->addWhere($conditions);
+        $this->addScopes($scopes);
         $this->model->update($values);
     }
 
-    public function updateIncrement (string $column, int $step = 1, array $conditions = [])
+    public function updateIncrement (string $column, array $conditions = [], int $step = 1,
+                                     array  $scopes = [])
     {
         $this->createModel();
         $this->addWhere($conditions);
+        $this->addScopes($scopes);
         $this->model->increment($column, $step);
     }
 
-    public function updateByIds ($ids, $values)
+    public function updateByIds ($ids, array $values)
     {
         $this->createModel();
-        if (is_array($ids))
-        {
-            $this->model->whereIn('id', $ids)->update($values);
-        }
-        else
-        {
-            $this->model->where('id', '=', $ids)->update($values);
-        }
+        $this->model->whereIn('id', $ids)->update($values);
     }
 
     public function updateIncrementByIds ($ids, $column, int $step = 1)
@@ -133,28 +130,23 @@ abstract class BaseRepository implements BaseRepositoryContract
                           array $limitOffset = [], array $scopes = [], array $postFunctions = [])
     {
         $this->createModel();
-
-        $this->addScopes($scopes);
         $this->addWhere($conditions);
+        $this->addScopes($scopes);
         $this->addOrderBy($orders);
         $this->addLimitOffset($limitOffset);
-
         $result = $this->model->get($columns);
         $this->addPostFunction($result, $postFunctions);
-
         return $result;
     }
 
     public function findByIds ($ids, array $columns = ['*'], array $orders = [],
-                               array $scopes = [], array $postFunctions = [])
+                               array $limitOffset = [], array $postFunctions = [])
     {
         $this->createModel();
-        $this->addScopes($scopes);
         $this->addOrderBy($orders);
-
+        $this->addLimitOffset($limitOffset);
         $result = $this->model->find($ids, $columns);
         $this->addPostFunction($result, $postFunctions);
-
         return $result;
     }
 
@@ -162,17 +154,26 @@ abstract class BaseRepository implements BaseRepositoryContract
                            array $limitOffset = [], array $scopes = [])
     {
         $this->createModel();
+        $this->addWhere($conditions);
         $this->addScopes($scopes);
         $this->addWhere($conditions);
         $this->addLimitOffset($limitOffset);
-
         return $this->model->pluck($columns[0], $columns[1] ?? null);
     }
 
-    public function delete (array $conditions = [])
+    public function pluckByIds ($ids, array $columns = ['name'], array $orders = [],
+                                array $limitOffset = [])
+    {
+        $this->createModel();
+        $this->addLimitOffset($limitOffset);
+        return $this->model->whereIn('id', $ids)->pluck($columns[0], $columns[1] ?? null);
+    }
+
+    public function delete (array $conditions = [], array $scopes = [])
     {
         $this->createModel();
         $this->addWhere($conditions);
+        $this->addScopes($scopes);
         return $this->model->delete();
     }
 
@@ -182,10 +183,11 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->model->whereIn('id', $ids)->delete();
     }
 
-    public function softDelete (array $conditions = [])
+    public function softDelete (array $conditions = [], array $scopes = [])
     {
         $this->createModel();
         $this->addWhere($conditions);
+        $this->addScopes($scopes);
         return $this->model->update(['deleted_at' => now()]);
     }
 
@@ -215,11 +217,9 @@ abstract class BaseRepository implements BaseRepositoryContract
                               int   $pagination = 1, array $scopes = [])
     {
         $this->createModel();
-
         $this->addScopes($scopes);
         $this->addWhere($conditions);
         $this->addOrderBy($orders);
-
         return $this->model->paginate($pagination, $columns);
     }
 
