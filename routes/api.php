@@ -126,12 +126,14 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
             Route::get('module-classes',
                        [ModuleClassController::class, 'readManyByIdDepartment']);
 
-            Route::get('schedules', [ScheduleController::class, 'readManyByIdDepartment']);
-
             Route::get('exam-schedules', [ExamScheduleController::class, 'readManyByIdDepartment']);
 
             Route::get('fixed-schedules',
                        [FixedScheduleController::class, 'readManyByIdDepartment']);
+
+            Route::get('{relation}/module-classes/schedules',
+                       [ScheduleController::class, 'readManyByIdDepartment'])
+                 ->where(['relation' => 'modules|teachers']);
         });
     });
 

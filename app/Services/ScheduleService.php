@@ -2,39 +2,57 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Arr;
+use App\Http\Resources\ScheduleResource;
+use App\Repositories\Contracts\TeacherRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
-use App\Repositories\Contracts\DepartmentRepositoryContract;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ScheduleService implements Contracts\ScheduleServiceContract
 {
     private ScheduleRepositoryContract $scheduleDepository;
-    private DepartmentRepositoryContract $departmentRepository;
+    private TeacherRepositoryContract $teacherRepository;
 
     /**
-     * @param ScheduleRepositoryContract   $scheduleDepository
-     * @param DepartmentRepositoryContract $departmentRepository
+     * @param ScheduleRepositoryContract $scheduleDepository
+     * @param TeacherRepositoryContract  $teacherRepository
      */
-    public function __construct (ScheduleRepositoryContract   $scheduleDepository,
-                                 DepartmentRepositoryContract $departmentRepository)
+    public function __construct (ScheduleRepositoryContract $scheduleDepository,
+                                 TeacherRepositoryContract  $teacherRepository)
     {
-        $this->scheduleDepository   = $scheduleDepository;
-        $this->departmentRepository = $departmentRepository;
+        $this->scheduleDepository = $scheduleDepository;
+        $this->teacherRepository  = $teacherRepository;
     }
 
-    public function readManyByIdDepartment (string $idDepartment, array $inputs)
+    public function readManyByIdDepartment (string $idDepartment, string $relation,
+                                            array  $inputs) : AnonymousResourceCollection
     {
-        return $this->scheduleDepository->findAllByIdDepartment($idDepartment, $inputs);
+        $schedules = [];
+        switch ($relation)
+        {
+            case 'modules':
+                $schedules = $this->scheduleDepository->findAllByIdDepartment($idDepartment,
+                                                                              $inputs);
+                break;
+            case 'teachers';
+                $idTeachers = $this->_readManyIdTeachersByIdDepartment($idDepartment);
+                $schedules  = $this->scheduleDepository->findAllByIdTeachers($idTeachers, $inputs);
+        }
+
+        return ScheduleResource::collection($schedules);
     }
 
-    public function readManyByIdTeacher (string $idTeacher, array $inputs)
+    private function _readManyIdTeachersByIdDepartment (string $idDepartment)
     {
-        return $this->scheduleDepository->findAllByIdTeacher($idTeacher, $inputs);
+        return $this->teacherRepository->pluck(['id'],
+                                               [['id_department', '=', $idDepartment,
+                                                 ['is_active', '=', 1]]])->toArray();
     }
 
-    public function readManyByTeachersInDepartment (string $idDepartment)
+    public function readManyByIdTeacher (string $idTeacher,
+                                         array  $inputs) : AnonymousResourceCollection
     {
-//        $idTeachers = $this->departmentRepository->pluck($idDepartment, ['id'])
+        $schedules = $this->scheduleDepository->findAllByIdTeachers($idTeacher, $inputs);
+        return ScheduleResource::collection($schedules);
     }
 
     public function update (string $idSchedule, array $scheduleArr)

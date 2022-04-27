@@ -4,8 +4,6 @@ namespace App\Repositories;
 
 use App\Helpers\GData;
 use App\Models\Schedule;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use App\Repositories\Abstracts\BaseRepository;
 
@@ -16,28 +14,39 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
         return Schedule::class;
     }
 
-    public function findAllByIdTeacher (string $idTeacher, array $inputs)
+    public function findAllByIdTeachers ($idTeachers, array $inputs)
     {
         $this->createModel();
-        return $this->model->whereHas('moduleClass', function (Builder $query) use ($idTeacher)
+        return $this->model->whereHas('moduleClass', function (Builder $query) use ($idTeachers)
         {
-            $query->where('id_teacher', $idTeacher);
+            $query->whereIn('id_teacher', $idTeachers);
         })->filter($inputs)->with([
-                                      'moduleClass'    => function ($query)
+                                      'moduleClass'    => function ($query) use ($idTeachers)
                                       {
-                                          return $query->select('id', 'name',
-                                                                DB::raw('\'self\' as teacher'));
+                                          if (is_array($idTeachers))
+                                          {
+                                              $query->select('id', 'name', 'id_teacher')
+                                                    ->with(['teacher' => function ($query)
+                                                    {
+                                                        $query->select('id', 'name')
+                                                              ->where('is_active', '=', 1);
+                                                    }]);
+                                          }
+                                          else
+                                          {
+                                              $query->select('id', 'name');
+                                          }
                                       },
                                       'fixedSchedules' => function ($query)
                                       {
-                                          return $query->whereIn('status',
-                                                                 array_merge(array_values(GData::$fsStatusCode['pending']),
-                                                                             array_values(GData::$fsStatusCode['approve'])))
-                                                       ->select('id', 'id_schedule', 'created_at',
-                                                                'old_date', 'old_shift',
-                                                                'old_id_room', 'new_date',
-                                                                'new_shift', 'new_id_room',
-                                                                'intend_time', 'status');
+                                          $query->whereIn('status',
+                                                          array_merge(array_values(GData::$fsStatusCode['pending']),
+                                                                      array_values(GData::$fsStatusCode['approve'])))
+                                                ->select('id', 'id_schedule', 'created_at',
+                                                         'old_date', 'old_shift',
+                                                         'old_id_room', 'new_date',
+                                                         'new_shift', 'new_id_room',
+                                                         'intend_time', 'status');
                                       },
                                   ])->get();
     }

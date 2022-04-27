@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
-use App\Http\Resources\ScheduleResource;
 use App\Services\Contracts\ScheduleServiceContract;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -20,20 +19,19 @@ class ScheduleController extends Controller
         $this->scheduleService = $scheduleService;
     }
 
-    public function readManyByIdDepartment (Request $request,
-                                            string  $idDepartment) : AnonymousResourceCollection
+    public function readManyByIdDepartment (Request $request, string $idDepartment,
+                                            string  $relation)
     {
         Gate::authorize('get-department-schedule');
-        $schedules = $this->scheduleService->readManyByIdDepartment($idDepartment, $request->all());
-        return ScheduleResource::collection($schedules);
+        return $this->scheduleService->readManyByIdDepartment($idDepartment, $relation,
+                                                              $request->all());
     }
 
     public function readManyByIdTeacher (Request $request,
                                          string  $idTeacher) : AnonymousResourceCollection
     {
         Gate::authorize('get-teacher-schedule');
-        $schedules = $this->scheduleService->readManyByIdTeacher($idTeacher, $request->all());
-        return ScheduleResource::collection($schedules);
+        return $this->scheduleService->readManyByIdTeacher($idTeacher, $request->all());
     }
 
     public function update (Request $request, string $idSchedule)

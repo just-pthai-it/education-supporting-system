@@ -27,7 +27,7 @@ class ScheduleResource extends JsonResource
         $module_name = str_replace('-' . $arr[1] . '-' . $arr[2] . '-' . $arr[3],
                                    '', $this->moduleClass->name);
 
-        if ($this->moduleClass->teacher != 'self')
+        if ($this->moduleClass->relationLoaded('teacher'))
         {
             if (!isset(GData::$current[$id_module]))
             {
@@ -78,7 +78,7 @@ class ScheduleResource extends JsonResource
             'idModule'       => $id_module,
             'note'           => $this->note,
             'moduleName'     => $module_name,
-            'teacher'        => $this->moduleClass->teacher,
+            'teacher'        => $this->moduleClass->relationLoaded('teacher') ? $this->moduleClass->teacher : 'self',
             'color'          => $color,
             'fixedSchedules' => $this->fixedSchedules,
         ];
