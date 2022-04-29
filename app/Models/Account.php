@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -60,9 +59,9 @@ class Account extends Authenticatable implements JWTSubject
         return $this->morphTo();
     }
 
-    public function devices () : HasMany
+    public function fcmRegistrationTokens () : HasMany
     {
-        return $this->hasMany(Device::class, 'id_account', 'id');
+        return $this->hasMany(FcmRegistrationToken::class, 'id_account', 'id');
     }
 
     public function notifications () : BelongsToMany

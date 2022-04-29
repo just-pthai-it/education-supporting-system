@@ -10,10 +10,10 @@ class DataVersionTeacher extends Model
 {
     use HasFactory;
 
-    public const table = 'data_version_teacher';
-    public const table_as = 'data_version_teacher as dvt';
+    public const table = 'data_version_teachers';
+    public const table_as = 'data_version_teachers as dvts';
 
-    protected $table = 'data_version_teacher';
+    protected $table = 'data_version_teachers';
     protected $primaryKey = 'id_teacher';
     protected $keyType = 'string';
     public $timestamps = false;
@@ -21,7 +21,10 @@ class DataVersionTeacher extends Model
     protected $fillable = [
         'id_teacher',
         'schedule',
+        'exam_schedule',
         'notification',
+        'created_at',
+        'updated_at',
     ];
 
     public function teacher () : BelongsTo

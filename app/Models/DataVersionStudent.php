@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DataVersionStudent extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
-    public const table = 'data_version_student';
-    public const table_as = 'data_version_student as dvs';
+    public const table = 'data_version_students';
+    public const table_as = 'data_version_students as dvss';
 
-    protected $table = 'data_version_student';
+    protected $table = 'data_version_students';
     protected $primaryKey = 'id_student';
     protected $keyType = 'string';
     public $timestamps = false;
@@ -21,9 +22,11 @@ class DataVersionStudent extends Model
     protected $fillable = [
         'id_student',
         'schedule',
+        'exam_schedule',
         'notification',
         'module_score',
-        'exam_schedule'
+        'created_at',
+        'updated_at',
     ];
 
     public function student () : BelongsTo

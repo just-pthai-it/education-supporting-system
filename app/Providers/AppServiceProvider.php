@@ -18,6 +18,8 @@ use App\Services\ExcelScheduleService;
 use App\Services\FixedScheduleService;
 use App\Services\ExcelCurriculumService;
 use App\Services\ExcelExamScheduleService;
+use App\Services\DataVersionStudentService;
+use App\Services\FcmRegistrationTokenService;
 use App\Services\Contracts\RoomServiceContract;
 use App\Services\Contracts\TeacherServiceContract;
 use App\Services\Contracts\FeedbackServiceContract;
@@ -46,29 +48,33 @@ use Illuminate\Support\ServiceProvider;
 use App\Services\Contracts\ExamScheduleServiceContract;
 use App\Services\Contracts\TrainingTypeServiceContract;
 use App\Services\Contracts\FixedScheduleServiceContract;
+use App\Services\Contracts\DataVersionStudentServiceContract;
+use App\Services\Contracts\FcmRegistrationTokenServiceContract;
 
 class AppServiceProvider extends ServiceProvider
 {
     public array $bindings = [
-        FixedScheduleServiceContract::class => FixedScheduleService::class,
-        ExamScheduleServiceContract::class  => ExamScheduleService::class,
-        NotificationServiceContract::class  => NotificationService::class,
-        AcademicYearServiceContract::class  => AcademicYearService::class,
-        StudySessionServiceContract::class  => StudySessionService::class,
-        ModuleClassServiceContract::class   => ModuleClassService::class,
-        DepartmentServiceContract::class    => DepartmentService::class,
-        ResourceServiceContract::class      => ResourceService::class,
-        FeedbackServiceContract::class      => FeedbackService::class,
-        ScheduleServiceContract::class      => ScheduleService::class,
-        TeacherServiceContract::class       => TeacherService::class,
-        AccountServiceContract::class       => AccountService::class,
-        FacultyServiceContract::class       => FacultyService::class,
-        NotifyServiceContract::class        => NotifyService::class,
-        ClassServiceContract::class         => ClassService::class,
-        AuthServiceContract::class          => AuthService::class,
-        RoomServiceContract::class          => RoomService::class,
-        MailServiceContract::class          => MailService::class,
-        TrainingTypeServiceContract::class  => TrainingTypeService::class,
+        FixedScheduleServiceContract::class        => FixedScheduleService::class,
+        ExamScheduleServiceContract::class         => ExamScheduleService::class,
+        NotificationServiceContract::class         => NotificationService::class,
+        AcademicYearServiceContract::class         => AcademicYearService::class,
+        StudySessionServiceContract::class         => StudySessionService::class,
+        ModuleClassServiceContract::class          => ModuleClassService::class,
+        DepartmentServiceContract::class           => DepartmentService::class,
+        ResourceServiceContract::class             => ResourceService::class,
+        FeedbackServiceContract::class             => FeedbackService::class,
+        ScheduleServiceContract::class             => ScheduleService::class,
+        TeacherServiceContract::class              => TeacherService::class,
+        AccountServiceContract::class              => AccountService::class,
+        FacultyServiceContract::class              => FacultyService::class,
+        NotifyServiceContract::class               => NotifyService::class,
+        ClassServiceContract::class                => ClassService::class,
+        AuthServiceContract::class                 => AuthService::class,
+        RoomServiceContract::class                 => RoomService::class,
+        MailServiceContract::class                 => MailService::class,
+        TrainingTypeServiceContract::class         => TrainingTypeService::class,
+        FcmRegistrationTokenServiceContract::class => FcmRegistrationTokenService::class,
+        DataVersionStudentServiceContract::class   => DataVersionStudentService::class,
 
     ];
 

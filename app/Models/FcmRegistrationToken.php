@@ -6,22 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Device extends Model
+class FcmRegistrationToken extends Model
 {
     use HasFactory;
 
-    public const table = 'device';
-    public const table_as = 'device as d';
+    public const table = 'fcm_registration_tokens';
+    public const table_as = 'fcm_registration_tokens as frts';
 
-    protected $table = 'device';
-    protected $primaryKey = 'device_token';
     protected $keyType = 'string';
     public $timestamps = false;
 
     protected $fillable = [
-        'device_token',
+        'id',
         'id_account',
-        'last_use'
+        'created_at',
+        'updated_at',
     ];
 
     public function account () : BelongsTo
