@@ -22,7 +22,6 @@ class CreateFcmRegistrationTokensTable extends Migration
             $table->timestamp('created_at')->default(DB::raw('current_timestamp()'));
             $table->timestamp('updated_at')->default(DB::raw('current_timestamp()'))
                   ->useCurrentOnUpdate();
-            $table->foreign('id_account')->on('accounts')->references('id');
         });
     }
 

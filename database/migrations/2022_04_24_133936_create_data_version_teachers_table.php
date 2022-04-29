@@ -21,9 +21,9 @@ class CreateDataVersionTeachersTable extends Migration
             $table->unsignedSmallInteger('schedule')->default(0);
             $table->unsignedSmallInteger('exam_schedule')->default(0);
             $table->unsignedSmallInteger('notification')->default(0);
-            $table->timestamp('updated-at')->default(DB::raw('current_timestamp()'))
+            $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
+            $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
                   ->useCurrentOnUpdate();
-            $table->foreign('id_teacher')->on('teachers')->references('id');
         });
     }
 

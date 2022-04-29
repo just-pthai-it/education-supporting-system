@@ -102,20 +102,17 @@ class CreateForeignKeys extends Migration
             $table->foreign('id_teacher')->references('id')->on('teachers');
         });
 
-
         Schema::table('account_notification', function ($table)
         {
             $table->foreign('id_account')->references('id')->on('accounts');
             $table->foreign('id_notification')->references('id')->on('notifications');
         });
 
-
         Schema::table('notification_tag', function ($table)
         {
             $table->foreign('id_notification')->references('id')->on('notifications');
             $table->foreign('id_tag')->references('id')->on('tags');
         });
-
 
         Schema::table('module_class_student', function ($table)
         {
@@ -130,13 +127,11 @@ class CreateForeignKeys extends Migration
             $table->foreign('id_role')->references('id')->on('roles');
         });
 
-
         Schema::table('schedules', function ($table)
         {
             $table->foreign('id_module_class')->references('id')->on('module_classes');
             $table->foreign('id_room')->references('id')->on('rooms');
         });
-
 
         Schema::table('students', function ($table)
         {
@@ -161,6 +156,21 @@ class CreateForeignKeys extends Migration
         Schema::table('third_party_tokens', function ($table)
         {
             $table->foreign('id_account')->references('id')->on('accounts');
+        });
+
+        Schema::table('data_version_students', function ($table)
+        {
+            $table->foreign('id_student')->on('students')->references('id');
+        });
+
+        Schema::table('data_version_teachers', function ($table)
+        {
+            $table->foreign('id_teacher')->on('teachers')->references('id');
+        });
+
+        Schema::table('fcm_registration_tokens', function ($table)
+        {
+            $table->foreign('id_account')->on('accounts')->references('id');
         });
     }
 

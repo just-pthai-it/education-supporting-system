@@ -22,9 +22,9 @@ class CreateDataVersionStudentsTable extends Migration
             $table->unsignedSmallInteger('exam_schedule')->default(0);
             $table->unsignedSmallInteger('notification')->default(0);
             $table->unsignedSmallInteger('module_score')->default(0);
-            $table->timestamp('updated_at')->default(DB::raw('current_timestamp()'))
+            $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
+            $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
                   ->useCurrentOnUpdate();
-            $table->foreign('id_student')->on('students')->references('id');
         });
     }
 
