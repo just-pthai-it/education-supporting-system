@@ -47,7 +47,8 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
             {
                 $query->where('id_teacher', '=', $id_teacher);
             });
-        })->filter($inputs)->with(['schedule:id,id_module_class', 'schedule.moduleClass:id,name'])
+        })->filter($inputs)->with(['schedule:id,id_module_class',
+                                   'schedule.moduleClass:id,name,number_reality'])
                            ->paginate($inputs['pagination'] ?? 20);
     }
 }
