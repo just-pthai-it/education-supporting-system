@@ -30,9 +30,9 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
                                        'schedule.moduleClass:id,name,id_teacher,number_reality',
                                        'schedule.moduleClass.teacher:id,name']);
 
-        if (isset($inputs['page'], $inputs['pagination']))
+        if (isset($inputs['page']))
         {
-            return $this->model->paginate($inputs['pagination']);
+            return $this->model->paginate($inputs['pagination'] ?? 20);
         }
 
         return $this->model->get();
@@ -41,14 +41,21 @@ class FixedScheduleRepository extends BaseRepository implements Contracts\FixedS
     public function findByIdTeacher ($id_teacher, array $inputs)
     {
         $this->createModel();
-        return $this->model->whereHas('schedule', function (Builder $query) use ($id_teacher)
-        {
-            $query->whereHas('moduleClass', function (Builder $query) use ($id_teacher)
+        $this->model = $this->model->whereHas('schedule',
+            function (Builder $query) use ($id_teacher)
             {
-                $query->where('id_teacher', '=', $id_teacher);
-            });
-        })->filter($inputs)->with(['schedule:id,id_module_class',
-                                   'schedule.moduleClass:id,name,number_reality'])
-                           ->paginate($inputs['pagination'] ?? 20);
+                $query->whereHas('moduleClass', function (Builder $query) use ($id_teacher)
+                {
+                    $query->where('id_teacher', '=', $id_teacher);
+                });
+            })->filter($inputs)->with(['schedule:id,id_module_class',
+                                       'schedule.moduleClass:id,name,number_reality']);
+
+        if (isset($inputs['page']))
+        {
+            return $this->model->paginate($inputs['pagination'] ?? 20);
+        }
+
+        return $this->model->get();
     }
 }
