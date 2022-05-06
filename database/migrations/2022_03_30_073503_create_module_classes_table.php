@@ -24,7 +24,7 @@ class CreateModuleClassesTable extends Migration
             $table->boolean('is_international');
             $table->unsignedTinyInteger('id_study_session');
             $table->string('id_module', 50);
-            $table->string('id_teacher', 50);
+            $table->string('id_teacher', 50)->nullable();
             $table->dateTime('deleted_at')->nullable();
         });
     }
