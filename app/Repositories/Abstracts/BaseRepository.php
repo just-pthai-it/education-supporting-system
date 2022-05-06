@@ -117,7 +117,7 @@ abstract class BaseRepository implements BaseRepositoryContract
     public function updateByIds ($ids, array $values)
     {
         $this->createModel();
-        $this->model->whereIn('id', $ids)->update($values);
+        $this->model->whereIn('id', is_array($ids) ? $ids : [$ids])->update($values);
     }
 
     public function updateIncrementByIds ($ids, $column, int $step = 1)
@@ -166,7 +166,8 @@ abstract class BaseRepository implements BaseRepositoryContract
     {
         $this->createModel();
         $this->addLimitOffset($limitOffset);
-        return $this->model->whereIn('id', $ids)->pluck($columns[0], $columns[1] ?? null);
+        return $this->model->whereIn('id', is_array($ids) ? $ids : [$ids])
+                           ->pluck($columns[0], $columns[1] ?? null);
     }
 
     public function delete (array $conditions = [], array $scopes = [])
@@ -180,7 +181,7 @@ abstract class BaseRepository implements BaseRepositoryContract
     public function deleteByIds ($ids)
     {
         $this->createModel();
-        $this->model->whereIn('id', $ids)->delete();
+        $this->model->whereIn('id', is_array($ids) ? $ids : [$ids])->delete();
     }
 
     public function softDelete (array $conditions = [], array $scopes = [])
@@ -194,7 +195,8 @@ abstract class BaseRepository implements BaseRepositoryContract
     public function softDeleteByIds ($ids)
     {
         $this->createModel();
-        $this->model->whereIn('id', $ids)->update(['deleted_at' => now()]);
+        $this->model->whereIn('id', is_array($ids) ? $ids : [$ids])
+                    ->update(['deleted_at' => now()]);
     }
 
     public function count (array $conditions = [])
