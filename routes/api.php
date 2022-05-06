@@ -163,12 +163,6 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
     });
 
 
-    Route::group(['prefix' => 'other-department'], function ()
-    {
-
-    });
-
-
     Route::group(['prefix' => 'feedback'], function ()
     {
         Route::post('create', [FeedbackController::class, 'create']);
@@ -194,4 +188,170 @@ Route::middleware(['cus.auth', 'default_header'])->group(function ()
 Route::get('bad-request', function ()
 {
     return response('', 400);
+});
+
+
+Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],], function ()
+{
+    Route::group(['prefix' => ''], function ()
+    {
+        Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['cus.auth']);
+
+        Route::post('logout', [AuthController::class, 'logout']);
+    });
+
+
+    Route::group(['prefix' => 'accounts'], function ()
+    {
+        Route::patch('change-password/{uuid_account}',
+                     [AccountController::class, 'changePassword']);
+
+        Route::group(['prefix' => 'update'], function ()
+        {
+            Route::patch('{uuid_account}', [AccountController::class, 'update']);
+        });
+    });
+
+
+    Route::group(['prefix' => 'teachers'], function ()
+    {
+        Route::group(['prefix' => '{id_teacher}'], function ()
+        {
+            Route::get('', [TeacherController::class, 'read']);
+
+            Route::get('module-classes/schedules',
+                       [ScheduleController::class, 'readManyByIdTeacher']);
+
+            Route::get('module-classes/exam-schedules',
+                       [ExamScheduleController::class, 'readManyByIdTeacher']);
+
+            Route::get('module-classes/schedules/fixed-schedules',
+                       [FixedScheduleController::class, 'readManyByIdTeacher']);
+        });
+
+        Route::get('', [TeacherController::class, 'readMany']);
+    });
+
+
+    Route::group(['prefix' => 'departments'], function ()
+    {
+        Route::group(['prefix' => '{id_department}'], function ()
+        {
+            Route::get('modules/module-classes',
+                       [ModuleClassController::class, 'readManyByIdDepartment']);
+
+            Route::get('modules/module-classes/exam-schedules',
+                       [ExamScheduleController::class, 'readManyByIdDepartment']);
+
+            Route::get('modules/module-classes/schedules/fixed-schedules',
+                       [FixedScheduleController::class, 'readManyByIdDepartment']);
+
+            Route::get('{relation}/module-classes/schedules',
+                       [ScheduleController::class, 'readManyByIdDepartment'])
+                 ->where(['relation' => 'modules|teachers']);
+        });
+    });
+
+
+    Route::group(['prefix' => 'schedules'], function ()
+    {
+        Route::group(['prefix' => 'update'], function ()
+        {
+            Route::patch('{id_schedule}', [ScheduleController::class, 'update']);
+        });
+    });
+
+
+    Route::group(['prefix' => 'fixed-schedules'], function ()
+    {
+        Route::get('', [FixedScheduleController::class, 'readMany']);
+
+        Route::post('create', [FixedScheduleController::class, 'create']);
+
+        Route::group(['prefix' => 'update'], function ()
+        {
+            Route::patch('{id_fixed_schedule}', [FixedScheduleController::class, 'update']);
+        });
+    });
+
+
+    Route::group(['prefix' => 'exam-schedules'], function ()
+    {
+        Route::put('update', [ExamScheduleController::class, 'update']);
+    });
+
+
+    Route::group(['prefix' => 'notifications'], function ()
+    {
+        Route::post('create', [NotificationController::class, 'store']);
+    });
+
+
+    Route::group(['prefix' => 'rooms'], function ()
+    {
+        Route::get('', [RoomController::class, 'readMany']);
+    });
+
+
+    Route::group(['prefix' => 'faculties'], function ()
+    {
+        Route::get('', [FacultyController::class, 'readMany']);
+    });
+
+
+    Route::group(['prefix' => 'feedback'], function ()
+    {
+        Route::post('create', [FeedbackController::class, 'create']);
+
+        Route::get('', [FeedbackController::class, 'readMany']);
+    });
+
+
+    Route::group(['prefix' => 'academic-years'], function ()
+    {
+        Route::get('', [AcademicYearController::class, 'readMany']);
+    });
+
+    Route::group(['prefix' => 'training-types'], function ()
+    {
+        Route::get('', [TrainingTypeController::class, 'readMany']);
+    });
+
+
+    Route::group(['prefix' => 'classes'], function ()
+    {
+        Route::get('', [ClassController::class, 'readMany']);
+    });
+
+
+    Route::group(['prefix' => 'module-classes'], function ()
+    {
+        Route::get('', [ModuleClassController::class, 'readMany']);
+
+        Route::put('update', [ModuleClassController::class, 'updateMany']);
+
+        Route::delete('delete', [ModuleClassController::class, 'destroyMany']);
+    });
+
+
+    Route::group(['prefix' => 'study-sessions'], function ()
+    {
+        Route::get('', [StudySessionController::class, 'readMany']);
+    });
+
+
+    Route::group(['prefix' => 'import-data'], function ()
+    {
+        Route::post('roll-call', [ResourceController::class, 'uploadRollCallFile']);
+
+        Route::post('schedule', [ResourceController::class, 'uploadScheduleFile']);
+
+        Route::post('exam-schedule', [ResourceController::class, 'uploadExamScheduleFile']);
+
+        Route::post('curriculum', [ResourceController::class, 'uploadCurriculumFile']);
+
+    });
+
+
+    Route::get('me', [UserController::class, 'getUserInfo']);
 });
