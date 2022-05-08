@@ -300,17 +300,17 @@ class ResourceService implements Contracts\ResourceServiceContract
         }, 2);
     }
 
-    private function _createManyExamSchedules ($exam_schedules)
+    private function _createManyExamSchedules ($examSchedules)
     {
-        $this->examScheduleRepository->upsert($exam_schedules, [],
+        $this->examScheduleRepository->upsert($examSchedules, [],
                                               ['id_module_class' => DB::raw('id_module_class')]);
     }
 
-    private function _createManyExamSchedulesTeachers ($exam_schedules_teachers)
+    private function _createManyExamSchedulesTeachers ($examSchedulesTeachers)
     {
-        foreach ($exam_schedules_teachers as $id_module_class => $id_teachers)
+        foreach ($examSchedulesTeachers as $idModuleClass => $idTeachers)
         {
-            $this->examScheduleRepository->syncPivot($id_module_class, $id_teachers, 'teachers');
+            $this->examScheduleRepository->syncPivot($idModuleClass, $idTeachers, 'teachers');
         }
     }
 

@@ -2,18 +2,30 @@
 
 namespace App\Services;
 
+use App\Helpers\GFString;
 use App\Helpers\GFunction;
 use App\Imports\FileImport;
 
 class ExcelExamScheduleService implements Contracts\ExcelServiceContract
 {
     private array $teachers;
+    private int $numericalOrderIndex = 0;
+    private int $moduleIdIndex = -1;
+    private int $moduleClassNameIndex = -1;
+    private int $methodIndex = -1;
+    private int $dateIndex = -1;
+    private int $timeIndex = -1;
+    private int $numberOfStudentsIndex = -1;
+    private int $firstTeacherIndex = -1;
+    private int $lastTeacherIndex = -1;
+    private int $roomIndex1 = -1;
+    private int $roomIndex2 = -1;
 
     public function readData ($file_name, ...$params) : array
     {
         $this->teachers = $params[0];
-        $raw_data       = $this->_getData($file_name);
-        return $this->_formatData($raw_data);
+        $rawData        = $this->_getData($file_name);
+        return $this->_formatData($rawData);
     }
 
     private function _getData ($file_name) : array
@@ -21,90 +33,136 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
         return (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
     }
 
-    private function _formatData ($raw_data) : array
+    private function _formatData ($rawData) : array
     {
-        $first_teacher_index = -1;
-        $last_teacher_index  = -1;
+        $examSchedules         = [];
+        $examSchedulesTeachers = [];
 
-        $exam_schedules          = [];
-        $exam_schedules_teachers = [];
-        foreach ($raw_data as $sheet)
+        foreach ($rawData as $sheet)
         {
-            $is_start = false;
+            $isStart = false;
             foreach ($sheet as $row)
             {
-                if ($row[0] == 'STT')
+                if ($row[$this->numericalOrderIndex] == 'STT')
                 {
-                    for ($i = 5; ; $i++)
+                    $i = 0;
+                    while (true)
                     {
-                        if (strpos($row[$i], 'GV') !== false)
+                        switch (true)
                         {
-                            $first_teacher_index =
-                                $first_teacher_index == -1 ? $i : $first_teacher_index;
+                            case $row[$i] == 'Mã học phần':
+                                $this->moduleIdIndex = $i;
+                                break;
 
-                            $last_teacher_index = $i;
+                            case $row[$i] == 'Lớp học phần':
+                                $this->moduleClassNameIndex = $i;
+                                break;
+
+                            case $row[$i] == 'Hình thức thi':
+                                $this->methodIndex = $i;
+                                break;
+
+                            case $row[$i] == 'Ngày thi':
+                                $this->dateIndex = $i;
+                                break;
+
+                            case GFString::removeExtraSpace($row[$i]) == 'Ca thi (Giờ thi)':
+                                $this->timeIndex = $i;
+                                break;
+
+                            case $row[$i] == 'Số SV':
+                                $this->numberOfStudentsIndex = $i;
+                                break;
+
+                            case $row[$i] == 'Tên phòng':
+                                $this->roomIndex1 = $i;
+                                break;
+
+                            case strpos($row[$i], 'GV') !== false:
+                                if ($this->firstTeacherIndex == -1)
+                                {
+                                    $this->firstTeacherIndex = $i;
+                                }
+                                $this->lastTeacherIndex = $i;
+                                break;
+
+                            case $row[$i] == 'Phòng thi':
+                                $this->roomIndex2 = $i;
+                                break;
                         }
-                        else if ($last_teacher_index != -1)
+
+                        if ($row[$i] == 'Phòng thi')
                         {
                             break;
                         }
+
+                        $i++;
                     }
-                    $is_start = true;
+                    $isStart = true;
                     continue;
                 }
 
-                if ($is_start)
+                if ($isStart)
                 {
-                    if (is_null($row[0]))
+                    if (is_null($row[$this->numericalOrderIndex]))
                     {
                         break;
                     }
 
-                    $id_room = $row[$last_teacher_index + 1] ==
-                               null ? $row[11] : substr($row[$last_teacher_index + 1], 2);
-                    $id_room = str_replace('Phòng thi TT', 'PTTT', $id_room);
+                    $idRoom = $row[$this->roomIndex2] == null
+                        ? $row[$this->roomIndex1] : explode('.', $row[$this->roomIndex2])[1];
+                    $idRoom = str_replace('Phòng thi TT', 'PTTT', $idRoom);
 
-                    $id_module_class = GFunction::convertToIDModuleClass($row[1], $row[3]);
+                    $idModuleClass = GFunction::convertToIDModuleClass($row[$this->moduleIdIndex],
+                                                                       $row[$this->moduleClassNameIndex]);
 
-                    $this->_createExamSchedules($exam_schedules, $id_module_class, $row[6], $row[7],
-                                                $row[8], $id_room);
+                    $this->_createExamSchedules($examSchedules, $idModuleClass,
+                                                $row[$this->methodIndex], $row[$this->dateIndex],
+                                                $row[$this->timeIndex],
+                                                $row[$this->numberOfStudentsIndex], $idRoom);
 
-                    for ($j = $first_teacher_index; $j <= $last_teacher_index; $j++)
+                    for ($j = $this->firstTeacherIndex; $j <= $this->lastTeacherIndex; $j++)
                     {
-                        $this->_createExamSchedulesTeachers($exam_schedules_teachers,
-                                                            $id_module_class, $row[$j],
-                                                            $j - $first_teacher_index + 1);
+                        $this->_createExamSchedulesTeachers($examSchedulesTeachers,
+                                                            $idModuleClass, $row[$j] ?? '',
+                                                            $j - $this->firstTeacherIndex + 1);
                     }
-
                 }
             }
         }
 
         return [
-            'exam_schedules'          => $exam_schedules,
-            'exam_schedules_teachers' => $exam_schedules_teachers
+            'exam_schedules'          => $examSchedules,
+            'exam_schedules_teachers' => $examSchedulesTeachers
         ];
     }
 
-    private function _createExamSchedules (&$exam_schedules, $id_module_class,
-                                           $method, $date, $time, $id_room)
+    private function _createExamSchedules (array  &$examSchedules, string $idModuleClass,
+                                           string $method, string $date, string $time,
+                                           string $numberOfStudents, string $idRoom)
     {
-        $date_time = $this->_createDateTime($date, $time);
+        $dateTime = $this->_createDateTime($date, $time);
 
-        $exam_schedules[] = [
-            'id_module_class' => $id_module_class,
-            'method'          => $method,
-            'start_at'        => $date_time[0],
-            'end_at'          => $date_time[1],
-            'id_room'         => $id_room,
+        $examSchedules[] = [
+            'id_module_class'    => $idModuleClass,
+            'method'             => $method,
+            'start_at'           => $dateTime[0],
+            'end_at'             => $dateTime[1],
+            'number_of_students' => $numberOfStudents,
+            'id_room'            => $idRoom,
         ];
     }
 
-    private function _createExamSchedulesTeachers (&$exam_schedules_teaches, $id_module_class,
-                                                   $teacher_name, $position)
+    private function _createExamSchedulesTeachers (array  &$examSchedulesTeaches,
+                                                   string $idModuleClass, string $teacherName,
+                                                   string $position)
     {
-        $id_teacher                                            = $this->teachers[$teacher_name];
-        $exam_schedules_teaches[$id_module_class][$id_teacher] = ['position' => $position];
+        if (empty($teacherName))
+        {
+            return;
+        }
+        $idTeacher = $this->teachers[$teacherName];;
+        $examSchedulesTeaches[$idModuleClass][$idTeacher] = ['position' => $position];
     }
 
     private function _createDateTime ($date, $time) : array
@@ -119,11 +177,11 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
             $date = GFunction::formatDate($date);
         }
 
-        $arr        = explode('-', $time);
-        $time_start = $date . ' ' . substr($arr[0], strlen($arr[0]) - 5) . ':00.000';
-        $time_end   = $date . ' ' . substr($arr[1], 0, 5) . ':00.000';
+        $arr       = explode('-', $time);
+        $timeStart = $date . ' ' . substr($arr[0], strlen($arr[0]) - 5) . ':00.000';
+        $timeEnd   = $date . ' ' . substr($arr[1], 0, 5) . ':00.000';
 
-        return [$time_start, $time_end];
+        return [$timeStart, $timeEnd];
     }
 
     public function handleData ($formatted_data, ...$params)
