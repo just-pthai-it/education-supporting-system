@@ -43,4 +43,9 @@ class ExamScheduleController extends Controller
         Gate::authorize('update-exam-schedule');
         $this->examScheduleService->update($request->all());
     }
+
+    public function updateProctors (Request $request, string $idExamSchedule)
+    {
+        $this->examScheduleService->updateProctors($idExamSchedule, $request->all());
+    }
 }
