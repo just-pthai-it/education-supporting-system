@@ -24,6 +24,7 @@ class ExamSchedule extends Model
         'method',
         'start_at',
         'end_at',
+        'number_of_students',
         'id_room',
         'note',
     ];
