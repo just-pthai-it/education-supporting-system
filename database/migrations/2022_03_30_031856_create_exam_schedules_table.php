@@ -16,7 +16,7 @@ class CreateExamSchedulesTable extends Migration
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->string('id_module_class', 50)->primary();
+            $table->string('id', 50)->primary();
             $table->string('method', 50);
             $table->string('start_at', 50);
             $table->string('end_at', 50);

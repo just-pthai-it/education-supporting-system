@@ -15,12 +15,11 @@ class ExamSchedule extends Model
     public const table = 'exam_schedules';
     public const table_as = 'exam_schedules as ess';
 
-    protected $primaryKey = 'id_module_class';
     protected $keyType = 'string';
     public $timestamps = false;
 
     protected $fillable = [
-        'id_module_class',
+        'id',
         'method',
         'start_at',
         'end_at',
@@ -41,13 +40,13 @@ class ExamSchedule extends Model
 
     public function moduleClass () : BelongsTo
     {
-        return $this->belongsTo(ModuleClass::class, 'id_module_class', 'id');
+        return $this->belongsTo(ModuleClass::class, 'id', 'id');
     }
 
     public function teachers () : BelongsToMany
     {
         return $this->belongsToMany(Teacher::class, 'exam_schedule_teacher',
-                                    'id_module_class', 'id_teacher')
+                                    'id_exam_schedule', 'id_teacher')
                     ->withPivot(['position']);
     }
 }

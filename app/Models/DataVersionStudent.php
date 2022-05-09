@@ -15,12 +15,11 @@ class DataVersionStudent extends Model
     public const table_as = 'data_version_students as dvss';
 
     protected $table = 'data_version_students';
-    protected $primaryKey = 'id_student';
     protected $keyType = 'string';
     public $timestamps = false;
 
     protected $fillable = [
-        'id_student',
+        'id',
         'schedule',
         'exam_schedule',
         'notification',
@@ -31,6 +30,6 @@ class DataVersionStudent extends Model
 
     public function student () : BelongsTo
     {
-        return $this->belongsTo(Student::class, 'id_student', 'id');
+        return $this->belongsTo(Student::class, 'id', 'id');
     }
 }
