@@ -35,6 +35,17 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
 
     public function updateProctors (string $idExamSchedule, array $inputs)
     {
+        $this->_formatUpdateProctorsInputs($inputs);
         $this->examScheduleRepository->syncPivot($idExamSchedule, $inputs, 'teachers');
+    }
+
+    private function _formatUpdateProctorsInputs (array &$inputs)
+    {
+        $values = [];
+        foreach ($inputs as $key => $value)
+        {
+            $values[$value] = ['position' => $key];
+        }
+        $inputs = $values;
     }
 }
