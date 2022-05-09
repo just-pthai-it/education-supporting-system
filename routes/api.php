@@ -279,6 +279,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
     {
         Route::group(['prefix' => '{id_exam_schedule}'], function ()
         {
+            Route::patch('', [ExamScheduleController::class, 'updateV1']);
+
             Route::put('proctors', [ExamScheduleController::class, 'updateProctors']);
         });
     });

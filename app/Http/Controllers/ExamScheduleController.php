@@ -44,6 +44,12 @@ class ExamScheduleController extends Controller
         $this->examScheduleService->update($request->all());
     }
 
+
+    public function updateV1 (Request $request, string $idExamSchedule)
+    {
+        $this->examScheduleService->updateV1($idExamSchedule, $request->all());
+    }
+
     public function updateProctors (Request $request, string $idExamSchedule)
     {
         $this->examScheduleService->updateProctors($idExamSchedule, $request->all());

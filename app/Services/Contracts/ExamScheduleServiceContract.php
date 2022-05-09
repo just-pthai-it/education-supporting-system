@@ -10,5 +10,7 @@ interface ExamScheduleServiceContract
 
     public function update ($examSchedule);
 
+    public function updateV1 (string $idExamSchedule, array $inputs);
+
     public function updateProctors (string $idExamSchedule, array $inputs);
 }

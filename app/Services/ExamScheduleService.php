@@ -33,6 +33,11 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
                                                    Arr::except($examSchedule, ['id']));
     }
 
+    public function updateV1 (string $idExamSchedule, array $inputs)
+    {
+        $this->examScheduleRepository->updateByIds($idExamSchedule, $inputs);
+    }
+
     public function updateProctors (string $idExamSchedule, array $inputs)
     {
         $this->_formatUpdateProctorsInputs($inputs);
