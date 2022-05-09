@@ -49,7 +49,7 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
         $values = [];
         foreach ($inputs as $key => $value)
         {
-            $values[$value] = ['position' => $key];
+            $values[$value] = ['position' => $key + 1];
         }
         $inputs = $values;
     }
