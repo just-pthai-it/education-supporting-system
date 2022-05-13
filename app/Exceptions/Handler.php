@@ -32,6 +32,15 @@ class Handler extends ExceptionHandler
      */
     public function register ()
     {
+        $this->renderable(function (CustomBadHttpRequestException $e, $request) {
+            return response($e->getOptions(), $e->getCode());
+        });
+
+        $this->reportable(function (CustomBadHttpRequestException $e)
+        {
+            return false;
+        });
+
         $this->renderable(function (InvalidAccountException $exception)
         {
             return response('Invalid username or password', 403);
