@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Abstracts\ACustomFormRequest;
 
-class NotificationPostRequest extends FormRequest
+class NotificationPostRequest extends ACustomFormRequest
 {
-    protected $redirect = '/api/bad-request';
-
     /**
      * Determine if the user is authorized to make this request.
      * @return bool
@@ -24,9 +22,9 @@ class NotificationPostRequest extends FormRequest
     public function rules () : array
     {
         return [
-            'type'           => 'required',
-            'data'           => 'required',
-            'tag_names'      => 'required_without:accountable_ids',
+            'type'            => 'required',
+            'data'            => 'required',
+            'tag_names'       => 'required_without:accountable_ids',
             'accountable_ids' => 'required_without:tag_names',
         ];
     }

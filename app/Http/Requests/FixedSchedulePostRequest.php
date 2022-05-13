@@ -3,12 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Models\Role;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Abstracts\ACustomFormRequest;
 
-class FixedSchedulePostRequest extends FormRequest
+class FixedSchedulePostRequest extends ACustomFormRequest
 {
-    protected $redirect = '/api/bad-request';
-
     /**
      * Determine if the user is authorized to make this request.
      * @return bool

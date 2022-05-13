@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Abstracts\ACustomFormRequest;
 
-class AccountPatchRequest extends FormRequest
+class AccountPatchRequest extends ACustomFormRequest
 {
-    protected $redirect = '/api/bad-request';
-
     /**
      * Determine if the user is authorized to make this request.
      * @return bool
