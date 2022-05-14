@@ -19,11 +19,9 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function login (LoginRequest $request) : JsonResponse
+    public function login (LoginRequest $request)
     {
-        $data = $this->authService->login($request->username, $request->password);
-        return (new UserData($data['response']))
-            ->response()->header('Authorization', "Bearer {$data['token']}");
+        return $this->authService->login($request->username, $request->password);
     }
 
     public function logout ()

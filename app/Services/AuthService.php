@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
-use App\Exceptions\InvalidAccountException;
+use App\Models\Teacher;
+use App\Http\Resources\UserData;
+use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\Contracts\RoleRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\TeacherRepositoryContract;
@@ -27,23 +29,24 @@ class AuthService implements Contracts\AuthServiceContract
         $this->roleRepository            = $roleRepository;
     }
 
-    /**
-     * @throws InvalidAccountException
-     */
-    public function login ($username, $password) : array
+    public function login ($username, $password)
     {
-        $token = $this->_authenticate($username, $password);
-        $data  = $this->getUserInfo();
+        $accessToken = $this->_authenticate($username, $password);
+        if ($accessToken == '')
+        {
+            return response(['errors' => ['Invalid username, email or password']], 401);
+        }
 
-        return [
-            'response' => $data,
-            'token'    => $token,
-        ];
+        $userInfo = $this->getUserInfo();
+        if (is_null($userInfo))
+        {
+            return response(['errors' => ['Unknown this account owner']], 404);
+        }
+
+        return response(['data' => new UserData($userInfo)])
+            ->header('Authorization', "Bearer {$accessToken}");
     }
 
-    /**
-     * @throws InvalidAccountException
-     */
     private function _authenticate ($username_email, $password)
     {
         $credential = [
@@ -59,39 +62,41 @@ class AuthService implements Contracts\AuthServiceContract
             $credential['username'] = $username_email;
         }
 
-        if (!$token = auth()->attempt($credential))
+        if (($accessToken = auth()->attempt($credential)) === false)
         {
-            throw new InvalidAccountException();
+            return '';
         }
 
-        return $token;
+        return $accessToken;
     }
 
-    /**
-     * @throws InvalidAccountException
-     */
     public function getUserInfo ()
     {
-        switch (auth()->user()->accountable_type)
+        $accountableId   = auth()->user()->accountable_id;
+        $accountableType = auth()->user()->accountable_type;
+        switch ($accountableType)
         {
             case 'App\Models\OtherDepartment':
-                $data = $this->otherDepartmentDepository->find(['*'],
-                                                               [['id', '=', auth()->user()->accountable_id]])[0];
+                $conditions = [['id', '=', $accountableId]];;
+                $data = $this->otherDepartmentDepository->find(['*'], $conditions);
                 break;
 
-            case 'App\Models\Teacher':
-                $data = $this->teacherDepository->find(['*'],
-                                                       [['id', '=', auth()->user()->accountable_id]],
-                                                       [], [],
-                                                       [['with', 'department:id,name,id_faculty',
-                                                         'department.faculty:id,name']])[0];
+            case Teacher::class:
+                $conditions = [['id', '=', $accountableId]];;
+                $scopes = [['with', 'department:id,name,id_faculty', 'department.faculty:id,name']];
+                $data   = $this->teacherDepository->find(['*'], $conditions, [], [], $scopes);
                 break;
 
             default:
-                throw new InvalidAccountException();
+                $data = new Collection();
         }
 
-        return $this->_completeUserData($data);
+        if ($data->isEmpty())
+        {
+            return null;
+        }
+
+        return $this->_completeUserData($data[0]);
     }
 
     private function _completeUserData ($data)
@@ -101,7 +106,6 @@ class AuthService implements Contracts\AuthServiceContract
         $data->email        = auth()->user()->email;
         $data->phone        = auth()->user()->phone;
         $data->permissions  = $this->_getAccountPermissions();
-
         return $data;
     }
 
