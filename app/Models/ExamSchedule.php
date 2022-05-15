@@ -46,12 +46,14 @@ class ExamSchedule extends Model
     {
         return $this->belongsToMany(Teacher::class, 'exam_schedule_teacher',
                                     'id_exam_schedule', 'id_teacher')
-                    ->withPivot(['position']);
+                    ->withPivot(['id']);
     }
 
     public function rooms () : BelongsToMany
     {
-        return $this->belongsToMany(Teacher::class, 'exam_schedule_room',
-                                    'id_exam_schedule', 'id_room');
+        return $this->belongsToMany(Room::class, 'exam_schedule_room',
+                                    'id_exam_schedule', 'id_room')
+                    ->withPivot(['id']);
+
     }
 }
