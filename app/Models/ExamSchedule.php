@@ -24,7 +24,6 @@ class ExamSchedule extends Model
         'start_at',
         'end_at',
         'number_of_students',
-        'id_room',
         'note',
     ];
 
@@ -48,5 +47,11 @@ class ExamSchedule extends Model
         return $this->belongsToMany(Teacher::class, 'exam_schedule_teacher',
                                     'id_exam_schedule', 'id_teacher')
                     ->withPivot(['position']);
+    }
+
+    public function rooms () : BelongsToMany
+    {
+        return $this->belongsToMany(Teacher::class, 'exam_schedule_room',
+                                    'id_exam_schedule', 'id_room');
     }
 }
