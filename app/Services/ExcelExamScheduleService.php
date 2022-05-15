@@ -144,7 +144,7 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
         $dateTime = $this->_createDateTime($date, $time);
 
         $examSchedules[] = [
-            'id_module_class'    => $idModuleClass,
+            'id'                 => $idModuleClass,
             'method'             => $method,
             'start_at'           => $dateTime[0],
             'end_at'             => $dateTime[1],

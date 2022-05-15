@@ -302,8 +302,7 @@ class ResourceService implements Contracts\ResourceServiceContract
 
     private function _createManyExamSchedules ($examSchedules)
     {
-        $this->examScheduleRepository->upsert($examSchedules, [],
-                                              ['id_module_class' => DB::raw('id_module_class')]);
+        $this->examScheduleRepository->upsert($examSchedules, []);
     }
 
     private function _createManyExamSchedulesTeachers ($examSchedulesTeachers)
