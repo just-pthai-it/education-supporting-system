@@ -37,6 +37,7 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
     {
         $examSchedules         = [];
         $examSchedulesTeachers = [];
+        $examSchedulesRooms    = [];
 
         foreach ($rawData as $sheet)
         {
@@ -113,33 +114,36 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
                         ? $row[$this->roomIndex1] : explode('.', $row[$this->roomIndex2])[1];
                     $idRoom = str_replace('Phòng thi TT', 'PTTT', $idRoom);
 
-                    $idModuleClass = GFunction::convertToIDModuleClass($row[$this->moduleIdIndex],
-                                                                       $row[$this->moduleClassNameIndex]);
+                    $idExamSchedule = GFunction::convertToIDModuleClass($row[$this->moduleIdIndex],
+                                                                        $row[$this->moduleClassNameIndex]);
 
-                    $this->_createExamSchedules($examSchedules, $idModuleClass,
+                    $this->_createExamSchedules($examSchedules, $idExamSchedule,
                                                 $row[$this->methodIndex], $row[$this->dateIndex],
                                                 $row[$this->timeIndex],
-                                                $row[$this->numberOfStudentsIndex], $idRoom);
+                                                $row[$this->numberOfStudentsIndex]);
+
+                    $this->_createExamScheduleRoom($examSchedulesRooms, $idExamSchedule, $idRoom);
 
                     for ($j = $this->firstTeacherIndex; $j <= $this->lastTeacherIndex; $j++)
                     {
                         $this->_createExamSchedulesTeachers($examSchedulesTeachers,
-                                                            $idModuleClass, $row[$j] ?? '',
-                                                            $j - $this->firstTeacherIndex + 1);
+                                                            $idExamSchedule, $row[$j] ?? '');
                     }
                 }
             }
         }
 
+        //         echo json_encode($examSchedules);
         return [
             'exam_schedules'          => $examSchedules,
-            'exam_schedules_teachers' => $examSchedulesTeachers
+            'exam_schedules_teachers' => $examSchedulesTeachers,
+            'exam_schedules_rooms'    => $examSchedulesRooms,
         ];
     }
 
     private function _createExamSchedules (array  &$examSchedules, string $idModuleClass,
                                            string $method, string $date, string $time,
-                                           string $numberOfStudents, string $idRoom)
+                                           string $numberOfStudents)
     {
         $dateTime = $this->_createDateTime($date, $time);
 
@@ -149,20 +153,24 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
             'start_at'           => $dateTime[0],
             'end_at'             => $dateTime[1],
             'number_of_students' => $numberOfStudents,
-            'id_room'            => $idRoom,
         ];
     }
 
     private function _createExamSchedulesTeachers (array  &$examSchedulesTeaches,
-                                                   string $idModuleClass, string $teacherName,
-                                                   string $position)
+                                                   string $idModuleClass, string $teacherName)
     {
         if (empty($teacherName))
         {
             return;
         }
-        $idTeacher = $this->teachers[$teacherName];;
-        $examSchedulesTeaches[$idModuleClass][$idTeacher] = ['position' => $position];
+
+        $examSchedulesTeaches[$idModuleClass][] = $this->teachers[$teacherName];
+    }
+
+    private function _createExamScheduleRoom (array  &$examSchedulesRoom, string $idExamSchedule,
+                                              string $idRoom)
+    {
+        $examSchedulesRoom[$idExamSchedule] = explode(',', GFString::removeAllSpace($idRoom));
     }
 
     private function _createDateTime ($date, $time) : array

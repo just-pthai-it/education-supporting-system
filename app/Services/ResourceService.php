@@ -297,19 +297,28 @@ class ResourceService implements Contracts\ResourceServiceContract
         {
             $this->_createManyExamSchedules($data['exam_schedules']);
             $this->_createManyExamSchedulesTeachers($data['exam_schedules_teachers']);
+            $this->_createManyExamSchedulesRooms($data['exam_schedules_rooms']);
         }, 2);
     }
 
     private function _createManyExamSchedules ($examSchedules)
     {
-        $this->examScheduleRepository->upsert($examSchedules, []);
+        $this->examScheduleRepository->upsert($examSchedules);
     }
 
     private function _createManyExamSchedulesTeachers ($examSchedulesTeachers)
     {
-        foreach ($examSchedulesTeachers as $idModuleClass => $idTeachers)
+        foreach ($examSchedulesTeachers as $idExamSchedule => $idTeachers)
         {
-            $this->examScheduleRepository->syncPivot($idModuleClass, $idTeachers, 'teachers');
+            $this->examScheduleRepository->syncPivot($idExamSchedule, $idTeachers, 'teachers');
+        }
+    }
+
+    private function _createManyExamSchedulesRooms ($examSchedulesRooms)
+    {
+        foreach ($examSchedulesRooms as $idExamSchedule => $idRooms)
+        {
+            $this->examScheduleRepository->syncPivot($idExamSchedule, $idRooms, 'rooms');
         }
     }
 

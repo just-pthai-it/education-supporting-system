@@ -18,12 +18,6 @@ class ExamScheduleResource extends JsonResource
      */
     public function toArray ($request) : array
     {
-        $teachers = [];
-        foreach ($this->teachers as $teacher)
-        {
-            $teachers[] = $teacher->name;
-        }
-
         return [
             'id'               => $this->id,
             'name'             => $this->moduleClass->name ?? null,
@@ -31,9 +25,9 @@ class ExamScheduleResource extends JsonResource
             'startAt'          => $this->start_at,
             'endAt'            => $this->end_at,
             'numberOfStudents' => $this->number_of_students,
-            'idRoom'           => $this->id_room,
+            'rooms'            => $this->rooms->pluck('id_room'),
             'note'             => $this->method,
-            'teachers'         => $teachers,
+            'teachers'         => $this->teachers->pluck('name'),
         ];
     }
 }
