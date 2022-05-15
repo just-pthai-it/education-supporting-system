@@ -8,4 +8,9 @@ class GFString
     {
         return trim(preg_replace('/[ ]+/', ' ', $str));
     }
+
+    public static function removeAllSpace (string $str) : string
+    {
+        return trim(preg_replace('/[ ]+/', '', $str));
+    }
 }
