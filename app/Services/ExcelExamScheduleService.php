@@ -20,6 +20,7 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
     private int $lastTeacherIndex = -1;
     private int $roomIndex1 = -1;
     private int $roomIndex2 = -1;
+    private int $numberOfRoomsIndex = -1;
 
     public function readData ($file_name, ...$params) : array
     {
@@ -37,7 +38,6 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
     {
         $examSchedules         = [];
         $examSchedulesTeachers = [];
-        $examSchedulesRooms    = [];
 
         foreach ($rawData as $sheet)
         {
@@ -75,6 +75,11 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
                                 $this->numberOfStudentsIndex = $i;
                                 break;
 
+                            case GFString::removeExtraSpace(GFString::removeAllEndOfLine($row[$i])) ==
+                                 'Số phòng':
+                                $this->numberOfRoomsIndex = $i;
+                                break;
+
                             case $row[$i] == 'Tên phòng':
                                 $this->roomIndex1 = $i;
                                 break;
@@ -110,67 +115,102 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
                         break;
                     }
 
-                    $idRoom = $row[$this->roomIndex2] == null
-                        ? $row[$this->roomIndex1] : explode('.', $row[$this->roomIndex2])[1];
-                    $idRoom = str_replace('Phòng thi TT', 'PTTT', $idRoom);
+                    $idRooms       = $this->_getIdRooms($row[$this->roomIndex1] ?? '',
+                                                        $row[$this->roomIndex2] ?? '',
+                                                        $row[$this->numberOfRoomsIndex]);
+                    $idModuleClass = $this->_getIdModuleClass($row[$this->moduleIdIndex],
+                                                              $row[$this->moduleClassNameIndex]);
+                    $idTeachers    = $this->_getIdTeachers($row);
 
-                    $idExamSchedule = GFunction::convertToIDModuleClass($row[$this->moduleIdIndex],
-                                                                        $row[$this->moduleClassNameIndex]);
-
-                    $this->_createExamSchedules($examSchedules, $idExamSchedule,
-                                                $row[$this->methodIndex], $row[$this->dateIndex],
-                                                $row[$this->timeIndex],
-                                                $row[$this->numberOfStudentsIndex]);
-
-                    $this->_createExamScheduleRoom($examSchedulesRooms, $idExamSchedule, $idRoom);
-
-                    for ($j = $this->firstTeacherIndex; $j <= $this->lastTeacherIndex; $j++)
+                    foreach ($idRooms as $idRoom)
                     {
-                        $this->_createExamSchedulesTeachers($examSchedulesTeachers,
-                                                            $idExamSchedule, $row[$j] ?? '');
+                        $this->_createExamSchedules($examSchedules, $idModuleClass,
+                                                    $row[$this->methodIndex],
+                                                    $row[$this->dateIndex],
+                                                    $row[$this->timeIndex],
+                                                    $row[$this->numberOfStudentsIndex], $idRoom);
                     }
+
+                    $this->_createExamSchedulesTeachers($examSchedulesTeachers, $idTeachers);
                 }
             }
         }
 
-        //         echo json_encode($examSchedules);
         return [
             'exam_schedules'          => $examSchedules,
             'exam_schedules_teachers' => $examSchedulesTeachers,
-            'exam_schedules_rooms'    => $examSchedulesRooms,
         ];
+    }
+
+    private function _getIdModuleClass (string $idModule, string $moduleClassName) : string
+    {
+        return GFunction::convertToIDModuleClass($idModule, $moduleClassName);
+    }
+
+    private function _getIdRooms (string $room1, string $room2, string $numberOfRooms)
+    {
+        $room1 = GFString::removeAllSpace(GFString::removeAllEndOfLine($room1));
+        $room2 = GFString::removeAllSpace(GFString::removeAllEndOfLine($room2));
+        if ($room1 == '' && $room2 == '')
+        {
+            return array_fill(0, intval($numberOfRooms), null);
+        }
+
+        $idRooms = $room2 == '' ? $room1 : $room2;
+        $idRooms = explode('.', $idRooms);
+        $idRooms = $idRooms[1] ?? $idRooms[0];
+        $idRooms = str_replace('PhòngthiTT', 'PTTT', $idRooms);
+        $idRooms = explode(',', $idRooms);
+        if (count($idRooms) < intval($numberOfRooms))
+        {
+            for ($i = count($idRooms); $i <= intval($numberOfRooms); $i++)
+            {
+                $idRooms[] = null;
+            }
+        }
+
+        return $idRooms;
+    }
+
+    private function _getIdTeachers (array &$row) : array
+    {
+        $idTeachers = [];
+        for ($j = $this->firstTeacherIndex; $j <= $this->lastTeacherIndex; $j++)
+        {
+            if (is_null($row[$j]))
+            {
+                continue;
+            }
+
+            $idTeachers[] = $this->teachers[$row[$j]];
+        }
+        return $idTeachers;
     }
 
     private function _createExamSchedules (array  &$examSchedules, string $idModuleClass,
                                            string $method, string $date, string $time,
-                                           string $numberOfStudents)
+                                           string $numberOfStudents, $idRoom)
     {
         $dateTime = $this->_createDateTime($date, $time);
 
         $examSchedules[] = [
-            'id'                 => $idModuleClass,
+            'id_module_class'    => $idModuleClass,
             'method'             => $method,
             'start_at'           => $dateTime[0],
             'end_at'             => $dateTime[1],
             'number_of_students' => $numberOfStudents,
+            'id_room'            => $idRoom,
         ];
     }
 
-    private function _createExamSchedulesTeachers (array  &$examSchedulesTeaches,
-                                                   string $idModuleClass, string $teacherName)
+    private function _createExamSchedulesTeachers (array &$examSchedulesTeaches, array $idTeachers)
     {
-        if (empty($teacherName))
+        if (empty($idTeachers))
         {
             return;
         }
 
-        $examSchedulesTeaches[$idModuleClass][] = $this->teachers[$teacherName];
-    }
-
-    private function _createExamScheduleRoom (array  &$examSchedulesRoom, string $idExamSchedule,
-                                              string $idRoom)
-    {
-        $examSchedulesRoom[$idExamSchedule] = explode(',', GFString::removeAllSpace($idRoom));
+        $examSchedulesTeaches[] = $idTeachers;
     }
 
     private function _createDateTime ($date, $time) : array

@@ -295,30 +295,25 @@ class ResourceService implements Contracts\ResourceServiceContract
     {
         DB::transaction(function () use ($data)
         {
-            $this->_createManyExamSchedules($data['exam_schedules']);
-            $this->_createManyExamSchedulesTeachers($data['exam_schedules_teachers']);
-            $this->_createManyExamSchedulesRooms($data['exam_schedules_rooms']);
+            $firstIdExamSchedule = $this->_createManyExamSchedules($data['exam_schedules']);
+            $this->_createManyExamSchedulesTeachers($data['exam_schedules_teachers'],
+                                                    intval($firstIdExamSchedule));
         }, 2);
     }
 
     private function _createManyExamSchedules ($examSchedules)
     {
-        $this->examScheduleRepository->upsert($examSchedules);
+        $this->examScheduleRepository->insertMultiple($examSchedules);
+        return DB::getPdo()->lastInsertId();
     }
 
-    private function _createManyExamSchedulesTeachers ($examSchedulesTeachers)
+    private function _createManyExamSchedulesTeachers (array $examSchedulesTeachers,
+                                                       int   $idExamSchedule)
     {
-        foreach ($examSchedulesTeachers as $idExamSchedule => $idTeachers)
+        foreach ($examSchedulesTeachers as $idTeachers)
         {
             $this->examScheduleRepository->syncPivot($idExamSchedule, $idTeachers, 'teachers');
-        }
-    }
-
-    private function _createManyExamSchedulesRooms ($examSchedulesRooms)
-    {
-        foreach ($examSchedulesRooms as $idExamSchedule => $idRooms)
-        {
-            $this->examScheduleRepository->syncPivot($idExamSchedule, $idRooms, 'rooms');
+            $idExamSchedule++;
         }
     }
 

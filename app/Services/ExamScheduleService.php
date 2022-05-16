@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use Illuminate\Support\Arr;
+use App\Http\Resources\ExamScheduleResource;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ExamScheduleService implements Contracts\ExamScheduleServiceContract
 {
@@ -17,14 +19,17 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
         $this->examScheduleRepository = $examScheduleRepository;
     }
 
-    public function readManyByIdDepartment (string $idDepartment, array $inputs)
+    public function readManyByIdDepartment (string $idDepartment,
+                                            array  $inputs) : AnonymousResourceCollection
     {
-        return $this->examScheduleRepository->findByIdDepartment($idDepartment, $inputs);
+        $examSchedules = $this->examScheduleRepository->findByIdDepartment($idDepartment, $inputs);
+        return ExamScheduleResource::collection($examSchedules);
     }
 
-    public function readManyByIdTeacher (string $idTeacher, array $inputs)
+    public function readManyByIdTeacher (string $idTeacher, array $inputs) : AnonymousResourceCollection
     {
-        return $this->examScheduleRepository->findByIdTeacher($idTeacher, $inputs);
+        $examSchedules = $this->examScheduleRepository->findByIdTeacher($idTeacher, $inputs);
+        return ExamScheduleResource::collection($examSchedules);
     }
 
     public function update ($examSchedule)

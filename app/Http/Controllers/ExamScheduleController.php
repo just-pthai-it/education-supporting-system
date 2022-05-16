@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use App\Http\Resources\ExamScheduleResource;
 use App\Services\Contracts\ExamScheduleServiceContract;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ExamScheduleController extends Controller
 {
@@ -20,22 +18,16 @@ class ExamScheduleController extends Controller
         $this->examScheduleService = $examScheduleService;
     }
 
-    public function readManyByIdDepartment (Request $request,
-                                            string  $idDepartment) : AnonymousResourceCollection
+    public function readManyByIdDepartment (Request $request, string $idDepartment)
     {
         Gate::authorize('get-department-exam-schedule');
-        $exam_schedules = $this->examScheduleService->readManyByIdDepartment($idDepartment,
-                                                                             $request->all());
-        return ExamScheduleResource::collection($exam_schedules);
+        return $this->examScheduleService->readManyByIdDepartment($idDepartment, $request->all());
     }
 
-    public function readManyByIdTeacher (Request $request,
-                                         string  $idTeacher) : AnonymousResourceCollection
+    public function readManyByIdTeacher (Request $request, string $idTeacher)
     {
         Gate::authorize('get-teacher-exam-schedule');
-        $exam_schedules = $this->examScheduleService->readManyByIdTeacher($idTeacher,
-                                                                          $request->all());
-        return ExamScheduleResource::collection($exam_schedules);
+        return $this->examScheduleService->readManyByIdTeacher($idTeacher, $request->all());
     }
 
     public function update (Request $request)
