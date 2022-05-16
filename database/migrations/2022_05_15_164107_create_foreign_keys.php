@@ -59,7 +59,8 @@ class CreateForeignKeys extends Migration
 
         Schema::table('exam_schedules', function ($table)
         {
-            $table->foreign('id')->references('id')->on('module_classes');
+            $table->foreign('id_module_class')->references('id')->on('module_classes');
+            $table->foreign('id_room')->references('id')->on('rooms');
         });
 
         Schema::table('exam_schedule_teacher', function ($table)
@@ -166,12 +167,6 @@ class CreateForeignKeys extends Migration
         Schema::table('fcm_registration_tokens', function ($table)
         {
             $table->foreign('id_account')->on('accounts')->references('id');
-        });
-
-        Schema::table('exam_schedule_room', function ($table)
-        {
-            $table->foreign('id_exam_schedule')->on('exam_schedules')->references('id');
-            $table->foreign('id_room')->on('rooms')->references('id');
         });
     }
 

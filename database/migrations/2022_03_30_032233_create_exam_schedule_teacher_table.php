@@ -17,7 +17,7 @@ class CreateExamScheduleTeacherTable extends Migration
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
             $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->string('id_exam_schedule', 50);
+            $table->unsignedMediumInteger('id_exam_schedule');
             $table->string('id_teacher', 50);
             $table->unique(['id_exam_schedule', 'id_teacher']);
         });
