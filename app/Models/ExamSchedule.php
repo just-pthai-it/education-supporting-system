@@ -20,10 +20,12 @@ class ExamSchedule extends Model
 
     protected $fillable = [
         'id',
+        'id_module_class',
         'method',
         'start_at',
         'end_at',
         'number_of_students',
+        'id_room',
         'note',
     ];
 
@@ -39,7 +41,7 @@ class ExamSchedule extends Model
 
     public function moduleClass () : BelongsTo
     {
-        return $this->belongsTo(ModuleClass::class, 'id', 'id');
+        return $this->belongsTo(ModuleClass::class, 'id_module_class', 'id');
     }
 
     public function teachers () : BelongsToMany
@@ -49,11 +51,8 @@ class ExamSchedule extends Model
                     ->withPivot(['id']);
     }
 
-    public function rooms () : BelongsToMany
+    public function rooms () : BelongsTo
     {
-        return $this->belongsToMany(Room::class, 'exam_schedule_room',
-                                    'id_exam_schedule', 'id_room')
-                    ->withPivot(['id']);
-
+        return $this->belongsTo(Room::class, 'id_room', 'id');
     }
 }
