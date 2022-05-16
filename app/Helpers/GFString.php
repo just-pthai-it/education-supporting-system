@@ -13,4 +13,9 @@ class GFString
     {
         return trim(preg_replace('/[ ]+/', '', $str));
     }
+
+    public static function removeAllEndOfLine (string $str)
+    {
+        return preg_replace('/[\n]+/', '', $str);
+    }
 }
