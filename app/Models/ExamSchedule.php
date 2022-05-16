@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\Filterable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,11 @@ class ExamSchedule extends Model
     private array $filterable = [
         'start_at',
     ];
+
+    public function filterDate (Builder $query, $values)
+    {
+        $query->whereBetween('start_at', explode(',', $values));
+    }
 
     private array $sortable = [];
 
