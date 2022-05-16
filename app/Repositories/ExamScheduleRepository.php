@@ -13,34 +13,51 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
         return ExamSchedule::class;
     }
 
-    public function findByIdTeacher ($id_teacher, array $inputs)
+    public function findByIdTeacher ($idTeacher, array $inputs)
     {
         $this->createModel();
-        return $this->model->whereHas('teachers', function (Builder $query) use ($id_teacher)
+        $this->model = $this->model->whereHas('teachers', function (Builder $query) use ($idTeacher)
         {
-            $query->where('teachers.id', '=', $id_teacher);
-        })->filter($inputs)->with(['moduleClass:id,name',
-                                   'teachers' => function ($query)
-                                   {
-                                       return $query->select('id_teacher', 'name')
-                                                    ->orderBy('pivot_id');
-                                   },])->get();
+            $query->where('teachers.id', '=', $idTeacher);
+        });
+
+        if (isset($inputs['id_study_session']))
+        {
+            $this->model = $this->model->whereHas('moduleClass',
+                function (Builder $query) use ($inputs)
+                {
+                    $query->where('id_study_session', '=', $inputs['id_study_session']);
+                });
+        }
+
+        return $this->model->filter($inputs)->with(['moduleClass:id,name',
+                                                    'teachers' => function ($query)
+                                                    {
+                                                        return $query->select('id_teacher', 'name')
+                                                                     ->orderBy('pivot_id');
+                                                    },])->get();
     }
 
-    public function findByIdDepartment ($id_department, array $inputs)
+    public function findByIdDepartment (string $idDepartment, array $inputs)
     {
         $this->createModel();
-        return $this->model->whereHas('moduleClass', function (Builder $query) use ($id_department)
-        {
-            $query->whereHas('module', function (Builder $query) use ($id_department)
+        return $this->model->whereHas('moduleClass',
+            function (Builder $query) use ($idDepartment, $inputs)
             {
-                $query->where('id_department', '=', $id_department);
-            });
-        })->filter($inputs)->with(['moduleClass:id,name',
-                                   'teachers' => function ($query)
-                                   {
-                                       return $query->select('id_teacher', 'name')
-                                                    ->orderBy('pivot_id');
-                                   },])->get();
+                if (isset($inputs['id_study_session']))
+                {
+                    $query->where('id_study_session', '=', $inputs['id_study_session']);
+                }
+
+                $query->whereHas('module', function (Builder $query) use ($idDepartment)
+                {
+                    $query->where('id_department', '=', $idDepartment);
+                });
+            })->filter($inputs)->with(['moduleClass:id,name',
+                                       'teachers' => function ($query)
+                                       {
+                                           return $query->select('id_teacher', 'name')
+                                                        ->orderBy('pivot_id');
+                                       },])->get();
     }
 }

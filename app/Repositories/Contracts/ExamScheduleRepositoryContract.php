@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 interface ExamScheduleRepositoryContract extends BaseRepositoryContract
 {
-    public function findByIdTeacher ($id_teacher, array $inputs);
+    public function findByIdTeacher ($idTeacher, array $inputs);
 
-    public function findByIdDepartment ($id_department, array $inputs);
+    public function findByIdDepartment (string $idDepartment, array $inputs);
 }
