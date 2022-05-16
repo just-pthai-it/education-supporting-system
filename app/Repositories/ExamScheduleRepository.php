@@ -24,11 +24,7 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
                                    {
                                        return $query->select('id_teacher', 'name')
                                                     ->orderBy('pivot_id');
-                                   },
-                                   'rooms'    => function ($query)
-                                   {
-                                       return $query->select('id_room');
-                                   }])->get();
+                                   },])->get();
     }
 
     public function findByIdDepartment ($id_department, array $inputs)
@@ -45,10 +41,6 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
                                    {
                                        return $query->select('id_teacher', 'name')
                                                     ->orderBy('pivot_id');
-                                   },
-                                   'rooms'    => function ($query)
-                                   {
-                                       return $query->select('id_room');
-                                   }])->get();
+                                   },])->get();
     }
 }
