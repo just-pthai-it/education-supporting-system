@@ -120,6 +120,13 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->model->whereIn('id', is_array($ids) ? $ids : [$ids])->update($values);
     }
 
+    public function updateExistingPivot (string $lcId, array $fkIds, string $relationship,
+                                         array  $values)
+    {
+        $this->createModel();
+        $this->model->find($lcId)->{$relationship}()->updateExistingPivot($fkIds, $values);
+    }
+
     public function updateIncrementByIds ($ids, $column, int $step = 1)
     {
         $this->createModel();
@@ -184,6 +191,12 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->model->whereIn('id', is_array($ids) ? $ids : [$ids])->delete();
     }
 
+    public function deletePivot ($id, array $array, string $relation)
+    {
+        $this->createModel();
+        $this->model->find($id)->$relation()->detach($array);
+    }
+
     public function softDelete (array $conditions = [], array $scopes = [])
     {
         $this->createModel();
@@ -204,6 +217,13 @@ abstract class BaseRepository implements BaseRepositoryContract
         $this->createModel();
         $this->addWhere($conditions);
         return $this->model->count();
+    }
+
+    public function checkIfPivotExist (string $lcId, array $fkIds, string $relationship,
+                                       string $fkColumn)
+    {
+        $this->createModel();
+        return $this->model->find($lcId)->{$relationship}()->whereIn($fkColumn, $fkIds)->exists();
     }
 
     //    public function checkExist ($id)

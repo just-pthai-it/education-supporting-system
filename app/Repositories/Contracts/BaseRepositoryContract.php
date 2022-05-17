@@ -25,6 +25,9 @@ interface BaseRepositoryContract
 
     public function updateByIds ($ids, array $values);
 
+    public function updateExistingPivot (string $lcId, array $fkIds, string $relationship,
+                                         array  $values);
+
     public function updateIncrement (string $column, array $conditions = [], int $step = 1,
                                      array  $scopes = []);
 
@@ -46,11 +49,16 @@ interface BaseRepositoryContract
 
     public function deleteByIds ($ids);
 
+    public function deletePivot ($id, array $array, string $relation);
+
     public function softDelete (array $conditions = [], array $scopes = []);
 
     public function softDeleteByIds ($ids);
 
     public function count (array $conditions = []);
+
+    public function checkIfPivotExist (string $lcId, array $fkIds, string $relationship,
+                                       string $fkColumn);
 
     public function paginate (array $columns = ['*'], array $conditions = [], array $orders = [],
                               int   $pagination = 1, array $scopes = []);
