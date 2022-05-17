@@ -62,6 +62,6 @@ class Teacher extends Model
     {
         return $this->belongsToMany(ExamSchedule::class, 'exam_schedule_teacher',
                                     'id_teacher', 'id_exam_schedule')
-                    ->withPivot('position');
+                    ->withPivot('id', 'note');
     }
 }

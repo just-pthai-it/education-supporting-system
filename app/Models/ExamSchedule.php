@@ -27,7 +27,6 @@ class ExamSchedule extends Model
         'end_at',
         'number_of_students',
         'id_room',
-        'note',
     ];
 
     protected $hidden = [
@@ -54,7 +53,7 @@ class ExamSchedule extends Model
     {
         return $this->belongsToMany(Teacher::class, 'exam_schedule_teacher',
                                     'id_exam_schedule', 'id_teacher')
-                    ->withPivot(['id']);
+                    ->withPivot(['id', 'note']);
     }
 
     public function rooms () : BelongsTo
