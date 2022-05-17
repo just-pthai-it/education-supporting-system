@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\UpdateExamSchedulePatchRequest;
 use App\Services\Contracts\ExamScheduleServiceContract;
 
 class ExamScheduleController extends Controller
@@ -36,8 +37,7 @@ class ExamScheduleController extends Controller
         $this->examScheduleService->update($request->all());
     }
 
-
-    public function updateV1 (Request $request, string $idExamSchedule)
+    public function updateV1 (UpdateExamSchedulePatchRequest $request, string $idExamSchedule)
     {
         $this->examScheduleService->updateV1($idExamSchedule, $request->all());
     }
