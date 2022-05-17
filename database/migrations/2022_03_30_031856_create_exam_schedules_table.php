@@ -23,7 +23,6 @@ class CreateExamSchedulesTable extends Migration
             $table->string('end_at', 50);
             $table->unsignedTinyInteger('number_of_students');
             $table->string('id_room', 50)->nullable();
-            $table->string('note', 1000)->default('');
             $table->unique(['id_module_class', 'id_room']);
         });
     }

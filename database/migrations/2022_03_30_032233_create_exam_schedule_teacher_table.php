@@ -19,6 +19,7 @@ class CreateExamScheduleTeacherTable extends Migration
             $table->unsignedMediumInteger('id')->autoIncrement();
             $table->unsignedMediumInteger('id_exam_schedule');
             $table->string('id_teacher', 50);
+            $table->string('note', 1000)->default('');
             $table->unique(['id_exam_schedule', 'id_teacher']);
         });
     }
