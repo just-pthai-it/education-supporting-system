@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\TeacherResource;
 use App\Services\Contracts\TeacherServiceContract;
+use App\Http\Requests\UpdateExamScheduleTeacherPatchRequest;
 
 class TeacherController extends Controller
 {
@@ -27,4 +28,14 @@ class TeacherController extends Controller
     {
         return $this->teacherService->readMany($request->all());
     }
+
+    public function updateExamScheduleTeacherByIdExamSchedule (UpdateExamScheduleTeacherPatchRequest $request,
+                                                               string                                $idTeacher,
+                                                               string                                $idExamSchedule)
+    {
+        $this->teacherService->updateExamScheduleTeacherByIdExamSchedule($idTeacher,
+                                                                         $idExamSchedule,
+                                                                         $request->validated());
+    }
+
 }

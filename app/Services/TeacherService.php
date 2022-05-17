@@ -30,4 +30,15 @@ class TeacherService implements Contracts\TeacherServiceContract
                                                    [['filter', $inputs]]);
         return ['data' => $teachers];
     }
+
+    public function updateExamScheduleTeacherByIdExamSchedule (string $idTeacher,
+                                                               string $idExamSchedule,
+                                                               array  $inputs)
+    {
+        $values = ['note' => $inputs['note']];
+        $this->teacherRepository->updateExistingPivot($idTeacher, [$idExamSchedule],
+                                                      'examSchedules',
+                                                      $values);
+    }
+
 }

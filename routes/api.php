@@ -225,6 +225,9 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
             Route::get('module-classes/exam-schedules',
                        [ExamScheduleController::class, 'readManyByIdTeacher']);
 
+            Route::patch('exam-schedules/{id_exam_schedule}',
+                         [TeacherController::class, 'updateExamScheduleTeacherByIdExamSchedule']);
+
             Route::get('module-classes/schedules/fixed-schedules',
                        [FixedScheduleController::class, 'readManyByIdTeacher']);
         });
