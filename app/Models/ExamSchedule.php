@@ -39,7 +39,16 @@ class ExamSchedule extends Model
 
     public function filterDate (Builder $query, $values)
     {
-        $query->whereBetween('start_at', explode(',', $values));
+        $values = explode(',', $values['between']);
+        if (count($values) == 1)
+        {
+            $query->where('time_start', '=', $values[0]);
+        }
+        else
+        {
+            $query->whereBetween('start_at',
+                                 ["{$values[0]} 00:00:00.000", "{$values[1]} 23:59:59.000"]);
+        }
     }
 
     private array $sortable = [];
