@@ -3,30 +3,24 @@
 namespace App\Services;
 
 use App\Helpers\GFunction;
-use App\Imports\FileImport;
+use App\Services\Abstracts\AExcelService;
+use App\Imports\ExamScheduleExcelFileImport;
 
-class ExcelCurriculumService implements Contracts\ExcelServiceContract
+class ExcelCurriculumService extends AExcelService
 {
-
-    public function readData ($file_name, ...$params) : array
+    protected function _getData () : array
     {
-        $raw_data = $this->_getData($file_name);
-        return $this->_formatData($raw_data);
+        return (new ExamScheduleExcelFileImport())->toArray(request()->file);
     }
 
-    private function _getData ($file_name) : array
-    {
-        return (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
-    }
-
-    private function _formatData ($raw_data) : array
+    protected function _formatData ($rawData) : array
     {
         $curriculum = [];
         $modules    = [];
         $id_modules = [];
         $semester   = 1;
         $option     = 1;
-        foreach ($raw_data as &$sheet)
+        foreach ($rawData as &$sheet)
         {
             $this->_createCurriculum($curriculum, $sheet[1][0]);
             $is_begin = false;
@@ -109,15 +103,5 @@ class ExcelCurriculumService implements Contracts\ExcelServiceContract
     private function _createCurriculum (&$curriculums, $curriculum_name)
     {
         $curriculums = ['name' => $curriculum_name,];
-    }
-
-    public function handleData ($formatted_data, ...$params)
-    {
-        // TODO: Implement handleData() method.
-    }
-
-    public function setParameters (...$parameters)
-    {
-        // TODO: Implement setParameters() method.
     }
 }

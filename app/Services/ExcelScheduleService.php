@@ -4,40 +4,39 @@ namespace App\Services;
 
 use Exception;
 use App\Helpers\GFunction;
-use App\Imports\FileImport;
+use App\Services\Abstracts\AExcelService;
+use App\Imports\ExamScheduleExcelFileImport;
 
-class ExcelScheduleService implements Contracts\ExcelServiceContract
+class ExcelScheduleService extends AExcelService
 {
-    private int $id_study_session;
+    private int $idStudySession;
 
     /**
      * @throws Exception
      */
-    public function readData ($file_name, ...$params) : array
+    public function readData (...$parameters) : array
     {
-        $raw_data = $this->_getData($file_name);
-
-        $this->id_study_session = intval($params[0]);
-
+        $this->idStudySession = intval($parameters[0]);
+        $raw_data = $this->_getData();
         return $this->_formatData($raw_data);
     }
 
-    private function _getData ($file_name) : array
+    protected function _getData () : array
     {
-        return (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
+        return (new ExamScheduleExcelFileImport())->toArray(request()->file);
     }
 
     /**
      * @throws Exception
      */
-    private function _formatData ($raw_data) : array
+    protected function _formatData ($rawData) : array
     {
         $schedules              = [];
         $id_modules             = [];
         $module_classes         = [];
         $Special_module_classes = [];
 
-        foreach ($raw_data as $sheet)
+        foreach ($rawData as $sheet)
         {
             $is_start = false;
 
@@ -141,7 +140,7 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
             'id_modules'             => array_unique($id_modules, SORT_REGULAR),
             'module_classes'         => $module_classes,
             'special_module_classes' => array_merge($Special_module_classes,
-                                                    ['id_study_session' => $this->id_study_session])
+                                                    ['id_study_session' => $this->idStudySession])
         ];
     }
 
@@ -159,7 +158,7 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
             'type'             => $type == 'BT' ? 2 : ($type ==
                                                        'TH' ? 3 : ($type ==
                                                                    'DA' ? 4 : 1)),
-            'id_study_session' => $this->id_study_session,
+            'id_study_session' => $this->idStudySession,
             'is_international' => strpos($id_module_class, '(QT') === false ? 0 : 1,
             'id_module'        => $id_module,
         ];
@@ -215,13 +214,8 @@ class ExcelScheduleService implements Contracts\ExcelServiceContract
         }
     }
 
-    public function handleData ($formatted_data, ...$params)
-    {
-
-    }
-
     public function setParameters (...$parameters)
     {
-        $this->id_study_session = $parameters[0];
+        $this->idStudySession = $parameters[0];
     }
 }

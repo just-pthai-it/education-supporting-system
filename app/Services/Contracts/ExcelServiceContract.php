@@ -4,9 +4,9 @@ namespace App\Services\Contracts;
 
 interface ExcelServiceContract
 {
-    public function readData ($file_name, ...$params);
+    public function readData (...$parameters);
 
-    public function handleData ($formatted_data, ...$params);
+    public function handleData ($formattedData, ...$parameters);
 
     public function setParameters (...$parameters);
 }

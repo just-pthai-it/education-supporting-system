@@ -4,28 +4,23 @@ namespace App\Services;
 
 use App\Helpers\GData;
 use App\Helpers\GFunction;
-use App\Imports\FileImport;
+use App\Services\Abstracts\AExcelService;
+use App\Imports\ExamScheduleExcelFileImport;
 use Illuminate\Support\Str;
 
-class ExcelRollCallService implements Contracts\ExcelServiceContract
+class ExcelRollCallService extends AExcelService
 {
-    private $special_module_classes;
-    private $id_students_missing;
-    private $academic_years;
-    private $id_training_type;
+    private $specialModuleClasses;
+    private $idStudentsMissing;
+    private $academicYears;
+    private $idTrainingType;
 
-    public function readData ($file_name, ...$params) : array
+    protected function _getData () : array
     {
-        $raw_data = $this->_getData($file_name);
-        return $this->_formatData($raw_data);
+        return (new ExamScheduleExcelFileImport())->toArray(request()->file);
     }
 
-    private function _getData ($file_name) : array
-    {
-        return (new FileImport())->toArray(storage_path('app/public/excels/') . $file_name);
-    }
-
-    private function _formatData ($raw_data) : array
+    protected function _formatData ($rawData) : array
     {
         $current_module_class        = '';
         $latest_first_ordinal_number = -1;
@@ -36,7 +31,7 @@ class ExcelRollCallService implements Contracts\ExcelServiceContract
         $temp_students          = [];
         $id_module_classes      = [];
         $module_classes_missing = [];
-        foreach ($raw_data as $sheet)
+        foreach ($rawData as $sheet)
         {
             $is_begin = false;
             foreach ($sheet as $row)
@@ -95,9 +90,9 @@ class ExcelRollCallService implements Contracts\ExcelServiceContract
         if ($latest_first_ordinal_number == 1)
         {
             $is_valid = false;
-            if (isset($this->special_module_classes[$current_module_class]))
+            if (isset($this->specialModuleClasses[$current_module_class]))
             {
-                $current_module_class = $this->special_module_classes[$current_module_class];
+                $current_module_class = $this->specialModuleClasses[$current_module_class];
                 $is_valid             = true;
             }
             else
@@ -121,17 +116,17 @@ class ExcelRollCallService implements Contracts\ExcelServiceContract
         $temp_students = [];
     }
 
-    public function handleData ($formatted_data, ...$params) : array
+    public function handleData ($formattedData, ...$parameters) : array
     {
         $classes               = [];
         $available_id_students = [];
 
-        foreach ($formatted_data['students'] as $key => &$student)
+        foreach ($formattedData['students'] as $key => &$student)
         {
-            if (!in_array($student['id'], $this->id_students_missing))
+            if (!in_array($student['id'], $this->idStudentsMissing))
             {
                 $available_id_students[] = $student['id'];
-                unset($formatted_data['students'][$key]);
+                unset($formattedData['students'][$key]);
                 continue;
             }
 
@@ -144,17 +139,17 @@ class ExcelRollCallService implements Contracts\ExcelServiceContract
         return [
             'classes'               => array_unique($classes, SORT_REGULAR),
             'available_id_students' => $available_id_students,
-            'students'              => $formatted_data['students'],
-            'participates'          => $formatted_data['participates'],
+            'students'              => $formattedData['students'],
+            'participates'          => $formattedData['participates'],
         ];
     }
 
     public function setParameters (...$parameters)
     {
-        $this->special_module_classes = $parameters[0];
-        $this->id_students_missing    = $parameters[1];
-        $this->academic_years         = $parameters[2];
-        $this->id_training_type       = $parameters[3];
+        $this->specialModuleClasses = $parameters[0];
+        $this->idStudentsMissing    = $parameters[1];
+        $this->academicYears        = $parameters[2];
+        $this->idTrainingType       = $parameters[3];
     }
 
     private function _getInfoOfFacultyClass (&$id_class)
@@ -207,9 +202,9 @@ class ExcelRollCallService implements Contracts\ExcelServiceContract
             }
         }
         $class_info['id']               = $id_class;
-        $class_info['id_academic_year'] = $this->academic_years[$academic_year];
+        $class_info['id_academic_year'] = $this->academicYears[$academic_year];
         $class_info['id_training_type'] = strpos($id_class, 'VLVH') !==
-                                          false ? 2 : $this->id_training_type;
+                                          false ? 2 : $this->idTrainingType;
 
         return $class_info;
     }

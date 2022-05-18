@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithColumnLimit;
 
-class FileImport implements ToCollection, WithColumnLimit, WithLimit
+class ExamScheduleExcelFileImport implements ToCollection, WithColumnLimit, WithLimit
 {
     use Importable;
 
@@ -22,7 +22,7 @@ class FileImport implements ToCollection, WithColumnLimit, WithLimit
 
     public function endColumn () : string
     {
-        return 'T';
+        return 'Q';
     }
 
     public function limit () : int
