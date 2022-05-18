@@ -8,7 +8,7 @@ use App\Imports\FileImport;
 
 class ExcelExamScheduleService implements Contracts\ExcelServiceContract
 {
-    private array $teachers;
+    //    private array $teachers;
     private int $numericalOrderIndex = 0;
     private int $moduleIdIndex = -1;
     private int $moduleClassNameIndex = -1;
@@ -16,16 +16,15 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
     private int $dateIndex = -1;
     private int $timeIndex = -1;
     private int $numberOfStudentsIndex = -1;
-    private int $firstTeacherIndex = -1;
-    private int $lastTeacherIndex = -1;
-    private int $roomIndex1 = -1;
-    private int $roomIndex2 = -1;
+    //    private int $firstTeacherIndex = -1;
+    //    private int $lastTeacherIndex = -1;
+    private int $roomIndex = -1;
     private int $numberOfRoomsIndex = -1;
 
     public function readData ($file_name, ...$params) : array
     {
-        $this->teachers = $params[0];
-        $rawData        = $this->_getData($file_name);
+        //        $this->teachers = $params[0];
+        $rawData = $this->_getData($file_name);
         return $this->_formatData($rawData);
     }
 
@@ -36,8 +35,8 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
 
     private function _formatData ($rawData) : array
     {
-        $examSchedules         = [];
-        $examSchedulesTeachers = [];
+        $examSchedules = [];
+        //        $examSchedulesTeachers = [];
 
         foreach ($rawData as $sheet)
         {
@@ -46,64 +45,109 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
             {
                 if ($row[$this->numericalOrderIndex] == 'STT')
                 {
-                    $i = 0;
-                    while (true)
+                    foreach ($row as $i => $column)
                     {
                         switch (true)
                         {
-                            case $row[$i] == 'Mã học phần':
+                            case $column == 'Mã học phần':
                                 $this->moduleIdIndex = $i;
                                 break;
 
-                            case $row[$i] == 'Lớp học phần':
+                            case $column == 'Lớp học phần':
                                 $this->moduleClassNameIndex = $i;
                                 break;
 
-                            case $row[$i] == 'Hình thức thi':
+                            case $column == 'Hình thức thi':
                                 $this->methodIndex = $i;
                                 break;
 
-                            case $row[$i] == 'Ngày thi':
+                            case $column == 'Ngày thi':
                                 $this->dateIndex = $i;
                                 break;
 
-                            case GFString::removeExtraSpace($row[$i]) == 'Ca thi (Giờ thi)':
+                            case GFString::removeExtraSpace($column) == 'Ca thi (Giờ thi)':
                                 $this->timeIndex = $i;
                                 break;
 
-                            case $row[$i] == 'Số SV':
+                            case $column == 'Số SV':
                                 $this->numberOfStudentsIndex = $i;
                                 break;
 
-                            case GFString::removeExtraSpace(GFString::removeAllEndOfLine($row[$i])) ==
+                            case GFString::removeExtraSpace(GFString::removeAllEndOfLine($column)) ==
                                  'Số phòng':
                                 $this->numberOfRoomsIndex = $i;
                                 break;
 
-                            case $row[$i] == 'Tên phòng':
-                                $this->roomIndex1 = $i;
+                            case $column == 'Tên phòng':
+                                $this->roomIndex = $i;
                                 break;
 
-                            case strpos($row[$i], 'GV') !== false:
-                                if ($this->firstTeacherIndex == -1)
-                                {
-                                    $this->firstTeacherIndex = $i;
-                                }
-                                $this->lastTeacherIndex = $i;
-                                break;
-
-                            case $row[$i] == 'Phòng thi':
-                                $this->roomIndex2 = $i;
-                                break;
+                            //                            case strpos($column, 'GV') !== false:
+                            //                                if ($this->firstTeacherIndex == -1)
+                            //                                {
+                            //                                    $this->firstTeacherIndex = $i;
+                            //                                }
+                            //                                $this->lastTeacherIndex = $i;
+                            //                                break;
                         }
-
-                        if ($row[$i] == 'Phòng thi')
-                        {
-                            break;
-                        }
-
-                        $i++;
                     }
+                    //                    while (true)
+                    //                    {
+                    //                        switch (true)
+                    //                        {
+                    //                            case $row[$i] == 'Mã học phần':
+                    //                                $this->moduleIdIndex = $i;
+                    //                                break;
+                    //
+                    //                            case $row[$i] == 'Lớp học phần':
+                    //                                $this->moduleClassNameIndex = $i;
+                    //                                break;
+                    //
+                    //                            case $row[$i] == 'Hình thức thi':
+                    //                                $this->methodIndex = $i;
+                    //                                break;
+                    //
+                    //                            case $row[$i] == 'Ngày thi':
+                    //                                $this->dateIndex = $i;
+                    //                                break;
+                    //
+                    //                            case GFString::removeExtraSpace($row[$i]) == 'Ca thi (Giờ thi)':
+                    //                                $this->timeIndex = $i;
+                    //                                break;
+                    //
+                    //                            case $row[$i] == 'Số SV':
+                    //                                $this->numberOfStudentsIndex = $i;
+                    //                                break;
+                    //
+                    //                            case GFString::removeExtraSpace(GFString::removeAllEndOfLine($row[$i])) ==
+                    //                                 'Số phòng':
+                    //                                $this->numberOfRoomsIndex = $i;
+                    //                                break;
+                    //
+                    //                            case $row[$i] == 'Tên phòng':
+                    //                                $this->roomIndex = $i;
+                    //                                break;
+                    //
+                    //                            case strpos($row[$i], 'GV') !== false:
+                    //                                if ($this->firstTeacherIndex == -1)
+                    //                                {
+                    //                                    $this->firstTeacherIndex = $i;
+                    //                                }
+                    //                                $this->lastTeacherIndex = $i;
+                    //                                break;
+                    //
+                    //                            case $row[$i] == 'Phòng thi':
+                    //                                $this->roomIndex2 = $i;
+                    //                                break;
+                    //                        }
+                    //
+                    //                        if ($row[$i] == 'Phòng thi')
+                    //                        {
+                    //                            break;
+                    //                        }
+                    //
+                    //                        $i++;
+                    //                    }
                     $isStart = true;
                     continue;
                 }
@@ -115,12 +159,11 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
                         break;
                     }
 
-                    $idRooms       = $this->_getIdRooms($row[$this->roomIndex1] ?? '',
-                                                        $row[$this->roomIndex2] ?? '',
+                    $idRooms       = $this->_getIdRooms($row[$this->roomIndex] ?? '',
                                                         $row[$this->numberOfRoomsIndex]);
                     $idModuleClass = $this->_getIdModuleClass($row[$this->moduleIdIndex],
                                                               $row[$this->moduleClassNameIndex]);
-                    $idTeachers    = $this->_getIdTeachers($row);
+                    //                    $idTeachers    = $this->_getIdTeachers($row);
 
                     foreach ($idRooms as $idRoom)
                     {
@@ -131,14 +174,14 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
                                                     $row[$this->numberOfStudentsIndex], $idRoom);
                     }
 
-                    $this->_createExamSchedulesTeachers($examSchedulesTeachers, $idTeachers);
+                    //                    $this->_createExamSchedulesTeachers($examSchedulesTeachers, $idTeachers);
                 }
             }
         }
 
         return [
-            'exam_schedules'          => $examSchedules,
-            'exam_schedules_teachers' => $examSchedulesTeachers,
+            'exam_schedules' => $examSchedules,
+            //            'exam_schedules_teachers' => $examSchedulesTeachers,
         ];
     }
 
@@ -147,23 +190,21 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
         return GFunction::convertToIDModuleClass($idModule, $moduleClassName);
     }
 
-    private function _getIdRooms (string $room1, string $room2, string $numberOfRooms)
+    private function _getIdRooms (string $room, string $numberOfRooms)
     {
-        $room1 = GFString::removeAllSpace(GFString::removeAllEndOfLine($room1));
-        $room2 = GFString::removeAllSpace(GFString::removeAllEndOfLine($room2));
-        if ($room1 == '' && $room2 == '')
+        $room = GFString::removeAllSpace(GFString::removeAllEndOfLine($room));
+        if ($room == '')
         {
             return array_fill(0, intval($numberOfRooms), null);
         }
 
-        $idRooms = $room2 == '' ? $room1 : $room2;
-        $idRooms = explode('.', $idRooms);
+        $idRooms = explode('.', $room);
         $idRooms = $idRooms[1] ?? $idRooms[0];
         $idRooms = str_replace('PhòngthiTT', 'PTTT', $idRooms);
         $idRooms = explode(',', $idRooms);
         if (count($idRooms) < intval($numberOfRooms))
         {
-            for ($i = count($idRooms); $i <= intval($numberOfRooms); $i++)
+            for ($i = count($idRooms) + 1; $i <= intval($numberOfRooms); $i++)
             {
                 $idRooms[] = null;
             }
@@ -172,20 +213,20 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
         return $idRooms;
     }
 
-    private function _getIdTeachers (array &$row) : array
-    {
-        $idTeachers = [];
-        for ($j = $this->firstTeacherIndex; $j <= $this->lastTeacherIndex; $j++)
-        {
-            if (is_null($row[$j]))
-            {
-                continue;
-            }
-
-            $idTeachers[] = $this->teachers[$row[$j]];
-        }
-        return $idTeachers;
-    }
+    //    private function _getIdTeachers (array &$row) : array
+    //    {
+    //        $idTeachers = [];
+    //        for ($j = $this->firstTeacherIndex; $j <= $this->lastTeacherIndex; $j++)
+    //        {
+    //            if (is_null($row[$j]))
+    //            {
+    //                continue;
+    //            }
+    //
+    //            $idTeachers[] = $this->teachers[$row[$j]];
+    //        }
+    //        return $idTeachers;
+    //    }
 
     private function _createExamSchedules (array  &$examSchedules, string $idModuleClass,
                                            string $method, string $date, string $time,
@@ -203,15 +244,15 @@ class ExcelExamScheduleService implements Contracts\ExcelServiceContract
         ];
     }
 
-    private function _createExamSchedulesTeachers (array &$examSchedulesTeaches, array $idTeachers)
-    {
-        if (empty($idTeachers))
-        {
-            return;
-        }
-
-        $examSchedulesTeaches[] = $idTeachers;
-    }
+    //    private function _createExamSchedulesTeachers (array &$examSchedulesTeaches, array $idTeachers)
+    //    {
+    //        if (empty($idTeachers))
+    //        {
+    //            return;
+    //        }
+    //
+    //        $examSchedulesTeaches[] = $idTeachers;
+    //    }
 
     private function _createDateTime ($date, $time) : array
     {

@@ -283,11 +283,10 @@ class ResourceService implements Contracts\ResourceServiceContract
     {
         $this->excelService = app()->make('excel_exam_schedule');
         $this->fileUploadHandler->handleFileUpload($input['file']);
-        $teachers = $this->teacherRepository->pluck(['id', 'name'],
-                                                    [['id_department', '=', $input['id_department']]])
-                                            ->toArray();
-        $data     = $this->excelService->readData($this->fileUploadHandler->getNewFileName(),
-                                                  $teachers);
+        //        $teachers = $this->teacherRepository->pluck(['id', 'name'],
+        //                                                    [['id_department', '=', $input['id_department']]])
+        //                                            ->toArray();
+        $data = $this->excelService->readData($this->fileUploadHandler->getNewFileName());
         $this->_createAndUpdateData3($data);
     }
 
@@ -295,27 +294,27 @@ class ResourceService implements Contracts\ResourceServiceContract
     {
         DB::transaction(function () use ($data)
         {
-            $firstIdExamSchedule = $this->_createManyExamSchedules($data['exam_schedules']);
-            $this->_createManyExamSchedulesTeachers($data['exam_schedules_teachers'],
-                                                    intval($firstIdExamSchedule));
+            $this->_createManyExamSchedules($data['exam_schedules']);
+            //            $this->_createManyExamSchedulesTeachers($data['exam_schedules_teachers'],
+            //                                                    intval($firstIdExamSchedule));
         }, 2);
     }
 
     private function _createManyExamSchedules ($examSchedules)
     {
         $this->examScheduleRepository->insertMultiple($examSchedules);
-        return DB::getPdo()->lastInsertId();
+        //        return DB::getPdo()->lastInsertId();
     }
 
-    private function _createManyExamSchedulesTeachers (array $examSchedulesTeachers,
-                                                       int   $idExamSchedule)
-    {
-        foreach ($examSchedulesTeachers as $idTeachers)
-        {
-            $this->examScheduleRepository->syncPivot($idExamSchedule, $idTeachers, 'teachers');
-            $idExamSchedule++;
-        }
-    }
+    //    private function _createManyExamSchedulesTeachers (array $examSchedulesTeachers,
+    //                                                       int   $idExamSchedule)
+    //    {
+    //        foreach ($examSchedulesTeachers as $idTeachers)
+    //        {
+    //            $this->examScheduleRepository->syncPivot($idExamSchedule, $idTeachers, 'teachers');
+    //            $idExamSchedule++;
+    //        }
+    //    }
 
     /**
      * @throws BindingResolutionException
