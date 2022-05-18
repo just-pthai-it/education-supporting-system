@@ -42,9 +42,12 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
 
     private function _formatStudySessionInput (array &$inputs)
     {
-        $idStudySession = $this->_readIdStudySessionByName($inputs['study_session']);;
-        $inputs['id_study_session'] = $idStudySession;
-        unset($inputs['study_session']);
+        if (isset($inputs['study_session']))
+        {
+            $idStudySession = $this->_readIdStudySessionByName($inputs['study_session']);;
+            $inputs['id_study_session'] = $idStudySession;
+            unset($inputs['study_session']);
+        }
     }
 
     private function _readIdStudySessionByName (string $studySession)
