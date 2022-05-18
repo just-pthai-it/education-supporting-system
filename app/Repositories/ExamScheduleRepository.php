@@ -33,7 +33,8 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
         return $this->model->filter($inputs)->with(['moduleClass:id,name',
                                                     'teachers' => function ($query)
                                                     {
-                                                        return $query->select('id_teacher', 'name')
+                                                        return $query->select('id_teacher', 'name',
+                                                                              'note')
                                                                      ->orderBy('pivot_id');
                                                     },])->get();
     }
@@ -56,7 +57,7 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
             })->filter($inputs)->with(['moduleClass:id,name',
                                        'teachers' => function ($query)
                                        {
-                                           return $query->select('id_teacher', 'name')
+                                           return $query->select('id_teacher', 'name', 'note')
                                                         ->orderBy('pivot_id');
                                        },])->get();
     }

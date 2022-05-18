@@ -18,6 +18,16 @@ class ExamScheduleResource extends JsonResource
      */
     public function toArray ($request) : array
     {
+        if (!is_null($request->route('id_teacher')))
+        {
+            $note = $this->teachers->where('id_teacher', '=', $request->route('id_teacher'))
+                                   ->first()->note;
+        }
+        else
+        {
+            $note = null;
+        }
+
         return [
             'id'               => $this->id,
             'id_module_class'  => $this->id_module_class,
@@ -27,7 +37,7 @@ class ExamScheduleResource extends JsonResource
             'endAt'            => $this->end_at,
             'numberOfStudents' => $this->number_of_students,
             'idRoom'           => $this->id_room,
-            'note'             => $this->note,
+            'note'             => $note,
             'teachers'         => $this->teachers->pluck('name'),
         ];
     }
