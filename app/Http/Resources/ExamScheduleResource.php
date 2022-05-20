@@ -30,7 +30,7 @@ class ExamScheduleResource extends JsonResource
 
         return [
             'id'               => $this->id,
-            'id_module_class'  => $this->id_module_class,
+            'idModuleClass'    => $this->id_module_class,
             'name'             => $this->moduleClass->name ?? null,
             'method'           => $this->method,
             'startAt'          => $this->start_at,
