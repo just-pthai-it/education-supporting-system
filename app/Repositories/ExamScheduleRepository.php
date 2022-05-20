@@ -30,7 +30,8 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
                 });
         }
 
-        return $this->model->filter($inputs)->with(['moduleClass:id,name',
+        return $this->model->filter($inputs)->with(['moduleClass:id,name,id_module',
+                                                    'moduleClass.module:id,credit',
                                                     'teachers' => function ($query)
                                                     {
                                                         return $query->select('id_teacher', 'name',
@@ -54,7 +55,8 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
                 {
                     $query->where('id_department', '=', $idDepartment);
                 });
-            })->filter($inputs)->with(['moduleClass:id,name',
+            })->filter($inputs)->with(['moduleClass:id,name,id_module',
+                                       'moduleClass.module:id,credit',
                                        'teachers' => function ($query)
                                        {
                                            return $query->select('id_teacher', 'name', 'note')
