@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\UpdateExamSchedulePatchRequest;
 use App\Services\Contracts\ExamScheduleServiceContract;
+use App\Http\Requests\CreateExamScheduleTeacherPostRequest;
 
 class ExamScheduleController extends Controller
 {
@@ -42,8 +43,8 @@ class ExamScheduleController extends Controller
         $this->examScheduleService->updateV1($idExamSchedule, $request->all());
     }
 
-    public function createExamScheduleTeacher (Request $request, string $idExamSchedule)
+    public function createExamScheduleTeacher (CreateExamScheduleTeacherPostRequest $request, string $idExamSchedule)
     {
-        $this->examScheduleService->createExamScheduleTeacher($idExamSchedule, $request->all());
+        $this->examScheduleService->createExamScheduleTeacher($idExamSchedule, $request->validated());
     }
 }

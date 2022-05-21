@@ -75,9 +75,9 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
     private function _formatProctorsInputs (array &$inputs)
     {
         $values = [];
-        foreach ($inputs as $key => $value)
+        foreach ($inputs as $value)
         {
-            $values[$value] = ['position' => $key + 1];
+            $values[$value] = ['note' => ''];
         }
         $inputs = $values;
     }
