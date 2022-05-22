@@ -37,6 +37,11 @@ class ExamSchedule extends Model
         'start_at',
     ];
 
+    private array $sortable = [
+        'id',
+        'start_at',
+    ];
+
     public function filterDate (Builder $query, $values)
     {
         $values = explode(',', $values['between']);
@@ -50,8 +55,6 @@ class ExamSchedule extends Model
                                  ["{$values[0]} 00:00:00.000", "{$values[1]} 23:59:59.000"]);
         }
     }
-
-    private array $sortable = [];
 
     public function moduleClass () : BelongsTo
     {
