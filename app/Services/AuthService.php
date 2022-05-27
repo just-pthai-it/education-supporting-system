@@ -34,13 +34,13 @@ class AuthService implements Contracts\AuthServiceContract
         $accessToken = $this->_authenticate($username, $password);
         if ($accessToken == '')
         {
-            return response(['errors' => ['Invalid username, email or password']], 401);
+            return response(['messages' => ['Invalid username, email or password']], 401);
         }
 
         $userInfo = $this->getUserInfo();
         if (is_null($userInfo))
         {
-            return response(['errors' => ['Unknown this account owner']], 404);
+            return response(['messages' => ['Unknown this account owner']], 404);
         }
 
         return response(['data' => new UserData($userInfo)])

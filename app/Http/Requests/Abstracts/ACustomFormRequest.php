@@ -13,7 +13,7 @@ abstract class ACustomFormRequest extends FormRequest
      */
     protected function failedValidation (Validator $validator)
     {
-        $errors = ['errors' => $validator->errors()->toArray()];
+        $errors = ['messages' => $validator->errors()->toArray()];
         throw new CustomBadHttpRequestException('', $errors, 400);
     }
 }
