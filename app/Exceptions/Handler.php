@@ -32,8 +32,9 @@ class Handler extends ExceptionHandler
      */
     public function register ()
     {
-        $this->renderable(function (CustomBadHttpRequestException $e, $request) {
-            return response($e->getOptions(), $e->getCode());
+        $this->renderable(function (CustomBadHttpRequestException $e)
+        {
+            return response(['messages' => json_decode($e->getMessage())], $e->getCode());
         });
 
         $this->reportable(function (CustomBadHttpRequestException $e)
@@ -41,30 +42,19 @@ class Handler extends ExceptionHandler
             return false;
         });
 
-        $this->renderable(function (InvalidAccountException $exception)
+        $this->renderable(function (CustomAuthenticationException $e)
         {
-            return response('Invalid username or password', 403);
+            return response(['messages' => json_decode($e->getMessage())], $e->getCode());
         });
 
-        $this->renderable(function (InvalidFormRequestException $exception)
+        $this->reportable(function (CustomAuthenticationException $e)
         {
-            return response('', 400);
-        });
-        $this->renderable(function (ImportDataFailedException $exception)
-        {
-            return response('', 406);
+            return false;
         });
     }
 
     public function report (Throwable $e)
     {
-        if ($e instanceof InvalidAccountException
-            || $e instanceof InvalidFormRequestException
-            || $e instanceof ImportDataFailedException)
-        {
-            return;
-        }
-
         GFunction::printError($e);
     }
 }
