@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Throwable;
 
-class CustomBadHttpRequestException extends Exception
+class CustomAuthenticationException extends Exception
 {
     private array $options;
 
