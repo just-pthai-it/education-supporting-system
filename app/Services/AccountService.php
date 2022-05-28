@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Helpers\GFunction;
 use App\Repositories\Contracts\AccountRepositoryContract;
-use App\Exceptions\InvalidAccountException;
+use App\Exceptions\CustomAuthenticationException;
 
 class AccountService implements Contracts\AccountServiceContract
 {
@@ -23,7 +23,7 @@ class AccountService implements Contracts\AccountServiceContract
      * @param int    $idAccount
      * @param array  $inputs
      *
-     * @throws InvalidAccountException
+     * @throws CustomAuthenticationException
      */
     public function changePassword (string $uuidAccount, int $idAccount, array $inputs)
     {
@@ -37,7 +37,7 @@ class AccountService implements Contracts\AccountServiceContract
      * @param int    $idAccount
      * @param string $password
      *
-     * @throws InvalidAccountException
+     * @throws CustomAuthenticationException
      */
     private function _verifyCredentials (string $uuidAccount, int $idAccount, string $password)
     {
@@ -47,9 +47,10 @@ class AccountService implements Contracts\AccountServiceContract
             'password' => $password
         ];
 
-        if (!auth()->attempt($credentials))
+        if (auth()->attempt($credentials) === false)
         {
-            throw new InvalidAccountException();
+            $messages = json_encode(['Invalid username, email or password']);
+            throw new CustomAuthenticationException($messages, 401);
         }
     }
 

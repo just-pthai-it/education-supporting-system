@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Teacher;
 use App\Http\Resources\UserData;
+use App\Exceptions\CustomAuthenticationException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\Contracts\RoleRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
@@ -29,42 +30,43 @@ class AuthService implements Contracts\AuthServiceContract
         $this->roleRepository            = $roleRepository;
     }
 
+    /**
+     * @throws CustomAuthenticationException
+     */
     public function login ($username, $password)
     {
-        $accessToken = $this->_authenticate($username, $password);
-        if ($accessToken == '')
-        {
-            return response(['messages' => ['Invalid username, email or password']], 401);
-        }
-
-        $userInfo = $this->getUserInfo();
+        $accessToken = $this->_verifyCredentials($username, $password);
+        $userInfo    = $this->getUserInfo();
         if (is_null($userInfo))
         {
-            return response(['messages' => ['Unknown this account owner']], 404);
+            $messages = json_encode(['Unknown this account owner']);
+            throw new CustomAuthenticationException($messages, 404);
         }
 
         return response(['data' => new UserData($userInfo)])
             ->header('Authorization', "Bearer {$accessToken}");
     }
 
-    private function _authenticate ($username_email, $password)
+    /**
+     * @throws CustomAuthenticationException
+     */
+    private function _verifyCredentials ($usernameOrEmail, $password) : string
     {
-        $credential = [
-            'password' => $password,
-        ];
-
-        if (strpos($username_email, '@') !== false)
+        if (strpos($usernameOrEmail, '@') !== false)
         {
-            $credential['email'] = $username_email;
+            $credentials['email'] = $usernameOrEmail;
         }
         else
         {
-            $credential['username'] = $username_email;
+            $credentials['username'] = $usernameOrEmail;
         }
 
-        if (($accessToken = auth()->attempt($credential)) === false)
+        $credentials['password'] = $password;
+
+        if (($accessToken = auth()->attempt($credentials)) === false)
         {
-            return '';
+            $messages = json_encode(['Invalid username, email or password']);
+            throw new CustomAuthenticationException($messages, 401);
         }
 
         return $accessToken;
