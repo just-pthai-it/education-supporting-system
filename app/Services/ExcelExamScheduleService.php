@@ -3,9 +3,10 @@
 namespace App\Services;
 
 use App\Helpers\GFString;
-use App\Helpers\GFunction;
 use App\Services\Abstracts\AExcelService;
-use App\Imports\ExamScheduleExcelFileImport;
+use Box\Spout\Common\Exception\IOException;
+use Box\Spout\Common\Exception\UnsupportedTypeException;
+use Box\Spout\Reader\Exception\ReaderNotOpenedException;
 
 class ExcelExamScheduleService extends AExcelService
 {
@@ -19,56 +20,74 @@ class ExcelExamScheduleService extends AExcelService
     private int $roomIndex = -1;
     private int $numberOfRoomsIndex = -1;
 
-    protected function _getData () : array
+    /**
+     * @throws UnsupportedTypeException
+     * @throws IOException
+     * @throws ReaderNotOpenedException
+     */
+    public function readData (string $filePath, ...$parameters) : array
     {
-        return (new ExamScheduleExcelFileImport())->toArray(request()->file);
-    }
-
-    protected function _formatData ($rawData) : array
-    {
+        $reader        = $this->_getReader($filePath);
         $examSchedules = [];
 
-        foreach ($rawData as $sheet)
+        foreach ($reader->getSheetIterator() as $sheet)
         {
             $isStart = false;
-            foreach ($sheet as $row)
+            foreach ($sheet->getRowIterator() as $row)
             {
-                if ($row[$this->numericalOrderIndex] == 'STT')
+                $cells = $row->getCells();
+                if (empty($cells))
                 {
-                    foreach ($row as $i => $column)
+                    if ($isStart)
+                    {
+                        break;
+                    }
+
+                    continue;
+                }
+
+                if ($isStart && empty($this->_getCellData($cells, 0)))
+                {
+                    break;
+                }
+
+                if ($this->_getCellData($cells, $this->numericalOrderIndex) == 'STT')
+                {
+                    foreach ($cells as $i => $cell)
                     {
                         switch (true)
                         {
-                            case $column == 'Mã học phần':
+                            case $cell->getValue() == 'Mã học phần':
                                 $this->moduleIdIndex = $i;
                                 break;
 
-                            case $column == 'Lớp học phần':
+                            case $cell->getValue() == 'Lớp học phần':
                                 $this->moduleClassNameIndex = $i;
                                 break;
 
-                            case $column == 'Hình thức thi':
+                            case $cell->getValue() == 'Hình thức thi':
                                 $this->methodIndex = $i;
                                 break;
 
-                            case $column == 'Ngày thi':
+                            case $cell->getValue() == 'Ngày thi':
                                 $this->dateIndex = $i;
                                 break;
 
-                            case GFString::removeExtraSpace($column) == 'Ca thi (Giờ thi)':
+                            case GFString::removeExtraSpace($cell->getValue()) ==
+                                 'Ca thi (Giờ thi)':
                                 $this->timeIndex = $i;
                                 break;
 
-                            case $column == 'Số SV':
+                            case $cell->getValue() == 'Số SV':
                                 $this->numberOfStudentsIndex = $i;
                                 break;
 
-                            case GFString::removeExtraSpace(GFString::removeAllEndOfLine($column)) ==
+                            case GFString::removeExtraSpace(GFString::removeAllEndOfLine($cell->getValue())) ==
                                  'Số phòng':
                                 $this->numberOfRoomsIndex = $i;
                                 break;
 
-                            case $column == 'Tên phòng':
+                            case $cell->getValue() == 'Tên phòng':
                                 $this->roomIndex = $i;
                                 break;
                         }
@@ -79,23 +98,24 @@ class ExcelExamScheduleService extends AExcelService
 
                 if ($isStart)
                 {
-                    if (is_null($row[$this->numericalOrderIndex]))
-                    {
-                        break;
-                    }
+                    $rooms         = $this->_getCellData($cells, $this->roomIndex);
+                    $numberOfRooms = $this->_getCellData($cells, $this->numberOfRoomsIndex);
+                    $idRooms       = $this->_getIdRooms($rooms, $numberOfRooms);
 
-                    $idRooms       = $this->_getIdRooms($row[$this->roomIndex] ?? '',
-                                                        $row[$this->numberOfRoomsIndex]);
-                    $idModuleClass = $this->_getIdModuleClass($row[$this->moduleIdIndex],
-                                                              $row[$this->moduleClassNameIndex]);
+                    $idModule        = $this->_getCellData($cells, $this->moduleIdIndex);
+                    $moduleClassName = $this->_getCellData($cells, $this->moduleClassNameIndex);
+                    $idModuleClass   = $this->_getIdModuleClass($idModule, $moduleClassName);
 
                     foreach ($idRooms as $idRoom)
                     {
-                        $this->_createExamSchedules($examSchedules, $idModuleClass,
-                                                    $row[$this->methodIndex],
-                                                    $row[$this->dateIndex],
-                                                    $row[$this->timeIndex],
-                                                    $row[$this->numberOfStudentsIndex], $idRoom);
+                        $method = $this->_getCellData($cells, $this->methodIndex);
+                        $date   = $this->_getCellData($cells, $this->dateIndex);
+                        $time   = $this->_getCellData($cells, $this->timeIndex);;
+                        $numberOfStudents = $this->_getCellData($cells,
+                                                                $this->numberOfStudentsIndex);
+
+                        $this->_createExamSchedules($examSchedules, $idModuleClass, $method, $date,
+                                                    $time, $numberOfStudents, $idRoom);
                     }
                 }
             }
@@ -108,7 +128,7 @@ class ExcelExamScheduleService extends AExcelService
 
     private function _getIdModuleClass (string $idModule, string $moduleClassName) : string
     {
-        return GFunction::convertToIDModuleClass($idModule, $moduleClassName);
+        return $this->_convertToIDModuleClass($idModule, $moduleClassName);
     }
 
     private function _getIdRooms (string $room, string $numberOfRooms)
@@ -153,14 +173,7 @@ class ExcelExamScheduleService extends AExcelService
     private function _createDateTime ($date, $time) : array
     {
         preg_replace('/\s+/', ' ', $time);
-        if (is_numeric($date))
-        {
-            $date = GFunction::excelValueToDate($date);
-        }
-        else
-        {
-            $date = GFunction::formatDate($date);
-        }
+        $date = explode(' ', $date)[0];
 
         $arr       = explode('-', $time);
         $timeStart = $date . ' ' . substr($arr[0], strlen($arr[0]) - 5) . ':00.000';

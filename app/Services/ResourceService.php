@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\BusinessClasses\FileUploadHandler;
 use App\Exceptions\ImportDataFailedException;
 use App\Helpers\GFunction;
 use App\Services\Contracts\ExcelServiceContract;
@@ -29,6 +30,7 @@ class ResourceService implements Contracts\ResourceServiceContract
     private ExamScheduleRepositoryContract $examScheduleRepository;
     private CurriculumRepositoryContract $curriculumRepository;
     private StudySessionRepositoryContract $studySessionRepository;
+    private FileUploadHandler $fileUploadHandler;
     private ExcelServiceContract $excelService;
 
     /**
@@ -40,6 +42,7 @@ class ResourceService implements Contracts\ResourceServiceContract
      * @param ExamScheduleRepositoryContract $examScheduleRepository
      * @param CurriculumRepositoryContract   $curriculumRepository
      * @param StudySessionRepositoryContract $studySessionRepository
+     * @param FileUploadHandler              $fileUploadHandler
      */
     public function __construct (ModuleClassRepositoryContract  $moduleClassRepository,
                                  StudentRepositoryContract      $studentRepository,
@@ -48,7 +51,8 @@ class ResourceService implements Contracts\ResourceServiceContract
                                  ScheduleRepositoryContract     $scheduleRepository,
                                  ExamScheduleRepositoryContract $examScheduleRepository,
                                  CurriculumRepositoryContract   $curriculumRepository,
-                                 StudySessionRepositoryContract $studySessionRepository)
+                                 StudySessionRepositoryContract $studySessionRepository,
+                                 FileUploadHandler              $fileUploadHandler)
     {
         $this->moduleClassRepository  = $moduleClassRepository;
         $this->studentRepository      = $studentRepository;
@@ -58,6 +62,7 @@ class ResourceService implements Contracts\ResourceServiceContract
         $this->examScheduleRepository = $examScheduleRepository;
         $this->curriculumRepository   = $curriculumRepository;
         $this->studySessionRepository = $studySessionRepository;
+        $this->fileUploadHandler = $fileUploadHandler;
     }
 
     /**
@@ -72,6 +77,14 @@ class ResourceService implements Contracts\ResourceServiceContract
         $data                = $this->_handleData($data, $input['id_training_type'],
                                                   $id_students_missing);
         $this->_createAndUpdateData2($data, $id_students_missing);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function __handleFileUpload ($file)
+    {
+        $this->fileUploadHandler->handleFileUpload($file);
     }
 
     /**
@@ -267,7 +280,8 @@ class ResourceService implements Contracts\ResourceServiceContract
     public function importExamScheduleFile ($input)
     {
         $this->excelService = app()->make('excel_exam_schedule');
-        $data = $this->excelService->readData();
+        $this->__handleFileUpload($input['file']);
+        $data = $this->excelService->readData($this->fileUploadHandler->getFilePath());
         $this->_createAndUpdateData3($data);
     }
 

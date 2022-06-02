@@ -25,6 +25,10 @@ class FileUploadHandler
         return $this->old_file_name;
     }
 
+    public function getFilePath () : string
+    {
+        return storage_path('app/public/excels/' . $this->new_file_name);
+    }
     /**
      * @throws Exception
      */
@@ -47,7 +51,7 @@ class FileUploadHandler
         }
         else
         {
-            throw new Exception();
+            throw new Exception('File handler exception');
         }
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Helpers;
 
-use DateTime;
-use Carbon\Carbon;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -73,15 +71,6 @@ class GFunction
         return $formatted_array;
     }
 
-    public static function convertToIDModuleClass ($id_module, $module_class_name) : string
-    {
-
-        $arr        = explode('-', $module_class_name);
-        $arr_length = count($arr);
-        return $id_module . '-' . $arr[$arr_length - 3] . '-' . $arr[$arr_length - 2] . '-' .
-               $arr[$arr_length - 1];
-    }
-
     /*
      * dd/MM-dd/MM/yy to dd/MM/YY
      * @example: 01/02-01/03/22 => 01/02/2022
@@ -107,13 +96,4 @@ class GFunction
     {
         return DB::raw('UuidFromBin(' . $column_name . ') as ' . $column_name);
     }
-
-    /*
-     *
-     */
-
-
-    /*
-     *
-     */
 }
