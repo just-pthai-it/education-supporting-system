@@ -18,7 +18,7 @@ class CreateTeachersTable extends Migration
             $table->collation = 'utf8mb4_unicode_ci';
             $table->string('id', 50)->primary();
             $table->string('name', 100);
-            $table->boolean('is_female');
+            $table->boolean('is_female')->default(0);
             $table->dateTime('birth')->nullable();
             $table->string('university_teacher_degree', 200)->nullable();
             $table->boolean('is_head_of_department');
