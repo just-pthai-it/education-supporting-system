@@ -21,7 +21,7 @@ class CreateSchedulesTable extends Migration
             $table->date('date');
             $table->string('shift', 50);
             $table->string('id_room', 50);
-            $table->string('note', 1000);
+            $table->string('note', 1000)->default('');
             $table->dateTime('deleted_at')->nullable();
         });
     }
