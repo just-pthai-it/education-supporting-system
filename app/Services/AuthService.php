@@ -3,10 +3,13 @@
 namespace App\Services;
 
 use App\Models\Teacher;
-use App\Http\Resources\UserData;
+use App\Models\Student;
+use App\Models\OtherDepartment;
+use App\Http\Resources\UserResource;
 use App\Exceptions\CustomAuthenticationException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\Contracts\RoleRepositoryContract;
+use App\Repositories\Contracts\StudentRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\TeacherRepositoryContract;
 
@@ -14,20 +17,24 @@ class AuthService implements Contracts\AuthServiceContract
 {
     private OtherDepartmentRepositoryContract $otherDepartmentDepository;
     private TeacherRepositoryContract $teacherDepository;
+    private StudentRepositoryContract $studentRepository;
     private RoleRepositoryContract $roleRepository;
 
     /**
      * @param OtherDepartmentRepositoryContract $otherDepartmentDepository
      * @param TeacherRepositoryContract         $teacherDepository
      * @param RoleRepositoryContract            $roleRepository
+     * @param StudentRepositoryContract         $studentRepository
      */
     public function __construct (OtherDepartmentRepositoryContract $otherDepartmentDepository,
                                  TeacherRepositoryContract         $teacherDepository,
-                                 RoleRepositoryContract            $roleRepository)
+                                 RoleRepositoryContract            $roleRepository,
+                                 StudentRepositoryContract         $studentRepository)
     {
         $this->otherDepartmentDepository = $otherDepartmentDepository;
         $this->teacherDepository         = $teacherDepository;
         $this->roleRepository            = $roleRepository;
+        $this->studentRepository         = $studentRepository;
     }
 
     /**
@@ -43,7 +50,7 @@ class AuthService implements Contracts\AuthServiceContract
             throw new CustomAuthenticationException($messages, 404);
         }
 
-        return response(['data' => new UserData($userInfo)])
+        return response(['data' => new UserResource($userInfo)])
             ->header('Authorization', "Bearer {$accessToken}");
     }
 
@@ -78,15 +85,20 @@ class AuthService implements Contracts\AuthServiceContract
         $accountableType = auth()->user()->accountable_type;
         switch ($accountableType)
         {
-            case 'App\Models\OtherDepartment':
-                $conditions = [['id', '=', $accountableId]];;
-                $data = $this->otherDepartmentDepository->find(['*'], $conditions);
+            case OtherDepartment::class:
+                $conditions = [['id', '=', $accountableId]];
+                $data       = $this->otherDepartmentDepository->find(['*'], $conditions);
                 break;
 
             case Teacher::class:
                 $conditions = [['id', '=', $accountableId]];;
                 $scopes = [['with', 'department:id,name,id_faculty', 'department.faculty:id,name']];
                 $data   = $this->teacherDepository->find(['*'], $conditions, [], [], $scopes);
+                break;
+
+            case Student::class:
+                $conditions = [['id', '=', $accountableId]];
+                $data       = $this->studentRepository->find(['*'], $conditions);
                 break;
 
             default:

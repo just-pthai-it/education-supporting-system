@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\UserData;
+use App\Http\Resources\UserResource;
 use App\Http\Requests\LoginRequest;
 use App\Services\Contracts\AuthServiceContract;
 

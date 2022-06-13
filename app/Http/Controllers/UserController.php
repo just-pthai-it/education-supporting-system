@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserData;
+use App\Http\Resources\UserResource;
 use App\Services\Contracts\AuthServiceContract;
 
 class UserController extends Controller
@@ -17,9 +17,9 @@ class UserController extends Controller
         $this->authService = $authService;
     }
 
-    public function getUserInfo () : UserData
+    public function getUserInfo () : UserResource
     {
         $data = $this->authService->getUserInfo();
-        return new UserData($data);
+        return new UserResource($data);
     }
 }
