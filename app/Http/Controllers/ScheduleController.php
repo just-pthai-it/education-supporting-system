@@ -27,11 +27,15 @@ class ScheduleController extends Controller
                                                               $request->all());
     }
 
-    public function readManyByIdTeacher (Request $request,
-                                         string  $idTeacher) : AnonymousResourceCollection
+    public function readManyByIdTeacher (Request $request, string $idTeacher)
     {
         Gate::authorize('get-teacher-schedule');
         return $this->scheduleService->readManyByIdTeacher($idTeacher, $request->all());
+    }
+
+    public function readManyByIdStudent (Request $request, string $idStudent)
+    {
+        return $this->scheduleService->readManyByIdStudent($idStudent, $request->all());
     }
 
     public function update (Request $request, string $idSchedule)

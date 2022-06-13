@@ -71,6 +71,14 @@ class ScheduleService implements Contracts\ScheduleServiceContract
         }
     }
 
+    public function readManyByIdStudent (string $idStudent,
+                                         array  $inputs) : AnonymousResourceCollection
+    {
+        $this->_formatInputs($inputs);
+        $schedules = $this->scheduleDepository->findAllByIdStudent($idStudent, $inputs);
+        return ScheduleResource::collection($schedules);
+    }
+
     private function _readIdStudySessionByName (string $studySession)
     {
         return $this->studySessionRepository->pluck(['id'], [['name', '=', $studySession]])

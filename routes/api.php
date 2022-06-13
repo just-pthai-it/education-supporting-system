@@ -212,6 +212,24 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
         });
     });
 
+    Route::group(['prefix' => 'students'], function ()
+    {
+        Route::group(['prefix' => '{id_student}'], function ()
+        {
+//            Route::get('', [TeacherController::class, 'read']);
+
+            Route::get('module-classes/schedules',
+                       [ScheduleController::class, 'readManyByIdStudent']);
+
+            Route::get('module-classes/exam-schedules',
+                       [ExamScheduleController::class, 'readManyByIdTeacher']);
+
+        });
+
+        Route::get('', [TeacherController::class, 'readMany']);
+    });
+
+
 
     Route::group(['prefix' => 'teachers'], function ()
     {

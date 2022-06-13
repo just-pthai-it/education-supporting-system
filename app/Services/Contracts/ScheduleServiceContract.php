@@ -8,5 +8,7 @@ interface ScheduleServiceContract
 
     public function readManyByIdTeacher (string $idTeacher, array $inputs);
 
+    public function readManyByIdStudent (string $idStudent, array $inputs);
+
     public function update (string $idSchedule, array $scheduleArr);
 }

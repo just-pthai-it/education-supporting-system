@@ -62,25 +62,45 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
     public function findAllByIdDepartment (string $idDepartment, array $inputs)
     {
         $this->createModel();
-        return $this->model->whereHas('moduleClass', function (Builder $query) use ($idDepartment)
-        {
-            $query->whereHas('module', function (Builder $query) use ($idDepartment)
+        return $this->model->whereHas('moduleClass',
+            function (Builder $query) use ($idDepartment, $inputs)
             {
-                $query->where('id_department', '=', $idDepartment);
+                if (isset($inputs['id_study_session']))
+                {
+                    $query->where('id_study_session', '=',
+                                  $inputs['id_study_session']);
+                }
+
+                $query->whereHas('module', function (Builder $query) use ($idDepartment)
+                {
+                    $query->where('id_department', '=', $idDepartment);
+                });
+            })->filter($inputs)->with(['moduleClass:id,name,id_teacher',
+                                       'moduleClass.teacher:id,name',
+                                       'fixedSchedules' => function ($query)
+                                       {
+                                           return $query->whereIn('status',
+                                                                  array_merge(array_values(GData::$fsStatusCode['pending']),
+                                                                              array_values(GData::$fsStatusCode['approve'])))
+                                                        ->select('id', 'id_schedule', 'created_at',
+                                                                 'old_date', 'old_shift',
+                                                                 'old_id_room', 'new_date',
+                                                                 'new_shift', 'new_id_room',
+                                                                 'intend_time', 'status');
+                                       },
+                                      ])->get();
+    }
+
+    public function findAllByIdStudent (string $idStudent, array $inputs)
+    {
+        $this->createModel();
+        return $this->model->whereHas('moduleClass', function (Builder $query) use ($idStudent)
+        {
+            $query->whereHas('students', function (Builder $query) use ($idStudent)
+            {
+                $query->where('id_student', '=', $idStudent);
             });
         })->filter($inputs)->with(['moduleClass:id,name,id_teacher',
-                                   'moduleClass.teacher:id,name',
-                                   'fixedSchedules' => function ($query)
-                                   {
-                                       return $query->whereIn('status',
-                                                              array_merge(array_values(GData::$fsStatusCode['pending']),
-                                                                          array_values(GData::$fsStatusCode['approve'])))
-                                                    ->select('id', 'id_schedule', 'created_at',
-                                                             'old_date', 'old_shift',
-                                                             'old_id_room', 'new_date',
-                                                             'new_shift', 'new_id_room',
-                                                             'intend_time', 'status');
-                                   },
-                                  ])->get();
+                                   'moduleClass.teacher:id,name'])->get();
     }
 }
