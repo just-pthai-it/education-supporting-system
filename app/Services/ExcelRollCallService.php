@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\GData;
+use App\Helpers\GFDateTime;
 use App\Services\Abstracts\AExcelService;
 use Box\Spout\Common\Exception\IOException;
 use Box\Spout\Common\Exception\UnsupportedTypeException;
@@ -165,7 +166,7 @@ class ExcelRollCallService extends AExcelService
             'id'       => $idStudent,
             'name'     => $fullName,
             'id_class' => $idClass,
-            'birth'    => date('Y-m-d', strtotime($birth)),
+            'birth'    => GFDateTime::convertDateTime($birth, 'd/m/Y', 'Y-m-d'),
         ];
 
         $students[]     = $student;

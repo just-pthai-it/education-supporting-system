@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use DateTime;
+
 class GFDateTime
 {
     public static function calculateDateTime (string $dateTime, string $value, string $format)
@@ -9,8 +11,8 @@ class GFDateTime
         return date($format, strtotime("{$dateTime}{$value}"));
     }
 
-    public static function convertDateFrom_dmy_To_Ymd (string $date)
+    public static function convertDateTime (string $date, string $from, string $to) : string
     {
-        return date('Y-m-d', strtotime(date('d-m-y', strtotime($date))));
+        return DateTime::createFromFormat($from, $date)->format($to);
     }
 }
