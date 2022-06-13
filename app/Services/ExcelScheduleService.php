@@ -3,219 +3,271 @@
 namespace App\Services;
 
 use Exception;
-use App\Helpers\GFunction;
+use App\Helpers\GData;
+use App\Helpers\GFDateTime;
 use App\Services\Abstracts\AExcelService;
-use App\Imports\ExamScheduleExcelFileImport;
 
 class ExcelScheduleService extends AExcelService
 {
     private int $idStudySession;
+    private int $numericalOrderIndex = 1;
+    private int $idModuleIndex = -1;
+    private int $moduleClassNameIndex = -1;
+    private int $numberOfStudentsIndex = -1;
+    private int $numberOfStudentsRealityIndex = -1;
+    private int $classTypeIndex = -1;
+    private int $dateIndex = -1;
+    private int $numberOfWeeks = -1;
+    private array $periods = [];
+    private array $roomsIndex = [];
+    private int $academicYearIndex = -1;
+
+    private const WORK_DAYS_IN_WEEK = 6;
 
     /**
+     * @param string $filePath *
+     *
      * @throws Exception
      */
-    public function readData (...$parameters) : array
+    public function readData (string $filePath, array $parameters = []) : array
     {
-        $this->idStudySession = intval($parameters[0]);
-        $raw_data = $this->_getData();
-        return $this->_formatData($raw_data);
-    }
+        $this->idStudySession = $parameters['id_study_session'];
 
-    protected function _getData () : array
-    {
-        return (new ExamScheduleExcelFileImport())->toArray(request()->file);
-    }
+        $reader = $this->_getReader($filePath);
 
-    /**
-     * @throws Exception
-     */
-    protected function _formatData ($rawData) : array
-    {
-        $schedules              = [];
-        $id_modules             = [];
-        $module_classes         = [];
-        $Special_module_classes = [];
+        $schedules     = [];
+        $moduleClasses = [];
 
-        foreach ($rawData as $sheet)
+        foreach ($reader->getSheetIterator() as $sheet)
         {
-            $is_start = false;
+            $this->__resetIndex();
+            $idModule                = '';
+            $moduleClassName         = '';
+            $numberOfStudents        = '';
+            $numberOfStudentsReality = '';
+            $classType               = '';
+            $dateRange               = '';
+            $numberOfWeeks           = '';
 
-            $current_id_module         = '';
-            $current_module_class_name = '';
-            $current_credit            = '';
-            $max_attempt               = '';
-            $real_attempt              = '';
-            $current_class_type        = '';
-            $current_date              = '';
-            $times                     = '';
-
-            $day_index   = [];
-            $other_index = [];
-
-            foreach ($sheet as $row)
+            $isStart = false;
+            foreach ($sheet->getRowIterator() as $row)
             {
-                if ($row[1] == 'STT')
+                $cells = $row->getCells();
+                if (empty($cells))
                 {
-                    for ($i = 3; ; $i++)
+                    if ($isStart)
                     {
-                        if ($row[$i] == 'Thời gian')
-                        {
-                            $other_index['date']    = $i;
-                            $other_index['faculty'] = $i + 17;
-                        }
-
-                        if ($row[$i] == 'Thứ 2')
-                        {
-                            $day_index['monday']    = $i;
-                            $day_index['tuesday']   = $i += 2;
-                            $day_index['wednesday'] = $i += 2;
-                            $day_index['thursday']  = $i += 2;
-                            $day_index['friday']    = $i += 2;
-                            $day_index['saturday']  = $i + 2;
-                            break;
-                        }
+                        break;
                     }
+
                     continue;
                 }
 
-                if ($row[1] == 1)
+                if ($this->_getCellData($cells, $this->numericalOrderIndex) == 'STT')
                 {
-                    $is_start = true;
-                }
-
-                if ($is_start && !is_null($row[$other_index['faculty']]))
-                {
-                    $current_id_module         = $row[2] ?? $current_id_module;
-                    $current_module_class_name = $row[4] ?? $current_module_class_name;
-                    $current_credit            = $row[2] ?? $current_credit;
-                    $max_attempt               = $row[5] ?? $max_attempt;
-                    $real_attempt              = $row[6] ?? $real_attempt;
-                    $current_class_type        = $row[7] ?? $current_class_type;
-                    $current_date              = $row[$other_index['date']] ?? $current_date;
-                    $times                     = $row[$other_index['date'] + 1] ?? $times;
-
-                    $this->_createModuleClass($module_classes, $current_id_module,
-                                              $current_module_class_name, $current_class_type,
-                                              $max_attempt, $real_attempt);
-
-                    $id_modules[] = ['id_module' => $current_id_module];
-
-                    if ($max_attempt <= 40)
+                    foreach ($cells as $i => $cell)
                     {
-                        $Special_module_classes[$current_module_class_name] = end($module_classes)['id'];
-                    }
-
-                    $j = -1;
-                    foreach ($day_index as $e)
-                    {
-                        $j++;
-                        if (!is_null($row[$e]) &&
-                            !is_null($row[$e + 1]))
+                        if ($cell->getValue() == 'Mã học phần')
                         {
-                            $period  = $row[$e] ?? '';
-                            $id_room = $row[$e + 1] ?? '';
-                            $period  = preg_replace('/[ ]+/', '', $period);
-                            $id_room = preg_replace('/[ ]+/', '', $id_room);
+                            $this->idModuleIndex = $i;
+                            continue;
+                        }
 
-                            if ($period == '' || $id_room == '')
+                        if ($cell->getValue() == 'Lớp môn tín chỉ')
+                        {
+                            $this->moduleClassNameIndex = $i;
+                            continue;
+                        }
+
+                        if ($cell->getValue() == 'Số SV DK')
+                        {
+                            $this->numberOfStudentsIndex = $i;
+                            continue;
+                        }
+
+                        if ($cell->getValue() == 'Số SV ĐK')
+                        {
+                            $this->numberOfStudentsRealityIndex = $i;
+                            continue;
+                        }
+
+                        if ($cell->getValue() == 'Kiểu học')
+                        {
+                            $this->classTypeIndex = $i;
+                            continue;
+                        }
+                        if ($cell->getValue() == 'Thời gian')
+                        {
+                            $this->dateIndex = $i;
+                            continue;
+                        }
+
+                        if ($cell->getValue() == 'Số tuần')
+                        {
+                            $this->numberOfWeeks = $i;
+                            continue;
+                        }
+
+                        if ($cell->getValue() == 'Thứ 2')
+                        {
+                            for ($j = 0; $j < self::WORK_DAYS_IN_WEEK; $j++)
                             {
-                                break;
+                                $this->periods[]    = $i + ($j * 2);
+                                $this->roomsIndex[] = $i + ($j * 2) + 1;
                             }
+                            continue;
+                        }
 
-                            $this->_createSchedule($schedules, end($module_classes)['id'],
-                                                   $current_date, $period, $id_room, $times, $j);
+                        if ($cell->getValue() == 'Khóa')
+                        {
+                            $this->academicYearIndex = $i;
                             break;
                         }
                     }
+
+                    continue;
                 }
-                else if ($is_start && is_null($row[$other_index['faculty']]))
+
+                if ($isStart)
                 {
-                    break;
+                    $this->__passStringValueIfNotEmpty($idModule,
+                                                       $this->_getCellData($cells,
+                                                                           $this->idModuleIndex));
+
+                    $this->__passStringValueIfNotEmpty($moduleClassName,
+                                                       $this->_getCellData($cells,
+                                                                           $this->moduleClassNameIndex));
+
+                    $this->__passStringValueIfNotEmpty($numberOfStudents,
+                                                       $this->_getCellData($cells,
+                                                                           $this->numberOfStudentsIndex));
+
+                    $this->__passStringValueIfNotEmpty($numberOfStudentsReality,
+                                                       $this->_getCellData($cells,
+                                                                           $this->numberOfStudentsRealityIndex));
+
+                    $this->__passStringValueIfNotEmpty($classType,
+                                                       $this->_getCellData($cells,
+                                                                           $this->classTypeIndex));
+
+                    $this->__passStringValueIfNotEmpty($dateRange,
+                                                       $this->_getCellData($cells,
+                                                                           $this->dateIndex));
+
+                    $this->__passStringValueIfNotEmpty($numberOfWeeks,
+                                                       $this->_getCellData($cells,
+                                                                           $this->numberOfWeeks));
+
+                    $this->__createModuleClass($moduleClasses, $idModule, $moduleClassName,
+                                               $classType, $numberOfStudents,
+                                               $numberOfStudentsReality);
+
+                    for ($i = 0; $i < count($this->periods); $i++)
+                    {
+                        if (!empty($this->_getCellData($cells, $this->periods[$i])) ||
+                            !empty($this->_getCellData($cells, $this->periods[$i])))
+                        {
+                            $period = $this->_getCellData($cells, $this->periods[$i]);
+                            $idRoom = $this->_getCellData($cells, $this->roomsIndex[$i]);
+                            $this->__createSchedules($schedules, $idModule, $moduleClassName,
+                                                     $dateRange, $period, $idRoom, $numberOfWeeks,
+                                                     $i);
+                        }
+                    }
+
+                    if (empty($this->_getCellData($cells, $this->academicYearIndex)))
+                    {
+                        break;
+                    }
+                }
+
+
+                if ($this->idModuleIndex != -1 && !$isStart)
+                {
+                    $isStart = true;
                 }
             }
         }
 
         return [
-            'schedules'              => $schedules,
-            'id_modules'             => array_unique($id_modules, SORT_REGULAR),
-            'module_classes'         => $module_classes,
-            'special_module_classes' => array_merge($Special_module_classes,
-                                                    ['id_study_session' => $this->idStudySession])
+            'schedules'      => $schedules,
+            'module_classes' => $moduleClasses,
         ];
     }
 
-
-    private function _createModuleClass (&$module_classes, $id_module, $module_class_name,
-                                         $type, $max_attempt, $real_attempt)
+    private function __resetIndex ()
     {
-        $id_module_class = GFunction::convertToIDModuleClass($id_module, $module_class_name);
-
-        $module_classes[$id_module_class] = [
-            'id'               => $id_module_class,
-            'name'             => $module_class_name,
-            'number_plan'      => $max_attempt,
-            'number_reality'   => $real_attempt,
-            'type'             => $type == 'BT' ? 2 : ($type ==
-                                                       'TH' ? 3 : ($type ==
-                                                                   'DA' ? 4 : 1)),
-            'id_study_session' => $this->idStudySession,
-            'is_international' => strpos($id_module_class, '(QT') === false ? 0 : 1,
-            'id_module'        => $id_module,
-        ];
+        $this->idModuleIndex                = -1;
+        $this->moduleClassNameIndex         = -1;
+        $this->numberOfStudentsIndex        = -1;
+        $this->numberOfStudentsRealityIndex = -1;
+        $this->classTypeIndex               = -1;
+        $this->dateIndex                    = -1;
+        $this->numberOfWeeks                = -1;
+        $this->periods                      = [];
+        $this->roomsIndex                   = [];
+        $this->academicYearIndex            = -1;
     }
 
-    /**
-     * @throws Exception
-     */
-    private function _createSchedule (&$schedules, $id_module_class, $date, $period, $id_room,
-                                      $times, $day)
+    private function __passStringValueIfNotEmpty (&$string, $value)
     {
-        $exact_date = $this->_getExactDate($date, $day);
-        $shift      = $this->_getShift($period);
-
-        for ($i = 0; $i < $times; $i++)
+        if (empty($value))
         {
+            return;
+        }
+
+        $string = $value;
+    }
+
+    private function __createModuleClass (array  &$moduleClasses, string $idModule,
+                                          string $moduleClassName, string $classType,
+                                          string $numberOfStudents, string $numberOfStudentsReality)
+    {
+        $idModuleClass = $this->_convertToIdModuleClass($idModule, $moduleClassName);
+
+        $moduleClasses[$idModuleClass] = [
+            'id'               => $idModuleClass,
+            'name'             => $moduleClassName,
+            'number_plan'      => $numberOfStudents,
+            'number_reality'   => $numberOfStudentsReality,
+            'type'             => GData::$classType[$classType],
+            'id_study_session' => $this->idStudySession,
+            'is_international' => strpos($idModuleClass, '(QT') === false ? 0 : 1,
+            'id_module'        => $idModule,
+        ];
+    }
+
+    private function __createSchedules (array  &$schedules, string $idModule,
+                                        string $moduleClassName, string $dateRange, string $period,
+                                        string $idRoom, string $numberOfWeeks,
+                                        string $dayIndexOfWeek)
+    {
+        $idModuleClass       = $this->_convertToIdModuleClass($idModule, $moduleClassName);
+        $firstDateOfSchedule = $this->__getFirstDateOfSchedule($dateRange, $dayIndexOfWeek);;
+        $shift = $this->__getShiftByPeriod($period);
+
+        for ($i = 0; $i < $numberOfWeeks; $i++)
+        {
+            $step = $i * 7;;
+            $date = GFDateTime::calculateDateTime($firstDateOfSchedule, "+{$step}", 'Y-m-d');;
             $schedules[] = [
-                'id_module_class' => $id_module_class,
-                'date'            => GFunction::plusDate($exact_date, 7 * $i),
+                'id_module_class' => $idModuleClass,
+                'date'            => $date,
                 'shift'           => $shift,
-                'id_room'         => $id_room,
+                'id_room'         => $idRoom,
             ];
         }
     }
 
-    private function _getExactDate ($date, $day)
+    private function __getShiftByPeriod (string $period)
     {
-        $date = GFunction::convertToDate($date);
-        return GFunction::plusDate($date, $day);
+        $period = preg_replace('/[ ]+/', '', $period);
+        return GData::$shift[$period];
     }
 
-    /**
-     * @throws Exception
-     */
-    private function _getShift ($period) : string
+    private function __getFirstDateOfSchedule (string $dateRange, string $dayIndexOfWeek)
     {
-        switch ($period)
-        {
-            case '1,2,3':
-                return '1';
-            case '4,5,6':
-                return '2';
-            case '7,8,9':
-                return '3';
-            case '10,11,12':
-                return '4';
-            case '13,14,15':
-                return '5_1';
-            case '13,14,15,16':
-                return '5_2';
-            default:
-                throw new Exception();
-        }
-    }
-
-    public function setParameters (...$parameters)
-    {
-        $this->idStudySession = $parameters[0];
+        $date = GFDateTime::convertDateFrom_dmy_To_Ymd(explode('-', $dateRange)[0]);
+        return GFDateTime::calculateDateTime($date, "+{$dayIndexOfWeek}", 'Y-m-d');
     }
 }

@@ -5,6 +5,22 @@ namespace App\Helpers;
 class GData
 {
 
+    public static array $classType = [
+        'LT' => 1,
+        'BT' => 2,
+        'TH' => 3,
+        'DA' => 4,
+    ];
+
+    public static array $shift = [
+        '1,2,3'      => '1',
+        '4,5,6'      => '2',
+        '7,8,9'      => '3',
+        '10,11,12'   => '4',
+        '13,14,15'   => '5_1',
+        '13,14,15,16' => '5_2',
+    ];
+
     /**
      * Contains all fixed schedule status code
      * @var array

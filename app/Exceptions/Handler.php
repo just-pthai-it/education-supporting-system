@@ -51,6 +51,16 @@ class Handler extends ExceptionHandler
         {
             return false;
         });
+
+        $this->renderable(function (DatabaseConflictException $e)
+        {
+            return response(['messages' => json_decode($e->getMessage())], $e->getCode());
+        });
+
+        $this->reportable(function (DatabaseConflictException $e)
+        {
+            return false;
+        });
     }
 
     public function report (Throwable $e)

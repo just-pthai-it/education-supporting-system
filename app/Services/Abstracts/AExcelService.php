@@ -12,7 +12,7 @@ use Box\Spout\Common\Exception\UnsupportedTypeException;
 class AExcelService implements ExcelServiceContract
 {
 
-    public function readData (string $filePath, ...$parameters) : array
+    public function readData (string $filePath, array $parameters = []) : array
     {
         return [];
     }
@@ -55,7 +55,7 @@ class AExcelService implements ExcelServiceContract
         return '';
     }
 
-    protected function _convertToIDModuleClass ($idModule, $moduleClassName) : string
+    protected function _convertToIdModuleClass (string $idModule, string $moduleClassName) : string
     {
         $array       = explode('-', $moduleClassName);
         $arrayLength = count($array);

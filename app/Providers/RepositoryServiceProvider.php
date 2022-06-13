@@ -15,6 +15,7 @@ use App\Repositories\ExamScheduleRepository;
 use App\Repositories\TrainingTypeRepository;
 use App\Repositories\FixedScheduleRepository;
 use App\Repositories\DataVersionTeacherRepository;
+use App\Repositories\DataVersionStudentRepository;
 use App\Repositories\FcmRegistrationTokenRepository;
 use App\Repositories\Contracts\TagRepositoryContract;
 use App\Repositories\Contracts\RoomRepositoryContract;
@@ -52,6 +53,7 @@ use App\Repositories\StudySessionRepository;
 use App\Repositories\TeacherRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Contracts\DataversionteacherRepositoryContract;
+use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
 use App\Repositories\Contracts\FcmRegistrationtokenRepositoryContract;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -60,20 +62,20 @@ class RepositoryServiceProvider extends ServiceProvider
      * @var array|string[]
      */
     public array $bindings = [
-        OtherDepartmentRepositoryContract::class => OtherDepartmentRepository::class,
-        FixedScheduleRepositoryContract::class   => FixedScheduleRepository::class,
-        NotificationRepositoryContract::class    => NotificationRepository::class,
-        AcademicYearRepositoryContract::class    => AcademicYearRepository::class,
-        ExamScheduleRepositoryContract::class    => ExamScheduleRepository::class,
-        StudySessionRepositoryContract::class    => StudySessionRepository::class,
-        ModuleClassRepositoryContract::class     => ModuleClassRepository::class,
-        CurriculumRepositoryContract::class      => CurriculumRepository::class,
-        DepartmentRepositoryContract::class      => DepartmentRepository::class,
-        PermissionRepositoryContract::class      => PermissionRepository::class,
-        ScheduleRepositoryContract::class        => ScheduleRepository::class,
-        FeedbackRepositoryContract::class        => FeedbackRepository::class,
-        TeacherRepositoryContract::class         => TeacherRepository::class,
-        StudentRepositoryContract::class         => StudentRepository::class,
+        OtherDepartmentRepositoryContract::class      => OtherDepartmentRepository::class,
+        FixedScheduleRepositoryContract::class        => FixedScheduleRepository::class,
+        NotificationRepositoryContract::class         => NotificationRepository::class,
+        AcademicYearRepositoryContract::class         => AcademicYearRepository::class,
+        ExamScheduleRepositoryContract::class         => ExamScheduleRepository::class,
+        StudySessionRepositoryContract::class         => StudySessionRepository::class,
+        ModuleClassRepositoryContract::class          => ModuleClassRepository::class,
+        CurriculumRepositoryContract::class           => CurriculumRepository::class,
+        DepartmentRepositoryContract::class           => DepartmentRepository::class,
+        PermissionRepositoryContract::class           => PermissionRepository::class,
+        ScheduleRepositoryContract::class             => ScheduleRepository::class,
+        FeedbackRepositoryContract::class             => FeedbackRepository::class,
+        TeacherRepositoryContract::class              => TeacherRepository::class,
+        StudentRepositoryContract::class              => StudentRepository::class,
         AccountRepositoryContract::class              => AccountRepository::class,
         FacultyRepositoryContract::class              => FacultyRepository::class,
         ModuleRepositoryContract::class               => ModuleRepository::class,
@@ -85,6 +87,7 @@ class RepositoryServiceProvider extends ServiceProvider
         TrainingTypeRepositoryContract::class         => TrainingTypeRepository::class,
         DataversionTeacherRepositoryContract::class   => DataVersionTeacherRepository::class,
         FcmRegistrationtokenRepositoryContract::class => FcmRegistrationTokenRepository::class,
+        DataVersionStudentRepositoryContract::class   => DataVersionStudentRepository::class,
 
     ];
 

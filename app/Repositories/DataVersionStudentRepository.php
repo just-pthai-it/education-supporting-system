@@ -11,7 +11,4 @@ class DataVersionStudentRepository extends BaseRepository implements Contracts\D
     {
         return DataVersionStudent::class;
     }
-
-        DataVersionStudentRepositoryContract::class    => DataVersionStudentRepository::class,
-
 }

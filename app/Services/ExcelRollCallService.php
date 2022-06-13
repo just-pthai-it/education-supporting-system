@@ -3,153 +3,180 @@
 namespace App\Services;
 
 use App\Helpers\GData;
-use App\Helpers\GFunction;
 use App\Services\Abstracts\AExcelService;
-use App\Imports\ExamScheduleExcelFileImport;
-use Illuminate\Support\Str;
+use Box\Spout\Common\Exception\IOException;
+use Box\Spout\Common\Exception\UnsupportedTypeException;
+use Box\Spout\Reader\Exception\ReaderNotOpenedException;
 
 class ExcelRollCallService extends AExcelService
 {
-    private $specialModuleClasses;
+    private $moduleClassesWithFewStudents;
     private $idStudentsMissing;
     private $academicYears;
     private $idTrainingType;
 
-    protected function _getData () : array
-    {
-        return (new ExamScheduleExcelFileImport())->toArray(request()->file);
-    }
+    private int $numericalOrderIndex = 0;
+    private int $classIndex = -1;
+    private int $idStudentIndex = -1;
+    private int $fullNameIndex = -1;
+    private int $birthIndex = -1;
 
-    protected function _formatData ($rawData) : array
-    {
-        $current_module_class        = '';
-        $latest_first_ordinal_number = -1;
+    private const MODULE_CLASS_ROW_INDEX = 4;
 
-        $students               = [];
-        $id_students            = [];
-        $participates           = [];
-        $temp_students          = [];
-        $id_module_classes      = [];
-        $module_classes_missing = [];
-        foreach ($rawData as $sheet)
+    /**
+     * @throws UnsupportedTypeException
+     * @throws IOException
+     * @throws ReaderNotOpenedException
+     */
+    public function readData (string $filePath, array $parameters = []) : array
+    {
+        $this->moduleClassesWithFewStudents = $parameters['module_classes_with_few_students'];
+
+        $reader = $this->_getReader($filePath);
+
+        $students           = [];
+        $tempStudents       = [];
+        $moduleClassStudent = [];
+
+        $currentIdModuleClass = '';
+        $isFirstPageOfClass   = false;
+        foreach ($reader->getSheetIterator() as $sheet)
         {
-            $is_begin = false;
-            foreach ($sheet as $row)
+            $previousIdModuleClass = $currentIdModuleClass;;
+            $isStart  = false;
+            $rowIndex = -1;
+            foreach ($sheet->getRowIterator() as $row)
             {
-                if (!is_int($row[0]) && $is_begin)
+                $cells = $row->getCells();
+                $rowIndex++;
+
+                if ($rowIndex == self::MODULE_CLASS_ROW_INDEX)
+                {
+                    $currentIdModuleClass = $this->_getCellData($cells, 0);
+                }
+
+                if (empty($cells))
+                {
+                    if ($isStart)
+                    {
+                        break;
+                    }
+
+                    continue;
+                }
+
+                if ($isStart && empty($this->_getCellData($cells, $this->numericalOrderIndex)))
                 {
                     break;
                 }
 
-                if (is_int($row[0]) && !$is_begin)
+                if ($this->_getCellData($cells, $this->numericalOrderIndex) == 'STT')
                 {
-                    if ($row[0] == 1)
+                    foreach ($cells as $i => $cell)
                     {
-                        $this->_firstPage($latest_first_ordinal_number, $current_module_class,
-                                          $temp_students, $participates, $id_module_classes,
-                                          $module_classes_missing);
+                        if ($cell->getValue() == 'Lớp')
+                        {
+                            $this->classIndex = $i;
+                            continue;
+                        }
+
+                        if ($cell->getValue() == 'Mã số SV')
+                        {
+                            $this->idStudentIndex = $i;
+                            continue;
+                        }
+
+                        if ($cell->getValue() == 'Họ và tên')
+                        {
+                            $this->fullNameIndex = $i;
+                            continue;
+                        }
+
+                        if ($cell->getValue() == 'Ngày sinh')
+                        {
+                            $this->birthIndex = $i;
+                            break;
+                        }
                     }
-
-                    $latest_first_ordinal_number = $row[0];
-                    $current_module_class        = $sheet[4][0];
-                    $is_begin                    = true;
                 }
 
-                if ($is_begin)
+                if (!$isStart &&
+                    is_numeric($this->_getCellData($cells, $this->numericalOrderIndex)))
                 {
-                    $arr['id']       = $row[2];
-                    $arr['birth']    = GFunction::formatDate($row[5]);
-                    $arr['id_class'] = $row[1];
-                    $arr['name']     = $row[3] . ' ' . $row[4];
+                    $isStart = true;
 
-                    $students[]      = $arr;
-                    $id_students[]   = ['id_student' => $arr['id']];
-                    $temp_students[] = $arr['id'];
+                    if ($this->_getCellData($cells, $this->numericalOrderIndex) == '1')
+                    {
+                        $idModuleClass = $previousIdModuleClass;
+                        if ($isFirstPageOfClass)
+                        {
+                            $idModuleClass = $this->moduleClassesWithFewStudents[$previousIdModuleClass];
+                        }
+
+                        if (!empty($tempStudents) && !empty($idModuleClass))
+                        {
+                            $this->__createModuleClassStudent($moduleClassStudent,
+                                                              $idModuleClass,
+                                                              $tempStudents);
+                        }
+
+                        $isFirstPageOfClass = true;
+                        $tempStudents       = [];
+                    }
+                    else
+                    {
+                        $isFirstPageOfClass = false;
+                    }
+                }
+
+                if ($isStart)
+                {
+                    $this->__createStudent($students, $tempStudents, $cells);
                 }
             }
         }
 
-        $this->_firstPage($latest_first_ordinal_number, $current_module_class,
-                          $temp_students, $participates, $id_module_classes,
-                          $module_classes_missing);
+        if ($isFirstPageOfClass)
+        {
+            $idModuleClass = $this->moduleClassesWithFewStudents[$currentIdModuleClass];
+        }
+        else
+        {
+            $idModuleClass = $currentIdModuleClass;
+        }
+
+        $this->__createModuleClassStudent($moduleClassStudent, $idModuleClass, $tempStudents);
 
         return [
-            'students'               => array_unique($students, SORT_REGULAR),
-            'id_students'            => array_unique($id_students, SORT_REGULAR),
-            'participates'           => $participates,
-            'id_module_classes'      => $id_module_classes,
-            'module_classes_missing' => $module_classes_missing,
+            'students'             => $students,
+            'module_class_student' => $moduleClassStudent
         ];
     }
 
-    private function _firstPage ($latest_first_ordinal_number, $current_module_class,
-                                 &$temp_students, &$participates, &$id_module_classes,
-                                 &$module_classes_missing)
+    private function __createStudent (array &$students, array &$tempStudents, array &$cells)
     {
-        $is_valid = true;
-        if ($latest_first_ordinal_number == 1)
-        {
-            $is_valid = false;
-            if (isset($this->specialModuleClasses[$current_module_class]))
-            {
-                $current_module_class = $this->specialModuleClasses[$current_module_class];
-                $is_valid             = true;
-            }
-            else
-            {
-                $module_classes_missing[] = $current_module_class;
-            }
-        }
+        $idStudent = $this->_getCellData($cells, $this->idStudentIndex);
+        $fullName  = $this->_getCellData($cells, $this->fullNameIndex);
+        $fullName  .= " {$this->_getCellData($cells, $this->fullNameIndex+1)}";
+        $idClass   = $this->_getCellData($cells, $this->classIndex);
+        $birth     = $this->_getCellData($cells, $this->birthIndex);
 
-        if ($is_valid)
-        {
-            if ($current_module_class != '')
-            {
-                $id_module_classes[] = ['id_module_class' => $current_module_class];
-            }
-            foreach ($temp_students as $id_student)
-            {
-                $participates[$current_module_class][] = $id_student;
-            }
-        }
-
-        $temp_students = [];
-    }
-
-    public function handleData ($formattedData, ...$parameters) : array
-    {
-        $classes               = [];
-        $available_id_students = [];
-
-        foreach ($formattedData['students'] as $key => &$student)
-        {
-            if (!in_array($student['id'], $this->idStudentsMissing))
-            {
-                $available_id_students[] = $student['id'];
-                unset($formattedData['students'][$key]);
-                continue;
-            }
-
-            $class_info = $this->_getInfoOfFacultyClass($student['id_class']);
-            $classes[]  = $class_info;
-
-            $student['uuid'] = GFunction::uuidToBin(Str::orderedUuid());
-        }
-
-        return [
-            'classes'               => array_unique($classes, SORT_REGULAR),
-            'available_id_students' => $available_id_students,
-            'students'              => $formattedData['students'],
-            'participates'          => $formattedData['participates'],
+        $student = [
+            'id'       => $idStudent,
+            'name'     => $fullName,
+            'id_class' => $idClass,
+            'birth'    => date('Y-m-d', strtotime($birth)),
         ];
+
+        $students[]     = $student;
+        $tempStudents[] = $idStudent;
     }
 
-    public function setParameters (...$parameters)
+
+    private function __createModuleClassStudent (array &$moduleClassStudent, string $idModuleClass,
+                                                 array $students)
     {
-        $this->specialModuleClasses = $parameters[0];
-        $this->idStudentsMissing    = $parameters[1];
-        $this->academicYears        = $parameters[2];
-        $this->idTrainingType       = $parameters[3];
+        $moduleClassStudent[$idModuleClass] = $students;
     }
 
     private function _getInfoOfFacultyClass (&$id_class)

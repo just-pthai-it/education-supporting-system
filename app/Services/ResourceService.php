@@ -2,23 +2,27 @@
 
 namespace App\Services;
 
+use Exception;
+use PDOException;
+use App\Helpers\GFArray;
+use Illuminate\Support\Facades\DB;
+use App\Models\DataVersionStudent;
+use Illuminate\Support\Facades\Cache;
 use App\BusinessClasses\FileUploadHandler;
 use App\Exceptions\ImportDataFailedException;
-use App\Helpers\GFunction;
+use App\Exceptions\DatabaseConflictException;
+use App\Jobs\CacheModuleClassesWithFewStudents;
 use App\Services\Contracts\ExcelServiceContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
+use App\Repositories\Contracts\ModuleRepositoryContract;
+use App\Repositories\Contracts\StudentRepositoryContract;
+use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\CurriculumRepositoryContract;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
-use App\Repositories\Contracts\ModuleRepositoryContract;
-use App\Repositories\Contracts\ScheduleRepositoryContract;
-use App\Repositories\Contracts\StudentRepositoryContract;
-use Exception;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use PDOException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 use App\Repositories\Contracts\StudySessionRepositoryContract;
+use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
 
 class ResourceService implements Contracts\ResourceServiceContract
 {
@@ -30,53 +34,60 @@ class ResourceService implements Contracts\ResourceServiceContract
     private ExamScheduleRepositoryContract $examScheduleRepository;
     private CurriculumRepositoryContract $curriculumRepository;
     private StudySessionRepositoryContract $studySessionRepository;
+    private DataVersionStudentRepositoryContract $dataVersionStudentRepository;
     private FileUploadHandler $fileUploadHandler;
     private ExcelServiceContract $excelService;
 
+    private const MINIMUM_NUMBER_OF_STUDENTS = 40;
+
     /**
-     * @param ModuleClassRepositoryContract  $moduleClassRepository
-     * @param StudentRepositoryContract      $studentRepository
-     * @param ModuleRepositoryContract       $moduleRepository
-     * @param ClassRepositoryContract        $classRepository
-     * @param ScheduleRepositoryContract     $scheduleRepository
-     * @param ExamScheduleRepositoryContract $examScheduleRepository
-     * @param CurriculumRepositoryContract   $curriculumRepository
-     * @param StudySessionRepositoryContract $studySessionRepository
-     * @param FileUploadHandler              $fileUploadHandler
+     * @param ModuleClassRepositoryContract        $moduleClassRepository
+     * @param StudentRepositoryContract            $studentRepository
+     * @param ModuleRepositoryContract             $moduleRepository
+     * @param ClassRepositoryContract              $classRepository
+     * @param ScheduleRepositoryContract           $scheduleRepository
+     * @param ExamScheduleRepositoryContract       $examScheduleRepository
+     * @param CurriculumRepositoryContract         $curriculumRepository
+     * @param StudySessionRepositoryContract       $studySessionRepository
+     * @param FileUploadHandler                    $fileUploadHandler
+     * @param DataVersionStudentRepositoryContract $dataVersionStudentRepository
      */
-    public function __construct (ModuleClassRepositoryContract  $moduleClassRepository,
-                                 StudentRepositoryContract      $studentRepository,
-                                 ModuleRepositoryContract       $moduleRepository,
-                                 ClassRepositoryContract        $classRepository,
-                                 ScheduleRepositoryContract     $scheduleRepository,
-                                 ExamScheduleRepositoryContract $examScheduleRepository,
-                                 CurriculumRepositoryContract   $curriculumRepository,
-                                 StudySessionRepositoryContract $studySessionRepository,
-                                 FileUploadHandler              $fileUploadHandler)
+    public function __construct (ModuleClassRepositoryContract        $moduleClassRepository,
+                                 StudentRepositoryContract            $studentRepository,
+                                 ModuleRepositoryContract             $moduleRepository,
+                                 ClassRepositoryContract              $classRepository,
+                                 ScheduleRepositoryContract           $scheduleRepository,
+                                 ExamScheduleRepositoryContract       $examScheduleRepository,
+                                 CurriculumRepositoryContract         $curriculumRepository,
+                                 StudySessionRepositoryContract       $studySessionRepository,
+                                 FileUploadHandler                    $fileUploadHandler,
+                                 DataVersionStudentRepositoryContract $dataVersionStudentRepository)
     {
-        $this->moduleClassRepository  = $moduleClassRepository;
-        $this->studentRepository      = $studentRepository;
-        $this->moduleRepository       = $moduleRepository;
-        $this->classRepository        = $classRepository;
-        $this->scheduleRepository     = $scheduleRepository;
-        $this->examScheduleRepository = $examScheduleRepository;
-        $this->curriculumRepository   = $curriculumRepository;
-        $this->studySessionRepository = $studySessionRepository;
-        $this->fileUploadHandler = $fileUploadHandler;
+        $this->moduleClassRepository        = $moduleClassRepository;
+        $this->studentRepository            = $studentRepository;
+        $this->moduleRepository             = $moduleRepository;
+        $this->classRepository              = $classRepository;
+        $this->scheduleRepository           = $scheduleRepository;
+        $this->examScheduleRepository       = $examScheduleRepository;
+        $this->curriculumRepository         = $curriculumRepository;
+        $this->studySessionRepository       = $studySessionRepository;
+        $this->fileUploadHandler            = $fileUploadHandler;
+        $this->dataVersionStudentRepository = $dataVersionStudentRepository;
     }
 
     /**
      * @throws Exception
      */
-    public function importRollCallFile ($input)
+    public function importRollCallFile (array $inputs)
     {
         $this->excelService = app()->make('excel_roll_call');
-        $data = $this->_readData($input['id_department']);
-        $this->_checkExceptions2($data['module_classes_missing'], $data['id_module_classes']);
-        $id_students_missing = $this->_getIDStudentsMissing($data['id_students']);
-        $data                = $this->_handleData($data, $input['id_training_type'],
-                                                  $id_students_missing);
-        $this->_createAndUpdateData2($data, $id_students_missing);
+        $this->__handleFileUpload($inputs['file']);
+        $idStudySession = $this->__readIdStudySessionByName($inputs['study_session']);;
+        $moduleClassesWithFewStudents = $this->__getModuleClassesWithFewStudentsFromCache($inputs['id_department'],
+                                                                                          $idStudySession);;
+        $parameters = ['module_classes_with_few_students' => $moduleClassesWithFewStudents];;
+        $data = $this->excelService->readData($this->fileUploadHandler->getFilePath(), $parameters);
+        $this->__createAndUpdateRollCallData($data);
     }
 
     /**
@@ -90,12 +101,11 @@ class ResourceService implements Contracts\ResourceServiceContract
     /**
      * @throws Exception
      */
-    private function _readData ($id_department) : array
+    private function __getModuleClassesWithFewStudentsFromCache (string $idDepartment,
+                                                                 string $idStudySession) : array
     {
-        $special_module_classes = Cache::get($id_department . '_special_module_classes') ??
-                                  Cache::get($id_department . '_special_module_classes_backup');
-        $this->excelService->setParameters($special_module_classes, null, null, null);
-        return $this->excelService->readData();
+        $key = "{$idStudySession}_{$idDepartment}_module_classes_with_few_students";;
+        return Cache::get($key, []);
     }
 
     /**
@@ -115,7 +125,7 @@ class ResourceService implements Contracts\ResourceServiceContract
             {
                 $message .= $module_class . PHP_EOL;
             }
-//            GFunction::printFileImportException($file_name, $message);
+            //            GFunction::printFileImportException($file_name, $message);
             throw new ImportDataFailedException();
         }
     }
@@ -125,42 +135,34 @@ class ResourceService implements Contracts\ResourceServiceContract
         return $this->moduleClassRepository->getIDModuleClassesMissing($id_module_classes);
     }
 
-    private function _handleData ($formatted_data, $id_training_type, $new_id_students) : array
+    private function __createAndUpdateRollCallData (array $data)
     {
-        $academic_years = Cache::get('academic_years') ?? Cache::get('academic_years_backup');
-        $this->excelService->setParameters(null, $new_id_students,
-                                           $academic_years, $id_training_type);
-        return $this->excelService->handleData($formatted_data);
-    }
-
-    private function _getIDStudentsMissing ($id_students)
-    {
-        return $this->studentRepository->getIDStudentsMissing($id_students);
-    }
-
-    private function _createAndUpdateData2 ($data, $new_id_students)
-    {
-        DB::transaction(function () use ($data, $new_id_students)
+        $dataVersionStudent = collect($data['students'])->map(function ($item, $key)
         {
-            $this->_createClasses($data['classes']);
-            $this->_createStudents($data['students']);
-            $this->_createParticipates($data['participates']);
-            $this->_updateDataVersionStudents($data['available_id_students']);
+            return GFArray::onlyKeys($item, ['id' => 'id_student']);
+        });
+
+        DB::transaction(function () use ($data, $dataVersionStudent)
+        {
+            $this->__createManyStudents($data['students']);
+            $this->__createManyModuleClassStudent($data['module_class_student']);
+            $this->__updateDataVersionStudents($dataVersionStudent->all());
         }, 2);
     }
 
-    private function _createStudents ($data)
+    private function __createManyStudents (array $students)
     {
-        $this->studentRepository->insertMultiple($data);
+        $students = collect($students)->unique('id')->sortBy('id')->all();
+        $this->studentRepository->upsert($students);
     }
 
-    private function _createClasses ($data)
+    private function __createManyModuleClassStudent (array $data)
     {
-        foreach ($data as $class)
+        foreach ($data as $idModuleClass => $idStudents)
         {
             try
             {
-                $this->classRepository->insert($class);
+                $this->moduleClassRepository->insertPivot($idModuleClass, $idStudents, 'students');
             }
             catch (PDOException $error)
             {
@@ -174,55 +176,53 @@ class ResourceService implements Contracts\ResourceServiceContract
         }
     }
 
-    private function _createParticipates ($data)
+    private function __updateDataVersionStudents (array $dataVersionStudents)
     {
-        foreach ($data as $id_module_class => $id_students)
-        {
-            try
-            {
-                $this->moduleClassRepository->insertPivot($id_module_class, $id_students,
-                                                          'students');
-            }
-            catch (PDOException $error)
-            {
-                if ($error->getCode() == 23000 &&
-                    $error->errorInfo[1] == 1062)
-                {
-                    continue;
-                }
-                throw $error;
-            }
-        }
-    }
-
-    private function _updateDataVersionStudents ($id_students)
-    {
-        $this->studentRepository->updateMultiple2($id_students, 'schedule_data_version');
+        $this->dataVersionStudentRepository->upsert($dataVersionStudents, [],
+                                                    ['schedule' => DB::raw('schedule + 1')]);
     }
 
     /**
      * @throws Exception
      */
-    public function importScheduleFile ($input)
+    public function importScheduleFile (array $inputs)
     {
         $this->excelService = app()->make('excel_schedule');
-        $idStudySession = $this->studySessionRepository->find(['id'],
-                                                              [['name', '=', $input['study_session']]])[0]->id;;
-        $data = $this->excelService->readData($idStudySession);
+        $this->__handleFileUpload($inputs['file']);
+        $idStudySession = $this->__readIdStudySessionByName($inputs['study_session']);
+        $data           = $this->excelService->readData($this->fileUploadHandler->getFilePath(),
+                                                        ['id_study_session' => $idStudySession]);
+        $idModules      = $this->__getIdModulesFromModuleClasses($data['module_classes']);
 
-        $modules_missing = $this->_getIDModulesMissing($data['id_modules']);
-        $this->_checkExceptions($modules_missing);
-        $this->_createAndUpdateData($data);
-        $this->_updateCacheData($data['special_module_classes'], $input['id_department'],
-                                $idStudySession);
+        $this->__checkIfModulesMissing($idModules);
+        $this->__createAndUpdateScheduleData($data);
+        $this->__updateModuleClassesWithFewStudentsToCache($data['module_classes'],
+                                                           $inputs['id_department'],
+                                                           $idStudySession);
     }
 
-    private function _getIDModulesMissing ($id_modules)
+    private function __readIdStudySessionByName (string $name)
     {
-        return $this->moduleRepository->getIDModulesMissing($id_modules);
+        return $this->studySessionRepository->find(['id'], [['name', '=', $name]])[0]->id;
     }
 
-    private function _createAndUpdateData ($data)
+    private function __getIdModulesFromModuleClasses (array $moduleClasses) : array
+    {
+        return collect($moduleClasses)->pluck('id_module')->unique()->values()->all();
+    }
+
+    private function __getIdModulesMissing ($idModules) : array
+    {
+        $idModelsAvailable = $this->__readIdModulesByIdModules($idModules)->all();
+        return collect($idModules)->diff($idModelsAvailable)->all();
+    }
+
+    private function __readIdModulesByIdModules (array $idModules)
+    {
+        return $this->moduleRepository->pluckByIds($idModules, ['id']);
+    }
+
+    private function __createAndUpdateScheduleData ($data)
     {
         DB::transaction(function () use ($data)
         {
@@ -242,50 +242,50 @@ class ResourceService implements Contracts\ResourceServiceContract
     }
 
     /**
-     * @throws ImportDataFailedException
+     * @throws DatabaseConflictException
      */
-    private function _checkExceptions ($modules_missing)
+    private function __checkIfModulesMissing ($idModules)
     {
-        if (!empty($modules_missing))
+        $modulesMissing = $this->__getIdModulesMissing($idModules);
+        if (!empty($modulesMissing))
         {
-            $message   =
-                'Cơ sở dữ liệu hiện tại không có một vài mã học phần tương ứng với các mã lớp học phần sau:' .
-                PHP_EOL;
-            foreach ($modules_missing as $modules)
-            {
-                $message .= $modules . PHP_EOL;
-            }
-
-//            GFunction::printFileImportException($file_name, $message);
-            throw new ImportDataFailedException();
+            $messages = ['modulesMissing' => $modulesMissing];
+            throw new DatabaseConflictException(json_encode($messages), 409);
         }
     }
 
-    private function _updateCacheData ($module_classes, $id_department, $id_study_session)
+    private function __updateModuleClassesWithFewStudentsToCache (array  $moduleClasses,
+                                                                  string $idDepartment,
+                                                                  string $idStudySession)
     {
-        $old_module_classes      = Cache::get($id_department . '_special_module_classes') ?? [];
-        $recent_id_study_session = array_pop($old_module_classes);
-        if ($recent_id_study_session != $id_study_session)
+        $moduleClassesWithFewStudents = collect($moduleClasses)->filter(function ($item, $key)
         {
-            $old_module_classes = [];
+            return $item['number_reality'] <= self::MINIMUM_NUMBER_OF_STUDENTS;
+        });
+
+        if (!empty($moduleClassesWithFewStudents))
+        {
+            $idModuleClassesWithFewStudents = $moduleClassesWithFewStudents->pluck('id', 'name')
+                                                                           ->all();
+            CacheModuleClassesWithFewStudents::dispatch($idModuleClassesWithFewStudents,
+                                                        $idStudySession,
+                                                        $idDepartment);
         }
-        Cache::forever($id_department . '_special_module_classes',
-                       array_merge($old_module_classes, $module_classes));
     }
 
     /**
      * @throws BindingResolutionException
      * @throws Exception
      */
-    public function importExamScheduleFile ($input)
+    public function importExamScheduleFile (array $inputs)
     {
         $this->excelService = app()->make('excel_exam_schedule');
-        $this->__handleFileUpload($input['file']);
+        $this->__handleFileUpload($inputs['file']);
         $data = $this->excelService->readData($this->fileUploadHandler->getFilePath());
-        $this->_createAndUpdateData3($data);
+        $this->__createAndUpdateExamScheduleData($data);
     }
 
-    private function _createAndUpdateData3 ($data)
+    private function __createAndUpdateExamScheduleData ($data)
     {
         DB::transaction(function () use ($data)
         {
@@ -302,10 +302,10 @@ class ResourceService implements Contracts\ResourceServiceContract
      * @throws BindingResolutionException
      * @throws Exception
      */
-    public function importCurriculumFile ($input)
+    public function importCurriculumFile (array $inputs)
     {
         $this->excelService = app()->make('excel_curriculum');
-        $data = $this->excelService->readData();
+        $data               = $this->excelService->readData();
         $this->_createAndUpdateData4($data);
     }
 

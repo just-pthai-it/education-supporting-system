@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImportSchedulePostRequest;
+use App\Http\Requests\ImportRollCallPostRequest;
 use App\Services\Contracts\ResourceServiceContract;
 use Illuminate\Http\Request;
+use App\Http\Requests\ImportExamSchedulePostRequest;
 
 class ResourceController extends Controller
 {
@@ -17,22 +20,22 @@ class ResourceController extends Controller
         $this->fileUploadService = $fileUploadServiceContract;
     }
 
-    public function uploadRollCallFile (Request $request)
+    public function uploadRollCallFile (ImportRollCallPostRequest $request)
     {
-        $this->fileUploadService->importRollCallFile($request->all());
+        $this->fileUploadService->importRollCallFile($request->validated());
     }
 
-    public function uploadScheduleFile (Request $request)
+    public function uploadScheduleFile (ImportSchedulePostRequest $request)
     {
-        $this->fileUploadService->importScheduleFile($request->all());
+        $this->fileUploadService->importScheduleFile($request->validated());
     }
 
-    public function uploadExamScheduleFile(Request $request)
+    public function uploadExamScheduleFile (ImportExamSchedulePostRequest $request)
     {
-        $this->fileUploadService->importExamScheduleFile($request->all());
+        $this->fileUploadService->importExamScheduleFile($request->validated());
     }
 
-    public function uploadCurriculumFile(Request $request)
+    public function uploadCurriculumFile (Request $request)
     {
         $this->fileUploadService->importCurriculumFile($request->all());
     }

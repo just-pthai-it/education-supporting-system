@@ -4,11 +4,11 @@ namespace App\Services\Contracts;
 
 interface ResourceServiceContract
 {
-    public function importRollCallFile ($input);
+    public function importRollCallFile (array $inputs);
 
-    public function importScheduleFile ($input);
+    public function importScheduleFile (array $inputs);
 
-    public function importExamScheduleFile ($input);
+    public function importExamScheduleFile (array $inputs);
 
-    public function importCurriculumFile ($input);
+    public function importCurriculumFile (array $inputs);
 }

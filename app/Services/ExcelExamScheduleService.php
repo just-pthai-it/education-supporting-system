@@ -25,9 +25,10 @@ class ExcelExamScheduleService extends AExcelService
      * @throws IOException
      * @throws ReaderNotOpenedException
      */
-    public function readData (string $filePath, ...$parameters) : array
+    public function readData (string $filePath, array $parameters = []) : array
     {
-        $reader        = $this->_getReader($filePath);
+        $reader = $this->_getReader($filePath);
+
         $examSchedules = [];
 
         foreach ($reader->getSheetIterator() as $sheet)
@@ -46,7 +47,7 @@ class ExcelExamScheduleService extends AExcelService
                     continue;
                 }
 
-                if ($isStart && empty($this->_getCellData($cells, 0)))
+                if ($isStart && empty($this->_getCellData($cells, $this->numericalOrderIndex)))
                 {
                     break;
                 }
@@ -128,7 +129,7 @@ class ExcelExamScheduleService extends AExcelService
 
     private function _getIdModuleClass (string $idModule, string $moduleClassName) : string
     {
-        return $this->_convertToIDModuleClass($idModule, $moduleClassName);
+        return $this->_convertToIdModuleClass($idModule, $moduleClassName);
     }
 
     private function _getIdRooms (string $room, string $numberOfRooms)
