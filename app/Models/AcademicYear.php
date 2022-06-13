@@ -13,9 +13,10 @@ class AcademicYear extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'academic_years';
-    public const table_as = 'academic_years as ays';
+    public const TABLE = 'academic_years';
+    public const TABLE_AS = 'academic_years as ays';
 
+    protected $table = 'academic_years';
     protected $keyType = 'string';
     public $timestamps = false;
 

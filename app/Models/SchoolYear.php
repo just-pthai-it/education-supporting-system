@@ -10,9 +10,10 @@ class SchoolYear extends Model
 {
     use HasFactory;
 
-    public const table = 'school_years';
-    public const table_as = 'school_years as sys';
+    public const TABLE = 'school_years';
+    public const TABLE_AS = 'school_years as sys';
 
+    protected $table = 'school_years';
     public $timestamps = false;
 
     protected $fillable = [

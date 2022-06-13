@@ -12,9 +12,10 @@ class FixedSchedule extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'fixed_schedules';
-    public const table_as = 'fixed_schedules as fss';
+    public const TABLE = 'fixed_schedules';
+    public const TABLE_AS = 'fixed_schedules as fss';
 
+    protected $table = 'fixed_schedules';
     public $timestamps = false;
 
     protected $fillable = [

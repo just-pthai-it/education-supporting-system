@@ -10,9 +10,10 @@ class Permission extends Model
 {
     use HasFactory;
 
-    public const table = 'permissions';
-    public const table_as = 'permissions as pers';
+    public const TABLE = 'permissions';
+    public const TABLE_AS = 'permissions as pers';
 
+    protected $table = 'permissions';
     public $timestamps = false;
 
     protected $fillable = [

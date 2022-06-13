@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\GFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,9 +11,10 @@ class Department extends Model
 {
     use HasFactory;
 
-    public const table = 'departments';
-    public const table_as = 'departments as deps';
+    public const TABLE = 'departments';
+    public const TABLE_AS = 'departments as deps';
 
+    protected $table = 'departments';
     protected $keyType = 'string';
     public $timestamps = false;
 

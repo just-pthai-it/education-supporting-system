@@ -11,9 +11,10 @@ class OtherDepartment extends Model
 {
     use HasFactory;
 
-    public const table = 'other_departments';
-    public const table_as = 'other_departments as ods';
+    public const TABLE = 'other_departments';
+    public const TABLE_AS = 'other_departments as ods';
 
+    protected $table = 'other_departments';
     protected $keyType = 'string';
     public $timestamps = false;
 

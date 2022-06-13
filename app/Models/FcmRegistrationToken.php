@@ -10,9 +10,10 @@ class FcmRegistrationToken extends Model
 {
     use HasFactory;
 
-    public const table = 'fcm_registration_tokens';
-    public const table_as = 'fcm_registration_tokens as frts';
+    public const TABLE = 'fcm_registration_tokens';
+    public const TABLE_AS = 'fcm_registration_tokens as frts';
 
+    protected $table = 'fcm_registration_tokens';
     protected $keyType = 'string';
     public $timestamps = false;
 

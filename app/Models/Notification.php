@@ -12,9 +12,10 @@ class Notification extends Model
 {
     use HasFactory;
 
-    public const table = 'notifications';
-    public const table_as = 'notifications as notis';
+    public const TABLE = 'notifications';
+    public const TABLE_AS = 'notifications as notis';
 
+    protected $table = 'notifications';
     public $timestamps = false;
 
     protected $fillable = [

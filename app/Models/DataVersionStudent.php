@@ -11,8 +11,8 @@ class DataVersionStudent extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'data_version_students';
-    public const table_as = 'data_version_students as dvss';
+    public const TABLE = 'data_version_students';
+    public const TABLE_AS = 'data_version_students as dvss';
 
     protected $table = 'data_version_students';
     protected $keyType = 'string';

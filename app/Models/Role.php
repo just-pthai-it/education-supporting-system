@@ -11,9 +11,10 @@ class Role extends Model
 {
     use HasFactory;
 
-    public const table = 'roles';
-    public const table_as = 'roles as rls';
+    public const TABLE = 'roles';
+    public const TABLE_AS = 'roles as rls';
 
+    protected $table = 'roles';
     public $timestamps = false;
 
     protected $fillable = [

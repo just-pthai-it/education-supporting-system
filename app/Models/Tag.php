@@ -10,9 +10,10 @@ class Tag extends Model
 {
     use HasFactory;
 
-    public const table = 'tags';
-    public const table_as = 'tags';
+    public const TABLE = 'tags';
+    public const TABLE_AS = 'tags';
 
+    protected $table = 'tags';
     public $timestamps = false;
 
     protected $fillable = [

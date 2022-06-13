@@ -11,9 +11,10 @@ class Feedback extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'feedback';
-    public const table_as = 'feedback as fb';
+    public const TABLE = 'feedback';
+    public const TABLE_AS = 'feedback as fb';
 
+    protected $table = 'feedback';
     public $timestamps = false;
 
     protected $fillable = [

@@ -10,8 +10,8 @@ class DataVersionTeacher extends Model
 {
     use HasFactory;
 
-    public const table = 'data_version_teachers';
-    public const table_as = 'data_version_teachers as dvts';
+    public const TABLE = 'data_version_teachers';
+    public const TABLE_AS = 'data_version_teachers as dvts';
 
     protected $table = 'data_version_teachers';
     protected $keyType = 'string';

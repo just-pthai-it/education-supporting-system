@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\GFunction;
 use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,9 +14,10 @@ class Teacher extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'teachers';
-    public const table_as = 'teachers as teas';
+    public const TABLE = 'teachers';
+    public const TABLE_AS = 'teachers as teas';
 
+    protected $table = 'teachers';
     protected $keyType = 'string';
     public $timestamps = false;
 

@@ -12,9 +12,10 @@ class Term extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'terms';
-    public const table_as = 'terms as tes';
+    public const TABLE = 'terms';
+    public const TABLE_AS = 'terms as tes';
 
+    protected $table = 'terms';
     public $timestamps = false;
 
     protected $fillable = [

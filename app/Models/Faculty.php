@@ -12,9 +12,10 @@ class Faculty extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'faculties';
-    public const table_as = 'faculties as facs';
+    public const TABLE = 'faculties';
+    public const TABLE_AS = 'faculties as facs';
 
+    protected $table = 'faculties';
     protected $keyType = 'string';
     public $timestamps = false;
 

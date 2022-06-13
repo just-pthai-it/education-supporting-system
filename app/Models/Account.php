@@ -19,9 +19,10 @@ class Account extends Authenticatable implements JWTSubject
 {
     use HasFactory, Filterable, Notifiable;
 
-    public const table = 'accounts';
-    public const table_as = 'accounts as accs';
+    public const TABLE = 'accounts';
+    public const TABLE_AS = 'accounts as accs';
 
+    protected $table = 'accounts';
     public $timestamps = false;
 
     protected $fillable = [

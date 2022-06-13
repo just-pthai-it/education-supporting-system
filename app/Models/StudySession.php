@@ -12,9 +12,10 @@ class StudySession extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'study_sessions';
-    public const table_as = 'study_sessions as sss';
+    public const TABLE = 'study_sessions';
+    public const TABLE_AS = 'study_sessions as sss';
 
+    protected $table = 'study_sessions';
     public $timestamps = false;
 
     protected $fillable = [

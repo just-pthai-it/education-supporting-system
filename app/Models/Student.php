@@ -13,9 +13,10 @@ class Student extends Model
 {
     use HasFactory;
 
-    public const table = 'students';
-    public const table_as = 'students as stus';
+    public const TABLE = 'students';
+    public const TABLE_AS = 'students as stus';
 
+    protected $table = 'students';
     protected $keyType = 'string';
     public $timestamps = false;
 

@@ -11,9 +11,10 @@ class TrainingType extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'training_types';
-    public const table_as = 'training_types as tts';
+    public const TABLE = 'training_types';
+    public const TABLE_AS = 'training_types as tts';
 
+    protected $table = 'training_types';
     public $timestamps = false;
 
     protected $fillable = [

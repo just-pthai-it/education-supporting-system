@@ -13,9 +13,10 @@ class ExamSchedule extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'exam_schedules';
-    public const table_as = 'exam_schedules as ess';
+    public const TABLE = 'exam_schedules';
+    public const TABLE_AS = 'exam_schedules as ess';
 
+    protected $table = 'exam_schedules';
     protected $keyType = 'string';
     public $timestamps = false;
 

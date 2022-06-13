@@ -14,9 +14,10 @@ class ModuleClass extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'module_classes';
-    public const table_as = 'module_classes as mcs';
+    public const TABLE = 'module_classes';
+    public const TABLE_AS = 'module_classes as mcs';
 
+    protected $table = 'module_classes';
     protected $keyType = 'string';
     public $timestamps = false;
 

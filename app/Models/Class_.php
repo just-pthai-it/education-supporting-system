@@ -12,8 +12,8 @@ class Class_ extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'classes';
-    public const table_as = 'classes as cls';
+    public const TABLE = 'classes';
+    public const TABLE_AS = 'classes as cls';
 
     protected $table = 'classes';
     protected $keyType = 'string';

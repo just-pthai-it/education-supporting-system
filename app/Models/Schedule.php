@@ -13,9 +13,10 @@ class Schedule extends Model
 {
     use HasFactory, Filterable;
 
-    public const table = 'schedules';
-    public const table_as = 'schedules as sdus';
+    public const TABLE = 'schedules';
+    public const TABLE_AS = 'schedules as sdus';
 
+    protected $table = 'schedules';
     public $timestamps = false;
 
     protected $fillable = [

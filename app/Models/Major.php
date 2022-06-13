@@ -11,9 +11,10 @@ class Major extends Model
 {
     use HasFactory;
 
-    public const table = 'majors';
-    public const table_as = 'majors as mjs';
+    public const TABLE = 'majors';
+    public const TABLE_AS = 'majors as mjs';
 
+    protected $table = 'majors';
     public $timestamps = false;
 
     protected $fillable = [
