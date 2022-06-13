@@ -8,6 +8,8 @@ interface ExamScheduleServiceContract
 
     public function readManyByIdTeacher (string $idTeacher, array $inputs);
 
+    public function readManyByIdStudent (string $idStudent, array $inputs);
+
     public function update ($examSchedule);
 
     public function updateV1 (string $idExamSchedule, array $inputs);

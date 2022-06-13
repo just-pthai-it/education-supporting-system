@@ -40,6 +40,14 @@ class ExamScheduleService implements Contracts\ExamScheduleServiceContract
         return ExamScheduleResource::collection($examSchedules);
     }
 
+    public function readManyByIdStudent (string $idStudent,
+                                         array  $inputs) : AnonymousResourceCollection
+    {
+        $this->_formatStudySessionInput($inputs);
+        $examSchedules = $this->examScheduleRepository->findByIdStudent($idStudent, $inputs);
+        return ExamScheduleResource::collection($examSchedules);
+    }
+
     private function _formatStudySessionInput (array &$inputs)
     {
         if (isset($inputs['study_session']))

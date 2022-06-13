@@ -23,8 +23,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                 $query->whereIn('id_teacher', $idTeachers);
                 if (isset($inputs['id_study_session']))
                 {
-                    $query->where('id_study_session', '=',
-                                  $inputs['id_study_session']);
+                    $query->where('id_study_session', '=', $inputs['id_study_session']);
                 }
             })->filter($inputs)->with([
                                           'moduleClass'    => function ($query) use (
@@ -65,12 +64,6 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
         return $this->model->whereHas('moduleClass',
             function (Builder $query) use ($idDepartment, $inputs)
             {
-                if (isset($inputs['id_study_session']))
-                {
-                    $query->where('id_study_session', '=',
-                                  $inputs['id_study_session']);
-                }
-
                 $query->whereHas('module', function (Builder $query) use ($idDepartment)
                 {
                     $query->where('id_department', '=', $idDepartment);
@@ -96,6 +89,11 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
         $this->createModel();
         return $this->model->whereHas('moduleClass', function (Builder $query) use ($idStudent)
         {
+            if (isset($inputs['id_study_session']))
+            {
+                $query->where('id_study_session', '=', $inputs['id_study_session']);
+            }
+
             $query->whereHas('students', function (Builder $query) use ($idStudent)
             {
                 $query->where('id_student', '=', $idStudent);

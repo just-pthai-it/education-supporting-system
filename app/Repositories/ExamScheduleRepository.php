@@ -40,6 +40,30 @@ class ExamScheduleRepository extends BaseRepository implements Contracts\ExamSch
                                                     },])->get();
     }
 
+    public function findByIdStudent (string $idStudent, array $inputs)
+    {
+        $this->createModel();
+        return $this->model->whereHas('moduleClass', function (Builder $query) use ($idStudent)
+        {
+            if (isset($inputs['id_study_session']))
+            {
+                $query->where('id_study_session', '=', $inputs['id_study_session']);
+            }
+
+            $query->whereHas('students', function (Builder $query) use ($idStudent)
+            {
+                $query->where('id_student', '=', $idStudent);
+            });
+        })->filter($inputs)->with(['moduleClass:id,name,id_module',
+                                   'moduleClass.module:id,credit',
+                                   'teachers' => function ($query)
+                                   {
+                                       return $query->select('id_teacher', 'name',
+                                                             'note')
+                                                    ->orderBy('pivot_id');
+                                   },])->get();
+    }
+
     public function findByIdDepartment (string $idDepartment, array $inputs)
     {
         $this->createModel();

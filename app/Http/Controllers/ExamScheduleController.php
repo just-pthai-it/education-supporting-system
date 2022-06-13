@@ -32,6 +32,11 @@ class ExamScheduleController extends Controller
         return $this->examScheduleService->readManyByIdTeacher($idTeacher, $request->all());
     }
 
+    public function readManyByIdStudent (Request $request, string $idStudent)
+    {
+        return $this->examScheduleService->readManyByIdStudent($idStudent, $request->all());
+    }
+
     public function update (Request $request)
     {
         Gate::authorize('update-exam-schedule');
