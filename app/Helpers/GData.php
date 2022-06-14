@@ -120,8 +120,6 @@ class GData
         '#a0c5df',
     ];
 
-    public static $current;
-
     public static array $faculty_class_and_major_info = [
         'CKOTO'        => ['name'       => 'Lớp Cơ khí ô tô',
                            'id_faculty' => 'CK'],

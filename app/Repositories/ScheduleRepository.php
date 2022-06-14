@@ -32,7 +32,8 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                           {
                                               if (count($idTeachers) > 1)
                                               {
-                                                  $query->select('id', 'name', 'id_teacher')
+                                                  $query->select('id', 'name', 'id_module',
+                                                                 'number_reality', 'id_teacher')
                                                         ->with(['teacher' => function ($query)
                                                         {
                                                             $query->select('id', 'name')
@@ -41,7 +42,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                               }
                                               else
                                               {
-                                                  $query->select('id', 'name');
+                                                  $query->select('id', 'name', 'id_module');
                                               }
                                           },
                                           'fixedSchedules' => function ($query)
@@ -68,7 +69,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                 {
                     $query->where('id_department', '=', $idDepartment);
                 });
-            })->filter($inputs)->with(['moduleClass:id,name,id_teacher',
+            })->filter($inputs)->with(['moduleClass:id,name,id_module,number_reality,id_teacher',
                                        'moduleClass.teacher:id,name',
                                        'fixedSchedules' => function ($query)
                                        {
@@ -98,7 +99,7 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
             {
                 $query->where('id_student', '=', $idStudent);
             });
-        })->filter($inputs)->with(['moduleClass:id,name,id_teacher',
+        })->filter($inputs)->with(['moduleClass:id,name,id_module,number_reality,id_teacher',
                                    'moduleClass.teacher:id,name'])->get();
     }
 }
