@@ -54,12 +54,15 @@ class UserResource extends JsonResource
 
             case Student::class:
                 return [
-                    'id'       => $this->id,
-                    'name'     => $this->name,
-                    'isFemale' => $this->is_female,
-                    'birth'    => $this->birth,
-                    'address'  => $this->address,
-                    'idClass'  => $this->id_class,
+                    'id'          => $this->id,
+                    'name'        => $this->name,
+                    'isFemale'    => $this->is_female,
+                    'birth'       => $this->birth,
+                    'address'     => $this->address,
+                    'idClass'     => $this->id_class,
+                    'idRole'      => $this->id_role,
+                    'uuidAccount' => $this->uuid_account,
+                    'permissions' => $this->permissions,
                 ];
 
             default:
