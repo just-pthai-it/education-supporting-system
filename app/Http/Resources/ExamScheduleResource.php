@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use JsonSerializable;
+use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -20,15 +22,11 @@ class ExamScheduleResource extends JsonResource
     {
         if (!is_null($request->route('id_teacher')))
         {
-            $note = $this->teachers->where('id_teacher', '=', $request->route('id_teacher'))
-                                   ->first()->note;
-        }
-        else
-        {
-            $note = null;
+            $this->note = $this->teachers->where('id_teacher', '=', $request->route('id_teacher'))
+                                         ->first()->note;
         }
 
-        return [
+        $response = [
             'id'               => $this->id,
             'idModuleClass'    => $this->id_module_class,
             'name'             => $this->moduleClass->name ?? null,
@@ -38,8 +36,19 @@ class ExamScheduleResource extends JsonResource
             'endAt'            => $this->end_at,
             'numberOfStudents' => $this->number_of_students,
             'idRoom'           => $this->id_room,
-            'note'             => $note,
             'teachers'         => $this->teachers->pluck('name'),
         ];
+
+        switch ($request->user()->accountable_type)
+        {
+            case Student::class:
+                break;
+
+            case Teacher::class:
+                $response['note'] = $this->note;
+                break;
+        }
+
+        return $response;
     }
 }
