@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -11,15 +12,14 @@ class GFunction
     public static function printError ($error)
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $date    = date('d/m/Y H:i:s');
-        $message = $date . PHP_EOL;
-        $message .= 'Code: ' . $error->getCode() . PHP_EOL;
+        $date    = date('Y-m-d');
+        $time    = date('H:i:s');
+        $message = $time . PHP_EOL;
+        $message .= "Code: {$error->getCode()}" . PHP_EOL;
         $message .= $error->getMessage() . PHP_EOL;
-        $message .= $error->getFile() . '  ' . $error->getLine() . PHP_EOL;
-        $message .= '=========================================================================================' .
-                    PHP_EOL;
-
-        file_put_contents(config('filesystems.disks.errors.file_path'), $message, FILE_APPEND);
+        $message .= "{$error->getFile()}  " . $error->getLine() . PHP_EOL;
+        $message .= Str::repeat('=', 100) . PHP_EOL;
+        file_put_contents(storage_path("logs/{$date}-laravel.log"), $message, FILE_APPEND);
     }
 
     public static function printFileImportException ($file_name, $message)
