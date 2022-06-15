@@ -44,7 +44,8 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
     private function _loadFixedScheduleRelationships (FixedSchedule &$fixedSchedule)
     {
         $fixedSchedule->load(['schedule:id,id_module_class',
-                              'schedule.moduleClass:id,name,id_teacher',
+                              'schedule.moduleClass:id,name,id_module,id_teacher',
+                              'schedule.moduleClass.module:id,id_department',
                               'schedule.moduleClass.teacher:id,name,is_female,id_department',
                               'schedule.moduleClass.teacher.account:accountable_id,email']);
     }
@@ -60,8 +61,9 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
             return;
         }
 
-        $teacher  = $this->_readHeadOfDepartment($fixedSchedule->schedule->moduleClass->teacher->id_department);
-        $mailData = $this->_getBasicMailDataForHeadOfDepartment();
+        $idDepartment = $fixedSchedule->schedule->moduleClass->module->id_department;
+        $teacher      = $this->_readHeadOfDepartment($idDepartment);
+        $mailData     = $this->_getBasicMailDataForHeadOfDepartment();
         $this->_sendMailNotification(array_merge($mailData, [
             'recipient'  => $teacher->account->email,
             'teacher'    => $teacher->getOriginal(),
