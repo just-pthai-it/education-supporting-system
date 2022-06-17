@@ -61,7 +61,7 @@ class ScheduleResource extends JsonResource
             $color = '#cccccc';
         }
 
-        $this->fixedSchedules = $this->fixedSchedules->map(function ($item, $key)
+        $this->fixedSchedules->transform(function ($item, $key)
         {
             return [
                 'id'         => $item->id,
