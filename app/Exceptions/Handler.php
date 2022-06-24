@@ -2,9 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Helpers\GFunction;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -13,7 +11,8 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        CustomAuthenticationException::class,
+        CustomBadHttpRequestException::class,
     ];
 
     /**
@@ -37,34 +36,14 @@ class Handler extends ExceptionHandler
             return response(['messages' => json_decode($e->getMessage())], $e->getCode());
         });
 
-        $this->reportable(function (CustomBadHttpRequestException $e)
-        {
-            return false;
-        });
-
         $this->renderable(function (CustomAuthenticationException $e)
         {
             return response(['messages' => json_decode($e->getMessage())], $e->getCode());
-        });
-
-        $this->reportable(function (CustomAuthenticationException $e)
-        {
-            return false;
         });
 
         $this->renderable(function (DatabaseConflictException $e)
         {
             return response(['messages' => json_decode($e->getMessage())], $e->getCode());
         });
-
-        $this->reportable(function (DatabaseConflictException $e)
-        {
-            return false;
-        });
-    }
-
-    public function report (Throwable $e)
-    {
-        GFunction::printError($e);
     }
 }
