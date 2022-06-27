@@ -16,10 +16,11 @@ class CreateAccountNotificationTable extends Migration
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->primary(['id_account', 'id_notification']);
+            $table->unsignedMediumInteger('id')->autoIncrement();
             $table->unsignedMediumInteger('id_account');
             $table->unsignedMediumInteger('id_notification');
             $table->dateTime('read_at')->nullable();
+            $table->unique(['id_account', 'id_notification']);
         });
     }
 

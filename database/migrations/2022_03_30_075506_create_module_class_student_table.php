@@ -16,13 +16,14 @@ class CreateModuleClassStudentTable extends Migration
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->primary(['id_module_class', 'id_student']);
+            $table->unsignedMediumInteger('id')->autoIncrement();
             $table->string('id_module_class', 50);
             $table->string('id_student', 50);
             $table->string('evaluation', 100)->nullable();
             $table->decimal('process_score', 4, 2)->nullable();
             $table->decimal('test_score', 4, 2)->nullable();
             $table->decimal('final_score', 4, 2)->nullable();
+            $table->unique(['id_module_class', 'id_student']);
         });
     }
 

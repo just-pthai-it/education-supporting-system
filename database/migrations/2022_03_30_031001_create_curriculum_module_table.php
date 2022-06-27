@@ -16,9 +16,10 @@ class CreateCurriculumModuleTable extends Migration
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->primary(['id_curriculum', 'id_module']);
+            $table->unsignedMediumInteger('id')->autoIncrement();
             $table->unsignedTinyInteger('id_curriculum');
             $table->string('id_module', 50);
+            $table->unique(['id_curriculum', 'id_module']);
         });
     }
 

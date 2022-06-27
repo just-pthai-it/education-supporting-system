@@ -25,10 +25,11 @@ class CreateAccountsTable extends Migration
             $table->string('phone', 100)->nullable()->unique();
             $table->unsignedTinyInteger('id_role');
             $table->string('accountable_type', 100);
-            $table->string('accountable_id', 50)->unique();
+            $table->string('accountable_id', 50);
             $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
             $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
                   ->useCurrentOnUpdate();
+            $table->unique(['accountable_type', 'accountable_id']);
         });
 
         DB::statement('alter table accounts add uuid binary(16) not null;');

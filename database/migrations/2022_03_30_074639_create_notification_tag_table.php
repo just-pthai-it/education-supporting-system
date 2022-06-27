@@ -16,9 +16,10 @@ class CreateNotificationTagTable extends Migration
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->primary(['id_notification', 'id_tag']);
+            $table->unsignedMediumInteger('id')->autoIncrement();
             $table->unsignedMediumInteger('id_notification');
             $table->unsignedSmallInteger('id_tag');
+            $table->unique(['id_notification', 'id_tag']);
         });
     }
 

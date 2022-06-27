@@ -16,9 +16,10 @@ class CreateAccountTagTable extends Migration
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->primary(['id_account', 'id_tag']);
+            $table->unsignedMediumInteger('id')->autoIncrement();
             $table->unsignedMediumInteger('id_account');
             $table->unsignedSmallInteger('id_tag');
+            $table->unique(['id_account', 'id_tag']);
         });
     }
 
