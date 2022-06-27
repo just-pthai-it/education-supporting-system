@@ -267,8 +267,9 @@ class ExcelScheduleService extends AExcelService
 
     private function __getFirstDateOfSchedule (string $dateRange, string $dayIndexOfWeek)
     {
-        $date = explode('-', $dateRange)[0];
-        $date = GFDateTime::convertDateTime($date, 'd/m/Y', 'Y-m-d');
-        return GFDateTime::calculateDateTime($date, "+{$dayIndexOfWeek}", 'Y-m-d');
+        $dateRange = explode('-', $dateRange);
+        $date      = $dateRange[0] . '/' . explode('/', $dateRange[1])[2];
+        $date      = GFDateTime::convertDateTime($date, 'd/m/y', 'Y-m-d');
+        return GFDateTime::calculateDateTime($date, "+{$dayIndexOfWeek} days", 'Y-m-d');
     }
 }
