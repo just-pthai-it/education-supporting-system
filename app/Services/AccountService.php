@@ -50,7 +50,7 @@ class AccountService implements Contracts\AccountServiceContract
         if (auth()->attempt($credentials) === false)
         {
             $messages = json_encode(['Invalid username, email or password']);
-            throw new CustomAuthenticationException($messages, 401);
+            throw new CustomAuthenticationException($messages, 419);
         }
     }
 
