@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use Illuminate\Support\Arr;
+use App\Http\Resources\ModuleClassResource;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\StudySessionRepositoryContract;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ModuleClassService implements Contracts\ModuleClassServiceContract
 {
@@ -29,10 +31,22 @@ class ModuleClassService implements Contracts\ModuleClassServiceContract
                                                   [['filter', $inputs]]);
     }
 
-    public function readManyByIdDepartment (string $idDepartment, array $inputs)
+    public function readManyByIdDepartment (string $idDepartment,
+                                            array  $inputs) : AnonymousResourceCollection
     {
-        $inputs = $this->_formatInputs($inputs);
-        return $this->moduleClassRepository->findByIdDepartment($idDepartment, $inputs);
+        $inputs        = $this->_formatInputs($inputs);
+        $moduleClasses = $this->moduleClassRepository->findByIdDepartment($idDepartment, $inputs);
+        return ModuleClassResource::collection($moduleClasses);
+    }
+
+    public function readManyByIdTeacher (string $idTeacher,
+                                         array  $inputs) : AnonymousResourceCollection
+    {
+        $inputs        = $this->_formatInputs($inputs);
+        $moduleClasses = $this->moduleClassRepository->find(['id', 'name'],
+                                                            [['id_teacher', '=', $idTeacher]],
+                                                            [], [], [['filter', $inputs]]);
+        return ModuleClassResource::collection($moduleClasses);
     }
 
     private function _formatInputs (array $inputs) : array

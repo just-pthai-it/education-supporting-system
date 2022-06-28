@@ -8,6 +8,8 @@ interface ModuleClassServiceContract
 
     public function readManyByIdDepartment (string $idDepartment, array $inputs);
 
+    public function readManyByIdTeacher (string $idTeacher, array $inputs);
+
     public function updateMany (array $inputs);
 
     public function destroyMany (array $inputs);

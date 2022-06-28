@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FacultyResource extends JsonResource
@@ -17,10 +16,16 @@ class FacultyResource extends JsonResource
      */
     public function toArray ($request) : array
     {
-        return [
-            'id'    => $this->id,
-            'name'  => $this->name,
-            'value' => $this->departments
+        $response = [
+            'id'   => $this->id,
+            'name' => $this->name,
         ];
+
+        if (request()->route('additional') == 'with-departments')
+        {
+            $response['value'] = DepartmentResource::collection($this->departments)->all();
+        }
+
+        return $response;
     }
 }

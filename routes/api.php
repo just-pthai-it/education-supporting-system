@@ -232,6 +232,9 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
         {
             Route::get('', [TeacherController::class, 'read']);
 
+            Route::get('module-classes',
+                       [ModuleClassController::class, 'readManyByIdTeacher']);
+
             Route::get('module-classes/schedules',
                        [ScheduleController::class, 'readManyByIdTeacher']);
 
@@ -316,7 +319,9 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
     Route::group(['prefix' => 'faculties'], function ()
     {
-        Route::get('', [FacultyController::class, 'readMany']);
+        Route::get('{additional?}', [FacultyController::class, 'readMany'])
+             ->where(['additional' => 'with-departments']);
+
     });
 
 
@@ -330,7 +335,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
     Route::group(['prefix' => 'academic-years'], function ()
     {
-        Route::get('', [AcademicYearController::class, 'readMany']);
+        Route::get('{additional?}', [AcademicYearController::class, 'readMany'])
+             ->where(['additional' => 'recent']);
     });
 
     Route::group(['prefix' => 'training-types'], function ()

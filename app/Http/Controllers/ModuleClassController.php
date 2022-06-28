@@ -25,12 +25,14 @@ class ModuleClassController extends Controller
         return ModuleClassResource::collection($response);
     }
 
-    public function readManyByIdDepartment (Request $request,
-                                            string  $idDepartment) : AnonymousResourceCollection
+    public function readManyByIdDepartment (Request $request, string $idDepartment)
     {
-        $response = $this->moduleClassService->readManyByIdDepartment($idDepartment,
-                                                                      $request->all());
-        return ModuleClassResource::collection($response);
+        return $this->moduleClassService->readManyByIdDepartment($idDepartment, $request->all());
+    }
+
+    public function readManyByIdTeacher (Request $request, string $idTeacher)
+    {
+        return $this->moduleClassService->readManyByIdTeacher($idTeacher, $request->all());
     }
 
     public function updateMany (Request $request)
