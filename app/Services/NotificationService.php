@@ -2,108 +2,179 @@
 
 namespace App\Services;
 
+use App\Models\Teacher;
+use App\Models\Student;
+use App\Helpers\Constants;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use App\Repositories\Contracts\TagRepositoryContract;
+use App\Repositories\Contracts\ClassRepositoryContract;
 use App\Repositories\Contracts\AccountRepositoryContract;
+use App\Repositories\Contracts\StudentRepositoryContract;
+use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
 
 class NotificationService implements Contracts\NotificationServiceContract
 {
     private NotificationRepositoryContract $notificationRepository;
+    private ModuleClassRepositoryContract $moduleClassRepository;
     private AccountRepositoryContract $accountRepository;
+    private StudentRepositoryContract $studentRepository;
+    private ClassRepositoryContract $classRepository;
     private TagRepositoryContract $tagRepository;
 
     /**
      * @param NotificationRepositoryContract $notificationRepository
      * @param AccountRepositoryContract      $accountRepository
      * @param TagRepositoryContract          $tagRepository
+     * @param ClassRepositoryContract        $classRepository
+     * @param StudentRepositoryContract      $studentRepository
+     * @param ModuleClassRepositoryContract  $moduleClassRepository
      */
     public function __construct (NotificationRepositoryContract $notificationRepository,
                                  AccountRepositoryContract      $accountRepository,
-                                 TagRepositoryContract          $tagRepository)
+                                 TagRepositoryContract          $tagRepository,
+                                 ClassRepositoryContract        $classRepository,
+                                 StudentRepositoryContract      $studentRepository,
+                                 ModuleClassRepositoryContract  $moduleClassRepository)
     {
         $this->notificationRepository = $notificationRepository;
         $this->accountRepository      = $accountRepository;
         $this->tagRepository          = $tagRepository;
+        $this->classRepository        = $classRepository;
+        $this->studentRepository      = $studentRepository;
+        $this->moduleClassRepository  = $moduleClassRepository;
     }
-
 
     public function store (array $inputs)
     {
-        $this->_completePostInputs($inputs);
-        $notificationArray = Arr::except($inputs, ['tag_names', 'accountable_ids']);
-        $idNotification    = $this->notificationRepository->insertGetId($notificationArray);
+        $notificationArray = Arr::only($inputs, ['data']);
+        $idAccounts        = [];
+        $idTags            = [];
 
-        if (!empty($inputs['tag_names']))
+        $this->__getIdAccountsAndIdTags($inputs, $idAccounts, $idTags);
+        DB::transaction(function () use ($notificationArray, $idAccounts, $idTags)
         {
-            $tags       = $this->_readTagsByNames($inputs['tag_names']);
-            $idTags     = $this->_getIdTagsFromTags($tags);
-            $idAccounts = $this->_getIdAccountsFromTags($tags);
-            $this->_createNotificationTag($idNotification, $idTags);
+            $idNotification = $this->__createNotification($notificationArray);
+            $this->__createManyNotificationAccount($idNotification, $idAccounts);
+            $this->__createManyNotificationTag($idNotification, $idTags);
+        }, 2);
+
+        return response('', 201);
+    }
+
+    private function __getIdAccountsAndIdTags (array $inputs, array &$idAccounts, array &$idTags)
+    {
+        switch (request()->route('option'))
+        {
+            case Constants::FOR_TEACHERS_IN_FACULTIES:
+            case Constants::FOR_TEACHERS_IN_DEPARTMENTS:
+                $taggableIds = array_merge($inputs['taggable_ids']['faculties'] ?? [],
+                                           $inputs['taggable_ids']['departments'] ?? []);
+                $tags        = $this->__readTagsByTaggableIds($taggableIds, true, true);
+                $idAccounts  = $this->__getIdAccountsByTags($tags);
+                $idTags      = $tags->pluck('id')->all();
+                break;
+
+            case Constants::FOR_STUDENTS_IN_FACULTIES_AND_ACADEMIC_YEARS:
+                $idClasses   = $this->__readIdClassesByIdAcademicYearAndIdFacultyPairs($inputs['taggable_ids']['academic_years'],
+                                                                                       $inputs['taggable_ids']['faculties']);
+                $taggableIds = array_merge($inputs['taggable_ids']['academic_years'],
+                                           $inputs['taggable_ids']['faculties']);
+                $idAccounts  = $this->__readIdAccountsByStudentsByIdClasses($idClasses);
+                $idTags      = $this->__readTagsByTaggableIds($taggableIds)->pluck('id')->all();
+                break;
+
+            case Constants::FOR_STUDENTS_IN_MODULE_CLASSES;
+                $idAccounts = $this->__readIdAccountsByStudentsByIdModuleClasses($inputs['taggable_ids']['module_classes']);
+                $idTags     = $this->__readTagsByTaggableIds($inputs['taggable_ids']['module_classes'])
+                                   ->pluck('id')->all();
+                break;
+
+            case Constants::FOR_STUDENTS_BY_IDS:
+                $idAccounts = $this->__readIdAccountsByIdStudents($inputs['id_students']);
+                break;
         }
-        else
+    }
+
+    private function __readIdClassesByIdAcademicYearAndIdFacultyPairs (array $idAcademicYears,
+                                                                       array $idFaculties) : array
+    {
+        return $this->classRepository->findIdClassesByIdAcademicYearAndIdFacultyPairs($idAcademicYears,
+                                                                                      $idFaculties)
+                                     ->all();
+    }
+
+    private function __readIdAccountsByStudentsByIdClasses (array $idClasses) : array
+    {
+        return $this->studentRepository->find(['id'], [['id_class', 'in', $idClasses]], [], [],
+                                              [['with', 'account:id,accountable_type,accountable_id']])
+                                       ->pluck('account.id')->filter()->all();
+    }
+
+    private function __readTagsByTaggableIds (array $taggableIds,
+                                              bool  $isWithAccounts = false,
+                                              bool  $isForTeacher = false) : Collection
+    {
+        $targetAudience = $isForTeacher ? Teacher::class : Student::class;
+        return $this->tagRepository->find(['id'],
+                                          [['taggable_id', 'in', $taggableIds],
+                                           ['target_audience', '=', $targetAudience]],
+                                          [], [],
+                                          $isWithAccounts ? [['with', 'accounts:id']] : []);
+    }
+
+    private function __readIdAccountsByStudentsByIdModuleClasses (array $idModuleClasses) : array
+    {
+        $moduleClasses = $this->moduleClassRepository->find(['id'],
+                                                            [['id', 'in', $idModuleClasses]],
+                                                            [], [],
+                                                            [['with', 'students:id', 'students.account:id,accountable_id']]);
+
+        $idAccounts = $moduleClasses->map(function ($item, $key)
         {
-            $idAccounts = $this->_readIdAccountsByNotifiableIds($inputs['accountable_ids']);
-        }
-
-        $this->_createNotificationAccount($idNotification, $idAccounts);
-    }
-
-    private function _completePostInputs (&$inputs)
-    {
-        $inputs['id_account'] = auth()->user()->id;
-    }
-
-    public function _readTagsByNames (array $tagNames)
-    {
-        $conditions = [];
-
-        foreach ($tagNames as $tagName)
-        {
-            if (!empty($conditions))
-            {
-                $conditions[] = ['name', '|like', $tagName];
-            }
-            else
-            {
-                $conditions[] = ['name', 'like', $tagName];
-            }
-        }
-
-        return $this->tagRepository->find(['id'], $conditions, [], [], [['with', 'accounts:id']]);
-    }
-
-    private function _getIdTagsFromTags (Collection $tags) : array
-    {
-        return $tags->pluck('id')->toArray();
-    }
-
-    private function _getIdAccountsFromTags (Collection $tags) : array
-    {
-        $idAccounts = [];
-
-        $tags->each(function ($item, $key) use (&$idAccounts)
-        {
-            $idAccounts = array_merge($idAccounts, $item->accounts->pluck('id')->toArray());
+            return $item->students->pluck('account.id');
         });
 
-        return $idAccounts;
+        return $idAccounts->collapse()->filter()->all();
     }
 
-    private function _readIdAccountsByNotifiableIds (array $notifiableIds)
+    private function __readIdAccountsByIdStudents (array $idStudents) : array
     {
-        return $this->accountRepository->pluck(['id'], [['accountable_id', 'in', $notifiableIds]])
-                                       ->toArray();
+        return $this->accountRepository->pluck(['id'], [['accountable_id', 'in', $idStudents]])
+                                       ->all();
     }
 
-    private function _createNotificationAccount (string $idNotification, array $idAccounts)
+    private function __createNotification (array $values) : int
     {
-        $this->notificationRepository->insertPivot($idNotification, $idAccounts, 'accounts');
+        $values['type'] = Constants::NOTIFICATION_TYPE[request()->route('option')];
+        return auth()->user()->notification()->create($values)->id;
     }
 
-    private function _createNotificationTag (string $idNotification, array $idTags)
+    private function __getIdAccountsByTags (Collection $tags) : array
     {
-        $this->notificationRepository->insertPivot($idNotification, $idTags, 'tags');
+        $idAccounts = $tags->map(function ($item, $key)
+        {
+            return $item->accounts->pluck('id');
+        });
+
+        return $idAccounts->collapse()->all();
+    }
+
+    private function __createManyNotificationAccount (string $idNotification, array $idAccounts)
+    {
+        if (!empty($idAccounts))
+        {
+            $this->notificationRepository->insertPivot($idNotification, $idAccounts, 'accounts');
+        }
+    }
+
+    private function __createManyNotificationTag (string $idNotification, array $idTags)
+    {
+        if (!empty($idTags))
+        {
+            $this->notificationRepository->insertPivot($idNotification, $idTags, 'tags');
+        }
     }
 }

@@ -307,7 +307,11 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
     Route::group(['prefix' => 'notifications'], function ()
     {
-        Route::post('create', [NotificationController::class, 'store']);
+        Route::group(['prefix' => 'create'], function ()
+        {
+            Route::post('{option}', [NotificationController::class, 'store'])
+                 ->where(['option' => 'faculties|departments|faculties-and-academic-years|module-classes|students']);
+        });
     });
 
 
