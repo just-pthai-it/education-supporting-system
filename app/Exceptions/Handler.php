@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -13,6 +14,7 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         CustomAuthenticationException::class,
         CustomBadHttpRequestException::class,
+        UnauthorizedHttpException::class,
     ];
 
     /**
