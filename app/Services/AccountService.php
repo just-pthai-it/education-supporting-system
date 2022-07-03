@@ -2,7 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Account;
 use App\Helpers\GFunction;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPasswordMailNotify;
+use App\Exceptions\CustomBadHttpRequestException;
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Exceptions\CustomAuthenticationException;
 
@@ -25,28 +29,26 @@ class AccountService implements Contracts\AccountServiceContract
      *
      * @throws CustomAuthenticationException
      */
-    public function changePassword (string $uuidAccount, int $idAccount, array $inputs)
+    public function changePassword (string $uuidAccount, int $idAccount, array $inputs) : void
     {
-        $this->_verifyCredentials($uuidAccount, $idAccount, $inputs['password']);
+        $credentials = [
+            'id'       => $idAccount,
+            'uuid'     => GFunction::uuidToBin($uuidAccount),
+            'password' => $inputs['password']
+        ];
+
+        $this->__verifyCredentials($credentials);
         $this->accountDepository->updateByIds($idAccount,
                                               ['password' => bcrypt($inputs['new_password'])]);
     }
 
     /**
-     * @param string $uuidAccount
-     * @param int    $idAccount
-     * @param string $password
+     * @param array $credentials *
      *
      * @throws CustomAuthenticationException
      */
-    private function _verifyCredentials (string $uuidAccount, int $idAccount, string $password)
+    private function __verifyCredentials (array $credentials) : void
     {
-        $credentials = [
-            'id'       => $idAccount,
-            'uuid'     => GFunction::uuidToBin($uuidAccount),
-            'password' => $password
-        ];
-
         if (auth()->attempt($credentials) === false)
         {
             $messages = json_encode(['Invalid username, email or password']);
@@ -54,7 +56,41 @@ class AccountService implements Contracts\AccountServiceContract
         }
     }
 
-    public function update ($uuidAccount, $values)
+    /**
+     * @throws CustomBadHttpRequestException
+     */
+    public function resetPassword (string $email)
+    {
+        $account = $this->__readAccountByEmail($email);
+        if (is_null($account))
+        {
+            $messages = json_encode(['Email is not available']);
+            throw new CustomBadHttpRequestException($messages, 400);
+        }
+
+        $token        = auth()->fromUser($account);
+        $frontEndHost = config('app.front_end_host');
+        $this->__sendConfirmResetPasswordMail($account, $token, $frontEndHost);
+    }
+
+    private function __readAccountByEmail (string $email) : ?Account
+    {
+        return $this->accountDepository->find(['*'], [['email', '=', $email]])[0] ?? null;
+    }
+
+    private function __sendConfirmResetPasswordMail (Account $account, string $token,
+                                                     string  $frontEndHost)
+    {
+        Mail::queue(new ResetPasswordMailNotify($account, $token, $frontEndHost));
+    }
+
+    public function confirmResetPassword (string $newPassword)
+    {
+        auth()->user()->update(['password' => bcrypt($newPassword)]);
+        auth()->logout();
+    }
+
+    public function update ($uuidAccount, $values) : void
     {
         $this->accountDepository->update($values,
                                          [['uuid', '=', GFunction::uuidToBin($uuidAccount)]]);

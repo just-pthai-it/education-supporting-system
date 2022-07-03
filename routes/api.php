@@ -201,6 +201,12 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
     });
 
 
+    Route::post('reset-password', [AccountController::class, 'resetPassword'])
+         ->withoutMiddleware(['cus.auth']);
+
+    Route::patch('confirm-reset-password', [AccountController::class, 'confirmResetPassword']);
+
+
     Route::group(['prefix' => 'accounts'], function ()
     {
         Route::patch('change-password/{uuid_account}',

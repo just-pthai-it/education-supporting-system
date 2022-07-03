@@ -41,6 +41,8 @@ class Account extends Authenticatable implements JWTSubject
     ];
 
     protected $hidden = [
+        'password',
+        'qldt_password',
         'uuid',
     ];
 
