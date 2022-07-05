@@ -6,9 +6,11 @@ interface AccountServiceContract
 {
     public function changePassword (string $uuidAccount, int $idAccount, array $inputs);
 
-    public function resetPassword (string $email);
+    public function requestResetPassword (string $email);
 
-    public function confirmResetPassword (string $newPassword);
+    public function verifyResetPassword (array $inputs);
+
+    public function resetPassword (array $inputs);
 
     public function update ($uuidAccount, $values);
 }

@@ -15,7 +15,7 @@ class ResetPasswordMailNotify extends Mailable
     private Account $account;
     private string $token;
     private string $frontEndHost;
-    private const RESET_PASSWORD_URL = '/reset-password/';
+    private const RESET_PASSWORD_URL = '/reset-password?token=';
     private const SUBJECT = 'Yêu cầu đặt lại mật khẩu.';
     private const VIEW = 'mail-forms.account.reset-password';
 
@@ -42,7 +42,7 @@ class ResetPasswordMailNotify extends Mailable
     {
         $data = ['name' => $this->account->accountable->name,
                  'url'  => "https://{$this->frontEndHost}" . self::RESET_PASSWORD_URL .
-                           $this->token,];
+                           "{$this->token}&email={$this->account->email}",];
 
         return $this->to($this->account->email)->with($data)
                     ->view(self::VIEW)->subject(self::SUBJECT);

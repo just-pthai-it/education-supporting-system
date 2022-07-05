@@ -12,6 +12,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
+        CustomHttpException::class,
         CustomAuthenticationException::class,
         CustomBadHttpRequestException::class,
         UnauthorizedHttpException::class,
@@ -33,6 +34,12 @@ class Handler extends ExceptionHandler
      */
     public function register ()
     {
+        $this->renderable(function (CustomHttpException $e)
+        {
+            $messages = json_decode($e->getMessage()) ?? $e->getMessage();
+            return response(['messages' => $messages], $e->getCode());
+        });
+
         $this->renderable(function (CustomBadHttpRequestException $e)
         {
             return response(['messages' => json_decode($e->getMessage())], $e->getCode());

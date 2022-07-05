@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Abstracts\ACustomFormRequest;
 
-class ConfirmResetPasswordPatchRequest extends ACustomFormRequest
+class VerifyResetPasswordPostRequest extends ACustomFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,8 @@ class ConfirmResetPasswordPatchRequest extends ACustomFormRequest
     public function rules () : array
     {
         return [
-            'new_password' => 'required|string',
+            'email' => 'required|string',
+            'token' => 'required|string',
         ];
     }
 }

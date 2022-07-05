@@ -14,6 +14,7 @@ use App\Repositories\ClassRepository;
 use App\Repositories\ExamScheduleRepository;
 use App\Repositories\TrainingTypeRepository;
 use App\Repositories\FixedScheduleRepository;
+use App\Repositories\PasswordResetRepository;
 use App\Repositories\DataVersionTeacherRepository;
 use App\Repositories\DataVersionStudentRepository;
 use App\Repositories\FcmRegistrationTokenRepository;
@@ -34,6 +35,7 @@ use App\Repositories\Contracts\NotificationRepositoryContract;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 use App\Repositories\Contracts\TrainingTypeRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
+use App\Repositories\Contracts\PasswordResetRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\TermRepositoryContract;
@@ -88,6 +90,7 @@ class RepositoryServiceProvider extends ServiceProvider
         DataversionTeacherRepositoryContract::class   => DataVersionTeacherRepository::class,
         FcmRegistrationtokenRepositoryContract::class => FcmRegistrationTokenRepository::class,
         DataVersionStudentRepositoryContract::class   => DataVersionStudentRepository::class,
+        PasswordResetRepositoryContract::class        => PasswordResetRepository::class,
 
     ];
 

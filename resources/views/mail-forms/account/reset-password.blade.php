@@ -18,7 +18,7 @@
         <tr class="header">
           <td style="height: 100%; display: flex; padding: 1rem; border-bottom: 1px solid #dddddd;">
             <a style="display: flex; align-items: center; text-decoration: none;" href="https://utcketnoi.edu.vn" target="_blank">
-              <img style="height: 100%; height: 65px; display: block; object-fit: cover;" src="https://utcketnoi.edu.vn/assets/img/logo.jpg" />
+              <img style="height: 100%; height: 65px; display: block; object-fit: cover;" src="https://utcketnoi.edu.vn/assets/img/logo-text.jpg" />
               <span style="margin-left: 0.75rem; color: #000000; font-size: 20px; font-weight: 600;"> HỆ THỐNG QUẢN LÝ LỊCH GIẢNG DẠY </span>
             </a>
           </td>

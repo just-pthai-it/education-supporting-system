@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountPatchRequest;
 use App\Http\Requests\ChangePasswordRequest;
-use App\Http\Requests\ResetPasswordPostRequest;
-use App\Http\Requests\ConfirmResetPasswordPatchRequest;
+use App\Http\Requests\VerifyResetPasswordPostRequest;
+use App\Http\Requests\RequestResetPasswordPostRequest;
+use App\Http\Requests\ResetPasswordPatchRequest;
 use App\Services\Contracts\AccountServiceContract;
 
 class AccountController extends Controller
@@ -27,14 +28,19 @@ class AccountController extends Controller
                                               $request->validated());
     }
 
-    public function resetPassword (ResetPasswordPostRequest $request)
+    public function requestResetPassword (RequestResetPasswordPostRequest $request)
     {
-        $this->accountService->resetPassword($request->validated()['email']);
+        $this->accountService->requestResetPassword($request->validated()['email']);
     }
 
-    public function confirmResetPassword (ConfirmResetPasswordPatchRequest $request)
+    public function verifyResetPassword (VerifyResetPasswordPostRequest $request)
     {
-        $this->accountService->confirmResetPassword($request->validated()['new_password']);
+        $this->accountService->verifyResetPassword($request->validated());
+    }
+
+    public function resetPassword (ResetPasswordPatchRequest $request)
+    {
+        $this->accountService->resetPassword($request->validated());
     }
 
     public function update (AccountPatchRequest $request, $uuidAccount)
