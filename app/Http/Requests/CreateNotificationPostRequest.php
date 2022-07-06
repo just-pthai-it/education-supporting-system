@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Helpers\Constants;
 use App\Http\Requests\Abstracts\ACustomFormRequest;
 
-class CreaateNotificationPostRequest extends ACustomFormRequest
+class CreateNotificationPostRequest extends ACustomFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

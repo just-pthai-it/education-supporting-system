@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreaateNotificationPostRequest;
+use App\Http\Requests\CreateNotificationPostRequest;
 use App\Services\Contracts\NotificationServiceContract;
 
 class NotificationController extends Controller
@@ -17,7 +17,7 @@ class NotificationController extends Controller
         $this->notificationService = $notificationService;
     }
 
-    public function store (CreaateNotificationPostRequest $request)
+    public function store (CreateNotificationPostRequest $request)
     {
         return $this->notificationService->store($request->validated());
     }
