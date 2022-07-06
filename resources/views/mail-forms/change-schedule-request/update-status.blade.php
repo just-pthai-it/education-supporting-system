@@ -21,7 +21,7 @@
 </head>
 
 <body>
-<table style="width: 100%; height: 100%; font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+<table style="width: 100%; height: 100%; font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; font-size: 14px;">
   <tbody>
   <tr>
     <td style="width: 100%; height: 100%; padding: 20px" class="box-wrapper">
@@ -29,9 +29,9 @@
         <tbody>
         <tr class="header">
           <td style="height: 100%; display: flex; padding: 1rem; border-bottom: 1px solid #dddddd;">
-            <a style="display: flex; align-items: center; text-decoration: none;" href="https://utcketnoi.edu.vn">
-              <img style="height: 100%; height: 65px; display: block; object-fit: cover;"
-                   src="https://utcketnoi.edu.vn/assets/img/logo.jpg"/>
+            <a style="display: flex; align-items: center; text-decoration: none;" href="https://utcketnoi.edu.vn" target="_blank">
+              <img style="height: 65px; display: block; object-fit: cover;"
+                   src="https://utcketnoi.edu.vn/assets/img/logo-text.png" alt=""/>
               <span style="margin-left: 0.75rem; color: #000000; font-size: 20px; font-weight: 600;">
                         HỆ THỐNG QUẢN LÝ LỊCH GIẢNG DẠY
                       </span>
@@ -74,7 +74,7 @@
                     {{ $fixed_schedule['old_date'] }}
                   </td>
                   <td style="padding: 0 1rem 0 0;">
-                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png"/>
+                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png" alt=""/>
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem; {{ isset($fixed_schedule['new_date']) ? '' : 'font-style: italic;' }}">
                     {{ $fixed_schedule['new_date'] ?? '(Chưa xác định)'}}
@@ -91,7 +91,7 @@
                     {{ $fixed_schedule['old_shift'] }}
                   </td>
                   <td style="padding: 0 1rem 0 0;">
-                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png"/>
+                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png" alt=""/>
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem; {{ isset($fixed_schedule['new_shift']) ? '' : 'font-style: italic;' }}">
                     {{ $fixed_schedule['new_shift'] ?? '(Chưa xác định)'}}
@@ -108,7 +108,7 @@
                     {{ $fixed_schedule['old_id_room'] }}
                   </td>
                   <td style="padding: 0 1rem 0 0;">
-                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png"/>
+                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png" alt=""/>
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem; {{ isset($fixed_schedule['new_id_room']) ? '' : 'font-style: italic;' }}">
                     {{ $fixed_schedule['new_id_room'] ?? '(Chưa xếp phòng)' }}
@@ -182,10 +182,13 @@
         <tr class="footer">
           <td style="text-align: center; padding: 1rem; font-size: 13px;">
             <div style="height: 1px; margin: 0 5rem 1rem; background-color: #1976d2; opacity: 0.36;"></div>
-            <a href="https://utcketnoi.edu.vn"> UTCKetnoi </a><br/>
+            <a href="https://utcketnoi.edu.vn" target="_blank"> UTCKetnoi </a><br/>
             <span style="display: block; margin-top: 0.25rem; color: #333333;">
                       Đây là tin nhắn tự động, vui lòng không phản hồi
                     </span>
+            <span style="display: block; margin-top: 0.25rem; color: #333333">
+              Để đưuọc hỗ trợ, vui lòng nhắn tin qua tài khoản hỗ trợ <a href="https://m.me/utcketnoi" target="_blank">tại đây</a>
+            </span>
           </td>
         </tr>
         </tbody>
