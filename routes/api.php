@@ -386,3 +386,13 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
     Route::get('me', [UserController::class, 'getUserInfo']);
 });
+
+Route::post('auth', function ()
+{
+    $socketId    = request()->socket_id;
+    $channelName = request()->channel_name;
+    $key         = '8178f5c727f67e579755';
+    $secret      = '78f10b4234c17b92ad1c';
+    $signature   = hash_hmac('sha256', "{$socketId}:{$channelName}", $secret);
+    return response(['auth' => "{$key}:{$signature}"]);
+});

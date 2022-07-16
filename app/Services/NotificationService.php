@@ -6,8 +6,10 @@ use App\Models\Teacher;
 use App\Models\Student;
 use App\Helpers\Constants;
 use Illuminate\Support\Arr;
+use App\Models\Notification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Events\NotificationCreated;
 use App\Repositories\Contracts\TagRepositoryContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
 use App\Repositories\Contracts\AccountRepositoryContract;
@@ -50,16 +52,19 @@ class NotificationService implements Contracts\NotificationServiceContract
     public function store (array $inputs)
     {
         $notificationArray = Arr::only($inputs, ['data']);
+        $notification      = null;
         $idAccounts        = [];
         $idTags            = [];
 
         $this->__getIdAccountsAndIdTags($inputs, $idAccounts, $idTags);
-        DB::transaction(function () use ($notificationArray, $idAccounts, $idTags)
+        DB::transaction(function () use ($notificationArray, &$notification, $idAccounts, $idTags)
         {
-            $idNotification = $this->__createNotification($notificationArray);
-            $this->__createManyNotificationAccount($idNotification, $idAccounts);
-            $this->__createManyNotificationTag($idNotification, $idTags);
+            $notification = $this->__createNotification($notificationArray);
+            $this->__createManyNotificationAccount($notification->id, $idAccounts);
+            $this->__createManyNotificationTag($notification->id, $idTags);
         }, 2);
+
+        NotificationCreated::dispatch($notification, $inputs['taggable_ids']);
 
         return response('', 201);
     }
@@ -146,10 +151,10 @@ class NotificationService implements Contracts\NotificationServiceContract
                                        ->all();
     }
 
-    private function __createNotification (array $values) : int
+    private function __createNotification (array $values) : Notification
     {
         $values['type'] = Constants::NOTIFICATION_TYPE[request()->route('option')];
-        return auth()->user()->notification()->create($values)->id;
+        return auth()->user()->notification()->create($values);
     }
 
     private function __getIdAccountsByTags (Collection $tags) : array

@@ -16,6 +16,16 @@ class ClassRepository extends BaseRepository implements Contracts\ClassRepositor
                                                                     array $idFaculties)
     {
         $this->createModel();
+        if (empty($idAcademicYears))
+        {
+            return $this->model->whereIn('id_faculty', $idFaculties)->pluck('id');
+        }
+
+        if (empty($idFaculties))
+        {
+            return $this->model->whereIn('id_academic_year', $idAcademicYears)->pluck('id');
+        }
+
         foreach ($idAcademicYears as $idAcademicYear)
         {
             foreach ($idFaculties as $idFaculty)
