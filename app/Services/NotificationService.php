@@ -64,7 +64,8 @@ class NotificationService implements Contracts\NotificationServiceContract
             $this->__createManyNotificationTag($notification->id, $idTags);
         }, 2);
 
-        NotificationCreated::dispatch($notification, $inputs['taggable_ids']);
+        NotificationCreated::dispatch($notification, $inputs['taggable_ids'],
+                                      request()->route('option'));
 
         return response('', 201);
     }

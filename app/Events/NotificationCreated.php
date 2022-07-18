@@ -18,17 +18,21 @@ class NotificationCreated implements ShouldBroadcast
 
     private Notification $notification;
     private array $taggableIds;
+    private string $routeOption;
 
     /**
      * Create a new event instance.
      *
      * @param Notification $notification
      * @param array        $taggableIds
+     * @param string       $routeOption
      */
-    public function __construct (Notification $notification, array $taggableIds)
+    public function __construct (Notification $notification, array $taggableIds,
+                                 string       $routeOption)
     {
         $this->notification = $notification;
         $this->taggableIds  = $taggableIds;
+        $this->routeOption  = $routeOption;
     }
 
     /**
@@ -38,7 +42,7 @@ class NotificationCreated implements ShouldBroadcast
     public function broadcastOn () : array
     {
         $channels = [];
-        switch (request()->route('option'))
+        switch ($this->routeOption)
         {
             case Constants::FOR_TEACHERS_IN_FACULTIES:
                 $channels = collect($this->taggableIds['faculties'])->transform(function ($item)
