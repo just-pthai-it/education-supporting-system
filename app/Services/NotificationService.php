@@ -155,7 +155,7 @@ class NotificationService implements Contracts\NotificationServiceContract
     private function __createNotification (array $values) : Notification
     {
         $values['type'] = Constants::NOTIFICATION_TYPE[request()->route('option')];
-        return auth()->user()->notification()->create($values);
+        return auth()->user()->notificationsSent()->create($values);
     }
 
     private function __getIdAccountsByTags (Collection $tags) : array
