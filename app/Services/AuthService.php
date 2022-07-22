@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Admin;
 use App\Models\Teacher;
 use App\Models\Student;
 use App\Models\OtherDepartment;
@@ -9,6 +10,7 @@ use App\Http\Resources\UserResource;
 use App\Exceptions\CustomAuthenticationException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\Contracts\RoleRepositoryContract;
+use App\Repositories\Contracts\AdminRepositoryContract;
 use App\Repositories\Contracts\StudentRepositoryContract;
 use App\Repositories\Contracts\OtherDepartmentRepositoryContract;
 use App\Repositories\Contracts\TeacherRepositoryContract;
@@ -18,6 +20,7 @@ class AuthService implements Contracts\AuthServiceContract
     private OtherDepartmentRepositoryContract $otherDepartmentDepository;
     private TeacherRepositoryContract $teacherDepository;
     private StudentRepositoryContract $studentRepository;
+    private AdminRepositoryContract $adminRepository;
     private RoleRepositoryContract $roleRepository;
 
     /**
@@ -25,16 +28,19 @@ class AuthService implements Contracts\AuthServiceContract
      * @param TeacherRepositoryContract         $teacherDepository
      * @param RoleRepositoryContract            $roleRepository
      * @param StudentRepositoryContract         $studentRepository
+     * @param AdminRepositoryContract           $adminRepository
      */
     public function __construct (OtherDepartmentRepositoryContract $otherDepartmentDepository,
                                  TeacherRepositoryContract         $teacherDepository,
                                  RoleRepositoryContract            $roleRepository,
-                                 StudentRepositoryContract         $studentRepository)
+                                 StudentRepositoryContract         $studentRepository,
+                                 AdminRepositoryContract           $adminRepository)
     {
         $this->otherDepartmentDepository = $otherDepartmentDepository;
         $this->teacherDepository         = $teacherDepository;
         $this->roleRepository            = $roleRepository;
         $this->studentRepository         = $studentRepository;
+        $this->adminRepository           = $adminRepository;
     }
 
     /**
@@ -85,6 +91,11 @@ class AuthService implements Contracts\AuthServiceContract
         $accountableType = auth()->user()->accountable_type;
         switch ($accountableType)
         {
+            case Admin::class:
+                $conditions = [['id', '=', $accountableId]];
+                $data       = $this->adminRepository->find(['*'], $conditions);
+                break;
+
             case OtherDepartment::class:
                 $conditions = [['id', '=', $accountableId]];
                 $data       = $this->otherDepartmentDepository->find(['*'], $conditions);

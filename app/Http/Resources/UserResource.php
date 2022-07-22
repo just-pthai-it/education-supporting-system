@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Admin;
 use App\Models\Teacher;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -21,6 +22,15 @@ class UserResource extends JsonResource
     {
         switch ($request->user()->accountable_type)
         {
+            case Admin::class:
+                return [
+                    'id'          => $this->id,
+                    'name'        => $this->name,
+                    'idRole'      => $this->id_role,
+                    'uuidAccount' => $this->uuid_account,
+                    'permissions' => $this->permissions,
+                ];
+
             case OtherDepartment::class:
                 return [
                     'id'          => $this->id,

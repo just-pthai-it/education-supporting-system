@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Repositories\TagRepository;
 use App\Repositories\RoomRepository;
 use App\Repositories\RoleRepository;
+use App\Repositories\AdminRepository;
 use App\Repositories\FeedbackRepository;
 use App\Repositories\PermissionRepository;
 use App\Repositories\CurriculumRepository;
@@ -21,6 +22,7 @@ use App\Repositories\FcmRegistrationTokenRepository;
 use App\Repositories\Contracts\TagRepositoryContract;
 use App\Repositories\Contracts\RoomRepositoryContract;
 use App\Repositories\Contracts\RoleRepositoryContract;
+use App\Repositories\Contracts\AdminRepositoryContract;
 use App\Repositories\Contracts\FeedbackRepositoryContract;
 use App\Repositories\Contracts\PermissionRepositoryContract;
 use App\Repositories\Contracts\CurriculumRepositoryContract;
@@ -91,6 +93,7 @@ class RepositoryServiceProvider extends ServiceProvider
         FcmRegistrationtokenRepositoryContract::class => FcmRegistrationTokenRepository::class,
         DataVersionStudentRepositoryContract::class   => DataVersionStudentRepository::class,
         PasswordResetRepositoryContract::class        => PasswordResetRepository::class,
+        AdminRepositoryContract::class                => AdminRepository::class,
 
     ];
 
