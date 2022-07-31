@@ -22,7 +22,8 @@ class NotificationResource extends JsonResource
             'type'      => $this->type,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
-            'readAt'    => $this->pivot->read_at,
+            'tags'      => $this->tags->pluck('name'),
+            'readAt'    => $this->accounts[0]->pivot->read_at,
             'sender'    => $this->account->accountable->name,
         ];
     }

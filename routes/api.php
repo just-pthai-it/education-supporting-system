@@ -210,6 +210,13 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
         {
             Route::patch('{uuid_account}', [AccountController::class, 'update']);
         });
+
+
+        Route::group(['prefix' => '{uuid_account}'], function ()
+        {
+            Route::get('notifications',
+                       [NotificationController::class, 'readManyByIdAccountAndUuidAccount']);
+        });
     });
 
     Route::group(['prefix' => 'students'], function ()
@@ -312,6 +319,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
             Route::post('{option}', [NotificationController::class, 'store'])
                  ->where(['option' => 'faculties|departments|faculties-and-academic-years|module-classes|students']);
         });
+
     });
 
 

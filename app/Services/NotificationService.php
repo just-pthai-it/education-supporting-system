@@ -10,21 +10,23 @@ use App\Models\Notification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Events\NotificationCreated;
+use App\Http\Resources\NotificationResource;
 use App\Repositories\Contracts\TagRepositoryContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
 use App\Repositories\Contracts\AccountRepositoryContract;
 use App\Repositories\Contracts\StudentRepositoryContract;
 use App\Repositories\Contracts\ModuleClassRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class NotificationService implements Contracts\NotificationServiceContract
 {
     private NotificationRepositoryContract $notificationRepository;
-    private ModuleClassRepositoryContract $moduleClassRepository;
-    private AccountRepositoryContract $accountRepository;
-    private StudentRepositoryContract $studentRepository;
-    private ClassRepositoryContract $classRepository;
-    private TagRepositoryContract $tagRepository;
+    private ModuleClassRepositoryContract  $moduleClassRepository;
+    private AccountRepositoryContract      $accountRepository;
+    private StudentRepositoryContract      $studentRepository;
+    private ClassRepositoryContract        $classRepository;
+    private TagRepositoryContract          $tagRepository;
 
     /**
      * @param NotificationRepositoryContract $notificationRepository
@@ -182,5 +184,13 @@ class NotificationService implements Contracts\NotificationServiceContract
         {
             $this->notificationRepository->insertPivot($idNotification, $idTags, 'tags');
         }
+    }
+
+    public function readManyByIdAccountAndUuidAccount (array $inputs) : AnonymousResourceCollection
+    {
+        $idAccount     = auth()->user()->id;
+        $notifications = $this->notificationRepository->findByIdAccount($idAccount, $inputs);
+
+        return NotificationResource::collection($notifications);
     }
 }

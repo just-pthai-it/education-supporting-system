@@ -6,4 +6,5 @@ interface NotificationServiceContract
 {
     public function store (array $inputs);
 
+    public function readManyByIdAccountAndUuidAccount (array $inputs);
 }
