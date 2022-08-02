@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use App\Models\Teacher;
 use App\Models\Student;
 use App\Helpers\Constants;
@@ -193,4 +194,31 @@ class NotificationService implements Contracts\NotificationServiceContract
 
         return NotificationResource::collection($notifications);
     }
+
+
+    public function markNotificationAsRead (string $idNotification)
+    {
+        $idAccount   = auth()->user()->id;
+        $datetimeNow = Carbon::now()->format('Y-m-d H:i:s');
+        $this->notificationRepository->updateExistingPivot($idNotification, [$idAccount],
+                                                           'accounts',
+                                                           ['read_at' => $datetimeNow]);
+    }
+
+    public function markNotificationsAsRead ()
+    {
+        $idAccount       = auth()->user()->id;
+        $datetimeNow     = Carbon::now()->format('Y-m-d H:i:s');
+        $idNotifications = $this->__getAllUnreadNotificationIdsByIdAccount($idAccount);
+        $this->accountRepository->updateExistingPivot($idAccount, $idNotifications,
+                                                      'notificationsReceived',
+                                                      ['read_at' => $datetimeNow]);
+    }
+
+    private function __getAllUnreadNotificationIdsByIdAccount (string $idAccount) : array
+    {
+        return $this->accountRepository->findUnreadNotificationsByIdAccount($idAccount)
+                                       ->pluck('id')->all();
+    }
+
 }

@@ -214,8 +214,17 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
         Route::group(['prefix' => '{uuid_account}'], function ()
         {
-            Route::get('notifications',
-                       [NotificationController::class, 'readManyByIdAccountAndUuidAccount']);
+            Route::group(['prefix' => 'notifications'], function ()
+            {
+                Route::get('',
+                           [NotificationController::class, 'readManyByIdAccountAndUuidAccount']);
+
+                Route::patch('{id_notification}/mark-as-read',
+                           [NotificationController::class, 'markNotificationAsRead']);
+
+                Route::put('mark-as-read',
+                             [NotificationController::class, 'markNotificationsAsRead']);
+            });
         });
     });
 
@@ -399,8 +408,8 @@ Route::post('auth', function ()
 {
     $socketId    = request()->socket_id;
     $channelName = request()->channel_name;
-    $key         = '8178f5c727f67e579755';
-    $secret      = '78f10b4234c17b92ad1c';
+    $key         = 'key';
+    $secret      = 'secret';
     $signature   = hash_hmac('sha256', "{$socketId}:{$channelName}", $secret);
     return response(['auth' => "{$key}:{$signature}"]);
 });
