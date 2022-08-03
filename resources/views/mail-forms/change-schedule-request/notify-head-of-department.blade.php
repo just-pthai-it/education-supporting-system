@@ -20,20 +20,14 @@
               <img style="height: 65px; display: block; object-fit: cover;"
                    src="https://utcketnoi.edu.vn/assets/img/logo.jpg" alt=""/>
               <span style="margin-left: 0.75rem; color: #000000; font-size: 20px; font-weight: 600;">
-                        HỆ THỐNG QUẢN LÝ LỊCH GIẢNG DẠY
-                      </span>
+                HỆ THỐNG QUẢN LÝ LỊCH GIẢNG DẠY
+              </span>
             </a>
           </td>
         </tr>
         <tr class="body">
-          <td
-                  style="padding: 1rem; padding-top: 1.5rem !important; padding-bottom: 1.5rem !important;">
-            <p>
-              Xin chào {{ $teacher_gender }} {{ $teacher_name }}.<br/>
-              Bộ môn {{ $department_name }} vừa nhận được một yêu cầu thay đổi lịch giảng dạy.<br>
-              Hãy kiểm tra ngay khi có thể.
-            </p>
-
+          <td style="padding: 1rem; padding-top: 1.5rem !important; padding-bottom: 1.5rem !important;">
+            <p> {!! $content !!}</p>
             <p>Trân trọng,</p>
             <div style="margin-top: 0.25rem; font-weight: bold; font-style: italic; color: #04af04;">Đội ngũ phát triển
               UTCKetnoi

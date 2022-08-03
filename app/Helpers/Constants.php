@@ -53,10 +53,11 @@ class Constants
     ];
 
     public const FIXED_SCHEDULE_CREATED_NOTIFICATION = [
-        'view'    => 'mail-forms.change-schedule-request.notify-head-of-department',
-        'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng.',
-        'content' => 'Xin chào :gender :name.<br>' . "<br>" .
-                     'Bộ môn :department_name vừa nhận được một yêu cầu thay đổi lịch giảng.<br>' .
-                     'Hãy kiểm tra ngay khi có thể.'
+        'view'              => 'mail-forms.change-schedule-request.notify-head-of-department',
+        'subject'           => 'Tiếp nhận yêu cầu thay đổi lịch giảng.',
+        'mail_content'      => 'Xin chào :teacher_gender :teacher_name.<br>' .
+                               'Bộ môn :department_name vừa nhận được một yêu cầu thay đổi lịch giảng dạy.<br>' .
+                               'Hãy kiểm tra ngay khi có thể.',
+        'broadcast_content' => 'Bộ môn :department_name vừa nhân được một yêu cầu thay đổi lịch giảng dạy.',
     ];
 }

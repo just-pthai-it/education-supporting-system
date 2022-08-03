@@ -57,8 +57,9 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
      */
     private function _sendMailNotificationToHeadOfDepartment (FixedSchedule $fixedSchedule)
     {
-        if (!in_array($fixedSchedule->status, [Constants::FIXED_SCHEDULE_STATUS['pending']['normal'],
-                                               Constants::FIXED_SCHEDULE_STATUS['pending']['soft']]))
+        if (!in_array($fixedSchedule->status,
+                      [Constants::FIXED_SCHEDULE_STATUS['pending']['normal'],
+                       Constants::FIXED_SCHEDULE_STATUS['pending']['soft']]))
         {
             return;
         }
@@ -66,14 +67,15 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
         $idDepartment = $fixedSchedule->schedule->moduleClass->module->id_department;
         $teacher      = $this->_readHeadOfDepartment($idDepartment);
         $mailData     = $this->_getBasicMailDataForHeadOfDepartment();
-        $this->_sendMailNotification(array_merge($mailData, [
-            'recipient' => $teacher->account->email,
-            'data'      => [
-                'teacher_name'    => $teacher->name,
-                'teacher_gender'  => $teacher->is_female ? 'cô' : 'thầy',
-                'department_name' => $teacher->department->name
-            ],
-        ]));
+        $mailContent  = replaceStringKeys($mailData['mail_content'],
+                                          [':teacher_gender'  => $teacher->is_female ? 'cô' : 'thầy',
+                                           ':teacher_name'    => $teacher->name,
+                                           ':department_name' => $teacher->department->name,]);
+
+        $this->_sendMailNotification(['view'      => $mailData['view'],
+                                      'subject'   => $mailData['subject'],
+                                      'recipient' => $teacher->account->email,
+                                      'data'      => ['content' => $mailContent,],]);
     }
 
     private function _readHeadOfDepartment (string $idDepartment)
@@ -127,16 +129,19 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
 
     private function _setUpData (array &$data, FixedSchedule $fixedSchedule)
     {
+        $mailContent = replaceStringKeys($data['mail_content'],
+                                         [':teacher_gender'  => $fixedSchedule->schedule->moduleClass->teacher->is_female ? 'cô' : 'thầy',
+                                          ':teacher_name'    => $fixedSchedule->schedule->moduleClass->teacher->name,
+                                          ':department_name' => $fixedSchedule->schedule->moduleClass->teacher->department->name,]);
+
         $data = array_merge($data, [
             'recipient' => $fixedSchedule->schedule->moduleClass->teacher->account->email,
             'data'      => [
-                'teacher_name'      => $fixedSchedule->schedule->moduleClass->teacher->name,
-                'teacher_gender'    => $fixedSchedule->schedule->moduleClass->teacher->is_female ? 'cô' : 'thầy',
                 'fixed_schedule'    => $fixedSchedule->getOriginal(),
                 'module_class_name' => $fixedSchedule->schedule->moduleClass->name,
                 'fs_status'         => Constants::FIXED_SCHEDULE_STATUS,
                 'status'            => $fixedSchedule->status,
-                'content'           => $data['content'],
+                'content'           => $mailContent,
             ]
         ]);
     }

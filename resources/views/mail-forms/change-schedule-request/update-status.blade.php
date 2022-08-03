@@ -42,10 +42,9 @@
           <td
                   style="padding: 1rem; padding-top: 1.5rem !important; padding-bottom: 1.5rem !important;">
             <p>
-              Xin chào {{ $teacher_gender }} {{ $teacher_name }}.<br/>
-              {{ $content }}
-              {{ $teacher_gender }}{{ in_array($fixed_schedule['status'] ,$fs_status['approve'])
-                                                    ? ', lịch giảng dạy mới đã được cập nhật trên hệ thống.' : '.' }}
+              {!! $content !!} <br>
+              {{ in_array($fixed_schedule['status'] ,$fs_status['approve'])
+                                                    ? 'Lịch giảng dạy mới đã được cập nhật trên hệ thống.' : '' }} <br>
               Thông tin chi tiết:
             </p>
             <div style="margin: 1rem 0.5rem; padding: 1rem; background-color: #f6f7f8;">
