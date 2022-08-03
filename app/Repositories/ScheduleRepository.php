@@ -48,8 +48,8 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                           'fixedSchedules' => function ($query)
                                           {
                                               $query->whereIn('status',
-                                                              array_merge(array_values(GData::$fsStatusCode['pending']),
-                                                                          array_values(GData::$fsStatusCode['approve'])))
+                                                              array_merge(array_values(Constants::FIXED_SCHEDULE_STATUS['pending']),
+                                                                          array_values(Constants::FIXED_SCHEDULE_STATUS['approve'])))
                                                     ->select('id', 'id_schedule', 'created_at',
                                                              'old_date', 'old_shift',
                                                              'old_id_room', 'new_date',
@@ -74,8 +74,8 @@ class ScheduleRepository extends BaseRepository implements Contracts\ScheduleRep
                                        'fixedSchedules' => function ($query)
                                        {
                                            return $query->whereIn('status',
-                                                                  array_merge(array_values(GData::$fsStatusCode['pending']),
-                                                                              array_values(GData::$fsStatusCode['approve'])))
+                                                                  array_merge(array_values(Constants::FIXED_SCHEDULE_STATUS['pending']),
+                                                                              array_values(Constants::FIXED_SCHEDULE_STATUS['approve'])))
                                                         ->select('id', 'id_schedule', 'created_at',
                                                                  'old_date', 'old_shift',
                                                                  'old_id_room', 'new_date',

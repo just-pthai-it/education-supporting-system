@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Helpers\GData;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Helpers\Constants;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -56,7 +57,8 @@ class ScheduleResource extends JsonResource
         }
 
         if ($this->fixedSchedules->isNotEmpty() &&
-            $this->fixedSchedules->last()->status == GData::$fsStatusCode['approve']['soft'])
+            $this->fixedSchedules->last()->status ==
+            Constants::FIXED_SCHEDULE_STATUS['approve']['soft'])
         {
             $color = '#cccccc';
         }

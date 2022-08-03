@@ -57,8 +57,8 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
      */
     private function _sendMailNotificationToHeadOfDepartment (FixedSchedule $fixedSchedule)
     {
-        if (!in_array($fixedSchedule->status, [GData::$fsStatusCode['pending']['normal'],
-                                               GData::$fsStatusCode['pending']['soft']]))
+        if (!in_array($fixedSchedule->status, [Constants::FIXED_SCHEDULE_STATUS['pending']['normal'],
+                                               Constants::FIXED_SCHEDULE_STATUS['pending']['soft']]))
         {
             return;
         }
@@ -92,27 +92,27 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
     {
         switch ($status)
         {
-            case GData::$fsStatusCode['cancel']['normal']:
+            case Constants::FIXED_SCHEDULE_STATUS['cancel']['normal']:
                 return GData::$mail_data['change_schedule_request']['cancel'];
 
-            case GData::$fsStatusCode['deny']['set_room']:
+            case Constants::FIXED_SCHEDULE_STATUS['deny']['set_room']:
                 return GData::$mail_data['change_schedule_request']['deny_set_room'];
 
-            case GData::$fsStatusCode['deny']['accept']:
+            case Constants::FIXED_SCHEDULE_STATUS['deny']['accept']:
                 return GData::$mail_data['change_schedule_request']['deny_accept'];
 
-            case GData::$fsStatusCode['pending']['normal']:
-            case GData::$fsStatusCode['pending']['soft']:
+            case Constants::FIXED_SCHEDULE_STATUS['pending']['normal']:
+            case Constants::FIXED_SCHEDULE_STATUS['pending']['soft']:
                 return GData::$mail_data['change_schedule_request']['pending'];
 
-            case GData::$fsStatusCode['pending']['set_room']:
+            case Constants::FIXED_SCHEDULE_STATUS['pending']['set_room']:
                 return GData::$mail_data['change_schedule_request']['pending_set_room'];
 
-            case GData::$fsStatusCode['approve']['normal']:
+            case Constants::FIXED_SCHEDULE_STATUS['approve']['normal']:
                 return GData::$mail_data['change_schedule_request']['approve'];
 
-            case GData::$fsStatusCode['approve']['soft']:
-            case GData::$fsStatusCode['approve']['straight']:
+            case Constants::FIXED_SCHEDULE_STATUS['approve']['soft']:
+            case Constants::FIXED_SCHEDULE_STATUS['approve']['straight']:
                 return GData::$mail_data['change_schedule_request']['approve_straight'];
 
             default:
