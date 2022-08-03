@@ -21,7 +21,7 @@
 </head>
 
 <body>
-<table style="width: 100%; height: 100%; font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+<table style="width: 100%; height: 100%; font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; font-size: 14px;">
   <tbody>
   <tr>
     <td style="width: 100%; height: 100%; padding: 20px" class="box-wrapper">
@@ -30,11 +30,11 @@
         <tr class="header">
           <td style="height: 100%; display: flex; padding: 1rem; border-bottom: 1px solid #dddddd;">
             <a style="display: flex; align-items: center; text-decoration: none;" href="https://utcketnoi.edu.vn">
-              <img style="height: 100%; height: 65px; display: block; object-fit: cover;"
-                   src="https://utcketnoi.edu.vn/assets/img/logo.jpg"/>
+              <img style="height: 65px; display: block; object-fit: cover;"
+                   src="https://utcketnoi.edu.vn/assets/img/logo.jpg" alt=""/>
               <span style="margin-left: 0.75rem; color: #000000; font-size: 20px; font-weight: 600;">
-                        HỆ THỐNG QUẢN LÝ LỊCH GIẢNG DẠY
-                      </span>
+                HỆ THỐNG QUẢN LÝ LỊCH GIẢNG DẠY
+              </span>
             </a>
           </td>
         </tr>
@@ -42,10 +42,9 @@
           <td
                   style="padding: 1rem; padding-top: 1.5rem !important; padding-bottom: 1.5rem !important;">
             <p>
-              Xin chào {{ $teacher['is_female'] ? 'cô' : 'thầy' }} {{ $teacher['name'] }},<br/>
+              Xin chào {{ $teacher_gender }} {{ $teacher_name }}.<br/>
               {{ $content }}
-              {{ $teacher['is_female'] ? 'cô' : 'thầy' }}
-              {{ in_array($fixed_schedule['status'],$fs_status_code['approve'])
+              {{ $teacher_gender }}{{ in_array($fixed_schedule['status'] ,$fs_status['approve'])
                                                     ? ', lịch giảng dạy mới đã được cập nhật trên hệ thống.' : '.' }}
               Thông tin chi tiết:
             </p>
@@ -60,7 +59,7 @@
                     :
                   </td>
                   <td colspan="3" style="padding-top: 0.25rem; padding-bottom: 0.25rem;">
-                    {{ $module_class['name'] }}
+                    {{ $module_class_name }}
                   </td>
                 </tr>
                 <tr>
@@ -136,23 +135,23 @@
                   </td>
                   <td style="font-weight: bold;"
                       colspan="3">
-                              <span class="{{in_array($fixed_schedule['status'], array_merge(array_values($fs_status_code['cancel']),
-                                                                                                array_values($fs_status_code['deny'])))
-                                                ? 'deny' : (in_array($fixed_schedule['status'], $fs_status_code['pending'])
+                              <span class="{{in_array($fixed_schedule['status'], array_merge(array_values($fs_status['cancel']),
+                                                                                                array_values($fs_status['deny'])))
+                                                ? 'deny' : (in_array($fixed_schedule['status'], $fs_status['pending'])
                                                 ? 'pending' : 'accept')
                                                 }}">
-                               @if($fixed_schedule['status'] == $fs_status_code['cancel']['normal'])
+                               @if($fixed_schedule['status'] == $fs_status['cancel']['normal'])
                                   Đã hủy
-                                @elseif($fixed_schedule['status'] == $fs_status_code['deny']['set_room'])
+                                @elseif($fixed_schedule['status'] == $fs_status['deny']['set_room'])
                                   Phòng QLGĐ đã từ chối
-                                @elseif($fixed_schedule['status'] == $fs_status_code['deny']['accept'])
+                                @elseif($fixed_schedule['status'] == $fs_status['deny']['accept'])
                                   Bộ môn đã từ chối
-                                @elseif(in_array($fixed_schedule['status'], [$fs_status_code['pending']['normal'],
-                                                                                 $fs_status_code['pending']['soft']]))
+                                @elseif(in_array($fixed_schedule['status'], [$fs_status['pending']['normal'],
+                                                                                 $fs_status['pending']['soft']]))
                                   Đang chờ bộ môn phê duyệt
-                                @elseif($fixed_schedule['status'] == $fs_status_code['pending']['set_room'])
+                                @elseif($fixed_schedule['status'] == $fs_status['pending']['set_room'])
                                   Đang chờ phòng QLGĐ xếp phòng
-                                @elseif(in_array($fixed_schedule['status'], $fs_status_code['approve']))
+                                @elseif(in_array($fixed_schedule['status'], $fs_status['approve']))
                                   Đã phê duyệt
                                 @endif
                               </span>
@@ -184,8 +183,12 @@
             <div style="height: 1px; margin: 0 5rem 1rem; background-color: #1976d2; opacity: 0.36;"></div>
             <a href="https://utcketnoi.edu.vn"> UTCKetnoi </a><br/>
             <span style="display: block; margin-top: 0.25rem; color: #333333;">
-                      Đây là tin nhắn tự động, vui lòng không phản hồi
-                    </span>
+              Đây là tin nhắn tự động, vui lòng không phản hồi.
+            </span>
+            <span style="display: block; margin-top: 0.25rem; color: #333333;">
+              Để được hỗ trợ, vui lòng nhắn tin qua tài khoản hỗ trợ
+              <a href="https://m.me/utcketnoi" target="_blank">tại đây.</a>
+            </span>
           </td>
         </tr>
         </tbody>

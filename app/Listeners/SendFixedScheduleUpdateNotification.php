@@ -5,11 +5,13 @@ namespace App\Listeners;
 use Exception;
 use App\Helpers\GData;
 use App\Models\Teacher;
+use App\Helpers\Constants;
 use App\Models\FixedSchedule;
 use App\Events\FixedScheduleUpdated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Services\Contracts\MailServiceContract;
+use function App\Helpers\replaceStringKeys;
 
 class SendFixedScheduleUpdateNotification implements ShouldQueue
 {
@@ -65,9 +67,12 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
         $teacher      = $this->_readHeadOfDepartment($idDepartment);
         $mailData     = $this->_getBasicMailDataForHeadOfDepartment();
         $this->_sendMailNotification(array_merge($mailData, [
-            'recipient'  => $teacher->account->email,
-            'teacher'    => $teacher->getOriginal(),
-            'department' => $teacher->department->getOriginal(),
+            'recipient' => $teacher->account->email,
+            'data'      => [
+                'teacher_name'    => $teacher->name,
+                'teacher_gender'  => $teacher->is_female ? 'cô' : 'thầy',
+                'department_name' => $teacher->department->name
+            ],
         ]));
     }
 
@@ -115,19 +120,24 @@ class SendFixedScheduleUpdateNotification implements ShouldQueue
         }
     }
 
-    private function _getBasicMailDataForHeadOfDepartment ()
+    private function _getBasicMailDataForHeadOfDepartment () : array
     {
-        return GData::$mail_data['change_schedule_request']['notify_head_of_department'];
+        return Constants::FIXED_SCHEDULE_CREATED_NOTIFICATION;
     }
 
     private function _setUpData (array &$data, FixedSchedule $fixedSchedule)
     {
         $data = array_merge($data, [
-            'recipient'      => $fixedSchedule->schedule->moduleClass->teacher->account->email,
-            'fixed_schedule' => $fixedSchedule->getOriginal(),
-            'module_class'   => $fixedSchedule->schedule->moduleClass->getOriginal(),
-            'teacher'        => $fixedSchedule->schedule->moduleClass->teacher->getOriginal(),
-            'fs_status_code' => GData::$fsStatusCode,
+            'recipient' => $fixedSchedule->schedule->moduleClass->teacher->account->email,
+            'data'      => [
+                'teacher_name'      => $fixedSchedule->schedule->moduleClass->teacher->name,
+                'teacher_gender'    => $fixedSchedule->schedule->moduleClass->teacher->is_female ? 'cô' : 'thầy',
+                'fixed_schedule'    => $fixedSchedule->getOriginal(),
+                'module_class_name' => $fixedSchedule->schedule->moduleClass->name,
+                'fs_status'         => Constants::FIXED_SCHEDULE_STATUS,
+                'status'            => $fixedSchedule->status,
+                'content'           => $data['content'],
+            ]
         ]);
     }
 

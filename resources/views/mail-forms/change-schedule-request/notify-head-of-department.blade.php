@@ -8,17 +8,17 @@
 </head>
 
 <body>
-<table style="width: 100%; height: 100%; font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+<table style="width: 100%; height: 100%; font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; font-size: 14px;">
   <tbody>
   <tr>
     <td style="width: 100%; height: 100%; padding: 20px" class="box-wrapper">
-      <table style="border-collapse: collapse; width: 600px; margin: auto; border: 1px solid #dddddd;">
+      <table style="border-collapse: collapse; width: 630px; margin: auto; border: 1px solid #dddddd;">
         <tbody>
         <tr class="header">
           <td style="height: 100%; display: flex; padding: 1rem; border-bottom: 1px solid #dddddd;">
             <a style="display: flex; align-items: center; text-decoration: none;" href="https://utcketnoi.edu.vn">
-              <img style="height: 100%; height: 65px; display: block; object-fit: cover;"
-                   src="https://utcketnoi.edu.vn/assets/img/logo.jpg"/>
+              <img style="height: 65px; display: block; object-fit: cover;"
+                   src="https://utcketnoi.edu.vn/assets/img/logo.jpg" alt=""/>
               <span style="margin-left: 0.75rem; color: #000000; font-size: 20px; font-weight: 600;">
                         HỆ THỐNG QUẢN LÝ LỊCH GIẢNG DẠY
                       </span>
@@ -29,8 +29,8 @@
           <td
                   style="padding: 1rem; padding-top: 1.5rem !important; padding-bottom: 1.5rem !important;">
             <p>
-              Xin chào {{ $teacher['is_female'] ? 'cô' : 'thầy' }} {{ $teacher['name'] }}.<br/>
-              Bộ môn {{ $department['name'] }} vừa nhận được một yêu cầu thay đổi lịch giảng.<br>
+              Xin chào {{ $teacher_gender }} {{ $teacher_name }}.<br/>
+              Bộ môn {{ $department_name }} vừa nhận được một yêu cầu thay đổi lịch giảng dạy.<br>
               Hãy kiểm tra ngay khi có thể.
             </p>
 
@@ -45,8 +45,12 @@
             <div style="height: 1px; margin: 0 5rem 1rem; background-color: #1976d2; opacity: 0.36;"></div>
             <a href="https://utcketnoi.edu.vn"> UTCKetnoi </a><br/>
             <span style="display: block; margin-top: 0.25rem; color: #333333;">
-                      Đây là tin nhắn tự động, vui lòng không phản hồi
-                    </span>
+              Đây là tin nhắn tự động, vui lòng không phản hồi.
+            </span>
+            <span style="display: block; margin-top: 0.25rem; color: #333333;">
+              Để được hỗ trợ, vui lòng nhắn tin qua tài khoản hỗ trợ
+              <a href="https://m.me/utcketnoi" target="_blank">tại đây.</a>
+            </span>
           </td>
         </tr>
         </tbody>

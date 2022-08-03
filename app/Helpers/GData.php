@@ -21,33 +21,6 @@ class GData
         '13,14,15,16' => '5_2',
     ];
 
-    /**
-     * Contains all fixed schedule status code
-     * @var array
-     */
-    public static array $fsStatusCode = [
-        'cancel'  => [
-            'normal' => 100,
-        ],
-        'pending' => [
-            'normal'   => 200,
-            'soft'     => 201,
-            'set_room' => 202,
-        ],
-        'approve' => [
-            'normal'   => 300,
-            'soft'     => 301,
-            'straight' => 302,
-        ],
-        'change'  => [
-            'normal' => 400,
-        ],
-        'deny'    => [
-            'accept'   => 500,
-            'set_room' => 501
-        ],
-    ];
-
     public static array $mail_data = [
         'change_schedule_request' => [
             'pending'                   => [
@@ -84,10 +57,6 @@ class GData
                 'view'    => 'mail-forms.change-schedule-request.update-status',
                 'subject' => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy.',
                 'content' => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy của',
-            ],
-            'notify_head_of_department' => [
-                'view'    => 'mail-forms.change-schedule-request.notify-head-of-department',
-                'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng.',
             ],
         ],
     ];
