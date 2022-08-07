@@ -18,10 +18,10 @@ use App\Repositories\Contracts\TeacherRepositoryContract;
 class AuthService implements Contracts\AuthServiceContract
 {
     private OtherDepartmentRepositoryContract $otherDepartmentDepository;
-    private TeacherRepositoryContract $teacherDepository;
-    private StudentRepositoryContract $studentRepository;
-    private AdminRepositoryContract $adminRepository;
-    private RoleRepositoryContract $roleRepository;
+    private TeacherRepositoryContract         $teacherDepository;
+    private StudentRepositoryContract         $studentRepository;
+    private AdminRepositoryContract           $adminRepository;
+    private RoleRepositoryContract            $roleRepository;
 
     /**
      * @param OtherDepartmentRepositoryContract $otherDepartmentDepository
@@ -130,6 +130,7 @@ class AuthService implements Contracts\AuthServiceContract
         $data->id_role      = auth()->user()->id_role;
         $data->email        = auth()->user()->email;
         $data->phone        = auth()->user()->phone;
+        $data->tags         = auth()->user()->tags()->get(['taggable_id', 'taggable_type']);
         $data->permissions  = $this->_getAccountPermissions();
         return $data;
     }

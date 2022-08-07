@@ -5,7 +5,9 @@ namespace App\Http\Resources;
 use App\Models\Admin;
 use App\Models\Teacher;
 use App\Models\Student;
+use App\Models\Faculty;
 use Illuminate\Http\Request;
+use App\Models\AcademicYear;
 use App\Models\OtherDepartment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,15 +25,20 @@ class UserResource extends JsonResource
         switch ($request->user()->accountable_type)
         {
             case Admin::class:
+                $tags   = $this->tags->pluck('taggable_id');
+                $tags[] = (string)auth()->user()->id;
                 return [
                     'id'          => $this->id,
                     'name'        => $this->name,
                     'idRole'      => $this->id_role,
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
+                    'tags'        => $this->tags,
                 ];
 
             case OtherDepartment::class:
+                $tags   = $this->tags->pluck('taggable_id');
+                $tags[] = (string)auth()->user()->id;
                 return [
                     'id'          => $this->id,
                     'name'        => $this->name,
@@ -39,9 +46,12 @@ class UserResource extends JsonResource
                     'address'     => $this->address,
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
+                    'tags'        => $this->tags,
                 ];
 
             case Teacher::class:
+                $tags   = $this->tags->pluck('taggable_id');
+                $tags[] = (string)auth()->user()->id;
                 return [
                     'id'                      => $this->id,
                     'name'                    => $this->name,
@@ -60,9 +70,18 @@ class UserResource extends JsonResource
                     'isHeadOfDepartment'      => $this->is_head_of_department,
                     'isHeadOfFaculty'         => $this->is_head_of_faculty,
                     'permissions'             => $this->permissions,
+                    'tags'                    => $tags,
                 ];
 
             case Student::class:
+                $tags            = $this->tags->pluck('taggable_id');
+                $facultyTag      = $this->tags->where('taggable_type', '=', Faculty::class)
+                                              ->first();
+                $academicYearTag = $this->tags->where('taggable_type', '=', AcademicYear::class)
+                                              ->first();;
+                $tags[] = $academicYearTag->taggable_id . '.' . $facultyTag->taggable_id;
+                $tags[] = (string)auth()->user()->id;
+
                 return [
                     'id'          => $this->id,
                     'name'        => $this->name,
@@ -73,6 +92,7 @@ class UserResource extends JsonResource
                     'idRole'      => $this->id_role,
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
+                    'tags'        => $this->tags,
                 ];
 
             default:
