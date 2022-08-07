@@ -28,6 +28,11 @@ class Notification extends Model
         'id_account',
     ];
 
+    protected array $sortable = [
+        'id',
+        'created_at',
+    ];
+
     protected $hidden = [
     ];
 

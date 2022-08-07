@@ -21,8 +21,7 @@ class NotificationRepository extends BaseRepository implements Contracts\Notific
             {
                 $query->orderBy('account_notification.id', 'desc')
                       ->where('id_account', '=', $idAccount);
-            })->filter($inputs)->orderBy('id', 'desc')
-                                   ->with([
+            })->filter($inputs)->with([
                                               'accounts' => function ($query) use ($idAccount)
                                               {
                                                   $query->select('id_account')
