@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\Filterable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,11 @@ class Notification extends Model
     protected $casts = [
         'data' => 'array',
     ];
+
+    public function filterTime (Builder $query, string $value)
+    {
+        $query->where('created_at', '<', $value);
+    }
 
     public function tags () : BelongsToMany
     {

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Notification;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\Abstracts\BaseRepository;
 
 class NotificationRepository extends BaseRepository implements Contracts\NotificationRepositoryContract
@@ -13,9 +14,9 @@ class NotificationRepository extends BaseRepository implements Contracts\Notific
         return Notification::class;
     }
 
-    public function findByIdAccount (string $idAccount, array $inputs)
+    public function findByIdAccount (string $idAccount, array $inputs) : Collection
     {
-        $this->model = $this->model->whereHas('accounts',
+        return $this->model->whereHas('accounts',
             function (Builder $query) use ($idAccount)
             {
                 $query->orderBy('account_notification.id', 'desc')
@@ -29,15 +30,6 @@ class NotificationRepository extends BaseRepository implements Contracts\Notific
                                               },
                                               'account:id,accountable_type,accountable_id',
                                               'account.accountable:id,name',
-                                          ]);
-
-        if (isset($inputs['page']))
-        {
-            return $this->model->paginate($inputs['pagination'] ?? 10);
-        }
-        else
-        {
-            return $this->model->get();
-        }
+                                          ])->get();
     }
 }
