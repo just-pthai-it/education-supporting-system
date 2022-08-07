@@ -21,53 +21,6 @@ class GData
         '13,14,15,16' => '5_2',
     ];
 
-    public static array $mail_data = [
-        'change_schedule_request' => [
-            'pending'          => [
-                'view'         => 'mail-forms.change-schedule-request.update-status',
-                'subject'      => 'Xác nhân yêu cầu thay đổi lịch giảng dạy.',
-                'mail_content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                                  'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
-            ],
-            'pending_set_room' => [
-                'view'         => 'mail-forms.change-schedule-request.update-status',
-                'subject'      => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy.',
-                'mail_content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                                  'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
-            ],
-            'approve'          => [
-                'view'         => 'mail-forms.change-schedule-request.update-status',
-                'subject'      => 'Phòng quản lí giảng đường đã phê duyệt yêu cầu thay đôi lịch giảng dạy.',
-                'mail_content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                                  'Phòng quản lí giảng đường đã phê duyệt và cấp phòng cho yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
-            ],
-            'approve_straight' => [
-                'view'         => 'mail-forms.change-schedule-request.update-status',
-                'subject'      => 'Yêu cầu thay đổi lịch giảng dạy đã được phê duyệt.',
-                'mail_content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                                  'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
-            ],
-            'cancel'           => [
-                'view'         => 'mail-forms.change-schedule-request.update-status',
-                'subject'      => 'Xác nhận hủy yêu cầu thay đổi lịch giảng dạy.',
-                'mail_content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                                  'Hệ thống đã hủy yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
-            ],
-            'deny_accept'      => [
-                'view'         => 'mail-forms.change-schedule-request.update-status',
-                'subject'      => 'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy.',
-                'mail_content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                                  'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
-            ],
-            'deny_set_room'    => [
-                'view'         => 'mail-forms.change-schedule-request.update-status',
-                'subject'      => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy.',
-                'mail_content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                                  'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
-            ],
-        ],
-    ];
-
     public static array $id_faculties_not_query = [
         'LLCT', 'GDTC', 'GDQP'
     ];

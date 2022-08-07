@@ -29,7 +29,6 @@ class NotificationRepository extends BaseRepository implements Contracts\Notific
                                               },
                                               'account:id,accountable_type,accountable_id',
                                               'account.accountable:id,name',
-                                              'tags:id,name'
                                           ]);
 
         if (isset($inputs['page']))

@@ -5,7 +5,7 @@ namespace App\Services;
 use Exception;
 use App\Helpers\Constants;
 use App\Models\FixedSchedule;
-use App\Events\FixedScheduleUpdated;
+use App\Events\FixedScheduleCreatedOrUpdated;
 use App\Repositories\Contracts\ScheduleRepositoryContract;
 use App\Repositories\Contracts\NotificationRepositoryContract;
 use App\Repositories\Contracts\FixedScheduleRepositoryContract;
@@ -50,41 +50,53 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
     /**
      * @throws Exception
      */
-    public function create ($fixedScheduleArr)
+    public function create (array $inputs)
     {
-        $this->_completeCreateInputs($fixedScheduleArr);
-        $fixedSchedule = $this->fixedScheduleRepository->insertGetObject($fixedScheduleArr);
-        $this->_sendMailNotification($fixedSchedule);
+        $inputs        = $this->_completeCreateInputs($inputs);
+        $fixedSchedule = $this->fixedScheduleRepository->insertGetObject($inputs);
+        $this->__dispatchRelatedEvents($fixedSchedule);
         return $fixedSchedule->id;
     }
 
-    private function _completeCreateInputs (array &$fixedScheduleArr)
+    /**
+     * @throws Exception
+     */
+    private function _completeCreateInputs (array $inputs) : array
     {
-        switch ($fixedScheduleArr['type'] ?? null)
-        {
-            case null:
-                $fixedScheduleArr['status'] = Constants::FIXED_SCHEDULE_STATUS['pending']['normal'];
-                break;
+        $inputs['status'] = $this->__getSuitableStatusOfCreatedFixedSchedule($inputs['type'] ?? '');
+        unset($inputs['type']);
 
-            case 'soft':
-                $fixedScheduleArr['status'] = Constants::FIXED_SCHEDULE_STATUS['pending']['soft'];
-                break;
-
-            case 'hard':
-                $fixedScheduleArr['status'] = Constants::FIXED_SCHEDULE_STATUS['change']['normal'];
-                break;
-        }
-        unset($fixedScheduleArr['type']);
-
-        $schedule = $this->_readScheduleById($fixedScheduleArr['id_schedule'],
+        $schedule = $this->_readScheduleById($inputs['id_schedule'],
                                              ['date as old_date', 'shift as old_shift',
                                               'id_room as old_id_room']);
 
-        $fixedScheduleArr = array_merge($fixedScheduleArr, $schedule->getOriginal());
+        return array_merge($inputs, $schedule->getOriginal());
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function __getSuitableStatusOfCreatedFixedSchedule (string $type) : int
+    {
+        switch ($type)
+        {
+            case '':
+                return Constants::FIXED_SCHEDULE_STATUS['pending']['normal'];
+
+            case 'soft':
+                return Constants::FIXED_SCHEDULE_STATUS['pending']['soft'];
+
+            case 'hard':
+                return Constants::FIXED_SCHEDULE_STATUS['change']['normal'];
+
+            default:
+                throw new Exception('Unknown fixed schedule type');
+        }
     }
 
     private function _readFixedScheduleById ($ids, array $columns = ['*'])
     {
+        $columns = ['*'];
         return $this->fixedScheduleRepository->findByIds($ids, $columns);
     }
 
@@ -103,7 +115,7 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         $fixedSchedule = $this->_readFixedScheduleById($idFixedSchedule);
         $this->_completeUpdateInputs($fixedScheduleArr, $fixedSchedule);
         $fixedSchedule->save();
-        $this->_sendMailNotification($fixedSchedule);
+        $this->__dispatchRelatedEvents($fixedSchedule);
         return ['data' => ['status' => $fixedSchedule->status]];
     }
 
@@ -182,13 +194,13 @@ class FixedScheduleService implements Contracts\FixedScheduleServiceContract
         unset($fixedScheduleArr['type']);
     }
 
-    private function _sendMailNotification (FixedSchedule $fixedSchedule)
+    private function __dispatchRelatedEvents (FixedSchedule $fixedSchedule)
     {
         if ($fixedSchedule->status == Constants::FIXED_SCHEDULE_STATUS['change']['normal'])
         {
             return;
         }
 
-        FixedScheduleUpdated::dispatch($fixedSchedule);
+        FixedScheduleCreatedOrUpdated::dispatch($fixedSchedule, request()->user());
     }
 }

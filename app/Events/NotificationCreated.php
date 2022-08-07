@@ -17,8 +17,8 @@ class NotificationCreated implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private Notification $notification;
-    private array $taggableIds;
-    private string $routeOption;
+    private array        $taggableIds;
+    private string       $routeOption;
 
     /**
      * Create a new event instance.
@@ -28,11 +28,18 @@ class NotificationCreated implements ShouldBroadcast
      * @param string       $routeOption
      */
     public function __construct (Notification $notification, array $taggableIds,
-                                 string       $routeOption)
+                                 string       $routeOption = '')
     {
         $this->notification = $notification;
         $this->taggableIds  = $taggableIds;
         $this->routeOption  = $routeOption;
+        $this->__loadNotificationRelationships();
+    }
+
+    private function __loadNotificationRelationships ()
+    {
+        $this->notification->load(['account:id,accountable_type,accountable_id',
+                                   'account.accountable:id,name',]);
     }
 
     /**
@@ -85,6 +92,9 @@ class NotificationCreated implements ShouldBroadcast
             case Constants::FOR_STUDENTS_BY_IDS:
                 $channels = $this->taggableIds['id_students'];
                 break;
+
+            default:
+                $channels = $this->taggableIds;
         }
 
         $channels = collect($channels)->transform(function ($item)
@@ -106,6 +116,15 @@ class NotificationCreated implements ShouldBroadcast
      */
     public function broadcastWith () : array
     {
-        return $this->notification->getOriginal();
+        return [
+            'id'        => $this->notification->id,
+            'type'      => $this->notification->type,
+            'data'      => [
+                'content' => $this->notification->data['content'],
+            ],
+            'sender'    => $this->notification->account->accountable->name,
+            'createdAt' => $this->notification->created_at,
+            'updatedAt' => $this->notification->updated_at,
+        ];
     }
 }
