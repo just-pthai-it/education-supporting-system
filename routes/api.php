@@ -220,6 +220,22 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
         {
             Route::patch('{uuid_account}', [AccountController::class, 'update']);
         });
+
+
+        Route::group(['prefix' => '{uuid_account}'], function ()
+        {
+            Route::group(['prefix' => 'notifications'], function ()
+            {
+                Route::get('',
+                           [NotificationController::class, 'readManyByIdAccountAndUuidAccount']);
+
+                Route::patch('{id_notification}/mark-as-read',
+                           [NotificationController::class, 'markNotificationAsRead']);
+
+                Route::put('mark-as-read',
+                             [NotificationController::class, 'markNotificationsAsRead']);
+            });
+        });
     });
 
     Route::group(['prefix' => 'students'], function ()
@@ -241,6 +257,9 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
         Route::group(['prefix' => '{id_teacher}'], function ()
         {
             Route::get('', [TeacherController::class, 'read']);
+
+            Route::get('module-classes',
+                       [ModuleClassController::class, 'readManyByIdTeacher']);
 
             Route::get('module-classes/schedules',
                        [ScheduleController::class, 'readManyByIdTeacher']);
@@ -314,7 +333,12 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
     Route::group(['prefix' => 'notifications'], function ()
     {
-        Route::post('create', [NotificationController::class, 'store']);
+        Route::group(['prefix' => 'create'], function ()
+        {
+            Route::post('{option}', [NotificationController::class, 'store'])
+                 ->where(['option' => 'faculties|departments|faculties-and-academic-years|module-classes|students']);
+        });
+
     });
 
 
@@ -326,7 +350,9 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
     Route::group(['prefix' => 'faculties'], function ()
     {
-        Route::get('', [FacultyController::class, 'readMany']);
+        Route::get('{additional?}', [FacultyController::class, 'readMany'])
+             ->where(['additional' => 'with-departments']);
+
     });
 
 
@@ -340,7 +366,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
     Route::group(['prefix' => 'academic-years'], function ()
     {
-        Route::get('', [AcademicYearController::class, 'readMany']);
+        Route::get('{additional?}', [AcademicYearController::class, 'readMany'])
+             ->where(['additional' => 'recent']);
     });
 
     Route::group(['prefix' => 'training-types'], function ()
@@ -385,4 +412,14 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
 
     Route::get('me', [UserController::class, 'getUserInfo']);
+});
+
+Route::post('auth', function ()
+{
+    $socketId    = request()->socket_id;
+    $channelName = request()->channel_name;
+    $key         = 'key';
+    $secret      = 'secret';
+    $signature   = hash_hmac('sha256', "{$socketId}:{$channelName}", $secret);
+    return response(['auth' => "{$key}:{$signature}"]);
 });

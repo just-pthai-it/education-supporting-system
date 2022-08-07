@@ -17,3 +17,16 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id)
 {
     return (int)$user->id === (int)$id;
 });
+
+
+Broadcast::channel('my-channel', function ($user)
+{
+    return true;
+    return response(true, 200)->header('Content-Type', 'application/json')
+                              ->header('Access-Control-Expose-Headers', 'Authorization')
+                              ->header('Access-Control-Allow-Headers', 'Authorization')
+                              ->header('Access-Control-Allow-Methods',
+                                       'HEAD, GET, POST, PUT, DELETE')
+                              ->header('Access-Control-Allow-Headers', 'origin, x-requested-with')
+                              ->header('Access-Control-Allow-Origin', '*');
+},                 ['guards' => ['web', 'admin']]);

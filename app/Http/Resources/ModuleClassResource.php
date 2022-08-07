@@ -19,10 +19,10 @@ class ModuleClassResource extends JsonResource
         return [
             'id'            => $this->id,
             'name'          => $this->name,
-            'credit'        => $this->credit,
+            'credit'        => $this->module->credit ?? null,
             'numberReality' => $this->number_reality,
             'type'          => $this->type,
-            'teacher'       => $this->teacher,
+            'teacher'       => $this->teacher->name ?? null,
         ];
     }
 }

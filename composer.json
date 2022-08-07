@@ -25,6 +25,7 @@
     "lcobucci/jwt": "^3.0.0",
     "maatwebsite/excel": "^3.1",
     "predis/predis": "^1.1",
+    "pusher/pusher-php-server": "^7.0",
     "tymon/jwt-auth": "^1.0"
   },
   "require-dev": {
@@ -42,7 +43,10 @@
       "App\\": "app/",
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/"
-    }
+    },
+    "files": [
+      "app/Helpers/string.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

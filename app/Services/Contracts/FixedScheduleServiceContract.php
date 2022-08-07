@@ -10,7 +10,7 @@ interface FixedScheduleServiceContract
 
     public function readManyByIdTeacher (string $idTeacher, array $inputs);
 
-    public function create ($fixedScheduleArr);
+    public function create (array $inputs);
 
     public function update (string $idFixedSchedule, array $fixedScheduleArr);
 

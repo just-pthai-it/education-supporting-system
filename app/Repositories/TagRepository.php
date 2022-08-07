@@ -11,6 +11,4 @@ class TagRepository extends BaseRepository implements Contracts\TagRepositoryCon
     {
         return Tag::class;
     }
-
-
 }

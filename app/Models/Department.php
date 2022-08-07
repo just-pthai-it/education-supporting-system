@@ -11,12 +11,12 @@ class Department extends Model
 {
     use HasFactory;
 
-    public const TABLE = 'departments';
+    public const TABLE    = 'departments';
     public const TABLE_AS = 'departments as deps';
 
-    protected $table = 'departments';
-    protected $keyType = 'string';
-    public $timestamps = false;
+    protected $table      = 'departments';
+    protected $keyType    = 'string';
+    public    $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -33,5 +33,10 @@ class Department extends Model
     public function modules () : HasMany
     {
         return $this->hasMany(Module::class, 'id_department', 'id');
+    }
+
+    public function teachers () : HasMany
+    {
+        return $this->hasMany(Teacher::class, 'id_department', 'id');
     }
 }

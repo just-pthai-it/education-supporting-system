@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use App\Events\FixedScheduleUpdated;
+use App\Events\Test;
+use App\Listeners\Temp;
+use App\Events\FixedScheduleCreatedOrUpdated;
 use Illuminate\Auth\Events\Registered;
-use App\Listeners\SendFixedScheduleUpdateNotification;
+use App\Listeners\SendFixedScheduleCreatedOrUpdateNotification;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
@@ -19,8 +21,11 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        FixedScheduleUpdated::class => [
-            SendFixedScheduleUpdateNotification::class,
+        FixedScheduleCreatedOrUpdated::class => [
+            SendFixedScheduleCreatedOrUpdateNotification::class,
+        ],
+        Test::class => [
+            Temp::class,
         ]
     ];
 

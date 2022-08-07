@@ -19,11 +19,11 @@ class Account extends Authenticatable implements JWTSubject
 {
     use HasFactory, Filterable, Notifiable;
 
-    public const TABLE = 'accounts';
+    public const TABLE    = 'accounts';
     public const TABLE_AS = 'accounts as accs';
 
-    protected $table = 'accounts';
-    public $timestamps = false;
+    protected $table      = 'accounts';
+    public    $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -67,13 +67,13 @@ class Account extends Authenticatable implements JWTSubject
         return $this->hasMany(FcmRegistrationToken::class, 'id_account', 'id');
     }
 
-    public function notifications () : BelongsToMany
+    public function notificationsReceived () : BelongsToMany
     {
         return $this->belongsToMany(Notification::class, 'account_notification', 'id_account',
-                                    'id_notification')->withPivot(['read_at']);
+                                    'id_notification')->withPivot(['id', 'read_at']);
     }
 
-    public function notification () : HasOne
+    public function notificationsSent () : HasOne
     {
         return $this->hasOne(Notification::class, 'id_account', 'id');
     }

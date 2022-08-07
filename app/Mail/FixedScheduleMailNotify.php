@@ -30,6 +30,6 @@ class FixedScheduleMailNotify extends Mailable
     public function build () : FixedScheduleMailNotify
     {
         return $this->to($this->data['recipient'])->view($this->data['view'])
-                    ->with($this->data)->subject($this->data['subject']);
+                    ->with($this->data['data'])->subject($this->data['subject']);
     }
 }

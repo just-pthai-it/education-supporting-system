@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Helpers\GData;
 use App\Models\Account;
+use App\Helpers\Constants;
 use App\Models\FixedSchedule;
 use App\Http\Middleware\VerifyJWTToken;
 use Tests\TestCase;
@@ -67,7 +67,7 @@ class FixedScheduleTest extends TestCase
                                                        'intend_time' => null,
                                                        'reason'      => 'abcxyz',
                                                        'reason_deny' => null,
-                                                       'status'      => GData::$fsStatusCode['pending']['normal'],
+                                                       'status'      => Constants::FIXED_SCHEDULE_STATUS['pending']['normal'],
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
         $this->actingAs(Account::find(6));
@@ -91,7 +91,7 @@ class FixedScheduleTest extends TestCase
                                                        'intend_time' => 'intend_time',
                                                        'reason'      => 'reason',
                                                        'reason_deny' => null,
-                                                       'status'      => GData::$fsStatusCode['pending']['soft'],
+                                                       'status'      => Constants::FIXED_SCHEDULE_STATUS['pending']['soft'],
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
 
@@ -116,7 +116,7 @@ class FixedScheduleTest extends TestCase
                                                        'intend_time' => null,
                                                        'reason'      => 'reason',
                                                        'reason_deny' => null,
-                                                       'status'      => GData::$fsStatusCode['pending']['normal'],
+                                                       'status'      => Constants::FIXED_SCHEDULE_STATUS['pending']['normal'],
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
 
@@ -141,7 +141,7 @@ class FixedScheduleTest extends TestCase
                                                        'intend_time' => 'intend_time',
                                                        'reason'      => 'reason',
                                                        'reason_deny' => null,
-                                                       'status'      => GData::$fsStatusCode['pending']['set_room'],
+                                                       'status'      => Constants::FIXED_SCHEDULE_STATUS['pending']['set_room'],
                                                        'accepted_at' => '2022-03-09 09:43:45',
                                                        'set_room_at' => null,]);
 
@@ -167,7 +167,7 @@ class FixedScheduleTest extends TestCase
                                                        'intend_time' => null,
                                                        'reason'      => 'reason',
                                                        'reason_deny' => null,
-                                                       'status'      => GData::$fsStatusCode['pending']['normal'],
+                                                       'status'      => Constants::FIXED_SCHEDULE_STATUS['pending']['normal'],
                                                        'accepted_at' => '2022-03-09 09:43:45',
                                                        'set_room_at' => null,]);
 
@@ -192,7 +192,7 @@ class FixedScheduleTest extends TestCase
                                                        'intend_time' => null,
                                                        'reason'      => 'reason',
                                                        'reason_deny' => null,
-                                                       'status'      => GData::$fsStatusCode['pending']['set_room'],
+                                                       'status'      => Constants::FIXED_SCHEDULE_STATUS['pending']['set_room'],
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
 
@@ -217,7 +217,7 @@ class FixedScheduleTest extends TestCase
                                                        'intend_time' => null,
                                                        'reason'      => 'reason',
                                                        'reason_deny' => null,
-                                                       'status'      => GData::$fsStatusCode['pending']['normal'],
+                                                       'status'      => Constants::FIXED_SCHEDULE_STATUS['pending']['normal'],
                                                        'accepted_at' => null,
                                                        'set_room_at' => null,]);
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\NotificationPostRequest;
+use App\Http\Requests\CreateNotificationPostRequest;
 use App\Services\Contracts\NotificationServiceContract;
 
 class NotificationController extends Controller
@@ -18,9 +18,24 @@ class NotificationController extends Controller
         $this->notificationService = $notificationService;
     }
 
-    public function store (NotificationPostRequest $request)
+    public function store (CreateNotificationPostRequest $request)
     {
-        $this->notificationService->store($request->validated());
-        return response('', 201);
+        return $this->notificationService->store($request->validated());
+    }
+
+    public function readManyByIdAccountAndUuidAccount (Request $request)
+    {
+        return $this->notificationService->readManyByIdAccountAndUuidAccount($request->all());
+    }
+
+    public function markNotificationAsRead (Request $request, string $uuidAccount,
+                                             string  $idNotification = '')
+    {
+        $this->notificationService->markNotificationAsRead($idNotification);
+    }
+
+    public function markNotificationsAsRead (Request $request, string $uuidAccount)
+    {
+        $this->notificationService->markNotificationsAsRead();
     }
 }

@@ -13,31 +13,33 @@ class FixedSchedulePatchRequest extends ACustomFormRequest
      */
     public function authorize () : bool
     {
-        $permissions = Role::find($this->user()->id_role)->permissions()
-                           ->pluck('permissions.id')->toArray();
+//        $permissions = Role::find($this->user()->id_role)->permissions()
+//                           ->pluck('permissions.id')->toArray();
+//
+//        if ($this->all()['type'] == 'accept' && in_array(13, $permissions))
+//        {
+//            return true;
+//        }
+//
+//        if ($this->all()['type'] == 'set_room' && in_array(17, $permissions))
+//        {
+//            return true;
+//        }
+//
+//        if ($this->all()['type'] == 'deny' &&
+//            (in_array(17, $permissions) || in_array(13, $permissions)))
+//        {
+//            return true;
+//        }
+//
+//        if ($this->all()['type'] == 'cancel' && in_array(32, $permissions))
+//        {
+//            return true;
+//        }
+//
+//        return false;
 
-        if ($this->all()['type'] == 'accept' && in_array(13, $permissions))
-        {
-            return true;
-        }
-
-        if ($this->all()['type'] == 'set_room' && in_array(17, $permissions))
-        {
-            return true;
-        }
-
-        if ($this->all()['type'] == 'deny' &&
-            (in_array(17, $permissions) || in_array(13, $permissions)))
-        {
-            return true;
-        }
-
-        if ($this->all()['type'] == 'cancel' && in_array(32, $permissions))
-        {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /**

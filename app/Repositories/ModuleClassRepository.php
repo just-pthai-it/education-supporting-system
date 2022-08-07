@@ -6,6 +6,7 @@ use App\Models\Module;
 use App\Models\Teacher;
 use App\Models\ModuleClass;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use App\Repositories\Abstracts\BaseRepository;
 
 class ModuleClassRepository extends BaseRepository implements Contracts\ModuleClassRepositoryContract
@@ -15,16 +16,14 @@ class ModuleClassRepository extends BaseRepository implements Contracts\ModuleCl
         return ModuleClass::class;
     }
 
-    public function findByIdDepartment ($id_department, array $inputs)
+    public function findByIdDepartment ($idDepartment, array $inputs)
     {
-        $this->createModel();
-        return $this->model->filter($inputs)
-                           ->join(Module::TABLE_AS, 'module_classes.id_module', '=', 'mds.id')
-                           ->where('mds.id_department', '=', $id_department)
-                           ->leftJoin(Teacher::TABLE_AS, 'teas.id', '=', 'module_classes.id_teacher')
-                           ->orderBy('module_classes.id')
-                           ->get(['module_classes.id', 'module_classes.name', 'credit', 'number_reality',
-                                  'type', 'teas.name as teacher']);
+        return $this->model->whereHas('module', function (Builder $query) use ($idDepartment)
+        {
+            $query->where('id_department', '=', $idDepartment);
+        })->filter($inputs)->with(['module:id,name,credit',
+                                   'teacher:id,name'])
+                           ->get(['id', 'name', 'number_reality', 'type', 'id_module', 'id_teacher']);
     }
 
     public function getIDModuleClassesMissing ($id_module_classes)

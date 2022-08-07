@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class NotificationResource extends JsonResource
+class DepartmentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,12 +18,8 @@ class NotificationResource extends JsonResource
     {
         return [
             'id'        => $this->id,
-            'data'      => $this->data,
-            'type'      => $this->type,
-            'createdAt' => $this->created_at,
-            'updatedAt' => $this->updated_at,
-            'readAt'    => $this->accounts[0]->pivot->read_at,
-            'sender'    => $this->account->accountable->name,
+            'name'      => $this->name,
+            'idFaculty' => $this->id_faculty,
         ];
     }
 }
