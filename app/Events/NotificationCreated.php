@@ -123,6 +123,7 @@ class NotificationCreated implements ShouldBroadcast
                 'content' => $this->notification->data['content'],
             ],
             'sender'    => $this->notification->account->accountable->name,
+            'action'    => $this->notification->action,
             'createdAt' => $this->notification->created_at,
             'updatedAt' => $this->notification->updated_at,
         ];

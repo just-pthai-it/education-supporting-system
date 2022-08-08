@@ -23,9 +23,10 @@ class Notification extends Model
         'id',
         'data',
         'type',
+        'id_account',
+        'action',
         'created_at',
         'updated_at',
-        'id_account',
     ];
 
     protected array $sortable = [

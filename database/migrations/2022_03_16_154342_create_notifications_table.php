@@ -21,6 +21,7 @@ class CreateNotificationsTable extends Migration
             $table->text('data');
             $table->unsignedTinyInteger('type');
             $table->unsignedMediumInteger('id_account');
+            $table->string('action', 255);
             $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
             $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
                   ->useCurrentOnUpdate();

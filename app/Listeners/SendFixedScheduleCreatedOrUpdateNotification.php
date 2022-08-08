@@ -157,6 +157,8 @@ class SendFixedScheduleCreatedOrUpdateNotification implements ShouldQueue
                 'content' => $notificationData['content'],
             ],
             'id_account' => $senderIdAccount,
+            'action'     => 'https://' . config('app.front_end_host') .
+                            "/schedule/change/{$this->fixedSchedule->id}",
         ];
 
         $notification = $this->__createNotification($notification);
