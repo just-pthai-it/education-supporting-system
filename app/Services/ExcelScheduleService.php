@@ -4,23 +4,24 @@ namespace App\Services;
 
 use Exception;
 use App\Helpers\GData;
-use App\Helpers\GFDateTime;
 use App\Services\Abstracts\AExcelService;
+use function App\Helpers\convertDateTime;
+use function App\Helpers\calculateDatetime;
 
 class ExcelScheduleService extends AExcelService
 {
-    private int $idStudySession;
-    private int $numericalOrderIndex = 1;
-    private int $idModuleIndex = -1;
-    private int $moduleClassNameIndex = -1;
-    private int $numberOfStudentsIndex = -1;
-    private int $numberOfStudentsRealityIndex = -1;
-    private int $classTypeIndex = -1;
-    private int $dateIndex = -1;
-    private int $numberOfWeeks = -1;
-    private array $periods = [];
-    private array $roomsIndex = [];
-    private int $academicYearIndex = -1;
+    private int   $idStudySession;
+    private int   $numericalOrderIndex          = 1;
+    private int   $idModuleIndex                = -1;
+    private int   $moduleClassNameIndex         = -1;
+    private int   $numberOfStudentsIndex        = -1;
+    private int   $numberOfStudentsRealityIndex = -1;
+    private int   $classTypeIndex               = -1;
+    private int   $dateIndex                    = -1;
+    private int   $numberOfWeeks                = -1;
+    private array $periods                      = [];
+    private array $roomsIndex                   = [];
+    private int   $academicYearIndex            = -1;
 
     private const WORK_DAYS_IN_WEEK = 6;
 
@@ -130,6 +131,11 @@ class ExcelScheduleService extends AExcelService
 
                 if ($isStart)
                 {
+                    if (empty($this->_getCellData($cells, $this->academicYearIndex)))
+                    {
+                        break;
+                    }
+
                     $this->__passStringValueIfNotEmpty($idModule,
                                                        $this->_getCellData($cells,
                                                                            $this->idModuleIndex));
@@ -174,13 +180,7 @@ class ExcelScheduleService extends AExcelService
                                                      $i);
                         }
                     }
-
-                    if (empty($this->_getCellData($cells, $this->academicYearIndex)))
-                    {
-                        break;
-                    }
                 }
-
 
                 if ($this->idModuleIndex != -1 && !$isStart)
                 {
@@ -249,7 +249,7 @@ class ExcelScheduleService extends AExcelService
         for ($i = 0; $i < $numberOfWeeks; $i++)
         {
             $step = $i * 7;;
-            $date = GFDateTime::calculateDateTime($firstDateOfSchedule, "+{$step}", 'Y-m-d');;
+            $date = calculateDateTime($firstDateOfSchedule, "+{$step} days", 'Y-m-d');;
             $schedules[] = [
                 'id_module_class' => $idModuleClass,
                 'date'            => $date,
@@ -269,7 +269,7 @@ class ExcelScheduleService extends AExcelService
     {
         $dateRange = explode('-', $dateRange);
         $date      = $dateRange[0] . '/' . explode('/', $dateRange[1])[2];
-        $date      = GFDateTime::convertDateTime($date, 'd/m/y', 'Y-m-d');
-        return GFDateTime::calculateDateTime($date, "+{$dayIndexOfWeek} days", 'Y-m-d');
+        $date      = convertDateTime($date, 'd/m/y', 'Y-m-d');
+        return calculateDateTime($date, "+{$dayIndexOfWeek} days", 'Y-m-d');
     }
 }

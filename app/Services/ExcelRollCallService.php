@@ -8,6 +8,7 @@ use App\Services\Abstracts\AExcelService;
 use Box\Spout\Common\Exception\IOException;
 use Box\Spout\Common\Exception\UnsupportedTypeException;
 use Box\Spout\Reader\Exception\ReaderNotOpenedException;
+use function App\Helpers\convertDateTime;
 
 class ExcelRollCallService extends AExcelService
 {
@@ -166,7 +167,7 @@ class ExcelRollCallService extends AExcelService
             'id'       => $idStudent,
             'name'     => $fullName,
             'id_class' => $idClass,
-            'birth'    => GFDateTime::convertDateTime($birth, 'd/m/Y', 'Y-m-d'),
+            'birth'    => convertDateTime($birth, 'd/m/Y', 'Y-m-d'),
         ];
 
         $students[]     = $student;
