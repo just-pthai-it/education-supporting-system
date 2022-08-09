@@ -25,10 +25,19 @@ class NotificationCollection extends ResourceCollection
             $this->collection->pop();
         }
 
+        if ($this->collection->count() == 0)
+        {
+            $milestone = null;
+        }
+        else
+        {
+            $milestone = $this->collection->last()->created_at;
+        }
+
         return [
             'data'      => NotificationResource::collection($this->collection),
             'hasNext'   => $hasNext,
-            'milestone' => $this->collection->last()->created_at,
+            'milestone' => $milestone,
         ];
     }
 }
