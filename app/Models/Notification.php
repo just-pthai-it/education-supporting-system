@@ -41,7 +41,7 @@ class Notification extends Model
         'data' => 'array',
     ];
 
-    public function filterTime (Builder $query, string $value)
+    public function filterMilestone (Builder $query, string $value)
     {
         $query->where('created_at', '<', $value);
     }
