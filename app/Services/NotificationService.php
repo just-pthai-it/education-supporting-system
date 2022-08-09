@@ -187,14 +187,14 @@ class NotificationService implements Contracts\NotificationServiceContract
         }
     }
 
-    public function readManyByIdAccountAndUuidAccount (array $inputs) : AnonymousResourceCollection
+    public function readManyByIdAccountAndUuidAccount (array $inputs,
+                                                       bool  $isOnlyUnread = false) : AnonymousResourceCollection
     {
         $idAccount     = auth()->user()->id;
-        $notifications = $this->notificationRepository->findByIdAccount($idAccount, $inputs);
-
+        $notifications = $this->notificationRepository->findByIdAccount($idAccount,
+                                                                        $inputs, $isOnlyUnread);
         return NotificationResource::collection($notifications);
     }
-
 
     public function markNotificationAsRead (string $idNotification)
     {

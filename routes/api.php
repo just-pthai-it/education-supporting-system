@@ -228,12 +228,14 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
             {
                 Route::get('',
                            [NotificationController::class, 'readManyByIdAccountAndUuidAccount']);
+                Route::get('unread',
+                           [NotificationController::class, 'readManyUnreadByIdAccountAndUuidAccount']);
 
                 Route::patch('{id_notification}/mark-as-read',
-                           [NotificationController::class, 'markNotificationAsRead']);
+                             [NotificationController::class, 'markNotificationAsRead']);
 
                 Route::put('mark-as-read',
-                             [NotificationController::class, 'markNotificationsAsRead']);
+                           [NotificationController::class, 'markNotificationsAsRead']);
             });
         });
     });

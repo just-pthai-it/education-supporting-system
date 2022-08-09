@@ -28,8 +28,14 @@ class NotificationController extends Controller
         return $this->notificationService->readManyByIdAccountAndUuidAccount($request->all());
     }
 
+    public function readManyUnreadByIdAccountAndUuidAccount (Request $request)
+    {
+        return $this->notificationService->readManyByIdAccountAndUuidAccount($request->all(),
+                                                                             true);
+    }
+
     public function markNotificationAsRead (Request $request, string $uuidAccount,
-                                             string  $idNotification = '')
+                                            string  $idNotification = '')
     {
         $this->notificationService->markNotificationAsRead($idNotification);
     }
