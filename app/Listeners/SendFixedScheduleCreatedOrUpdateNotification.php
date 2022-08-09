@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\Account;
 use App\Helpers\Constants;
 use App\Models\Notification;
@@ -150,6 +151,8 @@ class SendFixedScheduleCreatedOrUpdateNotification implements ShouldQueue
     {
         $senderIdAccount   = $this->__getSenderIdAccount($notificationTargetAudience);
         $receiverIdAccount = $this->__getReceiverIdAccount($notificationTargetAudience);
+        $now               = Carbon::now('+7')->format('Y-m-d H:i:s');
+        sleep(1);
 
         $notification = [
             'type'       => Constants::NOTIFICATION_TYPE['accounts'],
@@ -159,6 +162,8 @@ class SendFixedScheduleCreatedOrUpdateNotification implements ShouldQueue
             'id_account' => $senderIdAccount,
             'action'     => 'https://' . config('app.front_end_host') .
                             "/schedule/change/{$this->fixedSchedule->id}",
+            'created_at' => $now,
+            'updated_at' => $now,
         ];
 
         $notification = $this->__createNotification($notification);
