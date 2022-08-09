@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Events\NotificationCreated;
 use App\Http\Resources\NotificationResource;
+use App\Http\Resources\NotificationCollection;
 use App\Repositories\Contracts\TagRepositoryContract;
 use App\Repositories\Contracts\ClassRepositoryContract;
 use App\Repositories\Contracts\AccountRepositoryContract;
@@ -188,12 +189,18 @@ class NotificationService implements Contracts\NotificationServiceContract
     }
 
     public function readManyByIdAccountAndUuidAccount (array $inputs,
-                                                       bool  $isOnlyUnread = false) : AnonymousResourceCollection
+                                                       bool  $isOnlyUnread = false) : NotificationCollection
     {
-        $idAccount     = auth()->user()->id;
+        $idAccount = auth()->user()->id;
+        $this->__formatReadManyInputs($inputs);
         $notifications = $this->notificationRepository->findByIdAccount($idAccount,
                                                                         $inputs, $isOnlyUnread);
-        return NotificationResource::collection($notifications);
+        return new NotificationCollection($notifications);
+    }
+
+    private function __formatReadManyInputs (array &$inputs) : void
+    {
+        $inputs['limit'] = ((int)$inputs['limit'] ?? 5) + 1;
     }
 
     public function markNotificationAsRead (string $idNotification)
