@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Events\Test;
-use App\Listeners\Temp;
 use App\Events\FixedScheduleCreatedOrUpdated;
 use Illuminate\Auth\Events\Registered;
 use App\Listeners\SendFixedScheduleCreatedOrUpdateNotification;
@@ -24,9 +22,6 @@ class EventServiceProvider extends ServiceProvider
         FixedScheduleCreatedOrUpdated::class => [
             SendFixedScheduleCreatedOrUpdateNotification::class,
         ],
-        Test::class => [
-            Temp::class,
-        ]
     ];
 
     /**
