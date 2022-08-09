@@ -26,14 +26,19 @@ class NotificationRepository extends BaseRepository implements Contracts\Notific
                       {
                           $query->whereNull('read_at');
                       });
-            })->filter($inputs)->with([
-                                          'accounts' => function ($query) use ($idAccount)
-                                          {
-                                              $query->select('id_account')
-                                                    ->where('id_account', '=', $idAccount);
-                                          },
-                                          'account:id,accountable_type,accountable_id',
-                                          'account.accountable:id,name',
-                                      ])->get();
+            })->orderBy('id', 'desc')->filter($inputs)
+                           ->with([
+                                      'accounts' => function ($query) use (
+                                          $idAccount
+                                      )
+                                      {
+                                          $query->select('id_account')
+                                                ->where('id_account',
+                                                        '=',
+                                                        $idAccount);
+                                      },
+                                      'account:id,accountable_type,accountable_id',
+                                      'account.accountable:id,name',
+                                  ])->get();
     }
 }
