@@ -43,7 +43,7 @@
             </span>
             <span style="display: block; margin-top: 0.25rem; color: #333333;">
               Để được hỗ trợ, vui lòng nhắn tin qua tài khoản hỗ trợ
-              <a href="https://m.me/utcketnoi" target="_blank">tại đây.</a>
+              <a href="https://m.me/utcketnoi" target="_blank">tại đây</a>.
             </span>
           </td>
         </tr>
