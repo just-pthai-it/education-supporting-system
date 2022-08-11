@@ -31,6 +31,12 @@ use App\Http\Resources\AccountCollection;
 */
 Route::get('test', function ()
 {
+    \App\Jobs\Test3::dispatch();
+    var_dump(3);
+    \App\Jobs\Test1::dispatch();
+    var_dump(1);
+    \App\Jobs\Test2::dispatch();
+    var_dump(2);
 
 });
 
