@@ -46,7 +46,7 @@ class UserResource extends JsonResource
                     'address'     => $this->address,
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
-                    'tags'        => $this->tags,
+                    'tags'        => $tags,
                 ];
 
             case Teacher::class:
