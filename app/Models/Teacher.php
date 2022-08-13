@@ -39,7 +39,9 @@ class Teacher extends Model
         'pivot',
     ];
 
-    private array $filterable = [];
+    private array $filterable = [
+        'id_department',
+    ];
 
     private array $sortable = [];
 
