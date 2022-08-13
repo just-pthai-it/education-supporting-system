@@ -20,6 +20,7 @@ class NotificationResource extends JsonResource
             'id'        => $this->id,
             'data'      => $this->data,
             'type'      => $this->type,
+            'action'    => $this->action,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
             'readAt'    => $this->accounts[0]->pivot->read_at,
