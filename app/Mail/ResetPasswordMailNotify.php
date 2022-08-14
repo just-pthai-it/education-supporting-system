@@ -13,11 +13,11 @@ class ResetPasswordMailNotify extends Mailable
     use Queueable, SerializesModels;
 
     private Account $account;
-    private string $token;
-    private string $frontEndHost;
+    private string  $token;
+    private string  $frontEndUrl;
     private const RESET_PASSWORD_URL = '/reset-password?token=';
-    private const SUBJECT = 'Yêu cầu đặt lại mật khẩu.';
-    private const VIEW = 'mail-forms.account.reset-password';
+    private const SUBJECT            = 'Yêu cầu đặt lại mật khẩu.';
+    private const VIEW               = 'mail-forms.account.reset-password';
 
     /**
      * Create a new message instance.
@@ -28,9 +28,9 @@ class ResetPasswordMailNotify extends Mailable
      */
     public function __construct (Account $account, string $token, string $frontEndHost)
     {
-        $this->account      = $account;
-        $this->token        = $token;
-        $this->frontEndHost = $frontEndHost;
+        $this->account     = $account;
+        $this->token       = $token;
+        $this->frontEndUrl = $frontEndHost;
         $this->__loadUser();
     }
 
@@ -41,7 +41,7 @@ class ResetPasswordMailNotify extends Mailable
     public function build () : ResetPasswordMailNotify
     {
         $data = ['name' => $this->account->accountable->name,
-                 'url'  => "https://{$this->frontEndHost}" . self::RESET_PASSWORD_URL .
+                 'url'  => $this->frontEndUrl . self::RESET_PASSWORD_URL .
                            "{$this->token}&email={$this->account->email}",];
 
         return $this->to($this->account->email)->with($data)

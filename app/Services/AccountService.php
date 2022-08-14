@@ -78,10 +78,10 @@ class AccountService implements Contracts\AccountServiceContract
             throw new CustomHttpException($messages, 400);
         }
 
-        $token        = $this->__getToken();
-        $frontEndHost = config('app.front_end_host');
+        $token       = $this->__getToken();
+        $frontEndUrl = config('app.front_end_url');
         $this->__createPasswordReset($account->email, $token);
-        $this->__sendConfirmResetPasswordMail($account, $token, $frontEndHost);
+        $this->__sendConfirmResetPasswordMail($account, $token, $frontEndUrl);
     }
 
     private function __readAccountByEmail (string $email) : ?Account
