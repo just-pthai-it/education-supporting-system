@@ -20,7 +20,6 @@ class SendFixedScheduleCreatedOrUpdateNotification implements ShouldQueue
 {
     private MailServiceContract            $mailService;
     private NotificationRepositoryContract $notificationRepository;
-    private FixedScheduleCreatedOrUpdated  $event;
     private FixedSchedule                  $fixedSchedule;
     private Account                        $loggingAccount;
 
@@ -45,7 +44,6 @@ class SendFixedScheduleCreatedOrUpdateNotification implements ShouldQueue
      */
     public function handle (FixedScheduleCreatedOrUpdated $event)
     {
-        $this->event          = $event;
         $this->fixedSchedule  = $event->getFixedSchedule();
         $this->loggingAccount = $event->getLoggingAccount();
         $this->__loadFixedScheduleRelationships();
@@ -157,7 +155,9 @@ class SendFixedScheduleCreatedOrUpdateNotification implements ShouldQueue
         $notification = [
             'type'       => Constants::NOTIFICATION_TYPE['accounts'],
             'data'       => [
-                'content' => $notificationData['content'],
+                'content' => replaceStringKeys($notificationData['content'],
+                                               [':teacher_name'      => $this->fixedSchedule->schedule->moduleClass->teacher->name,
+                                                ':module_class_name' => $this->fixedSchedule->schedule->moduleClass->name]),
             ],
             'id_account' => $senderIdAccount,
             'action'     => config('app.front_end_url') .

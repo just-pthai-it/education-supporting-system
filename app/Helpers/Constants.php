@@ -50,56 +50,56 @@ class Constants
     ];
 
     public const FIXED_SCHEDULE_MAIL_NOTIFICATION_FOR_TEACHER = [
-        100 => [
+        self::FIXED_SCHEDULE_STATUS['cancel']['normal']  => [
             'view'    => 'mail-forms.change-schedule-request.update-status',
             'subject' => 'Xác nhận hủy yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
                          'Hủy thành công yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
         ],
-        200 => [
+        self::FIXED_SCHEDULE_STATUS['pending']['normal'] => [
             'view'    => 'mail-forms.change-schedule-request.update-status',
             'subject' => 'Xác nhận yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
                          'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
         ],
-        201 => [
+        self::FIXED_SCHEDULE_STATUS['pending']['soft']   => [
             'view'    => 'mail-forms.change-schedule-request.update-status',
             'subject' => 'Xác nhận yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
                          'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
         ],
 
-        202 => [
+        self::FIXED_SCHEDULE_STATUS['pending']['set_room'] => [
             'view'    => 'mail-forms.change-schedule-request.update-status',
             'subject' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
                          'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
         ],
-        300 => [
+        self::FIXED_SCHEDULE_STATUS['approve']['normal']   => [
             'view'    => 'mail-forms.change-schedule-request.update-status',
             'subject' => 'Phòng quản lí giảng đường đã phê duyệt yêu cầu thay đôi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
                          'Phòng quản lí giảng đường đã phê duyệt và cấp phòng cho yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
         ],
-        301 => [
+        self::FIXED_SCHEDULE_STATUS['approve']['soft']     => [
             'view'    => 'mail-forms.change-schedule-request.update-status',
             'subject' => 'Yêu cầu thay đổi lịch giảng dạy đã được phê duyệt',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
                          'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
         ],
-        302 => [
+        self::FIXED_SCHEDULE_STATUS['approve']['straight'] => [
             'view'    => 'mail-forms.change-schedule-request.update-status',
             'subject' => 'Yêu cầu thay đổi lịch giảng dạy đã được phê duyệt',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
                          'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
         ],
-        500 => [
+        self::FIXED_SCHEDULE_STATUS['deny']['accept']      => [
             'view'    => 'mail-forms.change-schedule-request.update-status',
             'subject' => 'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
                          'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
         ],
-        501 => [
+        self::FIXED_SCHEDULE_STATUS['deny']['set_room']    => [
             'view'    => 'mail-forms.change-schedule-request.update-status',
             'subject' => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
@@ -108,14 +108,14 @@ class Constants
     ];
 
     public const FIXED_SCHEDULE_MAIL_NOTIFICATION_FOR_HEAD_OF_DEPARTMENT = [
-        200 => [
+        self::FIXED_SCHEDULE_STATUS['pending']['normal'] => [
             'view'    => 'mail-forms.change-schedule-request.notify-head-of-department',
             'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
                          'Bộ môn :department_name vừa nhận được một yêu cầu thay đổi lịch giảng dạy.<br>' .
                          'Hãy kiểm tra ngay khi có thể.',
         ],
-        201 => [
+        self::FIXED_SCHEDULE_STATUS['pending']['soft']   => [
             'view'    => 'mail-forms.change-schedule-request.notify-head-of-department',
             'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
@@ -125,39 +125,38 @@ class Constants
     ];
 
     public const FIXED_SCHEDULE_BROADCAST_NOTIFICATION_FOR_TEACHER = [
-        202 => [
-            'content' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy.',
+        self::FIXED_SCHEDULE_STATUS['pending']['set_room'] => [
+            'content' => 'Yêu cầu thay đổi lịch giảng dạy cho lớp :module_class_name đã được bộ môn phê duyệt.',
         ],
-        300 => [
-            'content' => 'Phòng quản lí đào tạo đã phê duyệt và cấp phòng cho yêu cầu thay đổi lịch giảng dạy.',
+        self::FIXED_SCHEDULE_STATUS['approve']['normal']   => [
+            'content' => 'Yêu cầu thay đổi lịch giảng dạy cho lớp :module_class_name đã được phòng quản lý giảng dường phê duyệt.',
         ],
-        301 => [
-            'content' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy.',
+        self::FIXED_SCHEDULE_STATUS['approve']['soft']     => [
+            'content' => 'Yêu cầu thay đổi lịch giảng dạy cho lớp :module_class_name đã được bộ môn phê duyệt.',
         ],
-        302 => [
-            'content' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy.',
+        self::FIXED_SCHEDULE_STATUS['approve']['straight'] => [
+            'content' => 'Yêu cầu thay đổi lịch giảng dạy cho lớp :module_class_name đã được bộ môn phê duyệt.',
         ],
-        500 => [
-            'content' => 'Bô môn đã từ chối yêu cầu thay đổi lịch giảng dạy.'
+        self::FIXED_SCHEDULE_STATUS['deny']['accept']      => [
+            'content' => 'Yêu cầu thay đổi lịch giảng dạy cho lớp :module_class_name đã bị bộ môn từ chối.',
         ],
-        501 => [
-            'content' => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy.',
+        self::FIXED_SCHEDULE_STATUS['deny']['set_room']    => [
+            'content' => 'Yêu cầu thay đổi lịch giảng dạy cho lớp :module_class_name đã bị phòng quản lý giảng dường từ chối.',
         ],
     ];
 
-
     public const FIXED_SCHEDULE_BROADCAST_NOTIFICATION_FOR_HEAD_OF_DEPARTMENT = [
-        200 => [
-            'content' => 'Bộ môn vừa nhân được một yêu cầu thay đổi lịch giảng dạy.',
+        self::FIXED_SCHEDULE_STATUS['pending']['normal'] => [
+            'content' => ':teacher_name vừa tạo một yêu cầu thay đổi lịch giảng dạy cho lớp :module_class_name.',
         ],
-        201 => [
-            'content' => 'Bộ môn vừa nhân được một yêu cầu thay đổi lịch giảng dạy.',
+        self::FIXED_SCHEDULE_STATUS['pending']['soft']   => [
+            'content' => ':teacher_name vừa tạo một yêu cầu thay đổi lịch giảng dạy cho lớp :module_class_name.',
         ],
     ];
 
     public const FIXED_SCHEDULE_BROADCAST_NOTIFICATION_FOR_ROOM_MANAGER = [
         self::FIXED_SCHEDULE_STATUS['pending']['set_room'] => [
-            'content' => 'Phòng quản lí giảng đường vừa tiếp nhận một yêu câu thay đổi lịch giảng dạy.'
+            'content' => ':teacher_name vừa tạo một yêu cầu thay đổi lịch giảng dạy cho lớp :module_class_name.',
         ],
     ];
 }
