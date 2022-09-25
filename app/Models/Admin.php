@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 class Admin extends Model
 {
     use HasFactory, Filterable;
-    public const TABLE = 'admins';
+
+    public const TABLE    = 'admins';
     public const TABLE_AS = 'admins as adms';
 
-    protected $table = 'admins';
-    public $timestamps = false;
+    protected $table      = 'admins';
+    public    $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -22,6 +23,12 @@ class Admin extends Model
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     public function account () : MorphOne

@@ -10,18 +10,23 @@ class FcmRegistrationToken extends Model
 {
     use HasFactory;
 
-    public const TABLE = 'fcm_registration_tokens';
+    public const TABLE    = 'fcm_registration_tokens';
     public const TABLE_AS = 'fcm_registration_tokens as frts';
 
-    protected $table = 'fcm_registration_tokens';
-    protected $keyType = 'string';
-    public $timestamps = false;
+    protected $table      = 'fcm_registration_tokens';
+    protected $keyType    = 'string';
+    public    $timestamps = false;
 
     protected $fillable = [
         'id',
         'id_account',
         'created_at',
         'updated_at',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function account () : BelongsTo

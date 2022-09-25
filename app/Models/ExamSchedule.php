@@ -13,11 +13,11 @@ class ExamSchedule extends Model
 {
     use HasFactory, Filterable;
 
-    public const TABLE = 'exam_schedules';
+    public const TABLE    = 'exam_schedules';
     public const TABLE_AS = 'exam_schedules as ess';
 
-    protected $table = 'exam_schedules';
-    public $timestamps = false;
+    protected $table      = 'exam_schedules';
+    public    $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -31,6 +31,11 @@ class ExamSchedule extends Model
 
     protected $hidden = [
         'pivot',
+    ];
+
+    protected $casts = [
+        'start_at' => 'datetime',
+        'end_at'   => 'datetime',
     ];
 
     private array $filterable = [

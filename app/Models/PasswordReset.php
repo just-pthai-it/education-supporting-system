@@ -10,8 +10,8 @@ class PasswordReset extends Model
     use HasFactory;
 
     protected $primaryKey = 'email';
-    protected $keyType = 'string';
-    public $timestamps = false;
+    protected $keyType    = 'string';
+    public    $timestamps = false;
 
     protected $fillable = [
         'email',
@@ -19,4 +19,9 @@ class PasswordReset extends Model
         'created_at',
         'expired_at',
     ];
+
+//    protected $casts = [
+//        'created_at' => 'datetime',
+//        'expired_at' => 'datetime',
+//    ];
 }

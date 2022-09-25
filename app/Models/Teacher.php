@@ -14,12 +14,12 @@ class Teacher extends Model
 {
     use HasFactory, Filterable;
 
-    public const TABLE = 'teachers';
+    public const TABLE    = 'teachers';
     public const TABLE_AS = 'teachers as teas';
 
-    protected $table = 'teachers';
-    protected $keyType = 'string';
-    public $timestamps = false;
+    protected $table      = 'teachers';
+    protected $keyType    = 'string';
+    public    $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -37,6 +37,10 @@ class Teacher extends Model
     protected $hidden = [
         'is_delete',
         'pivot',
+    ];
+
+    protected $casts = [
+        'deleted_at' => 'datetime',
     ];
 
     private array $filterable = [

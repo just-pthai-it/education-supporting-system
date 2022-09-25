@@ -13,11 +13,11 @@ class Schedule extends Model
 {
     use HasFactory, Filterable;
 
-    public const TABLE = 'schedules';
+    public const TABLE    = 'schedules';
     public const TABLE_AS = 'schedules as sdus';
 
-    protected $table = 'schedules';
-    public $timestamps = false;
+    protected $table      = 'schedules';
+    public    $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -27,6 +27,10 @@ class Schedule extends Model
         'id_room',
         'note',
         'deleted_at',
+    ];
+
+    protected $casts = [
+        'deleted_at' => 'datetime',
     ];
 
     private array $filterable = [

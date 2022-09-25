@@ -11,11 +11,11 @@ class Feedback extends Model
 {
     use HasFactory, Filterable;
 
-    public const TABLE = 'feedback';
+    public const TABLE    = 'feedback';
     public const TABLE_AS = 'feedback as fb';
 
-    protected $table = 'feedback';
-    public $timestamps = false;
+    protected $table      = 'feedback';
+    public    $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -36,7 +36,8 @@ class Feedback extends Model
     ];
 
     protected $casts = [
-        'data' => 'array'
+        'data'       => 'array',
+        'created_at' => 'datetime',
     ];
 
     public function account () : BelongsTo

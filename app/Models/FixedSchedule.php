@@ -12,11 +12,11 @@ class FixedSchedule extends Model
 {
     use HasFactory, Filterable;
 
-    public const TABLE = 'fixed_schedules';
+    public const TABLE    = 'fixed_schedules';
     public const TABLE_AS = 'fixed_schedules as fss';
 
-    protected $table = 'fixed_schedules';
-    public $timestamps = false;
+    protected $table      = 'fixed_schedules';
+    public    $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -35,6 +35,13 @@ class FixedSchedule extends Model
         'updated_at',
         'accepted_at',
         'set_room_at',
+    ];
+
+    protected $casts = [
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'accepted_at' => 'datetime',
+        'set_room_at' => 'datetime',
     ];
 
     private array $filterable = [
