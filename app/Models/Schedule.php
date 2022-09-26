@@ -30,6 +30,7 @@ class Schedule extends Model
     ];
 
     protected $casts = [
+        'date'       => 'datetime',
         'deleted_at' => 'datetime',
     ];
 

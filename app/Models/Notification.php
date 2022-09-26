@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\Filterable;
+use App\Pivots\AccountNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,9 +39,10 @@ class Notification extends Model
     ];
 
     protected $casts = [
-        'data'       => 'array',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'data'                   => 'array',
+        'created_at'             => 'datetime',
+        'updated_at'             => 'datetime',
+        'accounts.pivot.read_at' => 'datetime',
     ];
 
     public function filterMilestone (Builder $query, string $value)
@@ -60,7 +62,8 @@ class Notification extends Model
 
     public function accounts () : BelongsToMany
     {
-        return $this->belongsToMany(Account::class, 'account_notification', 'id_notification',
-                                    'id_account')->withPivot(['id', 'read_at']);
+        return $this->belongsToMany(Account::class, 'account_notification',
+                                    'id_notification', 'id_account')
+                    ->withPivot(['id', 'read_at'])->using(AccountNotification::class);
     }
 }
