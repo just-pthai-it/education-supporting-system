@@ -51,76 +51,79 @@ class Constants
 
     public const FIXED_SCHEDULE_MAIL_NOTIFICATION_FOR_TEACHER = [
         self::FIXED_SCHEDULE_STATUS['cancel']['normal']  => [
-            'view'    => 'mail-forms.change-schedule-request.update-status',
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
             'subject' => 'Xác nhận hủy yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                         'Hủy thành công yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
+                         'Hủy thành công yêu cầu thay đổi lịch giảng dạy của :teacher_gender.<br>',
         ],
         self::FIXED_SCHEDULE_STATUS['pending']['normal'] => [
-            'view'    => 'mail-forms.change-schedule-request.update-status',
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
             'subject' => 'Xác nhận yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                         'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
+                         'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng dạy của :teacher_gender.<br>',
         ],
         self::FIXED_SCHEDULE_STATUS['pending']['soft']   => [
-            'view'    => 'mail-forms.change-schedule-request.update-status',
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
             'subject' => 'Xác nhận yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                         'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
+                         'Hệ thống đã tiếp nhận yêu cầu thay đổi lịch giảng dạy của :teacher_gender.<br>',
         ],
 
         self::FIXED_SCHEDULE_STATUS['pending']['set_room'] => [
-            'view'    => 'mail-forms.change-schedule-request.update-status',
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
             'subject' => 'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                         'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
+                         'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.<br>',
         ],
         self::FIXED_SCHEDULE_STATUS['approve']['normal']   => [
-            'view'    => 'mail-forms.change-schedule-request.update-status',
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
             'subject' => 'Phòng quản lí giảng đường đã phê duyệt yêu cầu thay đôi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                         'Phòng quản lí giảng đường đã phê duyệt và cấp phòng cho yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
+                         'Phòng quản lí giảng đường đã phê duyệt và cấp phòng cho yêu cầu thay đổi lịch giảng dạy của :teacher_gender.<br>' .
+                         'Lịch giảng dạy mới đã được cập nhật trên hệ thống.<br>',
         ],
         self::FIXED_SCHEDULE_STATUS['approve']['soft']     => [
-            'view'    => 'mail-forms.change-schedule-request.update-status',
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
             'subject' => 'Yêu cầu thay đổi lịch giảng dạy đã được phê duyệt',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                         'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
+                         'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.<br>' .
+                         'Lịch giảng dạy mới đã được cập nhật trên hệ thống.<br>',
         ],
         self::FIXED_SCHEDULE_STATUS['approve']['straight'] => [
-            'view'    => 'mail-forms.change-schedule-request.update-status',
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
             'subject' => 'Yêu cầu thay đổi lịch giảng dạy đã được phê duyệt',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                         'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
+                         'Bộ môn đã phê duyệt yêu cầu thay đổi lịch giảng dạy của :teacher_gender.<br>' .
+                         'Lịch giảng dạy mới đã được cập nhật trên hệ thống.<br>',
         ],
         self::FIXED_SCHEDULE_STATUS['deny']['accept']      => [
-            'view'    => 'mail-forms.change-schedule-request.update-status',
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
             'subject' => 'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                         'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
+                         'Bộ môn đã từ chối yêu cầu thay đổi lịch giảng dạy của :teacher_gender.<br>',
         ],
         self::FIXED_SCHEDULE_STATUS['deny']['set_room']    => [
-            'view'    => 'mail-forms.change-schedule-request.update-status',
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
             'subject' => 'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy',
             'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
-                         'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy của :teacher_gender.',
+                         'Phòng quản lí giảng đường đã từ chối yêu cầu thay đổi lịch giảng dạy của :teacher_gender.<br>',
         ],
     ];
 
     public const FIXED_SCHEDULE_MAIL_NOTIFICATION_FOR_HEAD_OF_DEPARTMENT = [
         self::FIXED_SCHEDULE_STATUS['pending']['normal'] => [
-            'view'    => 'mail-forms.change-schedule-request.notify-head-of-department',
-            'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng',
-            'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
+            'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng dạy',
+            'content' => 'Xin chào :head_of_department_gender :head_of_department_name.<br>' .
                          'Bộ môn :department_name vừa nhận được một yêu cầu thay đổi lịch giảng dạy.<br>' .
-                         'Hãy kiểm tra ngay khi có thể.',
+                         'Giảng viên tạo yêu cầu: :teacher_name.<br>',
         ],
         self::FIXED_SCHEDULE_STATUS['pending']['soft']   => [
-            'view'    => 'mail-forms.change-schedule-request.notify-head-of-department',
-            'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng',
-            'content' => 'Xin chào :teacher_gender :teacher_name.<br>' .
+            'view'    => 'mail-forms.change-schedule-request.notify-teacher',
+            'subject' => 'Tiếp nhận yêu cầu thay đổi lịch giảng dạy',
+            'content' => 'Xin chào :head_of_department_gender :head_of_department_name.<br>' .
                          'Bộ môn :department_name vừa nhận được một yêu cầu thay đổi lịch giảng dạy.<br>' .
-                         'Hãy kiểm tra ngay khi có thể.',
+                         'Giảng viên tạo yêu cầu: :teacher_name.<br>',
         ],
     ];
 

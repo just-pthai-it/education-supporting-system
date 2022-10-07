@@ -47,12 +47,8 @@ class SendFixedScheduleCreatedOrUpdateNotification implements ShouldQueue
         $this->fixedSchedule  = $event->getFixedSchedule();
         $this->loggingAccount = $event->getLoggingAccount();
         $this->__loadFixedScheduleRelationships();
-
-        $mailData = Constants::FIXED_SCHEDULE_MAIL_NOTIFICATION_FOR_TEACHER[$this->fixedSchedule->status];
-        $this->_setUpData($mailData, $this->fixedSchedule);
-        $this->__sendFixedScheduleMailNotification($mailData);
-        $this->__sendMailNotificationToHeadOfDepartment($this->fixedSchedule);
-        $this->__sendBroadcastFixedScheduleNotification();
+        $this->__sendMailNotification();
+        $this->__sendBroadcastNotification();
     }
 
     private function __loadFixedScheduleRelationships () : void
@@ -68,59 +64,52 @@ class SendFixedScheduleCreatedOrUpdateNotification implements ShouldQueue
                                     'schedule.moduleClass.teacher.account:id,email,accountable_id']);
     }
 
-    /**
-     * @throws Exception
-     */
-    private function __sendMailNotificationToHeadOfDepartment (FixedSchedule $fixedSchedule)
+    private function __setUpData (array &$mailData, bool $isForHeadOfDepartment = false)
     {
-        if (!in_array($fixedSchedule->status,
-                      [Constants::FIXED_SCHEDULE_STATUS['pending']['normal'],
-                       Constants::FIXED_SCHEDULE_STATUS['pending']['soft']]))
-        {
-            return;
-        }
+        $teacher          = $this->fixedSchedule->schedule->moduleClass->teacher;
+        $headOfDepartment = $this->fixedSchedule->schedule->moduleClass->teacher->department->teachers[0];
+        $department       = $this->fixedSchedule->schedule->moduleClass->teacher->department;
+        $moduleClass      = $this->fixedSchedule->schedule->moduleClass;
 
-        $teacher = $this->fixedSchedule->schedule->moduleClass->teacher->department->teachers[0];;
-        $mailData = Constants::FIXED_SCHEDULE_MAIL_NOTIFICATION_FOR_HEAD_OF_DEPARTMENT[$fixedSchedule->status];;
         $mailContent = replaceStringKeys($mailData['content'],
-                                         [':teacher_gender'  => $teacher->is_female ? 'cô' : 'thầy',
-                                          ':teacher_name'    => $teacher->name,
-                                          ':department_name' => $teacher->department->name,]);
+                                         [':head_of_department_name'   => $headOfDepartment->name,
+                                          ':head_of_department_gender' => $headOfDepartment->is_female ? 'cô' : 'thầy',
+                                          ':teacher_gender'            => $teacher->is_female ? 'cô' : 'thầy',
+                                          ':teacher_name'              => $teacher->name,
+                                          ':department_name'           => $department->name,]);
 
-        $this->__sendFixedScheduleMailNotification(['view'      => $mailData['view'],
-                                                    'subject'   => $mailData['subject'],
-                                                    'recipient' => $teacher->account->email,
-                                                    'data'      => ['content' => $mailContent,],]);
-    }
-
-    private function _setUpData (array &$data, FixedSchedule $fixedSchedule)
-    {
-        $mailContent = replaceStringKeys($data['content'],
-                                         [':teacher_gender'  => $fixedSchedule->schedule->moduleClass->teacher->is_female ? 'cô' : 'thầy',
-                                          ':teacher_name'    => $fixedSchedule->schedule->moduleClass->teacher->name,
-                                          ':department_name' => $fixedSchedule->schedule->moduleClass->teacher->department->name,]);
-
-        $data = array_merge($data, [
-            'recipient' => $fixedSchedule->schedule->moduleClass->teacher->account->email,
+        $mailData = array_merge($mailData, [
+            'recipient' => ($isForHeadOfDepartment ? $headOfDepartment : $teacher)->account->email,
             'data'      => [
-                'fixed_schedule'    => $fixedSchedule->getOriginal(),
-                'module_class_name' => $fixedSchedule->schedule->moduleClass->name,
+                'fixed_schedule'    => $this->fixedSchedule->getOriginal(),
+                'module_class_name' => $moduleClass->name,
                 'fs_status'         => Constants::FIXED_SCHEDULE_STATUS,
-                'status'            => $fixedSchedule->status,
+                'status'            => $this->fixedSchedule->status,
                 'content'           => $mailContent,
             ]
         ]);
     }
 
-    private function __sendFixedScheduleMailNotification ($data)
+    private function __sendMailNotification ()
     {
-        $this->mailService->sendFixedScheduleMailNotification($data);
+        if (in_array($this->fixedSchedule->status,
+                     [Constants::FIXED_SCHEDULE_STATUS['pending']['normal'],
+                      Constants::FIXED_SCHEDULE_STATUS['pending']['soft']]))
+        {
+            $mailData = Constants::FIXED_SCHEDULE_MAIL_NOTIFICATION_FOR_HEAD_OF_DEPARTMENT[$this->fixedSchedule->status];
+            $this->__setUpData($mailData, true);
+            $this->mailService->sendFixedScheduleMailNotification($mailData);
+        }
+
+        $mailData = Constants::FIXED_SCHEDULE_MAIL_NOTIFICATION_FOR_TEACHER[$this->fixedSchedule->status];
+        $this->__setUpData($mailData,);
+        $this->mailService->sendFixedScheduleMailNotification($mailData);
     }
 
     /**
      * @throws Exception
      */
-    private function __sendBroadcastFixedScheduleNotification ()
+    private function __sendBroadcastNotification ()
     {
         if (isset(Constants::FIXED_SCHEDULE_BROADCAST_NOTIFICATION_FOR_TEACHER[$this->fixedSchedule->status]))
         {
@@ -222,17 +211,18 @@ class SendFixedScheduleCreatedOrUpdateNotification implements ShouldQueue
         }
     }
 
-    public function __createNotification (array $data) : Notification
+    private function __createNotification (array $data) : Notification
     {
         return $this->notificationRepository->insertGetObject($data);
     }
 
-    public function __createAccountNotification (Notification $notification, int $receiverIdAccount)
+    private function __createAccountNotification (Notification $notification,
+                                                  int          $receiverIdAccount)
     {
         $notification->accounts()->attach(['id_account' => $receiverIdAccount]);
     }
 
-    public function __broadcastNotification (Notification $notification, int $receiverIdAccount)
+    private function __broadcastNotification (Notification $notification, int $receiverIdAccount)
     {
         NotificationCreated::dispatch($notification, [$receiverIdAccount]);
     }

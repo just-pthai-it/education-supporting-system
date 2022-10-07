@@ -43,8 +43,6 @@
                   style="padding: 1rem; padding-top: 1.5rem !important; padding-bottom: 1.5rem !important;">
             <p>
               {!! $content !!} <br>
-              {{ in_array($fixed_schedule['status'] ,$fs_status['approve'])
-                                                    ? 'Lịch giảng dạy mới đã được cập nhật trên hệ thống.' : '' }} <br>
               Thông tin chi tiết:
             </p>
             <div style="margin: 1rem 0.5rem; padding: 1rem; background-color: #f6f7f8;">
@@ -72,7 +70,7 @@
                     {{ $fixed_schedule['old_date'] }}
                   </td>
                   <td style="padding: 0 1rem 0 0;">
-                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png"/>
+                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png" alt=""/>
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem; {{ isset($fixed_schedule['new_date']) ? '' : 'font-style: italic;' }}">
                     {{ $fixed_schedule['new_date'] ?? '(Chưa xác định)'}}
@@ -89,7 +87,7 @@
                     {{ $fixed_schedule['old_shift'] }}
                   </td>
                   <td style="padding: 0 1rem 0 0;">
-                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png"/>
+                    <img src="https://utcketnoi.edu.vn/assets/img/chevron-right.png" alt=""/>
                   </td>
                   <td style="padding-top: 0.25rem; padding-bottom: 0.25rem; {{ isset($fixed_schedule['new_shift']) ? '' : 'font-style: italic;' }}">
                     {{ $fixed_schedule['new_shift'] ?? '(Chưa xác định)'}}
