@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\CreateGoogleEventPostRequest;
-use App\Http\Requests\UpdateGoogleEventPatchRequest;
-use App\Http\Requests\AuthorizeGoogleAPIsPostRequest;
 use App\Services\Contracts\GoogleCalendarAPIsServiceContract;
+use App\Http\Requests\GoogleAPIs\AuthorizeGoogleAPIsPostRequest;
+use App\Http\Requests\GoogleAPIs\Calendar\CreateGoogleEventPostRequest;
+use App\Http\Requests\GoogleAPIs\Calendar\UpdateGoogleEventPatchRequest;
 use App\Http\Requests\GoogleAPIs\Calendar\DestroyGoogleEventDeleteRequest;
 
 class GoogleCalendarAPIsController extends Controller
