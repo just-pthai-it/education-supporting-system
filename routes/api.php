@@ -18,6 +18,7 @@ use App\Http\Controllers\ExamScheduleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TrainingTypeController;
 use App\Http\Controllers\FixedScheduleController;
+use App\Http\Controllers\GoogleCalendarAPIsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -224,6 +225,36 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
         Route::group(['prefix' => '{uuid_account}'], function ()
         {
+            Route::group(['prefix' => 'google-apis/calendar'], function ()
+            {
+                Route::get('authenticate',
+                           [GoogleCalendarAPIsController::class, 'googleAPIsAuthenticate']);
+                Route::post('authorize',
+                            [GoogleCalendarAPIsController::class, 'googleAPIsAuthorize']);
+                Route::group(['prefix' => 'calendars'], function ()
+                {
+                    Route::get('', [GoogleCalendarAPIsController::class, 'getCalendarList']);
+                    Route::group(['prefix' => '{calendar}'], function ()
+                    {
+                        Route::get('', [GoogleCalendarAPIsController::class, 'getCalendarList']);
+                        Route::group(['prefix' => 'events'], function ()
+                        {
+                            Route::get('',
+                                       [GoogleCalendarAPIsController::class, 'getEventsByCalendarId']);
+                            Route::group(['prefix' => '{event}'], function ()
+                            {
+                                Route::post('', [GoogleCalendarAPIsController::class, 'storeEvent']);
+                                Route::patch('', [GoogleCalendarAPIsController::class, 'updateEvent']);
+                                Route::delete('',
+                                              [GoogleCalendarAPIsController::class, 'destroyEvent']);
+
+                            });
+                        });
+                    });
+                });
+            });
+
+
             Route::group(['prefix' => 'notifications'], function ()
             {
                 Route::get('',

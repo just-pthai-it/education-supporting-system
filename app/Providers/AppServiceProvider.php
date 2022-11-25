@@ -16,6 +16,7 @@ use App\Services\TrainingTypeService;
 use App\Services\ExcelRollCallService;
 use App\Services\ExcelScheduleService;
 use App\Services\FixedScheduleService;
+use App\Services\GoogleCalendarAPIsService;
 use App\Services\ExcelCurriculumService;
 use App\Services\ExcelExamScheduleService;
 use App\Services\DataVersionStudentService;
@@ -48,12 +49,14 @@ use Illuminate\Support\ServiceProvider;
 use App\Services\Contracts\ExamScheduleServiceContract;
 use App\Services\Contracts\TrainingTypeServiceContract;
 use App\Services\Contracts\FixedScheduleServiceContract;
+use App\Services\Contracts\GoogleCalendarAPIsServiceContract;
 use App\Services\Contracts\DataVersionStudentServiceContract;
 use App\Services\Contracts\FcmRegistrationTokenServiceContract;
 
 class AppServiceProvider extends ServiceProvider
 {
     public array $bindings = [
+        GoogleCalendarAPIsServiceContract::class   => GoogleCalendarAPIsService::class,
         FixedScheduleServiceContract::class        => FixedScheduleService::class,
         ExamScheduleServiceContract::class         => ExamScheduleService::class,
         NotificationServiceContract::class         => NotificationService::class,

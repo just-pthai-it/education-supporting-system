@@ -36,6 +36,9 @@ interface BaseRepositoryContract
     public function find (array $columns = ['*'], array $conditions = [], array $orders = [],
                           array $limitOffset = [], array $scopes = [], array $postFunctions = []);
 
+    public function findOne (array $columns = ['*'], array $conditions = [], array $orders = [],
+                          array $limitOffset = [], array $scopes = [], array $postFunctions = []);
+
     public function findByIds ($ids, array $columns = ['*'], array $orders = [],
                                array $limitOffset = [], array $postFunctions = []);
 

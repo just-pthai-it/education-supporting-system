@@ -3,6 +3,7 @@
 namespace App\Repositories\Abstracts;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 use App\Repositories\Contracts\BaseRepositoryContract;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
@@ -144,6 +145,13 @@ abstract class BaseRepository implements BaseRepositoryContract
         $result = $this->model->get($columns);
         $this->addPostFunction($result, $postFunctions);
         return $result;
+    }
+
+    public function findOne (array $columns = ['*'], array $conditions = [], array $orders = [],
+                             array $limitOffset = [], array $scopes = [],
+                             array $postFunctions = []) : ? Model
+    {
+        return $this->find(...func_get_args())[0] ?? null;
     }
 
     public function findByIds ($ids, array $columns = ['*'], array $orders = [],

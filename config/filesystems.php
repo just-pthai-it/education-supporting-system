@@ -54,7 +54,8 @@ return [
         ],
 
         'credentials' => [
-            'file_path' => storage_path('app/firebase_credentials.json'),
+            'firebase'          => storage_path('app/firebase_credentials.json'),
+            'oauth2_google_api' => storage_path('app/oauth2_credentials.json'),
         ],
 
         'errors' => [
