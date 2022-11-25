@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,8 +17,12 @@ class CreateThirdPartyTokensTable extends Migration
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->unsignedMediumInteger('id_account')->primary();
-            $table->string('google_token', 1000);
+            $table->unsignedMediumInteger('id')->autoIncrement();
+            $table->unsignedMediumInteger('id_account')->unique();
+            $table->text('google_token')->nullable();
+            $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
+            $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
+                  ->useCurrentOnUpdate();
         });
     }
 
