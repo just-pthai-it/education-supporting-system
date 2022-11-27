@@ -22,8 +22,9 @@ class LoginRequest extends ACustomFormRequest
     public function rules () : array
     {
         return [
-            'username' => 'required',
-            'password' => 'required|min:4'
+            'username'    => 'required',
+            'password'    => 'required|min:4',
+            'remember_me' => ['required', 'boolean']
         ];
     }
 }

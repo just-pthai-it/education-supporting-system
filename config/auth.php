@@ -66,10 +66,6 @@ return [
     */
 
     'providers' => [
-        'users'    => [
-            'driver' => 'custom',
-            'model'  => App\Models\User::class,
-        ],
         'accounts' => [
             'driver' => 'custom',
             'model'  => App\Models\Account::class,

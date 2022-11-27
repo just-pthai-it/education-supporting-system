@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Exception;
+use Illuminate\Support\Carbon;
 use App\Models\Traits\Filterable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -107,6 +108,11 @@ class Account extends Authenticatable implements JWTSubject
         );
     }
 
+    public function thirdPartyToken () : HasOne
+    {
+        return $this->hasOne(ThirdPartyToken::class, 'id_account', 'id');
+    }
+
     public function dataVersionTeacher () : HasOneThrough
     {
         return $this->hasOneThrough(
@@ -126,6 +132,16 @@ class Account extends Authenticatable implements JWTSubject
 
     public function getJWTCustomClaims () : array
     {
+        if (request()->remember_me == 1)
+        {
+            $now = Carbon::now();
+            return [
+                'nbf' => $now->getTimestamp(),
+                'iat' => $now->getTimestamp(),
+                'exp' => $now->addMonths(6)->getTimestamp(),
+            ];
+        }
+
         return [];
     }
 }
