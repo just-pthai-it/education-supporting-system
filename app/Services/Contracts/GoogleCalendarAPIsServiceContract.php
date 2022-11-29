@@ -8,7 +8,7 @@ interface GoogleCalendarAPIsServiceContract
 
     public function authorize (string $authCode);
 
-    public function getCalendarList();
+    public function getCalendarList ();
 
     public function getAllEvents ();
 
@@ -19,4 +19,6 @@ interface GoogleCalendarAPIsServiceContract
     public function updateEvent (string $calendarId, string $eventId, array $inputs);
 
     public function destroyEvent (string $calendarId, string $eventId, array $inputs);
+
+    public function getAllEventsOfAllCalendars (array $optionParameters);
 }

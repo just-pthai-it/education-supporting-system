@@ -183,4 +183,39 @@ class GoogleCalendarAPIsService implements Contracts\GoogleCalendarAPIsServiceCo
         $this->__setToken();
         $this->googleCalendarAPIs->destroyEvent($calendarId, $eventId, $inputs);
     }
+
+    /**
+     * @throws InvalidGoogleApiTokenException
+     */
+    public function getAllEventsOfAllCalendars (array $optionParameters)
+    {
+        $this->__setToken();
+        $calendars = $this->googleCalendarAPIs->getCalendarList();
+        $result    = [];
+        foreach ($calendars as $calendar)
+        {
+            try
+            {
+                $googleEvents = $this->googleCalendarAPIs->getEventsByCalendarId($calendar->getId(),
+                                                                                 $optionParameters);
+
+                $result[] = [
+                    'accessRole'      => $calendar->getAccessRole(),
+                    'id'              => $calendar->getId(),
+                    'summary'         => $calendar->getSummary(),
+                    'description'     => $calendar->getDescription(),
+                    'colorId'         => $calendar->getColorId,
+                    'backgroundColor' => $calendar->getBackgroundColor,
+                    'events'          => $googleEvents,
+                ];
+
+            }
+            catch (Exception $exception)
+            {
+                return ['data' => 'error'];
+            }
+        }
+
+        return response(['data' => $result]);
+    }
 }

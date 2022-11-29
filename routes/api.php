@@ -233,6 +233,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
                             [GoogleCalendarAPIsController::class, 'googleAPIsAuthorize']);
                 Route::group(['prefix' => 'calendars'], function ()
                 {
+                    Route::get('events',
+                               [GoogleCalendarAPIsController::class, 'getAllEventsOfAllCalendars']);
                     Route::get('', [GoogleCalendarAPIsController::class, 'getCalendarList']);
                     Route::group(['prefix' => '{calendar}'], function ()
                     {
@@ -243,8 +245,10 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
                                        [GoogleCalendarAPIsController::class, 'getEventsByCalendarId']);
                             Route::group(['prefix' => '{event}'], function ()
                             {
-                                Route::post('', [GoogleCalendarAPIsController::class, 'storeEvent']);
-                                Route::patch('', [GoogleCalendarAPIsController::class, 'updateEvent']);
+                                Route::post('',
+                                            [GoogleCalendarAPIsController::class, 'storeEvent']);
+                                Route::patch('',
+                                             [GoogleCalendarAPIsController::class, 'updateEvent']);
                                 Route::delete('',
                                               [GoogleCalendarAPIsController::class, 'destroyEvent']);
 

@@ -59,4 +59,9 @@ class GoogleCalendarAPIsController extends Controller
     {
         $this->googleCalendarService->destroyEvent($calendarId, $eventId, $request->all());
     }
+
+    public function getAllEventsOfAllCalendars (Request $request)
+    {
+        return $this->googleCalendarService->getAllEventsOfAllCalendars($request->all());
+    }
 }
