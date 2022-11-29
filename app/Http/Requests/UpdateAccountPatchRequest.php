@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Abstracts\ACustomFormRequest;
 
-class AccountPatchRequest extends ACustomFormRequest
+class UpdateAccountPatchRequest extends ACustomFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,9 @@ class AccountPatchRequest extends ACustomFormRequest
     public function rules () : array
     {
         return [
-            'phone' => 'required|exclude_if:phone,',
+            'phone'                    => 'required|exclude_if:phone,',
+            'settings'                 => ['required', 'sometimes', 'array'],
+            "settings.google_calendar" => ["required", "sometimes", "boolean"]
         ];
     }
 }

@@ -34,6 +34,7 @@ class UserResource extends JsonResource
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
                     'tags'        => $this->tags,
+                    'settings'    => $this->settings,
                 ];
 
             case OtherDepartment::class:
@@ -47,6 +48,7 @@ class UserResource extends JsonResource
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
                     'tags'        => $tags,
+                    'settings'    => $this->settings,
                 ];
 
             case Teacher::class:
@@ -71,6 +73,7 @@ class UserResource extends JsonResource
                     'isHeadOfFaculty'         => $this->is_head_of_faculty,
                     'permissions'             => $this->permissions,
                     'tags'                    => $tags,
+                    'settings'                => $this->settings,
                 ];
 
             case Student::class:
@@ -93,6 +96,7 @@ class UserResource extends JsonResource
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
                     'tags'        => $this->tags,
+                    'settings'    => $this->settings,
                 ];
 
             default:

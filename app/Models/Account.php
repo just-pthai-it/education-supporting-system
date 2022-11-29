@@ -36,6 +36,7 @@ class Account extends Authenticatable implements JWTSubject
         'id_role',
         'accountable_type',
         'accountable_id',
+        'settings',
         'created_at',
         'updated_at',
         'uuid',
@@ -52,6 +53,7 @@ class Account extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $casts = [
+        'settings'          => 'array',
         'email_verified_at' => 'datetime',
         'created_at'        => 'datetime',
         'updated_at'        => 'datetime',

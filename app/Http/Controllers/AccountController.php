@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\AccountPatchRequest;
+use App\Http\Requests\UpdateAccountPatchRequest;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\VerifyResetPasswordPostRequest;
 use App\Http\Requests\RequestResetPasswordPostRequest;
@@ -43,7 +42,7 @@ class AccountController extends Controller
         $this->accountService->resetPassword($request->validated());
     }
 
-    public function update (AccountPatchRequest $request, $uuidAccount)
+    public function update (UpdateAccountPatchRequest $request, $uuidAccount)
     {
         $this->accountService->update($uuidAccount, $request->validated());
     }

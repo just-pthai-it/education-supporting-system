@@ -22,6 +22,7 @@ class CustomUserProvider extends EloquentUserProvider implements UserProvider
             'id_role',
             'accountable_type',
             'accountable_id',
+            'settings',
             GFunction::uuidFromBin('uuid'),
         ];
 
@@ -69,6 +70,7 @@ class CustomUserProvider extends EloquentUserProvider implements UserProvider
             'phone',
             'accountable_type',
             'accountable_id',
+            'settings',
             GFunction::uuidFromBin('uuid'),
         ];
 

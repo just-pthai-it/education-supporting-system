@@ -131,6 +131,7 @@ class AuthService implements Contracts\AuthServiceContract
         $data->email        = auth()->user()->email;
         $data->phone        = auth()->user()->phone;
         $data->tags         = auth()->user()->tags()->get(['taggable_id', 'taggable_type']);
+        $data->settings     = auth()->user()->settings;
         $data->permissions  = $this->_getAccountPermissions();
         return $data;
     }
