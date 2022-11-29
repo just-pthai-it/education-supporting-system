@@ -241,12 +241,12 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
                         Route::get('', [GoogleCalendarAPIsController::class, 'getCalendarList']);
                         Route::group(['prefix' => 'events'], function ()
                         {
+                            Route::post('',
+                                        [GoogleCalendarAPIsController::class, 'storeEvent']);
                             Route::get('',
                                        [GoogleCalendarAPIsController::class, 'getEventsByCalendarId']);
                             Route::group(['prefix' => '{event}'], function ()
                             {
-                                Route::post('',
-                                            [GoogleCalendarAPIsController::class, 'storeEvent']);
                                 Route::patch('',
                                              [GoogleCalendarAPIsController::class, 'updateEvent']);
                                 Route::delete('',
