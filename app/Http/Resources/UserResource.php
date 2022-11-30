@@ -34,7 +34,9 @@ class UserResource extends JsonResource
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
                     'tags'        => $this->tags,
-                    'settings'    => $this->settings,
+                    'settings'    => [
+                        'googleCalendar' => $this->settings['google_calendar'],
+                    ],
                 ];
 
             case OtherDepartment::class:
@@ -48,7 +50,9 @@ class UserResource extends JsonResource
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
                     'tags'        => $tags,
-                    'settings'    => $this->settings,
+                    'settings'    => [
+                        'googleCalendar' => $this->settings['google_calendar'],
+                    ],
                 ];
 
             case Teacher::class:
@@ -73,7 +77,9 @@ class UserResource extends JsonResource
                     'isHeadOfFaculty'         => $this->is_head_of_faculty,
                     'permissions'             => $this->permissions,
                     'tags'                    => $tags,
-                    'settings'                => $this->settings,
+                    'settings'                => [
+                        'googleCalendar' => $this->settings['google_calendar'],
+                    ],
                 ];
 
             case Student::class:
@@ -96,7 +102,9 @@ class UserResource extends JsonResource
                     'uuidAccount' => $this->uuid_account,
                     'permissions' => $this->permissions,
                     'tags'        => $this->tags,
-                    'settings'    => $this->settings,
+                    'settings'    => [
+                        'googleCalendar' => $this->settings['google_calendar'],
+                    ],
                 ];
 
             default:
