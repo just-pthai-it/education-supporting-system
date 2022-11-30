@@ -30,16 +30,19 @@ class GoogleCalendarAPIs
                                              ->getItems();
     }
 
-    public function createEvent (string $calendarId, array $data)
+    public function createEvent (string $calendarId, array $data, array $optionParameters)
     {
         $this->calendarService->events->insert($calendarId,
-                                               new Google_Service_Calendar_Event($data));
+                                               new Google_Service_Calendar_Event($data),
+                                               $optionParameters);
     }
 
-    public function updateEvent (string $calendarId, string $eventId, array $data)
+    public function updateEvent (string $calendarId, string $eventId, array $data,
+                                 array  $optionParameters)
     {
         $this->calendarService->events->update($calendarId, $eventId,
-                                               new Google_Service_Calendar_Event($data));
+                                               new Google_Service_Calendar_Event($data),
+                                               $optionParameters);
     }
 
     public function destroyEvent (string $calendarId, string $eventId, array $optionParams)

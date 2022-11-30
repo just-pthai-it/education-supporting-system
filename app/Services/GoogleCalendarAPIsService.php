@@ -160,28 +160,30 @@ class GoogleCalendarAPIsService implements Contracts\GoogleCalendarAPIsServiceCo
     /**
      * @throws InvalidGoogleApiTokenException
      */
-    public function createEvent (string $calendarId, array $inputs)
+    public function createEvent (string $calendarId, array $inputs, array $optionParameters)
     {
         $this->__setToken();
-        $this->googleCalendarAPIs->createEvent($calendarId, $inputs);
+        $this->googleCalendarAPIs->createEvent($calendarId, $inputs, $optionParameters);
+        return response([], 201);
     }
 
     /**
      * @throws InvalidGoogleApiTokenException
      */
-    public function updateEvent (string $calendarId, string $eventId, array $inputs)
+    public function updateEvent (string $calendarId, string $eventId, array $inputs,
+                                 array  $optionParameters)
     {
         $this->__setToken();
-        $this->googleCalendarAPIs->updateEvent($calendarId, $eventId, $inputs);
+        $this->googleCalendarAPIs->updateEvent($calendarId, $eventId, $inputs, $optionParameters);
     }
 
     /**
      * @throws InvalidGoogleApiTokenException
      */
-    public function destroyEvent (string $calendarId, string $eventId, array $inputs)
+    public function destroyEvent (string $calendarId, string $eventId, array $optionParameters)
     {
         $this->__setToken();
-        $this->googleCalendarAPIs->destroyEvent($calendarId, $eventId, $inputs);
+        $this->googleCalendarAPIs->destroyEvent($calendarId, $eventId, $optionParameters);
     }
 
     /**

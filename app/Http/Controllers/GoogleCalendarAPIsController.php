@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Services\Contracts\GoogleCalendarAPIsServiceContract;
 use App\Http\Requests\GoogleAPIs\AuthorizeGoogleAPIsPostRequest;
-use App\Http\Requests\GoogleAPIs\Calendar\CreateGoogleEventPostRequest;
-use App\Http\Requests\GoogleAPIs\Calendar\UpdateGoogleEventPatchRequest;
-use App\Http\Requests\GoogleAPIs\Calendar\DestroyGoogleEventDeleteRequest;
+use App\Http\Requests\GoogleAPIs\Calendar\Event\GetGoogleEventGetRequest;
+use App\Http\Requests\GoogleAPIs\Calendar\Event\UpdateGoogleEventPutRequest;
+use App\Http\Requests\GoogleAPIs\Calendar\Event\CreateGoogleEventPostRequest;
+use App\Http\Requests\GoogleAPIs\Calendar\Event\DestroyGoogleEventDeleteRequest;
 
 class GoogleCalendarAPIsController extends Controller
 {
@@ -36,32 +38,43 @@ class GoogleCalendarAPIsController extends Controller
         return $this->googleCalendarService->getCalendarList();
     }
 
-    public function getEventsByCalendarId (Request $request, string $uuidAccount,
-                                           string  $calendarId)
+    public function getEventsByCalendarId (GetGoogleEventGetRequest $request, string $uuidAccount,
+                                           string                   $calendarId)
     {
-        return $this->googleCalendarService->getEventsByCalendarId($calendarId, $request->all());
+        return $this->googleCalendarService->getEventsByCalendarId($calendarId,
+                                                                   $request->validated());
     }
 
     public function storeEvent (CreateGoogleEventPostRequest $request, string $uuidAccount,
                                 string                       $calendarId)
     {
-        $this->googleCalendarService->createEvent($calendarId, $request->all());
+        $optionParameterKeys = array_keys($request->query());
+        return $this->googleCalendarService->createEvent($calendarId,
+                                                         Arr::except($request->validated(),
+                                                                     $optionParameterKeys),
+                                                         Arr::only($request->validated(),
+                                                                   $optionParameterKeys));
     }
 
-    public function updateEvent (UpdateGoogleEventPatchRequest $request, string $uuidAccount,
-                                 string                        $calendarId, string $eventId)
+    public function updateEvent (UpdateGoogleEventPutRequest $request, string $uuidAccount,
+                                 string                      $calendarId, string $eventId)
     {
-        $this->googleCalendarService->updateEvent($calendarId, $eventId, $request->all());
+        $optionParameterKeys = array_keys($request->query());
+        return $this->googleCalendarService->updateEvent($calendarId, $eventId,
+                                                         Arr::except($request->validated(),
+                                                                     $optionParameterKeys),
+                                                         Arr::only($request->validated(),
+                                                                   $optionParameterKeys));
     }
 
     public function destroyEvent (DestroyGoogleEventDeleteRequest $request, string $uuidAccount,
                                   string                          $calendarId, string $eventId)
     {
-        $this->googleCalendarService->destroyEvent($calendarId, $eventId, $request->all());
+        $this->googleCalendarService->destroyEvent($calendarId, $eventId, $request->validated());
     }
 
-    public function getAllEventsOfAllCalendars (Request $request)
+    public function getAllEventsOfAllCalendars (GetGoogleEventGetRequest $request)
     {
-        return $this->googleCalendarService->getAllEventsOfAllCalendars($request->all());
+        return $this->googleCalendarService->getAllEventsOfAllCalendars($request->validated());
     }
 }

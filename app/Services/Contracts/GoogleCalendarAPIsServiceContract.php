@@ -14,11 +14,11 @@ interface GoogleCalendarAPIsServiceContract
 
     public function getEventsByCalendarId (string $calendarId, array $optionParameters = []);
 
-    public function createEvent (string $calendarId, array $inputs);
+    public function createEvent (string $calendarId, array $inputs, array $optionParameters);
 
-    public function updateEvent (string $calendarId, string $eventId, array $inputs);
+    public function updateEvent (string $calendarId, string $eventId, array $inputs, array $optionParameters);
 
-    public function destroyEvent (string $calendarId, string $eventId, array $inputs);
+    public function destroyEvent (string $calendarId, string $eventId, array $optionParameters);
 
     public function getAllEventsOfAllCalendars (array $optionParameters);
 }
