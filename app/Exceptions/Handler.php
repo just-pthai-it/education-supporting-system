@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Google\Service\Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
@@ -34,6 +35,16 @@ class Handler extends ExceptionHandler
      */
     public function register ()
     {
+        $this->renderable(function (Exception $e)
+        {
+            if (in_array($e->getCode(), [400, 401]))
+            {
+                return response(['message' => 'Token exception'], 422);
+            }
+
+            throw $e;
+        });
+
         $this->renderable(function (CustomHttpException $e)
         {
             $messages = json_decode($e->getMessage()) ?? $e->getMessage();
