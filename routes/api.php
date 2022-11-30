@@ -231,6 +231,9 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
                            [GoogleCalendarAPIsController::class, 'googleAPIsAuthenticate']);
                 Route::post('authorize',
                             [GoogleCalendarAPIsController::class, 'googleAPIsAuthorize']);
+                Route::post('revoke',
+                            [GoogleCalendarAPIsController::class, 'googleAPIsRevoke']);
+
                 Route::group(['prefix' => 'calendars'], function ()
                 {
                     Route::get('events',

@@ -77,4 +77,9 @@ class GoogleCalendarAPIsController extends Controller
     {
         return $this->googleCalendarService->getAllEventsOfAllCalendars($request->validated());
     }
+
+    public function googleAPIsRevoke (Request $request)
+    {
+        $this->googleCalendarService->googleAPIsRevoke();
+    }
 }

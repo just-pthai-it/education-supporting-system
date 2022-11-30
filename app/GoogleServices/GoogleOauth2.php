@@ -83,4 +83,9 @@ class GoogleOauth2
     {
         return $this->googleClient->isAccessTokenExpired();
     }
+
+    public function revoke (array $token = null)
+    {
+        $this->googleClient->revokeToken($token);
+    }
 }

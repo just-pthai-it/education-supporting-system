@@ -75,6 +75,10 @@ class GoogleCalendarAPIsService implements Contracts\GoogleCalendarAPIsServiceCo
     {
         $this->googleOauth2->authorize($authCode);
         $this->__upsertThirdPartyToken();
+        $settings = auth()->user()->settings;
+        $settings['google_calendar'] = true;
+        auth()->user()->settings = $settings;
+        auth()->user()->save();
     }
 
     private function __upsertThirdPartyToken () : void
@@ -219,5 +223,18 @@ class GoogleCalendarAPIsService implements Contracts\GoogleCalendarAPIsServiceCo
         }
 
         return response(['data' => $result]);
+    }
+
+    /**
+     * @throws InvalidGoogleApiTokenException
+     */
+    public function googleAPIsRevoke ()
+    {
+        $this->__setToken();
+        $this->googleOauth2->revoke();
+        $settings = auth()->user()->settings;
+        $settings['google_calendar'] = false;
+        auth()->user()->settings = $settings;
+        auth()->user()->save();
     }
 }

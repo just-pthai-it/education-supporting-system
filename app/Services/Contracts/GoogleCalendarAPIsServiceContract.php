@@ -21,4 +21,6 @@ interface GoogleCalendarAPIsServiceContract
     public function destroyEvent (string $calendarId, string $eventId, array $optionParameters);
 
     public function getAllEventsOfAllCalendars (array $optionParameters);
+
+    public function googleAPIsRevoke ();
 }
