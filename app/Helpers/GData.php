@@ -6,10 +6,12 @@ class GData
 {
 
     public static array $classType = [
-        'LT' => 1,
-        'BT' => 2,
-        'TH' => 3,
-        'DA' => 4,
+        'LT'  => 1,
+        'BT'  => 2,
+        'TH'  => 3,
+        'DA'  => 4,
+        'BTL' => 5,
+        'TT'  => 6,
     ];
 
     public static array $shift = [
