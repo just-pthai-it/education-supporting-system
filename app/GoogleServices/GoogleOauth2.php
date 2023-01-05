@@ -37,7 +37,6 @@ class GoogleOauth2
      */
     private function _setUpConfig (string $scope)
     {
-        $this->googleClient->setLoginHint(auth()->user()->email);
         $this->googleClient->setAccessType('offline');
         $this->googleClient->setPrompt('consent');
         $this->googleClient->setAuthConfig(config('filesystems.disks.credentials.oauth2_google_api'));

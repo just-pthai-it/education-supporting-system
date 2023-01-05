@@ -192,6 +192,16 @@ Route::get('bad-request', function ()
 });
 
 
+
+
+
+
+
+
+
+
+
+
 Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],], function ()
 {
     Route::group(['prefix' => ''], function ()

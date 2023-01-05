@@ -28,8 +28,6 @@ class GoogleCalendarAPIsService implements Contracts\GoogleCalendarAPIsServiceCo
                                  Google_Client                     $googleClient)
     {
         $this->thirdPartyTokenRepository = $thirdPartyTokenRepository;
-        $this->thirdPartyToken           = $this->thirdPartyTokenRepository->findOne(['*'],
-                                                                                     [['id_account', '=', auth()->user()->id]]);
         $this->googleOauth2              = new GoogleOauth2($googleClient,
                                                             Google_Service_Calendar::CALENDAR);
         $this->googleCalendarAPIs        = new GoogleCalendarAPIs($this->googleOauth2->getGoogleClient());
@@ -48,7 +46,7 @@ class GoogleCalendarAPIsService implements Contracts\GoogleCalendarAPIsServiceCo
      */
     private function __verifyToken (bool $isAuthenticating) : ?array
     {
-        $token = $this->thirdPartyToken->google_token ?? null;
+        $token = auth()->user()->thirdPartyToken->google_token ?? null;
         if (is_null($token) || !isset($token['access_token'], $token['refresh_token']))
         {
             if ($isAuthenticating)
@@ -83,15 +81,15 @@ class GoogleCalendarAPIsService implements Contracts\GoogleCalendarAPIsServiceCo
 
     private function __upsertThirdPartyToken () : void
     {
-        if (is_null($this->thirdPartyToken))
+        if (is_null(auth()->user()->thirdPartyToken))
         {
             $this->thirdPartyTokenRepository->insert(['id_account'   => auth()->user()->id,
                                                       'google_token' => $this->googleOauth2->getToken()]);
         }
         else
         {
-            $this->thirdPartyToken->google_token = $this->googleOauth2->getToken();
-            $this->thirdPartyToken->save();
+            auth()->user()->thirdPartyToken->google_token = $this->googleOauth2->getToken();
+            auth()->user()->thirdPartyToken->save();
         }
     }
 
