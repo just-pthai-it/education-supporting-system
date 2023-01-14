@@ -52,7 +52,7 @@ class ExamSchedule extends Model
         $values = explode(',', $values['between']);
         if (count($values) == 1)
         {
-            $query->where('time_start', '=', $values[0]);
+            $query->where('start_at', '=', $values[0]);
         }
         else
         {
