@@ -165,8 +165,8 @@ class GoogleCalendarAPIsService implements Contracts\GoogleCalendarAPIsServiceCo
     public function createEvent (string $calendarId, array $inputs, array $optionParameters)
     {
         $this->__setToken();
-        $this->googleCalendarAPIs->createEvent($calendarId, $inputs, $optionParameters);
-        return response([], 201);
+        $event = $this->googleCalendarAPIs->createEvent($calendarId, $inputs, $optionParameters);
+        return response(['data' => $event], 201);
     }
 
     /**

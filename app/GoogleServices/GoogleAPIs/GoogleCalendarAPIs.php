@@ -8,6 +8,7 @@ use Google_Client;
 use Carbon\Carbon;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
+use Google\Service\Calendar\Event;
 
 class GoogleCalendarAPIs
 {
@@ -30,11 +31,11 @@ class GoogleCalendarAPIs
                                              ->getItems();
     }
 
-    public function createEvent (string $calendarId, array $data, array $optionParameters)
+    public function createEvent (string $calendarId, array $data, array $optionParameters) : Event
     {
-        $this->calendarService->events->insert($calendarId,
-                                               new Google_Service_Calendar_Event($data),
-                                               $optionParameters);
+        return $this->calendarService->events->insert($calendarId,
+                                                      new Google_Service_Calendar_Event($data),
+                                                      $optionParameters);
     }
 
     public function updateEvent (string $calendarId, string $eventId, array $data,
