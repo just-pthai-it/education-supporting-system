@@ -17,6 +17,7 @@ class Module extends Model
 
     protected $table = 'modules';
     protected $keyType = 'string';
+    public $incrementing = false;
     public $timestamps = false;
 
     protected $fillable = [

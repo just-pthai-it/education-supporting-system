@@ -154,6 +154,14 @@ abstract class BaseRepository implements BaseRepositoryContract
         return $this->find(...func_get_args())[0] ?? null;
     }
 
+    public function findById ($id, array $columns = ['*'], array $postFunctions = []) : ?Model
+    {
+        $this->createModel();
+        $result = $this->model->find($id, $columns);
+        $this->addPostFunction($result, $postFunctions);
+        return $result;
+    }
+
     public function findByIds ($ids, array $columns = ['*'], array $orders = [],
                                array $limitOffset = [], array $postFunctions = [])
     {
