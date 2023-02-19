@@ -463,6 +463,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
     });
 
     Route::apiResource('modules', ModuleController::class);
+    Route::apiResource('curriculums', CurriculumController::class);
 
     Route::get('me', [UserController::class, 'getUserInfo']);
 });

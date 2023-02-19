@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\Contracts\CurriculumServiceContract;
 use App\Services\Contracts\ModuleServiceContract;
+use App\Services\CurriculumService;
 use App\Services\ModuleService;
 use App\Services\RoomService;
 use App\Services\TeacherService;
@@ -81,7 +83,7 @@ class AppServiceProvider extends ServiceProvider
         FcmRegistrationTokenServiceContract::class => FcmRegistrationTokenService::class,
         DataVersionStudentServiceContract::class   => DataVersionStudentService::class,
         ModuleServiceContract::class               => ModuleService::class,
-
+        CurriculumServiceContract::class           => CurriculumService::class,
     ];
 
     /**
