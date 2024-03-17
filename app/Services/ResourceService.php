@@ -199,7 +199,24 @@ class ResourceService implements Contracts\ResourceServiceContract
         $idModules      = $this->__getIdModulesFromModuleClasses($data['module_classes']);
 
 
-        $this->__checkIfModulesMissing($idModules);
+        $modulesMissing = $this->__checkIfModulesMissing($idModules);
+        if (!empty($modulesMissing))
+        {
+            $missingData = [];
+            foreach ($data['module_classes'] as $moduleClass)
+            {
+                if (in_array($moduleClass['id_module'], $modulesMissing))
+                {
+                    $moduleName    = str_replace(str_replace($moduleClass['id_module'], '', $moduleClass['id']), '',
+                                                 $moduleClass['name']);
+                    $missingData[] = ['id' => $moduleClass['id_module'], 'name' => $moduleName];
+                }
+            }
+
+            $messages = ['modulesMissing' => $missingData];
+            throw new DatabaseConflictException(json_encode($messages), 409);
+        }
+
         $roomIds = array_unique(array_column($data['schedules'], 'id_room'));
         $this->__createOrUpdateRooms(collect($roomIds)->map(function (string $roomId, string $key)
         {
@@ -262,11 +279,12 @@ class ResourceService implements Contracts\ResourceServiceContract
     private function __checkIfModulesMissing ($idModules)
     {
         $modulesMissing = $this->__getIdModulesMissing($idModules);
-        if (!empty($modulesMissing))
-        {
-            $messages = ['modulesMissing' => $modulesMissing];
-            throw new DatabaseConflictException(json_encode($messages), 409);
-        }
+        return $modulesMissing;
+//        if (!empty($modulesMissing))
+//        {
+//            $messages = ['modulesMissing' => $modulesMissing];
+//            throw new DatabaseConflictException(json_encode($messages), 409);
+//        }
     }
 
     private function __updateModuleClassesWithFewStudentsToCache (array  $moduleClasses,
