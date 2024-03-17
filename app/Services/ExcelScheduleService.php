@@ -174,7 +174,7 @@ class ExcelScheduleService extends AExcelService
                             !empty($this->_getCellData($cells, $this->periods[$i])))
                         {
                             $period = $this->_getCellData($cells, $this->periods[$i]);
-                            $idRoom = $this->_getCellData($cells, $this->roomsIndex[$i]);
+                            $idRoom = $this->_getCellData($cells, $this->roomsIndex[$i], 'room');
                             $this->__createSchedules($schedules, $idModule, $moduleClassName,
                                                      $dateRange, $period, $idRoom, $numberOfWeeks,
                                                      $i);
@@ -229,7 +229,7 @@ class ExcelScheduleService extends AExcelService
             'id'               => $idModuleClass,
             'name'             => $moduleClassName,
             'number_plan'      => $numberOfStudents,
-            'number_reality'   => $numberOfStudentsReality,
+            'number_reality'   => $numberOfStudentsReality === '' ? 0 : $numberOfStudentsReality,
             'type'             => GData::$classType[$classType],
             'id_study_session' => $this->idStudySession,
             'is_international' => strpos($idModuleClass, '(QT') === false ? 0 : 1,
@@ -261,7 +261,7 @@ class ExcelScheduleService extends AExcelService
 
     private function __getShiftByPeriod (string $period)
     {
-        $period = preg_replace('/[ ]+/', '', $period);
+        $period = preg_replace('/ +/', '', $period);
         return GData::$shift[$period];
     }
 

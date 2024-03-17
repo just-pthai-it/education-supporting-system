@@ -8,6 +8,7 @@ use Box\Spout\Common\Exception\IOException;
 use App\Services\Contracts\ExcelServiceContract;
 use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use Box\Spout\Common\Exception\UnsupportedTypeException;
+use Illuminate\Support\Str;
 
 class AExcelService implements ExcelServiceContract
 {
@@ -39,7 +40,7 @@ class AExcelService implements ExcelServiceContract
         return [];
     }
 
-    protected function _getCellData (array &$cells, int $index) : string
+    protected function _getCellData (array &$cells, int $index, string $typeCell = '') : string
     {
         if (isset($cells[$index]))
         {
@@ -47,6 +48,17 @@ class AExcelService implements ExcelServiceContract
             if ($value instanceof DateTime)
             {
                 return $value->format('Y-m-d H:i:s');
+            }
+
+            if ($typeCell == 'room')
+            {
+                $value = preg_replace('/ +/', '', Str::upper($value));
+                $value = str_replace('NCT', ' NCT', $value);
+
+                if (strpos($value, '-') === false)
+                {
+                    $value = 'PHTT';
+                }
             }
 
             return $value;
