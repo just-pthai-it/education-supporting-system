@@ -16,8 +16,8 @@ RUN pecl install igbinary msgpack && docker-php-ext-enable igbinary msgpack
 RUN printf "yes\nyes\nyes\nyes\nyes\nyes\n" | pecl install redis && docker-php-ext-enable redis
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY .docker/config/production/supervisor/supervisord.conf /etc/supervisord.conf
-COPY .docker/config/production/supervisor/supervisor.d/ /etc/supervisor.d/
+COPY --chown=www-data:www-data docker/config/production/supervisor/supervisord.conf /etc/supervisord.conf
+COPY --chown=www-data:www-data .docker/config/production/supervisor/supervisor.d/ /etc/supervisor.d/
 
 WORKDIR /var/www/html
 COPY --from=deps /app/vendor/ /var/www/html/vendor

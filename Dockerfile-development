@@ -17,8 +17,8 @@ RUN printf "yes\nyes\nyes\nyes\nyes\nyes\n" | pecl install redis && docker-php-e
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 RUN docker-php-source extract
 
-COPY .docker/config/development/supervisor/supervisord.conf /etc/supervisord.conf
-COPY .docker/config/development/supervisor/supervisor.d/ /etc/supervisor.d/
+COPY --chown=www-data:www-data .docker/config/development/supervisor/supervisord.conf /etc/supervisord.conf
+COPY --chown=www-data:www-data .docker/config/development/supervisor/supervisor.d/ /etc/supervisor.d/
 
 WORKDIR /var/www/html
 COPY --from=deps /app/vendor/ /var/www/html/vendor
