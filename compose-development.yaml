@@ -1,0 +1,96 @@
+version: '3.4'
+services:
+  app:
+    container_name: ESS
+    build:
+      context: .
+      dockerfile: Dockerfile-development
+      args:
+        - userid=${USER_ID}
+        - groupid=${GROUP_ID}
+    env_file:
+      - .env.development
+    restart: unless-stopped
+    ports:
+      - ${PUBLIC_PORT}:${APP_PORT}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - storage:/var/www/html/storage
+    depends_on:
+      - redis
+      - mariadb
+    networks:
+      - webserver-network
+      - mariadb-network
+      - redis-network
+
+  webserver:
+    image: nginx:stable-alpine3.17
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - app
+    ports:
+      - "81:80"
+      - "444:443"
+    volumes:
+      - ./:/var/www/html
+      - .docker/config/development/nginx/conf.d:/etc/nginx/templates
+    networks:
+      - webserver-network
+
+  adminer:
+    container_name: adminer
+    image: adminer:4.8.1
+    env_file:
+      - .env.development
+    restart: unless-stopped
+    ports:
+      - ${ADMINER_PUBLIC_PORT}:8080
+    depends_on:
+      - mariadb
+    networks:
+      - mariadb-network
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.11.2
+    env_file:
+      - .env.development
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    networks:
+      - mariadb-network
+
+  redis:
+    container_name: redis
+    image: redis:6.0.16
+    env_file:
+      - .env.development
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    networks:
+      - redis-network
+
+volumes:
+  storage:
+  mariadb-data:
+  redis-data:
+
+networks:
+  webserver-network:
+    driver: bridge
+  mariadb-network:
+    driver: bridge
+  redis-network:
+    driver: bridge

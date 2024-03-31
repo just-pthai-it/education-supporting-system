@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CurriculumController;
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\TeacherController;
@@ -460,6 +462,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['cus.auth', 'default_header'],]
 
     });
 
+    Route::apiResource('modules', ModuleController::class);
+    Route::apiResource('curriculums', CurriculumController::class);
 
     Route::get('me', [UserController::class, 'getUserInfo']);
 });

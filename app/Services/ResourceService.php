@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use App\Repositories\Contracts\RoomRepositoryContract;
 use Exception;
 use PDOException;
 use App\Helpers\GFArray;
 use Illuminate\Support\Facades\DB;
-use App\Models\DataVersionStudent;
 use Illuminate\Support\Facades\Cache;
 use App\BusinessClasses\FileUploadHandler;
 use App\Exceptions\ImportDataFailedException;
@@ -31,6 +31,7 @@ class ResourceService implements Contracts\ResourceServiceContract
     private ModuleRepositoryContract $moduleRepository;
     private ClassRepositoryContract $classRepository;
     private ScheduleRepositoryContract $scheduleRepository;
+    private RoomRepositoryContract $roomRepository;
     private ExamScheduleRepositoryContract $examScheduleRepository;
     private CurriculumRepositoryContract $curriculumRepository;
     private StudySessionRepositoryContract $studySessionRepository;
@@ -51,6 +52,7 @@ class ResourceService implements Contracts\ResourceServiceContract
      * @param StudySessionRepositoryContract       $studySessionRepository
      * @param FileUploadHandler                    $fileUploadHandler
      * @param DataVersionStudentRepositoryContract $dataVersionStudentRepository
+     * @param RoomRepositoryContract               $roomRepository
      */
     public function __construct (ModuleClassRepositoryContract        $moduleClassRepository,
                                  StudentRepositoryContract            $studentRepository,
@@ -61,7 +63,8 @@ class ResourceService implements Contracts\ResourceServiceContract
                                  CurriculumRepositoryContract         $curriculumRepository,
                                  StudySessionRepositoryContract       $studySessionRepository,
                                  FileUploadHandler                    $fileUploadHandler,
-                                 DataVersionStudentRepositoryContract $dataVersionStudentRepository)
+                                 DataVersionStudentRepositoryContract $dataVersionStudentRepository,
+                                 RoomRepositoryContract               $roomRepository)
     {
         $this->moduleClassRepository        = $moduleClassRepository;
         $this->studentRepository            = $studentRepository;
@@ -73,6 +76,7 @@ class ResourceService implements Contracts\ResourceServiceContract
         $this->studySessionRepository       = $studySessionRepository;
         $this->fileUploadHandler            = $fileUploadHandler;
         $this->dataVersionStudentRepository = $dataVersionStudentRepository;
+        $this->roomRepository               = $roomRepository;
     }
 
     /**
@@ -194,11 +198,39 @@ class ResourceService implements Contracts\ResourceServiceContract
                                                         ['id_study_session' => $idStudySession]);
         $idModules      = $this->__getIdModulesFromModuleClasses($data['module_classes']);
 
-        $this->__checkIfModulesMissing($idModules);
+
+        $modulesMissing = $this->__checkIfModulesMissing($idModules);
+        if (!empty($modulesMissing))
+        {
+            $missingData = [];
+            foreach ($data['module_classes'] as $moduleClass)
+            {
+                if (in_array($moduleClass['id_module'], $modulesMissing))
+                {
+                    $moduleName    = str_replace(str_replace($moduleClass['id_module'], '', $moduleClass['id']), '',
+                                                 $moduleClass['name']);
+                    $missingData[] = ['id' => $moduleClass['id_module'], 'name' => $moduleName];
+                }
+            }
+
+            $messages = ['modulesMissing' => $missingData];
+            throw new DatabaseConflictException(json_encode($messages), 409);
+        }
+
+        $roomIds = array_unique(array_column($data['schedules'], 'id_room'));
+        $this->__createOrUpdateRooms(collect($roomIds)->map(function (string $roomId, string $key)
+        {
+            return ['id' => $roomId, 'name' => $roomId];
+        })->toArray());
+
         $this->__createAndUpdateScheduleData($data);
-        $this->__updateModuleClassesWithFewStudentsToCache($data['module_classes'],
-                                                           $inputs['id_department'],
+        $this->__updateModuleClassesWithFewStudentsToCache($data['module_classes'], $inputs['id_department'],
                                                            $idStudySession);
+    }
+
+    private function __createOrUpdateRooms (array $roomIds)
+    {
+        $this->roomRepository->upsert($roomIds, ['id']);
     }
 
     private function __readIdStudySessionByName (string $name)
@@ -247,11 +279,12 @@ class ResourceService implements Contracts\ResourceServiceContract
     private function __checkIfModulesMissing ($idModules)
     {
         $modulesMissing = $this->__getIdModulesMissing($idModules);
-        if (!empty($modulesMissing))
-        {
-            $messages = ['modulesMissing' => $modulesMissing];
-            throw new DatabaseConflictException(json_encode($messages), 409);
-        }
+        return $modulesMissing;
+//        if (!empty($modulesMissing))
+//        {
+//            $messages = ['modulesMissing' => $modulesMissing];
+//            throw new DatabaseConflictException(json_encode($messages), 409);
+//        }
     }
 
     private function __updateModuleClassesWithFewStudentsToCache (array  $moduleClasses,

@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface CurriculumServiceContract
 {
-    public function createCurriculumGetId ($curriculum);
+    public function store (array $inputs);
 }
