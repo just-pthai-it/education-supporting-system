@@ -37,6 +37,10 @@ services:
       - "443:443"
     volumes:
       - ./:/var/www/html
+      - /etc/letsencrypt/live/just-pthai-it.info/fullchain.pem:/etc/nginx/ssl/letsencrypt/fullchain.pem
+      - /etc/letsencrypt/live/just-pthai-it.info/privkey.pem:/etc/nginx/ssl/letsencrypt/privkey.pem
+      - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf
+      - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
       - .docker/config/production/nginx/conf.d:/etc/nginx/templates
     networks:
       - webserver-network
