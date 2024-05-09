@@ -20,6 +20,8 @@ RUN docker-php-source extract
 COPY --chown=www-data:www-data .docker/config/development/supervisor/supervisord.conf /etc/supervisord.conf
 COPY --chown=www-data:www-data .docker/config/development/supervisor/supervisor.d/ /etc/supervisor.d/
 
+WORKDIR /cetc
+
 WORKDIR /var/www/html
 COPY --from=deps /app/vendor/ /var/www/html/vendor
 COPY --from=deps /usr/bin/composer /usr/bin/composer
@@ -28,8 +30,5 @@ RUN mv .env.development .env
 RUN composer dump-autoload -o
 
 USER www-data
-
-WORKDIR /cetc
-WORKDIR /var/www/html
 
 CMD supervisord -n -c /etc/supervisord.conf

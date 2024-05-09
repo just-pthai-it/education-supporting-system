@@ -19,6 +19,8 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --chown=www-data:www-data .docker/config/production/supervisor/supervisord.conf /etc/supervisord.conf
 COPY --chown=www-data:www-data .docker/config/production/supervisor/supervisor.d/ /etc/supervisor.d/
 
+WORKDIR /cetc
+
 WORKDIR /var/www/html
 COPY --from=deps /app/vendor/ /var/www/html/vendor
 COPY --from=deps /usr/bin/composer /usr/bin/composer
@@ -27,8 +29,5 @@ RUN mv .env.production .env
 RUN composer dump-autoload -o --no-dev
 
 USER www-data
-
-WORKDIR /cetc
-WORKDIR /var/www/html
 
 CMD supervisord -n -c /etc/supervisord.conf
