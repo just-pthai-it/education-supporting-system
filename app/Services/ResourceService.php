@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\RoomRepositoryContract;
+use App\Services\Contracts\RabbitMQServiceContract;
 use Exception;
 use PDOException;
 use App\Helpers\GFArray;
@@ -23,6 +24,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use App\Repositories\Contracts\ExamScheduleRepositoryContract;
 use App\Repositories\Contracts\StudySessionRepositoryContract;
 use App\Repositories\Contracts\DataVersionStudentRepositoryContract;
+use PhpAmqpLib\Message\AMQPMessage;
 
 class ResourceService implements Contracts\ResourceServiceContract
 {
@@ -38,6 +40,7 @@ class ResourceService implements Contracts\ResourceServiceContract
     private DataVersionStudentRepositoryContract $dataVersionStudentRepository;
     private FileUploadHandler $fileUploadHandler;
     private ExcelServiceContract $excelService;
+    private RabbitMQServiceContract $rabbitMQService;
 
     private const MINIMUM_NUMBER_OF_STUDENTS = 40;
 
@@ -53,6 +56,7 @@ class ResourceService implements Contracts\ResourceServiceContract
      * @param FileUploadHandler                    $fileUploadHandler
      * @param DataVersionStudentRepositoryContract $dataVersionStudentRepository
      * @param RoomRepositoryContract               $roomRepository
+     * @param RabbitMQServiceContract              $rabbitMQService
      */
     public function __construct (ModuleClassRepositoryContract        $moduleClassRepository,
                                  StudentRepositoryContract            $studentRepository,
@@ -64,7 +68,8 @@ class ResourceService implements Contracts\ResourceServiceContract
                                  StudySessionRepositoryContract       $studySessionRepository,
                                  FileUploadHandler                    $fileUploadHandler,
                                  DataVersionStudentRepositoryContract $dataVersionStudentRepository,
-                                 RoomRepositoryContract               $roomRepository)
+                                 RoomRepositoryContract               $roomRepository,
+                                 RabbitMQServiceContract              $rabbitMQService)
     {
         $this->moduleClassRepository        = $moduleClassRepository;
         $this->studentRepository            = $studentRepository;
@@ -77,6 +82,7 @@ class ResourceService implements Contracts\ResourceServiceContract
         $this->fileUploadHandler            = $fileUploadHandler;
         $this->dataVersionStudentRepository = $dataVersionStudentRepository;
         $this->roomRepository               = $roomRepository;
+        $this->rabbitMQService              = $rabbitMQService;
     }
 
     /**
@@ -194,9 +200,12 @@ class ResourceService implements Contracts\ResourceServiceContract
         $this->excelService = app()->make('excel_schedule');
         $this->__handleFileUpload($inputs['file']);
         $idStudySession = $this->__readIdStudySessionByName($inputs['study_session']);
-        $data           = $this->excelService->readData($this->fileUploadHandler->getFilePath(),
-                                                        ['id_study_session' => $idStudySession]);
-        $idModules      = $this->__getIdModulesFromModuleClasses($data['module_classes']);
+
+//        $data      = $this->excelService->readData($this->fileUploadHandler->getFilePath(),
+//                                                   ['id_study_session' => $idStudySession]);
+
+        $data = $this->__readDataFromGoService($idStudySession);
+        $idModules = $this->__getIdModulesFromModuleClasses($data['module_classes']);
 
 
         $modulesMissing = $this->__checkIfModulesMissing($idModules);
@@ -226,6 +235,26 @@ class ResourceService implements Contracts\ResourceServiceContract
         $this->__createAndUpdateScheduleData($data);
         $this->__updateModuleClassesWithFewStudentsToCache($data['module_classes'], $inputs['id_department'],
                                                            $idStudySession);
+    }
+
+    private function __readDataFromGoService (int $idStudySession) : array
+    {
+        $this->rabbitMQService->initConnection();
+        $this->rabbitMQService->initChannel();
+        $this->rabbitMQService->declareQueue('rpc_read_excel_file');
+        $temporaryQueue = $this->rabbitMQService->declareAndReturnTemporaryQueue('', false, false, true, false);
+        $this->rabbitMQService->basicConsume($temporaryQueue, '', false, true, false, false,
+                                             [$this->rabbitMQService, 'receiveRPCResponse']);
+        $message = new AMQPMessage(
+            json_encode(['file_name'        => $this->fileUploadHandler->getNewFileName(),
+                         'study_session_id' => $idStudySession,]),
+            ['content-type'   => 'application/json',
+             'reply_to'       => $temporaryQueue,]
+        );
+
+        $this->rabbitMQService->sendRPCRequest($message, '', 'rpc_read_excel_file');
+        $this->rabbitMQService->waitForRPCResponse();
+        return json_decode($this->rabbitMQService->getRpcResponse(), true);
     }
 
     private function __createOrUpdateRooms (array $roomIds)
