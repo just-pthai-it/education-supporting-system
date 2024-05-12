@@ -91,7 +91,7 @@ services:
     container_name: rabbitmq
     image: rabbitmq:3-management-alpine
     env_file:
-      - .env.local
+      - .env.production
     ports:
       - "5672:5672"
       - "15672:15672"
