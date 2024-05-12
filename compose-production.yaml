@@ -105,6 +105,7 @@ volumes:
   storage:
   mariadb-data:
   redis-data:
+  rabbitmq-data:
 
 networks:
   webserver-network:
