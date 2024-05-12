@@ -20,10 +20,12 @@ services:
     depends_on:
       - redis
       - mariadb
+      - rabbitmq
     networks:
       - webserver-network
       - mariadb-network
       - redis-network
+      - rabbitmq-network
 
   webserver:
     image: nginx:stable-alpine3.17
@@ -82,10 +84,25 @@ services:
     networks:
       - redis-network
 
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    env_file:
+      - .env.local
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+#      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - rabbitmq-network
+
 volumes:
   storage:
   mariadb-data:
   redis-data:
+  rabbitmq-data:
 
 networks:
   webserver-network:
@@ -93,4 +110,6 @@ networks:
   mariadb-network:
     driver: bridge
   redis-network:
+    driver: bridge
+  rabbitmq-network:
     driver: bridge
