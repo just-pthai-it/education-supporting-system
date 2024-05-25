@@ -27,6 +27,13 @@ class CreateModuleClassesTable extends Migration
             $table->string('id_teacher', 50)->nullable();
             $table->dateTime('deleted_at')->nullable();
         });
+
+        Schema::table('module_classes', function ($table)
+        {
+            $table->foreign('id_study_session')->references('id')->on('study_sessions');
+            $table->foreign('id_module')->references('id')->on('modules');
+            $table->foreign('id_teacher')->references('id')->on('teachers');
+        });
     }
 
     /**

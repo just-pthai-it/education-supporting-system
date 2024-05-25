@@ -21,6 +21,12 @@ class CreateNotificationTagTable extends Migration
             $table->unsignedSmallInteger('id_tag');
             $table->unique(['id_notification', 'id_tag']);
         });
+
+        Schema::table('notification_tag', function ($table)
+        {
+            $table->foreign('id_notification')->references('id')->on('notifications');
+            $table->foreign('id_tag')->references('id')->on('tags');
+        });
     }
 
     /**

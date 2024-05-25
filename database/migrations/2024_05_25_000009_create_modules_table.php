@@ -28,6 +28,11 @@ class CreateModulesTable extends Migration
             $table->unsignedTinyInteger('option');
             $table->string('id_department', 50);
         });
+
+        Schema::table('modules', function ($table)
+        {
+            $table->foreign('id_department')->references('id')->on('departments');
+        });
     }
 
     /**

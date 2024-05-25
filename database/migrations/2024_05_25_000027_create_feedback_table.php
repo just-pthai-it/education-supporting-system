@@ -1,10 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAccountTagTable extends Migration
+class CreateFeedbackTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +13,21 @@ class CreateAccountTagTable extends Migration
      */
     public function up ()
     {
-        Schema::create('account_tag', function (Blueprint $table)
+        Schema::create('feedback', function (Blueprint $table)
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
             $table->unsignedMediumInteger('id')->autoIncrement();
+            $table->text('data');
+            $table->unsignedTinyInteger('type');
+            $table->boolean('is_bug');
             $table->unsignedMediumInteger('id_account');
-            $table->unsignedSmallInteger('id_tag');
-            $table->unique(['id_account', 'id_tag']);
+            $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
+        });
+
+        Schema::table('feedback', function ($table)
+        {
+            $table->foreign('id_account')->references('id')->on('accounts');
         });
     }
 
@@ -29,6 +37,6 @@ class CreateAccountTagTable extends Migration
      */
     public function down ()
     {
-        Schema::dropIfExists('account_tag');
+        Schema::dropIfExists('feedback');
     }
 }

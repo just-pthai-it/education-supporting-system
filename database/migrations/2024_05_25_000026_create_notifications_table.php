@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateThirdPartyTokensTable extends Migration
+class CreateNotificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,23 @@ class CreateThirdPartyTokensTable extends Migration
      */
     public function up ()
     {
-        Schema::create('third_party_tokens', function (Blueprint $table)
+        Schema::create('notifications', function (Blueprint $table)
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
             $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->unsignedMediumInteger('id_account')->unique();
-            $table->text('google_token')->nullable();
-            $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
+            $table->text('data');
+            $table->unsignedTinyInteger('type');
+            $table->unsignedMediumInteger('id_account');
+            $table->string('action', 255);
+            $table->dateTime('created_at')->default(DB::raw('current_timestamp()'))->unique();
             $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
                   ->useCurrentOnUpdate();
+        });
+
+        Schema::table('notifications', function ($table)
+        {
+            $table->foreign('id_account')->references('id')->on('accounts');
         });
     }
 
@@ -32,6 +39,6 @@ class CreateThirdPartyTokensTable extends Migration
      */
     public function down ()
     {
-        Schema::dropIfExists('third_party_tokens');
+        Schema::dropIfExists('notifications');
     }
 }

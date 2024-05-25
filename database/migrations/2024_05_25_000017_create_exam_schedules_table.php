@@ -25,6 +25,12 @@ class CreateExamSchedulesTable extends Migration
             $table->string('id_room', 50)->nullable();
             $table->unique(['id_module_class', 'id_room']);
         });
+
+        Schema::table('exam_schedules', function ($table)
+        {
+            $table->foreign('id_module_class')->references('id')->on('module_classes');
+            $table->foreign('id_room')->references('id')->on('rooms');
+        });
     }
 
     /**

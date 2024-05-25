@@ -25,6 +25,12 @@ class CreateModuleClassStudentTable extends Migration
             $table->decimal('final_score', 4, 2)->nullable();
             $table->unique(['id_module_class', 'id_student']);
         });
+
+        Schema::table('module_class_student', function ($table)
+        {
+            $table->foreign('id_module_class')->references('id')->on('module_classes');
+            $table->foreign('id_student')->references('id')->on('students');
+        });
     }
 
     /**

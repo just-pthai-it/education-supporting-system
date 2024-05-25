@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePermissionRoleTable extends Migration
+class CreateTermsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,18 @@ class CreatePermissionRoleTable extends Migration
      */
     public function up ()
     {
-        Schema::create('permission_role', function (Blueprint $table)
+        Schema::create('terms', function (Blueprint $table)
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->primary(['id_permission', 'id_role']);
-            $table->unsignedTinyInteger('id_permission');
-            $table->unsignedTinyInteger('id_role');
-            $table->boolean('is_granted');
+            $table->unsignedTinyInteger('id')->autoIncrement();
+            $table->string('name', 100);
+            $table->unsignedTinyInteger('id_school_year');
+        });
+
+        Schema::table('terms', function ($table)
+        {
+            $table->foreign('id_school_year')->references('id')->on('school_years');
         });
     }
 
@@ -29,6 +33,6 @@ class CreatePermissionRoleTable extends Migration
      */
     public function down ()
     {
-        Schema::dropIfExists('permission_role');
+        Schema::dropIfExists('terms');
     }
 }

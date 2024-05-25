@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDataVersionTeachersTable extends Migration
+class CreateThirdPartyTokensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,21 @@ class CreateDataVersionTeachersTable extends Migration
      */
     public function up ()
     {
-        Schema::create('data_version_teachers', function (Blueprint $table)
+        Schema::create('third_party_tokens', function (Blueprint $table)
         {
             $table->charset   = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
-            $table->string('id', 50)->primary();
-            $table->unsignedSmallInteger('schedule')->default(0);
-            $table->unsignedSmallInteger('exam_schedule')->default(0);
-            $table->unsignedSmallInteger('notification')->default(0);
+            $table->unsignedMediumInteger('id')->autoIncrement();
+            $table->unsignedMediumInteger('id_account')->unique();
+            $table->text('google_token')->nullable();
             $table->dateTime('created_at')->default(DB::raw('current_timestamp()'));
             $table->dateTime('updated_at')->default(DB::raw('current_timestamp()'))
                   ->useCurrentOnUpdate();
+        });
+
+        Schema::table('third_party_tokens', function ($table)
+        {
+            $table->foreign('id_account')->references('id')->on('accounts');
         });
     }
 
@@ -33,6 +37,6 @@ class CreateDataVersionTeachersTable extends Migration
      */
     public function down ()
     {
-        Schema::dropIfExists('data_version_teachers');
+        Schema::dropIfExists('third_party_tokens');
     }
 }

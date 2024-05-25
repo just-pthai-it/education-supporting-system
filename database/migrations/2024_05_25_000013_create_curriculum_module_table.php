@@ -21,6 +21,12 @@ class CreateCurriculumModuleTable extends Migration
             $table->string('id_module', 50);
             $table->unique(['id_curriculum', 'id_module']);
         });
+
+        Schema::table('curriculum_module', function ($table)
+        {
+            $table->foreign('id_curriculum')->references('id')->on('curriculums');
+            $table->foreign('id_module')->references('id')->on('modules');
+        });
     }
 
     /**

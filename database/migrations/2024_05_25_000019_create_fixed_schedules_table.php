@@ -35,6 +35,14 @@ class CreateFixedSchedulesTable extends Migration
             $table->dateTime('accepted_at')->nullable();
             $table->dateTime('set_room_at')->nullable();
         });
+
+        Schema::table('fixed_schedules', function ($table)
+        {
+            $table->foreign('id_schedule')->references('id')->on('schedules');
+            $table->foreign('old_id_room')->references('id')->on('rooms');
+            $table->foreign('new_id_room')->references('id')->on('rooms');
+        });
+
     }
 
     /**

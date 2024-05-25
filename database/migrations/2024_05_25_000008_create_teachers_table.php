@@ -27,6 +27,11 @@ class CreateTeachersTable extends Migration
             $table->string('id_department', 50);
             $table->dateTime('deleted_at')->nullable();
         });
+
+        Schema::table('teachers', function ($table)
+        {
+            $table->foreign('id_department')->references('id')->on('teachers');
+        });
     }
 
     /**

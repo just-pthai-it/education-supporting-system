@@ -22,6 +22,12 @@ class CreateExamScheduleTeacherTable extends Migration
             $table->string('note', 1000)->default('');
             $table->unique(['id_exam_schedule', 'id_teacher']);
         });
+
+        Schema::table('exam_schedule_teacher', function ($table)
+        {
+            $table->foreign('id_exam_schedule')->references('id')->on('exam_schedules');
+            $table->foreign('id_teacher')->references('id')->on('teachers');
+        });
     }
 
     /**

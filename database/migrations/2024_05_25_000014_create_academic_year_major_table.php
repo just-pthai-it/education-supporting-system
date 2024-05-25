@@ -21,6 +21,13 @@ class CreateAcademicYearMajorTable extends Migration
             $table->unsignedTinyInteger('id_major');
             $table->unsignedTinyInteger('id_curriculum')->nullable();
         });
+
+        Schema::table('academic_year_major', function ($table)
+        {
+            $table->foreign('id_academic_year')->references('id')->on('academic_years');
+            $table->foreign('id_major')->references('id')->on('majors');
+            $table->foreign('id_curriculum')->references('id')->on('curriculums');
+        });
     }
 
     /**

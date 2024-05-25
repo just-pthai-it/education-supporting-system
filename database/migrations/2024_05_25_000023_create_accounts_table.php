@@ -32,6 +32,11 @@ class CreateAccountsTable extends Migration
             $table->unique(['accountable_type', 'accountable_id']);
         });
 
+        Schema::table('accounts', function ($table)
+        {
+            $table->foreign('id_role')->references('id')->on('roles');
+        });
+
         DB::statement('alter table accounts add uuid binary(16) not null;');
         DB::statement('create unique index accounts_uuid_uindex on accounts (uuid);');
     }
