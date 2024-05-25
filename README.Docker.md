@@ -8,7 +8,7 @@ When you're ready, start your application by running:
 
 Stop your application by running:
 
-`docker compose -f compose-local.yaml --env-file .env.local up down`
+`docker compose -f compose-local.yaml --env-file .env.local down`
 
 
 ### Building and running your application on production
