@@ -17,6 +17,8 @@ server {
         try_files $uri $uri/ /index.php?$query_string;
     }
 
+    error_page 404 /index.php;
+
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 
@@ -24,11 +26,10 @@ server {
         fastcgi_pass app:9000;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         include fastcgi_params;
+        fastcgi_hide_header X-Powered-By;
     }
 
     location ~ /\.(?!well-known).* {
         deny all;
     }
-
-    return 404;
 }
